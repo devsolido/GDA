@@ -12,12 +12,7 @@
     <script src="https://cdn.jsdelivr.net/npm/backendless/dist/backendless.min.js"></script>
 
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        /* ===== RESET & VARIÁVEIS ===== */
         :root {
             --color-primary: #0b0f15;
             --color-secondary: #121820;
@@ -34,6 +29,12 @@
             --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
             --radius: 16px;
             --transition: 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         html {
@@ -981,7 +982,7 @@
             background: rgba(255, 255, 255, 0.02);
             border-radius: 8px;
             border: 1px solid var(--color-border);
-            max-height: 250px;
+            max-height: 280px;
             overflow-y: auto;
         }
 
@@ -995,7 +996,7 @@
 
         .atividade-card .membro-item {
             display: grid;
-            grid-template-columns: 0.8fr 0.6fr 0.6fr 0.6fr 0.5fr 0.4fr auto auto;
+            grid-template-columns: 0.8fr 0.6fr 0.6fr 0.6fr 0.8fr 0.4fr auto auto;
             gap: 6px;
             align-items: center;
             padding: 8px 0;
@@ -1064,12 +1065,11 @@
         }
 
         .atividade-card .membro-item .obs-membro {
-            font-size: 11px;
+            font-size: 12px;
             color: var(--color-text-muted);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 80px;
+            word-wrap: break-word;
+            white-space: normal;
+            overflow: visible;
         }
 
         .atividade-card .membro-item .progresso-membro {
@@ -1078,6 +1078,23 @@
             color: var(--color-accent);
             text-align: right;
             min-width: 35px;
+        }
+
+        .atividade-card .membro-item .btn-detalhes {
+            background: rgba(21, 101, 192, 0.08);
+            border: 1px solid rgba(21, 101, 192, 0.1);
+            color: var(--color-info);
+            padding: 2px 8px;
+            border-radius: 30px;
+            font-size: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
+            white-space: nowrap;
+        }
+
+        .atividade-card .membro-item .btn-detalhes:hover {
+            background: rgba(21, 101, 192, 0.15);
         }
 
         .atividade-card .membro-item .btn-finalizar {
@@ -1329,7 +1346,149 @@
             font-size: 16px;
         }
 
-        /* ===== POPUP FINALIZAR PARTICIPAÇÃO ===== */
+        /* ===== POPUP DETALHES DO MEMBRO ===== */
+        .popup-detalhes {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+            z-index: 600;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .popup-detalhes.open {
+            display: flex;
+        }
+
+        .popup-detalhes .popup {
+            background: var(--color-secondary);
+            border-radius: 24px;
+            padding: 32px 36px;
+            max-width: 600px;
+            width: 100%;
+            border: 1px solid var(--color-border);
+            box-shadow: var(--shadow);
+            animation: popupIn 0.3s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .popup-detalhes .popup::-webkit-scrollbar {
+            width: 4px;
+        }
+        .popup-detalhes .popup::-webkit-scrollbar-thumb {
+            background: rgba(255, 179, 0, 0.2);
+            border-radius: 10px;
+        }
+
+        .popup-detalhes .popup h3 {
+            font-size: 22px;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .popup-detalhes .popup h3 i {
+            color: var(--color-accent);
+        }
+
+        .popup-detalhes .popup .popup-subtitle {
+            font-size: 14px;
+            color: var(--color-text-muted);
+            margin-bottom: 20px;
+        }
+
+        .popup-detalhes .popup .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .popup-detalhes .popup .info-item {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid var(--color-border);
+        }
+
+        .popup-detalhes .popup .info-item .label {
+            font-size: 11px;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .popup-detalhes .popup .info-item .value {
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+        .popup-detalhes .popup .historico-completo {
+            margin-top: 16px;
+            padding: 12px 14px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 10px;
+            border: 1px solid var(--color-border);
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .popup-detalhes .popup .historico-completo .historico-item {
+            font-size: 13px;
+            color: var(--color-text-muted);
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .popup-detalhes .popup .historico-completo .historico-item:last-child {
+            border-bottom: none;
+        }
+
+        .popup-detalhes .popup .historico-completo .historico-item .data {
+            color: var(--color-accent);
+        }
+
+        .popup-detalhes .popup .historico-completo .historico-item strong {
+            color: var(--color-text);
+        }
+
+        .popup-detalhes .popup .popup-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid var(--color-border);
+        }
+
+        .popup-detalhes .popup .popup-actions button {
+            padding: 8px 24px;
+            border-radius: 30px;
+            border: none;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .popup-detalhes .popup .popup-actions .btn-fechar {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--color-text-muted);
+        }
+
+        .popup-detalhes .popup .popup-actions .btn-fechar:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* ===== POPUP FINALIZAR ===== */
         .popup-finalizar {
             display: none;
             position: fixed;
@@ -1361,25 +1520,6 @@
             overflow-y: auto;
         }
 
-        .popup-finalizar .popup::-webkit-scrollbar {
-            width: 3px;
-        }
-        .popup-finalizar .popup::-webkit-scrollbar-thumb {
-            background: rgba(255, 179, 0, 0.2);
-            border-radius: 10px;
-        }
-
-        @keyframes popupIn {
-            from {
-                opacity: 0;
-                transform: scale(0.95) translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
-        }
-
         .popup-finalizar .popup h3 {
             font-size: 20px;
             margin-bottom: 8px;
@@ -1387,6 +1527,7 @@
             align-items: center;
             gap: 12px;
         }
+
         .popup-finalizar .popup h3 i {
             color: var(--color-success);
         }
@@ -1486,6 +1627,7 @@
         .popup-finalizar .popup .historico-membro .historico-item:last-child {
             border-bottom: none;
         }
+
         .popup-finalizar .popup .historico-membro .historico-item .data {
             color: var(--color-accent);
         }
@@ -1520,14 +1662,6 @@
             animation: popupIn 0.3s ease;
             max-height: 90vh;
             overflow-y: auto;
-        }
-
-        .popup-reprazo .popup::-webkit-scrollbar {
-            width: 3px;
-        }
-        .popup-reprazo .popup::-webkit-scrollbar-thumb {
-            background: rgba(255, 179, 0, 0.2);
-            border-radius: 10px;
         }
 
         .popup-reprazo .popup h3 {
@@ -1933,8 +2067,12 @@
                 width: 100%;
             }
             .popup-finalizar .popup,
-            .popup-reprazo .popup {
+            .popup-reprazo .popup,
+            .popup-detalhes .popup {
                 padding: 24px 20px;
+            }
+            .popup-detalhes .popup .info-grid {
+                grid-template-columns: 1fr;
             }
             .atividade-card .membro-item {
                 grid-template-columns: 1fr 1fr;
@@ -1949,7 +2087,8 @@
                 grid-column: span 2;
             }
             .atividade-card .membro-item .btn-finalizar,
-            .atividade-card .membro-item .btn-novo-prazo {
+            .atividade-card .membro-item .btn-novo-prazo,
+            .atividade-card .membro-item .btn-detalhes {
                 width: 100%;
                 text-align: center;
             }
@@ -2015,7 +2154,7 @@
             <button class="btn-entrar" onclick="entrarNoSistema()">
                 <i class="fas fa-sign-in-alt"></i> Entrar no Sistema
             </button>
-            <div class="versao">v2.0 · F1052574</div>
+            <div class="versao">v2.1 · F1052574</div>
         </div>
     </div>
 
@@ -2139,6 +2278,46 @@
             <div class="popup-actions">
                 <button class="btn-cancel" onclick="fecharPopupFinalizar()">Cancelar</button>
                 <button class="btn-confirm" onclick="confirmarFinalizar()"><i class="fas fa-check"></i> Finalizar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== POPUP DETALHES DO MEMBRO ===== -->
+    <div class="popup-detalhes" id="popupDetalhes">
+        <div class="popup">
+            <h3><i class="fas fa-user-circle"></i> <span id="popupDetalhesNome">Membro</span></h3>
+            <div class="popup-subtitle" id="popupDetalhesAtividade">Detalhes da participação na atividade</div>
+
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="label">📋 Função</div>
+                    <div class="value" id="popupDetalhesFuncao">-</div>
+                </div>
+                <div class="info-item">
+                    <div class="label">📊 Status</div>
+                    <div class="value" id="popupDetalhesStatus">-</div>
+                </div>
+                <div class="info-item">
+                    <div class="label">📅 Prazo</div>
+                    <div class="value" id="popupDetalhesPrazo">-</div>
+                </div>
+                <div class="info-item">
+                    <div class="label">📈 Progresso</div>
+                    <div class="value" id="popupDetalhesProgresso">-</div>
+                </div>
+                <div class="info-item" style="grid-column: span 2;">
+                    <div class="label">📝 Observações</div>
+                    <div class="value" id="popupDetalhesObservacoes">-</div>
+                </div>
+            </div>
+
+            <div id="popupDetalhesHistorico">
+                <label style="font-size:13px;font-weight:600;color:var(--color-text-muted);">📜 Histórico Completo</label>
+                <div class="historico-completo" id="popupDetalhesHistoricoLista"></div>
+            </div>
+
+            <div class="popup-actions">
+                <button class="btn-fechar" onclick="fecharPopupDetalhes()"><i class="fas fa-times"></i> Fechar</button>
             </div>
         </div>
     </div>
@@ -2311,7 +2490,7 @@
         </div>
     </div>
 
-    <!-- ===== JAVASCRIPT ===== -->
+    <!-- ===== JAVASCRIPT COMPLETO ===== -->
     <script>
         // ==========================================
         // CONFIGURAÇÃO
@@ -2624,12 +2803,14 @@
                                             <span class="funcao">${m.funcao || 'Sem função'}</span>
                                             <span class="status-membro ${statusClassesMembro[statusMembro]}">${statusLabelsMembro[statusMembro]}</span>
                                             <span class="prazo-membro ${diasMembro <= 3 && m.progresso < 100 && statusMembro === 'ativo' ? 'urgente' : ''}"><i class="far fa-calendar-alt"></i> ${m.prazo ? new Date(m.prazo + 'T00:00:00').toLocaleDateString('pt-BR') : 'Sem prazo'}</span>
-                                            <span class="obs-membro" title="${m.observacoes || ''}"><i class="fas fa-comment"></i> ${m.observacoes || 'Sem obs.'}</span>
+                                            <span class="obs-membro" style="white-space:normal;overflow:visible;word-wrap:break-word;">${m.observacoes || 'Sem obs.'}</span>
                                             <span class="progresso-membro">${m.progresso || 0}%</span>
                                             ${!isFinalizado ? `
+                                                <button class="btn-detalhes" onclick="abrirPopupDetalhes(${a.id}, ${idx})" title="Ver detalhes"><i class="fas fa-eye"></i></button>
                                                 <button class="btn-novo-prazo" onclick="abrirPopupReprazo(${a.id}, ${idx})" title="Alterar prazo"><i class="fas fa-clock"></i></button>
                                                 <button class="btn-finalizar" onclick="abrirPopupFinalizar(${a.id}, ${idx})" title="Finalizar participação"><i class="fas fa-check"></i></button>
                                             ` : `
+                                                <button class="btn-detalhes" onclick="abrirPopupDetalhes(${a.id}, ${idx})" title="Ver detalhes"><i class="fas fa-eye"></i></button>
                                                 <button class="btn-finalizar ${statusMembro}" disabled title="Participação já finalizada"><i class="fas fa-check"></i> ${statusMembro === 'concluido' ? 'Concluído' : 'Removido'}</button>
                                             `}
                                         </div>
@@ -2722,6 +2903,71 @@
                 renderAtividades();
             });
         });
+
+        // ==========================================
+        // POPUP DETALHES DO MEMBRO
+        // ==========================================
+        window.abrirPopupDetalhes = function(atividadeId, membroIndex) {
+            const atividade = atividades.find(a => a.id === atividadeId);
+            if (!atividade) { showNotification('❌ Erro!', 'Atividade não encontrada.'); return; }
+            const membro = atividade.membros && atividade.membros[membroIndex];
+            if (!membro) { showNotification('❌ Erro!', 'Membro não encontrado.'); return; }
+
+            document.getElementById('popupDetalhesNome').textContent = membro.nome || 'Sem nome';
+            document.getElementById('popupDetalhesAtividade').textContent =
+                `Atividade: ${atividade.titulo} (${atividade.disciplina})`;
+
+            document.getElementById('popupDetalhesFuncao').textContent = membro.funcao || 'Não definida';
+            document.getElementById('popupDetalhesStatus').textContent = getStatusMembroLabel(membro.status || 'ativo');
+            document.getElementById('popupDetalhesPrazo').textContent = membro.prazo ? new Date(membro.prazo +
+                'T00:00:00').toLocaleDateString('pt-BR') : 'Não definido';
+            document.getElementById('popupDetalhesProgresso').textContent = `${membro.progresso || 0}%`;
+            document.getElementById('popupDetalhesObservacoes').textContent = membro.observacoes || 'Nenhuma observação';
+
+            // Histórico completo
+            const historicoLista = document.getElementById('popupDetalhesHistoricoLista');
+            let historicoHtml = `
+                    <div class="historico-item"><span class="data">📅 Início</span> <strong>Participação iniciada</strong></div>
+                    <div class="historico-item"><span class="data">📊 Progresso</span> <strong>${membro.progresso || 0}%</strong></div>
+                `;
+
+            if (membro.historico && membro.historico.length > 0) {
+                historicoHtml += membro.historico.map(h => {
+                    let texto = '';
+                    if (h.acao === 'FINALIZADO') {
+                        texto =
+                            `<strong>${h.avaliacao === 'concluiu' ? '✅ Concluiu todas as tarefas' : h.avaliacao === 'parcial' ? '🟡 Concluiu parcialmente' : h.avaliacao === 'nao_concluiu' ? '❌ Não concluiu' : '⏳ Enrolou'}</strong>`;
+                        texto += `<br><span style="font-size:12px;color:var(--color-text-muted);">${h.justificativa}</span>`;
+                        if (h.observacoes) {
+                            texto +=
+                                `<br><span style="font-size:12px;color:var(--color-text-muted);">📝 ${h.observacoes}</span>`;
+                        }
+                    } else if (h.novoPrazo) {
+                        texto =
+                            `<strong>Prazo alterado para ${new Date(h.novoPrazo + 'T00:00:00').toLocaleDateString('pt-BR')}</strong>`;
+                        texto += `<br><span style="font-size:12px;color:var(--color-text-muted);">${h.justificativa}</span>`;
+                    } else {
+                        texto = `<strong>${h.justificativa || 'Registro'}</strong>`;
+                    }
+                    return `
+                            <div class="historico-item">
+                                <span class="data">📅 ${new Date(h.data + 'T00:00:00').toLocaleDateString('pt-BR')}</span>
+                                ${texto}
+                            </div>
+                        `;
+                }).join('');
+            } else {
+                historicoHtml +=
+                    `<div class="historico-item" style="color:var(--color-text-muted);">Nenhum registro adicional.</div>`;
+            }
+
+            historicoLista.innerHTML = historicoHtml;
+            document.getElementById('popupDetalhes').classList.add('open');
+        };
+
+        window.fecharPopupDetalhes = function() {
+            document.getElementById('popupDetalhes').classList.remove('open');
+        };
 
         // ==========================================
         // POPUP REPRAZO
@@ -2976,6 +3222,7 @@
                 if (document.getElementById('modalOverlay').classList.contains('open')) { closeModal(); }
                 if (document.getElementById('popupReprazo').classList.contains('open')) { fecharPopupReprazo(); }
                 if (document.getElementById('popupFinalizar').classList.contains('open')) { fecharPopupFinalizar(); }
+                if (document.getElementById('popupDetalhes').classList.contains('open')) { fecharPopupDetalhes(); }
             }
         });
 
@@ -3243,6 +3490,8 @@
         console.log('📋 Usuário:', USUARIO);
         console.log('📅 Data de Entrega ao Docente implementada!');
         console.log('👥 Gestão completa de membros: função, status, finalização e histórico!');
+        console.log('🔍 Botão "Ver Detalhes" com histórico completo do membro!');
+        console.log('📝 Observações dos membros sem cortes no dashboard!');
     </script>
 
 </body>
