@@ -44,20 +44,22 @@
             position: relative;
         }
 
-        /* ===== MARCA D'ÁGUA ===== */
+        /* ===== MARCA D'ÁGUA - ACOMPANHA O USUÁRIO ===== */
         body::after {
             content: 'F1052574';
             position: fixed;
+            /* ← FIXO: acompanha o scroll */
             bottom: 30px;
             right: 40px;
-            font-size: 80px;
+            font-size: 100px;
             font-weight: 900;
-            color: rgba(255, 179, 0, 0.02);
-            letter-spacing: 6px;
+            color: rgba(255, 179, 0, 0.03);
+            letter-spacing: 8px;
             pointer-events: none;
-            z-index: 0;
+            z-index: 9999;
             transform: rotate(-4deg);
             user-select: none;
+            text-shadow: 0 0 30px rgba(255, 179, 0, 0.02);
         }
 
         ::-webkit-scrollbar {
@@ -333,9 +335,10 @@
                 margin-left: 0;
             }
             body::after {
-                font-size: 40px;
-                bottom: 10px;
-                right: 15px;
+                font-size: 50px;
+                bottom: 12px;
+                right: 16px;
+                letter-spacing: 4px;
             }
         }
 
@@ -859,7 +862,7 @@
             font-size: 16px;
         }
 
-        /* ===== MODAL ===== */
+        /* ===== MODAL - CORRIGIDO ===== */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -900,6 +903,8 @@
             margin-top: 14px;
             margin-bottom: 4px;
         }
+
+        /* ===== CORREÇÃO: INPUTS, SELECTS E TEXTAREA ===== */
         .modal input,
         .modal select,
         .modal textarea {
@@ -907,22 +912,48 @@
             padding: 10px 14px;
             border-radius: 10px;
             border: 1px solid var(--color-border);
-            background: rgba(255, 255, 255, 0.02);
-            color: var(--color-text);
+            background: #1a232e;
+            /* ← FUNDO ESCURO */
+            color: #e8edf4;
+            /* ← TEXTO CLARO */
             font-family: 'Inter', sans-serif;
             font-size: 14px;
             outline: none;
             transition: var(--transition);
         }
+
         .modal input:focus,
         .modal select:focus,
         .modal textarea:focus {
             border-color: var(--color-accent);
+            box-shadow: 0 0 0 3px rgba(255, 179, 0, 0.08);
         }
+
+        /* ===== CORREÇÃO: OPÇÕES DO SELECT ===== */
+        .modal select option {
+            background: #121820;
+            /* ← FUNDO ESCURO PARA OPÇÕES */
+            color: #e8edf4;
+            /* ← TEXTO CLARO */
+        }
+
+        /* ===== CORREÇÃO: ÍCONE DO CALENDÁRIO ===== */
+        .modal input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            /* ← DEIXA O ÍCONE BRANCO */
+            cursor: pointer;
+        }
+
+        .modal input[type="date"]::-moz-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+        }
+
         .modal textarea {
             resize: vertical;
             min-height: 60px;
         }
+
         .modal .modal-actions {
             display: flex;
             gap: 12px;
@@ -975,6 +1006,12 @@
             .filtros-atividades button {
                 font-size: 11px;
                 padding: 3px 12px;
+            }
+            body::after {
+                font-size: 40px;
+                bottom: 10px;
+                right: 15px;
+                letter-spacing: 3px;
             }
         }
     </style>
