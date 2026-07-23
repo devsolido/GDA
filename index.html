@@ -57,13 +57,8 @@
             bottom: 0;
             pointer-events: none;
             z-index: 0;
-            background-image: repeating-linear-gradient(
-                -45deg,
-                transparent,
-                transparent 120px,
-                rgba(255, 179, 0, 0.015) 120px,
-                rgba(255, 179, 0, 0.015) 130px
-            );
+            background-image: repeating-linear-gradient(-45deg, transparent, transparent 120px, rgba(255, 179, 0, 0.015) 120px,
+                    rgba(255, 179, 0, 0.015) 130px);
         }
 
         body::after {
@@ -90,9 +85,16 @@
             line-height: 2.5;
         }
 
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.08); border-radius: 10px; }
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+        }
 
         /* ===== SIDEBAR ===== */
         header {
@@ -138,7 +140,9 @@
             font-weight: 700;
             color: var(--color-text);
         }
-        header .logo h2 span { color: var(--color-accent); }
+        header .logo h2 span {
+            color: var(--color-accent);
+        }
 
         header .navbar {
             display: flex;
@@ -178,7 +182,9 @@
             background: rgba(255, 179, 0, 0.08);
             color: var(--color-accent);
         }
-        header .navbar a .material-icons-sharp { font-size: 22px; }
+        header .navbar a .material-icons-sharp {
+            font-size: 22px;
+        }
         header .navbar a h3 {
             font-weight: 500;
             font-size: 14px;
@@ -201,7 +207,9 @@
             padding-left: 16px;
             border-left: 1px solid var(--color-border);
         }
-        .submenu-sistemas.open { display: flex; }
+        .submenu-sistemas.open {
+            display: flex;
+        }
 
         .submenu-sistemas a {
             display: flex;
@@ -250,8 +258,14 @@
             color: var(--color-primary);
         }
 
-        header .user-info .name { font-size: 13px; font-weight: 600; }
-        header .user-info .role { font-size: 11px; color: var(--color-text-muted); }
+        header .user-info .name {
+            font-size: 13px;
+            font-weight: 600;
+        }
+        header .user-info .role {
+            font-size: 11px;
+            color: var(--color-text-muted);
+        }
 
         /* ===== MAIN CONTAINER ===== */
         .container {
@@ -290,8 +304,12 @@
                 display: block;
                 font-size: 26px;
             }
-            header .user-info { justify-content: center; }
-            .container { margin-left: 72px; }
+            header .user-info {
+                justify-content: center;
+            }
+            .container {
+                margin-left: 72px;
+            }
         }
 
         @media (max-width: 600px) {
@@ -324,24 +342,29 @@
                 padding: 6px 10px;
                 font-size: 12px;
             }
-            header .navbar a h3 { display: none; }
-            header .navbar .nav-label { display: none; }
-            header .user-info { display: none; }
-            .submenu-sistemas { display: none !important; }
-            .container { margin-left: 0; }
+            header .navbar a h3 {
+                display: none;
+            }
+            header .navbar .nav-label {
+                display: none;
+            }
+            header .user-info {
+                display: none;
+            }
+            .submenu-sistemas {
+                display: none !important;
+            }
+            .container {
+                margin-left: 0;
+            }
             body::after {
                 font-size: 16px;
                 letter-spacing: 3px;
                 transform: rotate(-25deg) scale(2);
             }
             body::before {
-                background-image: repeating-linear-gradient(
-                    -45deg,
-                    transparent,
-                    transparent 80px,
-                    rgba(255, 179, 0, 0.015) 80px,
-                    rgba(255, 179, 0, 0.015) 85px
-                );
+                background-image: repeating-linear-gradient(-45deg, transparent, transparent 80px, rgba(255, 179, 0, 0.015) 80px,
+                    rgba(255, 179, 0, 0.015) 85px);
             }
         }
 
@@ -394,6 +417,7 @@
             gap: 8px;
             align-items: center;
             flex-wrap: wrap;
+            margin-bottom: 20px;
         }
 
         .sync-btn {
@@ -437,13 +461,28 @@
             border-radius: 30px;
             background: rgba(255, 255, 255, 0.02);
         }
-        .sync-status.success { color: var(--color-success); background: rgba(76, 175, 80, 0.05); }
-        .sync-status.error { color: var(--color-danger); background: rgba(229, 57, 53, 0.05); }
-        .sync-status.sync-ing { color: var(--color-accent); background: rgba(255, 179, 0, 0.05); animation: pulse 1s infinite; }
+        .sync-status.success {
+            color: var(--color-success);
+            background: rgba(76, 175, 80, 0.05);
+        }
+        .sync-status.error {
+            color: var(--color-danger);
+            background: rgba(229, 57, 53, 0.05);
+        }
+        .sync-status.sync-ing {
+            color: var(--color-accent);
+            background: rgba(255, 179, 0, 0.05);
+            animation: pulse 1s infinite;
+        }
 
         @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
         }
 
         /* ===== STATS CARDS ===== */
@@ -493,7 +532,9 @@
             gap: 12px;
             flex-wrap: wrap;
         }
-        .section-title i { color: var(--color-accent); }
+        .section-title i {
+            color: var(--color-accent);
+        }
         .section-title .badge {
             font-size: 12px;
             font-weight: 600;
@@ -514,7 +555,9 @@
             border: 1px solid var(--color-border);
         }
         @media (max-width: 700px) {
-            .checklist-grid { grid-template-columns: 1fr; }
+            .checklist-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         .check-item {
@@ -526,7 +569,9 @@
             cursor: pointer;
             transition: var(--transition);
         }
-        .check-item:hover { background: rgba(255, 255, 255, 0.02); }
+        .check-item:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
         .check-item .box {
             width: 20px;
             height: 20px;
@@ -556,7 +601,9 @@
             color: var(--color-text-muted);
             font-size: 14px;
         }
-        .check-item .icon-status.done { color: var(--color-success); }
+        .check-item .icon-status.done {
+            color: var(--color-success);
+        }
 
         /* ===== TABELA DE TURMAS ===== */
         .table-wrapper {
@@ -591,8 +638,12 @@
             transition: var(--transition);
         }
 
-        .table-search input:focus { border-color: var(--color-accent); }
-        .table-search input::placeholder { color: var(--color-text-muted); }
+        .table-search input:focus {
+            border-color: var(--color-accent);
+        }
+        .table-search input::placeholder {
+            color: var(--color-text-muted);
+        }
         .table-search .search-count {
             font-size: 12px;
             color: var(--color-text-muted);
@@ -605,7 +656,9 @@
             min-width: 700px;
         }
 
-        table thead { background: rgba(255, 255, 255, 0.02); }
+        table thead {
+            background: rgba(255, 255, 255, 0.02);
+        }
         table th {
             text-align: left;
             padding: 14px 18px;
@@ -621,9 +674,15 @@
             border-bottom: 1px solid var(--color-border);
             color: var(--color-text);
         }
-        table tr:last-child td { border-bottom: none; }
-        table tr:hover td { background: rgba(255, 255, 255, 0.01); }
-        table tr.hidden { display: none; }
+        table tr:last-child td {
+            border-bottom: none;
+        }
+        table tr:hover td {
+            background: rgba(255, 255, 255, 0.01);
+        }
+        table tr.hidden {
+            display: none;
+        }
 
         table .cod {
             font-weight: 600;
@@ -660,7 +719,9 @@
             gap: 20px;
         }
         @media (max-width: 900px) {
-            .atividades-grid { grid-template-columns: 1fr; }
+            .atividades-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         .atividade-card {
@@ -699,23 +760,87 @@
             font-size: 16px;
             font-weight: 700;
         }
-        .atividade-card .prazo {
+
+        .atividade-card .datas {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
             font-size: 13px;
             color: var(--color-text-muted);
-            margin: 8px 0 6px;
+            margin: 6px 0 8px;
         }
-        .atividade-card .prazo strong { color: var(--color-text); }
-        .atividade-card .prazo.urgente {
+        .atividade-card .datas span strong {
+            color: var(--color-text);
+        }
+        .atividade-card .datas .inicio {
+            color: var(--color-info);
+        }
+        .atividade-card .datas .prazo {
+            color: var(--color-warning);
+        }
+        .atividade-card .datas .prazo.urgente {
             color: var(--color-danger);
         }
-        .atividade-card .prazo.urgente strong { color: var(--color-danger); }
 
         .atividade-card .membros {
             font-size: 13px;
             color: var(--color-text-muted);
             margin: 6px 0 10px;
         }
-        .atividade-card .membros span { color: var(--color-text); }
+        .atividade-card .membros span {
+            color: var(--color-text);
+        }
+
+        .atividade-card .membros-lista {
+            margin: 8px 0 6px;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            border: 1px solid var(--color-border);
+        }
+
+        .atividade-card .membro-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 4px 0;
+            font-size: 13px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+        }
+        .atividade-card .membro-item:last-child {
+            border-bottom: none;
+        }
+
+        .atividade-card .membro-item .nome {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .atividade-card .membro-item .status-membro {
+            font-size: 11px;
+            padding: 1px 10px;
+            border-radius: 30px;
+        }
+        .atividade-card .membro-item .status-membro.concluido {
+            background: rgba(76, 175, 80, 0.1);
+            color: var(--color-success);
+        }
+        .atividade-card .membro-item .status-membro.andamento {
+            background: rgba(255, 179, 0, 0.1);
+            color: var(--color-accent);
+        }
+        .atividade-card .membro-item .status-membro.pendente {
+            background: rgba(229, 57, 53, 0.1);
+            color: var(--color-danger);
+        }
+
+        .atividade-card .membro-item .prazo-membro {
+            font-size: 12px;
+            color: var(--color-text-muted);
+        }
+        .atividade-card .membro-item .prazo-membro.urgente {
+            color: var(--color-danger);
+        }
 
         .atividade-card .progresso-area {
             display: flex;
@@ -876,7 +1001,9 @@
             border: 1px solid var(--color-border);
         }
 
-        .notification.show { transform: translateX(0); }
+        .notification.show {
+            transform: translateX(0);
+        }
 
         .notification .notif-title {
             font-weight: 600;
@@ -913,13 +1040,15 @@
             align-items: center;
             justify-content: center;
         }
-        .modal-overlay.open { display: flex; }
+        .modal-overlay.open {
+            display: flex;
+        }
 
         .modal {
             background: var(--color-secondary);
             border-radius: 24px;
             padding: 32px 36px;
-            max-width: 560px;
+            max-width: 640px;
             width: 90%;
             border: 1px solid var(--color-border);
             box-shadow: var(--shadow);
@@ -981,6 +1110,73 @@
             min-height: 60px;
         }
 
+        .modal .help-text {
+            font-size: 12px;
+            color: var(--color-text-muted);
+            margin-top: 4px;
+        }
+
+        .modal .membros-container {
+            margin-top: 10px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            border: 1px solid var(--color-border);
+        }
+
+        .modal .membro-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+
+        .modal .membro-row input {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .modal .membro-row input[type="date"] {
+            flex: 0.6;
+            min-width: 100px;
+        }
+
+        .modal .membro-row .btn-remove-membro {
+            background: rgba(229, 57, 53, 0.1);
+            border: 1px solid rgba(229, 57, 53, 0.1);
+            color: var(--color-danger);
+            padding: 6px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .modal .membro-row .btn-remove-membro:hover {
+            background: rgba(229, 57, 53, 0.2);
+        }
+
+        .modal .btn-add-membro {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px dashed var(--color-border);
+            color: var(--color-text-muted);
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
+            margin-top: 4px;
+        }
+
+        .modal .btn-add-membro:hover {
+            border-color: var(--color-accent);
+            color: var(--color-accent);
+            background: rgba(255, 179, 0, 0.03);
+        }
+
         .modal .modal-actions {
             display: flex;
             gap: 12px;
@@ -1013,20 +1209,46 @@
 
         /* ===== RESPONSIVO ===== */
         @media (max-width: 480px) {
-            .stats-grid { grid-template-columns: 1fr 1fr; }
-            .modal { padding: 24px 20px; }
-            .top-bar h1 { font-size: 20px; }
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .modal {
+                padding: 24px 20px;
+            }
+            .top-bar h1 {
+                font-size: 20px;
+            }
             .top-bar h1 small {
                 font-size: 12px;
                 display: block;
                 margin-left: 0;
             }
-            .filtros-atividades { gap: 4px; }
+            .filtros-atividades {
+                gap: 4px;
+            }
             .filtros-atividades button {
                 font-size: 11px;
                 padding: 3px 12px;
             }
-            .sync-buttons { width: 100%; justify-content: center; }
+            .sync-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+            .modal .membro-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .modal .membro-row input {
+                width: 100%;
+                min-width: unset;
+            }
+            .modal .membro-row input[type="date"] {
+                width: 100%;
+                min-width: unset;
+            }
+            .modal .membro-row .btn-remove-membro {
+                align-self: flex-end;
+            }
         }
     </style>
 </head>
@@ -1113,7 +1335,7 @@
         </div>
 
         <!-- ===== BOTÕES DE SINCRONIZAÇÃO ===== -->
-        <div class="sync-buttons" style="margin-bottom:20px;">
+        <div class="sync-buttons">
             <button class="sync-btn" id="syncBackendless" onclick="sincronizarBackendless()">
                 <i class="fas fa-cloud-upload-alt"></i> Salvar na Nuvem
             </button>
@@ -1230,7 +1452,7 @@
     <!-- ===== MODAL ===== -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal">
-            <h2><i class="fas fa-plus-circle" style="color:var(--color-accent);"></i> Nova Atividade</h2>
+            <h2 id="modalTitle"><i class="fas fa-plus-circle" style="color:var(--color-accent);"></i> Nova Atividade</h2>
             <form id="atividadeForm">
                 <label>Título da Atividade</label>
                 <input type="text" id="formTitulo" placeholder="Ex: Apresentação de seminário" required />
@@ -1246,11 +1468,27 @@
                     <!-- Inserido via JS -->
                 </select>
 
-                <label>Prazo</label>
+                <label>Data de Início</label>
+                <input type="date" id="formInicio" required />
+
+                <label>Prazo Máximo do Grupo / Individual</label>
                 <input type="date" id="formPrazo" required />
 
-                <label>Descrição / Membros (para grupo, separe por vírgula)</label>
-                <textarea id="formDesc" placeholder="Ex: João, Maria, Pedro - ou descrição da atividade"></textarea>
+                <!-- Área para membros (grupo) -->
+                <div id="membrosArea" style="display:none;">
+                    <label>Membros do Grupo</label>
+                    <div class="membros-container" id="membrosContainer">
+                        <!-- Inserido via JS -->
+                    </div>
+                    <button type="button" class="btn-add-membro" onclick="adicionarMembro()">
+                        <i class="fas fa-plus"></i> Adicionar Membro
+                    </button>
+                    <div class="help-text">Cada membro pode ter um prazo individual diferente do grupo.</div>
+                </div>
+
+                <!-- Descrição (para individual) -->
+                <label id="descLabel">Descrição</label>
+                <textarea id="formDesc" placeholder="Descrição da atividade"></textarea>
 
                 <div class="modal-actions">
                     <button type="button" class="btn-secondary" onclick="closeModal()">Cancelar</button>
@@ -1277,6 +1515,8 @@
         let checklistState = {};
         let atividades = [];
         let filtroAtual = 'todas';
+        let membrosTemp = [];
+        let editandoId = null;
 
         const checklistItems = [
             { id: 'linkedin', label: 'Verificar LinkedIn', icon: 'fab fa-linkedin' },
@@ -1368,12 +1608,12 @@
 
             tbody.innerHTML = filtered.map(t =>
                 `<tr>
-                    <td class="cod">${t.cod}</td>
-                    <td><strong>${t.nome}</strong><br><span class="prof">${t.professor}</span></td>
-                    <td class="turma">${t.turma}</td>
-                    <td><span class="status"><i class="fas fa-check-circle"></i> Matriculado</span></td>
-                    <td class="horario">${t.horario}</td>
-                </tr>`
+                        <td class="cod">${t.cod}</td>
+                        <td><strong>${t.nome}</strong><br><span class="prof">${t.professor}</span></td>
+                        <td class="turma">${t.turma}</td>
+                        <td><span class="status"><i class="fas fa-check-circle"></i> Matriculado</span></td>
+                        <td class="horario">${t.horario}</td>
+                    </tr>`
             ).join('');
 
             document.getElementById('searchCount').textContent =
@@ -1406,12 +1646,12 @@
             container.innerHTML = checklistItems.map(item => {
                 const done = checklistState[item.id] || false;
                 return `
-                    <div class="check-item" data-id="${item.id}">
-                        <div class="box ${done ? 'done' : ''}">${done ? '<i class="fas fa-check"></i>' : ''}</div>
-                        <span class="label ${done ? 'done' : ''}"><i class="${item.icon}" style="margin-right:8px;color:#ffb300;width:16px;"></i>${item.label}</span>
-                        <span class="icon-status ${done ? 'done' : ''}">${done ? '<i class="fas fa-check-circle"></i>' : '<i class="far fa-circle"></i>'}</span>
-                    </div>
-                `;
+                        <div class="check-item" data-id="${item.id}">
+                            <div class="box ${done ? 'done' : ''}">${done ? '<i class="fas fa-check"></i>' : ''}</div>
+                            <span class="label ${done ? 'done' : ''}"><i class="${item.icon}" style="margin-right:8px;color:#ffb300;width:16px;"></i>${item.label}</span>
+                            <span class="icon-status ${done ? 'done' : ''}">${done ? '<i class="fas fa-check-circle"></i>' : '<i class="far fa-circle"></i>'}</span>
+                        </div>
+                    `;
             }).join('');
 
             document.querySelectorAll('.check-item').forEach(el => {
@@ -1434,14 +1674,44 @@
             if (saved) {
                 try { atividades = JSON.parse(saved); } catch { atividades = []; }
             } else {
-                atividades = [
-                    { id: 1, titulo: 'Seminário sobre Saneamento', tipo: 'grupo', disciplina: 'FUNDAMENTOS DE SANEAMENTO E SAÚDE PÚBLICA',
-                        prazo: '2026-08-10', desc: 'João, Maria, Pedro, Ana - Apresentação de 20 min', progresso: 40 },
-                    { id: 2, titulo: 'Relatório de Campo', tipo: 'individual', disciplina: 'TÉCNICAS EM EDUCAÇÃO AMBIENTAL',
-                        prazo: '2026-07-28', desc: 'Entrega do relatório sobre visita técnica', progresso: 70 },
-                    { id: 3, titulo: 'Projeto de Educação Ambiental', tipo: 'grupo', disciplina: 'METODOLOGIA DE PROJETOS AMBIENTAIS',
-                        prazo: '2026-08-20', desc: 'Carlos, Fernanda, Lucas - Projeto comunitário', progresso: 15 },
-                ];
+                atividades = [{
+                    id: 1,
+                    titulo: 'Seminário sobre Saneamento',
+                    tipo: 'grupo',
+                    disciplina: 'FUNDAMENTOS DE SANEAMENTO E SAÚDE PÚBLICA',
+                    inicio: '2026-08-01',
+                    prazo: '2026-08-10',
+                    membros: [
+                        { nome: 'João', prazo: '2026-08-08', progresso: 100 },
+                        { nome: 'Maria', prazo: '2026-08-10', progresso: 60 },
+                        { nome: 'Pedro', prazo: '2026-08-05', progresso: 0 },
+                        { nome: 'Ana', prazo: '2026-08-09', progresso: 40 }
+                    ],
+                    desc: 'Apresentação de 20 min sobre saneamento básico'
+                }, {
+                    id: 2,
+                    titulo: 'Relatório de Campo',
+                    tipo: 'individual',
+                    disciplina: 'TÉCNICAS EM EDUCAÇÃO AMBIENTAL',
+                    inicio: '2026-07-20',
+                    prazo: '2026-07-28',
+                    membros: [],
+                    desc: 'Entrega do relatório sobre visita técnica à estação de tratamento',
+                    progresso: 70
+                }, {
+                    id: 3,
+                    titulo: 'Projeto de Educação Ambiental',
+                    tipo: 'grupo',
+                    disciplina: 'METODOLOGIA DE PROJETOS AMBIENTAIS',
+                    inicio: '2026-08-05',
+                    prazo: '2026-08-20',
+                    membros: [
+                        { nome: 'Carlos', prazo: '2026-08-18', progresso: 20 },
+                        { nome: 'Fernanda', prazo: '2026-08-20', progresso: 10 },
+                        { nome: 'Lucas', prazo: '2026-08-15', progresso: 30 }
+                    ],
+                    desc: 'Projeto comunitário de educação ambiental para escolas públicas'
+                }];
                 localStorage.setItem('gda_atividades', JSON.stringify(atividades));
             }
             renderAtividades();
@@ -1452,9 +1722,24 @@
         function getStatusAtividade(a) {
             const hoje = new Date();
             const prazo = new Date(a.prazo + 'T00:00:00');
-            if (a.progresso >= 100) return 'concluida';
+
+            // Para grupo, verifica se todos os membros concluíram
+            if (a.tipo === 'grupo' && a.membros && a.membros.length > 0) {
+                const todosConcluidos = a.membros.every(m => m.progresso >= 100);
+                if (todosConcluidos) return 'concluida';
+            }
+
+            // Para individual
+            if (a.tipo === 'individual' && a.progresso >= 100) return 'concluida';
+
             if (prazo < hoje) return 'atrasada';
             return 'andamento';
+        }
+
+        function calcularProgressoGrupo(a) {
+            if (!a.membros || a.membros.length === 0) return 0;
+            const total = a.membros.reduce((acc, m) => acc + (m.progresso || 0), 0);
+            return Math.round(total / a.membros.length);
         }
 
         function renderAtividades() {
@@ -1473,12 +1758,12 @@
             if (filtered.length === 0) {
                 container.innerHTML =
                     `
-                    <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--color-text-muted);background:var(--color-card);border-radius:var(--radius);border:1px solid var(--color-border);">
-                        <i class="fas fa-inbox" style="font-size:32px;display:block;margin-bottom:12px;color:rgba(255,179,0,0.1);"></i>
-                        ${atividades.length === 0 ? 'Nenhuma atividade cadastrada.' : 'Nenhuma atividade com este filtro.'}
-                        ${atividades.length === 0 ? 'Clique em "Nova Atividade" para começar.' : ''}
-                    </div>
-                `;
+                        <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--color-text-muted);background:var(--color-card);border-radius:var(--radius);border:1px solid var(--color-border);">
+                            <i class="fas fa-inbox" style="font-size:32px;display:block;margin-bottom:12px;color:rgba(255,179,0,0.1);"></i>
+                            ${atividades.length === 0 ? 'Nenhuma atividade cadastrada.' : 'Nenhuma atividade com este filtro.'}
+                            ${atividades.length === 0 ? 'Clique em "Nova Atividade" para começar.' : ''}
+                        </div>
+                    `;
                 updateStats();
                 return;
             }
@@ -1501,37 +1786,84 @@
 
                 const hoje = new Date();
                 const prazo = new Date(a.prazo + 'T00:00:00');
-                const dias = Math.ceil((prazo - hoje) / (1000 * 60 * 60 * 24));
-                const urgente = dias <= 3 && dias >= 0 && status !== 'concluida';
+                const inicio = new Date(a.inicio + 'T00:00:00');
+                const diasRestantes = Math.ceil((prazo - hoje) / (1000 * 60 * 60 * 24));
+                const urgente = diasRestantes <= 3 && diasRestantes >= 0 && status !== 'concluida';
+
+                // Progresso do grupo ou individual
+                let progresso = 0;
+                if (isGrupo) {
+                    progresso = calcularProgressoGrupo(a);
+                } else {
+                    progresso = a.progresso || 0;
+                }
+
+                // Para grupo, mostrar lista de membros
+                let membrosHtml = '';
+                if (isGrupo && a.membros && a.membros.length > 0) {
+                    membrosHtml = `
+                            <div class="membros-lista">
+                                ${a.membros.map(m => {
+                                    const prazoMembro = new Date(m.prazo + 'T00:00:00');
+                                    const diasMembro = Math.ceil((prazoMembro - hoje) / (1000 * 60 * 60 * 24));
+                                    const urgenteMembro = diasMembro <= 3 && diasMembro >= 0 && m.progresso < 100;
+                                    const statusMembro = m.progresso >= 100 ? 'concluido' : 
+                                                        (prazoMembro < hoje && m.progresso < 100 ? 'pendente' : 'andamento');
+                                    const statusLabelsMembro = {
+                                        'concluido': '✅ Concluído',
+                                        'andamento': '⏳ Em andamento',
+                                        'pendente': '⚠️ Pendente'
+                                    };
+                                    return `
+                                        <div class="membro-item">
+                                            <span class="nome">
+                                                <i class="fas fa-user"></i>
+                                                ${m.nome}
+                                                <span class="status-membro ${statusMembro}">${statusLabelsMembro[statusMembro]}</span>
+                                            </span>
+                                            <span class="prazo-membro ${urgenteMembro ? 'urgente' : ''}">
+                                                <i class="far fa-calendar-alt"></i> ${new Date(m.prazo + 'T00:00:00').toLocaleDateString('pt-BR')}
+                                                ${m.progresso}%
+                                            </span>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        `;
+                }
 
                 return `
-                    <div class="atividade-card">
-                        <span class="badge-status ${statusClasses[status]}">${statusLabels[status]}</span>
-                        <span class="tipo ${isGrupo ? 'grupo' : 'individual'}">
-                            <i class="fas ${isGrupo ? 'fa-users' : 'fa-user'}"></i>
-                            ${isGrupo ? 'Em Grupo' : 'Individual'}
-                        </span>
-                        <div class="disciplina">📚 ${a.disciplina}</div>
-                        <div class="titulo">${a.titulo}</div>
-                        <div class="prazo ${urgente ? 'urgente' : ''}">
-                            <i class="far fa-calendar-alt"></i> 
-                            <strong>${new Date(a.prazo + 'T00:00:00').toLocaleDateString('pt-BR')}</strong>
-                            ${status === 'atrasada' ? ' ⚠️ Atrasado!' : urgente ? ' 🔥 Prazo próximo!' : ''}
-                        </div>
-                        ${isGrupo ? `<div class="membros"><i class="fas fa-users"></i> Membros: <span>${a.desc || 'Não informado'}</span></div>` : 
-                        `<div class="membros"><i class="fas fa-user"></i> Individual</div>`}
-                        <div class="progresso-area">
-                            <div class="bar" onclick="editarProgresso(${a.id})" title="Clique para ajustar o progresso">
-                                <div class="fill" style="width:${a.progresso || 0}%;"></div>
+                        <div class="atividade-card">
+                            <span class="badge-status ${statusClasses[status]}">${statusLabels[status]}</span>
+                            <span class="tipo ${isGrupo ? 'grupo' : 'individual'}">
+                                <i class="fas ${isGrupo ? 'fa-users' : 'fa-user'}"></i>
+                                ${isGrupo ? 'Em Grupo' : 'Individual'}
+                            </span>
+                            <div class="disciplina">📚 ${a.disciplina}</div>
+                            <div class="titulo">${a.titulo}</div>
+                            <div class="datas">
+                                <span class="inicio"><i class="fas fa-play"></i> <strong>Início:</strong> ${new Date(a.inicio + 'T00:00:00').toLocaleDateString('pt-BR')}</span>
+                                <span class="prazo ${urgente ? 'urgente' : ''}"><i class="far fa-calendar-alt"></i> <strong>Prazo:</strong> ${new Date(a.prazo + 'T00:00:00').toLocaleDateString('pt-BR')} ${status === 'atrasada' ? '⚠️ Atrasado!' : urgente ? '🔥 Prazo próximo!' : ''}</span>
                             </div>
-                            <span class="pct" onclick="editarProgresso(${a.id})" title="Clique para ajustar">${a.progresso || 0}%</span>
+                            ${isGrupo ? `
+                                <div class="membros"><i class="fas fa-users"></i> ${a.membros.length} membros</div>
+                                ${membrosHtml}
+                            ` : `
+                                <div class="membros"><i class="fas fa-user"></i> Individual</div>
+                                ${a.desc ? `<div style="font-size:13px;color:var(--color-text-muted);margin:4px 0 8px;">${a.desc}</div>` : ''}
+                            `}
+                            <div class="progresso-area">
+                                <div class="bar" onclick="editarProgresso(${a.id})" title="Clique para ajustar o progresso">
+                                    <div class="fill" style="width:${progresso}%;"></div>
+                                </div>
+                                <span class="pct" onclick="editarProgresso(${a.id})" title="Clique para ajustar">${progresso}%</span>
+                            </div>
+                            <div class="acoes">
+                                <button class="btn-edit" onclick="editarAtividade(${a.id})"><i class="fas fa-edit"></i> Editar</button>
+                                <button class="btn-delete" onclick="deletarAtividade(${a.id})"><i class="fas fa-trash-alt"></i> Remover</button>
+                            </div>
                         </div>
-                        <div class="acoes">
-                            <button class="btn-edit" onclick="editarAtividade(${a.id})"><i class="fas fa-edit"></i> Editar</button>
-                            <button class="btn-delete" onclick="deletarAtividade(${a.id})"><i class="fas fa-trash-alt"></i> Remover</button>
-                        </div>
-                    </div>
-                `;
+                    `;
             }).join('');
 
             updateStats();
@@ -1542,17 +1874,57 @@
             const atividade = atividades.find(a => a.id === id);
             if (!atividade) return;
 
-            const novo = prompt(`Progresso atual: ${atividade.progresso || 0}%\nDigite o novo percentual (0-100):`, atividade
-                .progresso || 0);
-            if (novo === null) return;
+            if (atividade.tipo === 'grupo') {
+                // Para grupo, perguntar qual membro
+                const membrosNomes = atividade.membros.map((m, i) => `${i+1}. ${m.nome} (${m.progresso}%)`).join('\n');
+                const escolha = prompt(
+                    `Selecione o membro para ajustar o progresso:\n${membrosNomes}\n\nDigite o número do membro ou "0" para todos:`,
+                    '0'
+                );
+                if (escolha === null) return;
 
-            const pct = parseInt(novo);
-            if (isNaN(pct) || pct < 0 || pct > 100) {
-                alert('Digite um valor entre 0 e 100.');
-                return;
+                const idx = parseInt(escolha) - 1;
+                if (idx === -1) {
+                    // Ajustar todos os membros
+                    const novo = prompt(
+                        `Progresso atual médio: ${calcularProgressoGrupo(atividade)}%\nDigite o novo percentual para TODOS os membros (0-100):`,
+                        atividade.membros.reduce((acc, m) => acc + m.progresso, 0) / atividade.membros.length
+                    );
+                    if (novo === null) return;
+                    const pct = parseInt(novo);
+                    if (isNaN(pct) || pct < 0 || pct > 100) {
+                        alert('Digite um valor entre 0 e 100.');
+                        return;
+                    }
+                    atividade.membros.forEach(m => m.progresso = pct);
+                } else if (idx >= 0 && idx < atividade.membros.length) {
+                    const novo = prompt(
+                        `Progresso atual de ${atividade.membros[idx].nome}: ${atividade.membros[idx].progresso}%\nDigite o novo percentual (0-100):`,
+                        atividade.membros[idx].progresso
+                    );
+                    if (novo === null) return;
+                    const pct = parseInt(novo);
+                    if (isNaN(pct) || pct < 0 || pct > 100) {
+                        alert('Digite um valor entre 0 e 100.');
+                        return;
+                    }
+                    atividade.membros[idx].progresso = pct;
+                } else {
+                    alert('Número inválido.');
+                    return;
+                }
+            } else {
+                const novo = prompt(`Progresso atual: ${atividade.progresso || 0}%\nDigite o novo percentual (0-100):`,
+                    atividade.progresso || 0);
+                if (novo === null) return;
+                const pct = parseInt(novo);
+                if (isNaN(pct) || pct < 0 || pct > 100) {
+                    alert('Digite um valor entre 0 e 100.');
+                    return;
+                }
+                atividade.progresso = pct;
             }
 
-            atividade.progresso = pct;
             localStorage.setItem('gda_atividades', JSON.stringify(atividades));
             renderAtividades();
             verificarPrazos();
@@ -1569,20 +1941,233 @@
             });
         });
 
-        // ===== NOTIFICAÇÕES =====
+        // ==========================================
+        // MODAL - GERENCIAR MEMBROS
+        // ==========================================
+        function renderizarMembros() {
+            const container = document.getElementById('membrosContainer');
+            if (membrosTemp.length === 0) {
+                container.innerHTML =
+                    `
+                        <div style="text-align:center;padding:12px;color:var(--color-text-muted);font-size:13px;">
+                            <i class="fas fa-users" style="display:block;margin-bottom:6px;"></i>
+                            Adicione os membros do grupo abaixo.
+                        </div>
+                    `;
+                return;
+            }
+
+            container.innerHTML = membrosTemp.map((m, i) =>
+                `
+                    <div class="membro-row">
+                        <input type="text" value="${m.nome}" placeholder="Nome do membro" onchange="membrosTemp[${i}].nome = this.value" />
+                        <input type="date" value="${m.prazo}" onchange="membrosTemp[${i}].prazo = this.value" />
+                        <button type="button" class="btn-remove-membro" onclick="removerMembro(${i})">
+                            <i class="fas fa-times"></i> Remover
+                        </button>
+                    </div>
+                `
+            ).join('');
+        }
+
+        window.adicionarMembro = function() {
+            const hoje = new Date();
+            const prazoPadrao = new Date(hoje);
+            prazoPadrao.setDate(prazoPadrao.getDate() + 14);
+            membrosTemp.push({
+                nome: '',
+                prazo: prazoPadrao.toISOString().split('T')[0],
+                progresso: 0
+            });
+            renderizarMembros();
+        };
+
+        window.removerMembro = function(index) {
+            membrosTemp.splice(index, 1);
+            renderizarMembros();
+        };
+
+        // ==========================================
+        // MODAL - ABRIR/FECHAR
+        // ==========================================
+        function populateDisciplinas() {
+            const select = document.getElementById('formDisciplina');
+            const nomes = [...new Set(turmas.map(t => t.nome))];
+            select.innerHTML = nomes.map(n => `<option value="${n}">${n}</option>`).join('');
+        }
+
+        window.openModal = function(editData) {
+            const overlay = document.getElementById('modalOverlay');
+            const form = document.getElementById('atividadeForm');
+            form.reset();
+            membrosTemp = [];
+            editandoId = null;
+
+            // Definir datas padrão
+            const hoje = new Date();
+            const inicioPadrao = new Date(hoje);
+            const prazoPadrao = new Date(hoje);
+            prazoPadrao.setDate(prazoPadrao.getDate() + 14);
+
+            if (editData) {
+                document.getElementById('modalTitle').innerHTML =
+                    `<i class="fas fa-edit" style="color:var(--color-accent);"></i> Editar Atividade`;
+                document.getElementById('formTitulo').value = editData.titulo;
+                document.getElementById('formTipo').value = editData.tipo;
+                document.getElementById('formDisciplina').value = editData.disciplina;
+                document.getElementById('formInicio').value = editData.inicio || inicioPadrao.toISOString().split('T')[0];
+                document.getElementById('formPrazo').value = editData.prazo || prazoPadrao.toISOString().split('T')[0];
+                document.getElementById('formDesc').value = editData.desc || '';
+                editandoId = editData.id;
+
+                if (editData.tipo === 'grupo' && editData.membros) {
+                    membrosTemp = JSON.parse(JSON.stringify(editData.membros));
+                }
+
+                // Mostrar/ocultar área de membros
+                document.getElementById('membrosArea').style.display = editData.tipo === 'grupo' ? 'block' : 'none';
+                document.getElementById('descLabel').textContent = editData.tipo === 'grupo' ? 'Descrição do Projeto' :
+                    'Descrição';
+
+                if (editData.tipo === 'grupo') {
+                    renderizarMembros();
+                }
+            } else {
+                document.getElementById('modalTitle').innerHTML =
+                    `<i class="fas fa-plus-circle" style="color:var(--color-accent);"></i> Nova Atividade`;
+                document.getElementById('formInicio').value = inicioPadrao.toISOString().split('T')[0];
+                document.getElementById('formPrazo').value = prazoPadrao.toISOString().split('T')[0];
+                document.getElementById('membrosArea').style.display = 'none';
+                document.getElementById('descLabel').textContent = 'Descrição';
+                editandoId = null;
+            }
+
+            overlay.classList.add('open');
+
+            // Evento para mostrar/esconder área de membros
+            document.getElementById('formTipo').onchange = function() {
+                const isGrupo = this.value === 'grupo';
+                document.getElementById('membrosArea').style.display = isGrupo ? 'block' : 'none';
+                document.getElementById('descLabel').textContent = isGrupo ? 'Descrição do Projeto' : 'Descrição';
+                if (isGrupo && !editData) {
+                    adicionarMembro();
+                }
+            };
+        };
+
+        window.closeModal = function() {
+            document.getElementById('modalOverlay').classList.remove('open');
+        };
+
+        document.getElementById('modalOverlay').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // ==========================================
+        // MODAL - SALVAR ATIVIDADE
+        // ==========================================
+        document.getElementById('atividadeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const titulo = document.getElementById('formTitulo').value.trim();
+            const tipo = document.getElementById('formTipo').value;
+            const disciplina = document.getElementById('formDisciplina').value;
+            const inicio = document.getElementById('formInicio').value;
+            const prazo = document.getElementById('formPrazo').value;
+            const desc = document.getElementById('formDesc').value.trim();
+
+            if (!titulo || !disciplina || !inicio || !prazo) {
+                alert('Preencha todos os campos obrigatórios.');
+                return;
+            }
+
+            if (tipo === 'grupo') {
+                // Validar membros
+                const membrosInvalidos = membrosTemp.filter(m => !m.nome.trim() || !m.prazo);
+                if (membrosInvalidos.length > 0) {
+                    alert('Todos os membros devem ter nome e prazo definidos.');
+                    return;
+                }
+                if (membrosTemp.length === 0) {
+                    alert('Adicione pelo menos um membro ao grupo.');
+                    return;
+                }
+            }
+
+            if (editandoId) {
+                // Editar
+                const idx = atividades.findIndex(a => a.id === editandoId);
+                if (idx !== -1) {
+                    atividades[idx] = {
+                        ...atividades[idx],
+                        titulo,
+                        tipo,
+                        disciplina,
+                        inicio,
+                        prazo,
+                        desc: desc || '',
+                        membros: tipo === 'grupo' ? membrosTemp : [],
+                        progresso: tipo === 'individual' ? (atividades[idx].progresso || 0) : 0
+                    };
+                }
+            } else {
+                // Criar nova
+                const novaAtividade = {
+                    id: Date.now(),
+                    titulo,
+                    tipo,
+                    disciplina,
+                    inicio,
+                    prazo,
+                    desc: desc || '',
+                    membros: tipo === 'grupo' ? membrosTemp : [],
+                    progresso: tipo === 'individual' ? 0 : 0
+                };
+                atividades.push(novaAtividade);
+            }
+
+            localStorage.setItem('gda_atividades', JSON.stringify(atividades));
+            renderAtividades();
+            closeModal();
+            updateStats();
+            verificarPrazos();
+
+            // Resetar membros
+            membrosTemp = [];
+            editandoId = null;
+        });
+
+        window.deletarAtividade = function(id) {
+            if (confirm('Tem certeza que deseja remover esta atividade?')) {
+                atividades = atividades.filter(a => a.id !== id);
+                localStorage.setItem('gda_atividades', JSON.stringify(atividades));
+                renderAtividades();
+                updateStats();
+                verificarPrazos();
+            }
+        };
+
+        window.editarAtividade = function(id) {
+            const data = atividades.find(a => a.id === id);
+            if (data) openModal(data);
+        };
+
+        // ==========================================
+        // NOTIFICAÇÕES
+        // ==========================================
         let notifTimeout = null;
 
         function verificarPrazos() {
             const hoje = new Date();
             const prazosProximos = atividades.filter(a => {
-                if (a.progresso >= 100) return false;
+                if (getStatusAtividade(a) === 'concluida') return false;
                 const prazo = new Date(a.prazo + 'T00:00:00');
                 const dias = Math.ceil((prazo - hoje) / (1000 * 60 * 60 * 24));
                 return dias >= 0 && dias <= 3;
             });
 
             const atrasadas = atividades.filter(a => {
-                if (a.progresso >= 100) return false;
+                if (getStatusAtividade(a) === 'concluida') return false;
                 const prazo = new Date(a.prazo + 'T00:00:00');
                 return prazo < hoje;
             });
@@ -1621,99 +2206,6 @@
         };
 
         // ==========================================
-        // MODAL
-        // ==========================================
-        function populateDisciplinas() {
-            const select = document.getElementById('formDisciplina');
-            const nomes = [...new Set(turmas.map(t => t.nome))];
-            select.innerHTML = nomes.map(n => `<option value="${n}">${n}</option>`).join('');
-        }
-
-        window.openModal = function(editData) {
-            const overlay = document.getElementById('modalOverlay');
-            const form = document.getElementById('atividadeForm');
-            form.reset();
-
-            if (editData) {
-                document.querySelector('#modalOverlay .modal h2').innerHTML =
-                    `<i class="fas fa-edit" style="color:var(--color-accent);"></i> Editar Atividade`;
-                document.getElementById('formTitulo').value = editData.titulo;
-                document.getElementById('formTipo').value = editData.tipo;
-                document.getElementById('formDisciplina').value = editData.disciplina;
-                document.getElementById('formPrazo').value = editData.prazo;
-                document.getElementById('formDesc').value = editData.desc || '';
-                form.dataset.editId = editData.id;
-            } else {
-                document.querySelector('#modalOverlay .modal h2').innerHTML =
-                    `<i class="fas fa-plus-circle" style="color:var(--color-accent);"></i> Nova Atividade`;
-                form.dataset.editId = '';
-            }
-            overlay.classList.add('open');
-        };
-
-        window.closeModal = function() {
-            document.getElementById('modalOverlay').classList.remove('open');
-        };
-
-        document.getElementById('modalOverlay').addEventListener('click', function(e) {
-            if (e.target === this) closeModal();
-        });
-
-        document.getElementById('atividadeForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const titulo = document.getElementById('formTitulo').value.trim();
-            const tipo = document.getElementById('formTipo').value;
-            const disciplina = document.getElementById('formDisciplina').value;
-            const prazo = document.getElementById('formPrazo').value;
-            const desc = document.getElementById('formDesc').value.trim();
-            const editId = this.dataset.editId;
-
-            if (!titulo || !disciplina || !prazo) {
-                alert('Preencha todos os campos obrigatórios.');
-                return;
-            }
-
-            if (editId) {
-                const idx = atividades.findIndex(a => a.id === parseInt(editId));
-                if (idx !== -1) {
-                    atividades[idx] = { ...atividades[idx], titulo, tipo, disciplina, prazo, desc,
-                        progresso: atividades[idx].progresso || 0 };
-                }
-            } else {
-                atividades.push({
-                    id: Date.now(),
-                    titulo,
-                    tipo,
-                    disciplina,
-                    prazo,
-                    desc: desc || (tipo === 'grupo' ? 'Membros não informados' : ''),
-                    progresso: 0
-                });
-            }
-
-            localStorage.setItem('gda_atividades', JSON.stringify(atividades));
-            renderAtividades();
-            closeModal();
-            updateStats();
-            verificarPrazos();
-        });
-
-        window.deletarAtividade = function(id) {
-            if (confirm('Tem certeza que deseja remover esta atividade?')) {
-                atividades = atividades.filter(a => a.id !== id);
-                localStorage.setItem('gda_atividades', JSON.stringify(atividades));
-                renderAtividades();
-                updateStats();
-                verificarPrazos();
-            }
-        };
-
-        window.editarAtividade = function(id) {
-            const data = atividades.find(a => a.id === id);
-            if (data) openModal(data);
-        };
-
-        // ==========================================
         // SINCRONIZAÇÃO COM BACKENDLESS
         // ==========================================
         function setSyncStatus(msg, type = '') {
@@ -1734,19 +2226,16 @@
                 data_atualizacao: new Date().toISOString()
             };
 
-            // Buscar se já existe registro
-            const query = Backendless.Data.of('UsuarioGDA')
+            Backendless.Data.of('UsuarioGDA')
                 .find({ where: `usuario = '${USUARIO}'` })
                 .then((result) => {
                     if (result.length > 0) {
-                        // Atualizar existente
                         const obj = result[0];
                         obj.checklist = dados.checklist;
                         obj.atividades = dados.atividades;
                         obj.data_atualizacao = dados.data_atualizacao;
                         return Backendless.Data.of('UsuarioGDA').save(obj);
                     } else {
-                        // Criar novo
                         return Backendless.Data.of('UsuarioGDA').save(dados);
                     }
                 })
@@ -1877,12 +2366,19 @@
         loadChecklist();
         loadAtividades();
 
-        // Verificar prazos a cada 5 minutos
+        // Adicionar um membro padrão ao abrir modal de grupo pela primeira vez
+        document.getElementById('formTipo').addEventListener('change', function() {
+            if (this.value === 'grupo' && membrosTemp.length === 0) {
+                adicionarMembro();
+            }
+        });
+
         setInterval(verificarPrazos, 300000);
 
         console.log('🚀 GDA Acadêmico carregado!');
         console.log('📋 Usuário:', USUARIO);
         console.log('💾 Dados salvos localmente e sincronizados com Backendless');
+        console.log('👥 Atividades em grupo com prazos individuais implementados!');
     </script>
 
 </body>
