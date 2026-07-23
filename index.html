@@ -982,7 +982,7 @@
             background: rgba(255, 255, 255, 0.02);
             border-radius: 8px;
             border: 1px solid var(--color-border);
-            max-height: 280px;
+            max-height: 400px;
             overflow-y: auto;
         }
 
@@ -996,7 +996,7 @@
 
         .atividade-card .membro-item {
             display: grid;
-            grid-template-columns: 0.8fr 0.6fr 0.6fr 0.6fr 0.8fr 0.4fr auto auto;
+            grid-template-columns: 0.8fr 0.6fr 0.6fr 0.6fr 0.6fr 0.4fr auto auto;
             gap: 6px;
             align-items: center;
             padding: 8px 0;
@@ -1062,6 +1062,11 @@
 
         .atividade-card .membro-item .prazo-membro.urgente {
             color: var(--color-danger);
+        }
+
+        .atividade-card .membro-item .entregas-info {
+            font-size: 11px;
+            color: var(--color-text-muted);
         }
 
         .atividade-card .membro-item .obs-membro {
@@ -1145,6 +1150,63 @@
 
         .atividade-card .membro-item .btn-novo-prazo:hover {
             background: rgba(255, 179, 0, 0.15);
+        }
+
+        .atividade-card .membro-item .entregas-container {
+            grid-column: span 8;
+            padding: 6px 10px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            margin-bottom: 4px;
+        }
+
+        .atividade-card .membro-item .entrega-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 3px 0;
+            font-size: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+        }
+
+        .atividade-card .membro-item .entrega-item:last-child {
+            border-bottom: none;
+        }
+
+        .atividade-card .membro-item .entrega-item .checkbox {
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: var(--transition);
+            color: var(--color-primary);
+            font-size: 11px;
+        }
+
+        .atividade-card .membro-item .entrega-item .checkbox.done {
+            background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
+            border-color: var(--color-accent);
+        }
+
+        .atividade-card .membro-item .entrega-item .descricao {
+            flex: 1;
+            color: var(--color-text-muted);
+        }
+
+        .atividade-card .membro-item .entrega-item .descricao.done {
+            color: var(--color-success);
+            text-decoration: line-through;
+        }
+
+        .atividade-card .membro-item .entrega-item .data-entrega {
+            font-size: 11px;
+            color: var(--color-text-muted);
         }
 
         .atividade-card .progresso-area {
@@ -1346,7 +1408,7 @@
             font-size: 16px;
         }
 
-        /* ===== POPUP DETALHES DO MEMBRO ===== */
+        /* ===== POPUP DETALHES ===== */
         .popup-detalhes {
             display: none;
             position: fixed;
@@ -1369,21 +1431,13 @@
             background: var(--color-secondary);
             border-radius: 24px;
             padding: 32px 36px;
-            max-width: 600px;
+            max-width: 620px;
             width: 100%;
             border: 1px solid var(--color-border);
             box-shadow: var(--shadow);
             animation: popupIn 0.3s ease;
             max-height: 90vh;
             overflow-y: auto;
-        }
-
-        .popup-detalhes .popup::-webkit-scrollbar {
-            width: 4px;
-        }
-        .popup-detalhes .popup::-webkit-scrollbar-thumb {
-            background: rgba(255, 179, 0, 0.2);
-            border-radius: 10px;
         }
 
         .popup-detalhes .popup h3 {
@@ -1393,7 +1447,6 @@
             align-items: center;
             gap: 12px;
         }
-
         .popup-detalhes .popup h3 i {
             color: var(--color-accent);
         }
@@ -1431,21 +1484,60 @@
             margin-top: 2px;
         }
 
-        .popup-detalhes .popup .historico-completo {
-            margin-top: 16px;
+        .popup-detalhes .popup .entregas-detalhes {
+            margin-top: 12px;
             padding: 12px 14px;
             background: rgba(255, 255, 255, 0.02);
             border-radius: 10px;
             border: 1px solid var(--color-border);
-            max-height: 200px;
+        }
+
+        .popup-detalhes .popup .entregas-detalhes .entrega-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 4px 0;
+            font-size: 13px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+        }
+
+        .popup-detalhes .popup .entregas-detalhes .entrega-item:last-child {
+            border-bottom: none;
+        }
+
+        .popup-detalhes .popup .entregas-detalhes .entrega-item .status-icon {
+            font-size: 16px;
+        }
+
+        .popup-detalhes .popup .entregas-detalhes .entrega-item .descricao {
+            flex: 1;
+        }
+
+        .popup-detalhes .popup .entregas-detalhes .entrega-item .descricao.done {
+            color: var(--color-success);
+            text-decoration: line-through;
+        }
+
+        .popup-detalhes .popup .entregas-detalhes .entrega-item .data {
+            font-size: 12px;
+            color: var(--color-text-muted);
+        }
+
+        .popup-detalhes .popup .historico-completo {
+            margin-top: 12px;
+            padding: 12px 14px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 10px;
+            border: 1px solid var(--color-border);
+            max-height: 150px;
             overflow-y: auto;
         }
 
         .popup-detalhes .popup .historico-completo .historico-item {
             font-size: 13px;
             color: var(--color-text-muted);
-            padding: 6px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            padding: 4px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
         }
 
         .popup-detalhes .popup .historico-completo .historico-item:last-child {
@@ -1527,7 +1619,6 @@
             align-items: center;
             gap: 12px;
         }
-
         .popup-finalizar .popup h3 i {
             color: var(--color-success);
         }
@@ -1627,7 +1718,6 @@
         .popup-finalizar .popup .historico-membro .historico-item:last-child {
             border-bottom: none;
         }
-
         .popup-finalizar .popup .historico-membro .historico-item .data {
             color: var(--color-accent);
         }
@@ -1671,7 +1761,6 @@
             align-items: center;
             gap: 12px;
         }
-
         .popup-reprazo .popup h3 i {
             color: var(--color-accent);
         }
@@ -1808,7 +1897,7 @@
             background: var(--color-secondary);
             border-radius: 24px;
             padding: 32px 36px;
-            max-width: 760px;
+            max-width: 820px;
             width: 100%;
             border: 1px solid var(--color-border);
             box-shadow: var(--shadow);
@@ -1895,7 +1984,7 @@
             background: rgba(255, 255, 255, 0.02);
             border-radius: 12px;
             border: 1px solid var(--color-border);
-            max-height: 300px;
+            max-height: 400px;
             overflow-y: auto;
         }
 
@@ -1930,7 +2019,7 @@
 
         .modal .membro-row {
             display: grid;
-            grid-template-columns: 1fr 0.6fr 0.7fr 0.6fr 0.5fr auto;
+            grid-template-columns: 1fr 0.5fr 0.6fr 0.5fr 0.8fr auto;
             gap: 8px;
             align-items: center;
             margin-bottom: 10px;
@@ -2091,6 +2180,9 @@
             .atividade-card .membro-item .btn-detalhes {
                 width: 100%;
                 text-align: center;
+            }
+            .atividade-card .membro-item .entregas-container {
+                grid-column: span 2;
             }
         }
 
@@ -2311,8 +2403,13 @@
                 </div>
             </div>
 
+            <div class="entregas-detalhes">
+                <label style="font-size:13px;font-weight:600;color:var(--color-text-muted);">📋 Entregas do Membro</label>
+                <div id="popupDetalhesEntregas"></div>
+            </div>
+
             <div id="popupDetalhesHistorico">
-                <label style="font-size:13px;font-weight:600;color:var(--color-text-muted);">📜 Histórico Completo</label>
+                <label style="font-size:13px;font-weight:600;color:var(--color-text-muted);margin-top:12px;display:block;">📜 Histórico Completo</label>
                 <div class="historico-completo" id="popupDetalhesHistoricoLista"></div>
             </div>
 
@@ -2475,7 +2572,7 @@
                         <button type="button" class="btn-add-membro" onclick="adicionarMembro()">
                             <i class="fas fa-plus"></i> Adicionar Membro
                         </button>
-                        <div class="help-text">Cada membro pode ter um prazo individual, função e observações específicas.</div>
+                        <div class="help-text">Cada membro tem entregas individuais. O progresso é calculado automaticamente!</div>
                     </div>
                 </div>
 
@@ -2490,7 +2587,7 @@
         </div>
     </div>
 
-    <!-- ===== JAVASCRIPT COMPLETO ===== -->
+    <!-- ===== JAVASCRIPT ===== -->
     <script>
         // ==========================================
         // CONFIGURAÇÃO
@@ -2659,6 +2756,44 @@
         }
 
         // ==========================================
+        // FUNÇÃO PARA CALCULAR PROGRESSO DO MEMBRO (AUTOMÁTICO)
+        // ==========================================
+        function calcularProgressoMembro(membro) {
+            if (!membro.entregas || membro.entregas.length === 0) return 0;
+            const concluidas = membro.entregas.filter(e => e.concluido).length;
+            return Math.round((concluidas / membro.entregas.length) * 100);
+        }
+
+        // ==========================================
+        // FUNÇÃO PARA MARCAR/ DESMARCAR ENTREGA
+        // ==========================================
+        window.toggleEntrega = function(atividadeId, membroIndex, entregaIndex) {
+            const atividade = atividades.find(a => a.id === atividadeId);
+            if (!atividade) return;
+
+            const membro = atividade.membros && atividade.membros[membroIndex];
+            if (!membro) return;
+
+            if (!membro.entregas || !membro.entregas[entregaIndex]) return;
+
+            const entrega = membro.entregas[entregaIndex];
+            entrega.concluido = !entrega.concluido;
+            entrega.data = entrega.concluido ? new Date().toISOString().split('T')[0] : null;
+
+            // Recalcular progresso do membro
+            membro.progresso = calcularProgressoMembro(membro);
+
+            // Se todas as entregas estiverem concluídas e o membro ainda não foi finalizado, marcar como concluído automaticamente?
+            // Vamos deixar o usuário finalizar manualmente
+
+            localStorage.setItem('gda_atividades', JSON.stringify(atividades));
+            renderAtividades();
+            verificarPrazos();
+            showNotification('✅ Entrega atualizada!',
+                `${entrega.concluido ? '✅ Concluída' : '⏳ Pendente'}: ${entrega.descricao}`);
+        };
+
+        // ==========================================
         // ATIVIDADES
         // ==========================================
         function loadAtividades() {
@@ -2672,17 +2807,57 @@
                     inicio: '2026-08-01',
                     prazo: '2026-08-10',
                     entregaDocente: '2026-08-12',
-                    membros: [
-                        { nome: 'João', prazo: '2026-08-08', progresso: 100, funcao: 'Apresentador',
-                            observacoes: 'Já apresentou', status: 'ativo', historico: [] },
-                        { nome: 'Maria', prazo: '2026-08-10', progresso: 60, funcao: 'Pesquisadora',
-                            observacoes: 'Revisando slides', status: 'ativo', historico: [] },
-                        { nome: 'Pedro', prazo: '2026-08-05', progresso: 0, funcao: 'Designer',
-                            observacoes: 'Não entregou a parte', status: 'ativo',
-                            historico: [{ data: '2026-07-28', justificativa: 'Problemas pessoais' }] },
-                        { nome: 'Ana', prazo: '2026-08-09', progresso: 40, funcao: 'Pesquisadora',
-                            observacoes: 'Pesquisando', status: 'ativo', historico: [] }
-                    ],
+                    membros: [{
+                        nome: 'João',
+                        prazo: '2026-08-08',
+                        funcao: 'Apresentador',
+                        observacoes: 'Já apresentou',
+                        status: 'ativo',
+                        entregas: [
+                            { descricao: 'Pesquisa bibliográfica', concluido: true, data: '2026-08-01' },
+                            { descricao: 'Elaboração dos slides', concluido: true, data: '2026-08-03' },
+                            { descricao: 'Ensaio da apresentação', concluido: false, data: null }
+                        ],
+                        progresso: 67,
+                        historico: []
+                    }, {
+                        nome: 'Maria',
+                        prazo: '2026-08-10',
+                        funcao: 'Pesquisadora',
+                        observacoes: 'Revisando slides',
+                        status: 'ativo',
+                        entregas: [
+                            { descricao: 'Coleta de dados', concluido: true, data: '2026-08-02' },
+                            { descricao: 'Análise dos resultados', concluido: false, data: null },
+                            { descricao: 'Redação do relatório', concluido: false, data: null }
+                        ],
+                        progresso: 33,
+                        historico: []
+                    }, {
+                        nome: 'Pedro',
+                        prazo: '2026-08-05',
+                        funcao: 'Designer',
+                        observacoes: 'Não entregou a parte',
+                        status: 'ativo',
+                        entregas: [
+                            { descricao: 'Criação do design', concluido: false, data: null },
+                            { descricao: 'Revisão do design', concluido: false, data: null }
+                        ],
+                        progresso: 0,
+                        historico: [{ data: '2026-07-28', justificativa: 'Problemas pessoais' }]
+                    }, {
+                        nome: 'Ana',
+                        prazo: '2026-08-09',
+                        funcao: 'Pesquisadora',
+                        observacoes: 'Pesquisando',
+                        status: 'ativo',
+                        entregas: [
+                            { descricao: 'Levantamento de dados', concluido: true, data: '2026-08-04' },
+                            { descricao: 'Organização dos dados', concluido: false, data: null }
+                        ],
+                        progresso: 50,
+                        historico: []
+                    }],
                     observacoes: 'Apresentação de 20 min sobre saneamento básico'
                 }, {
                     id: 2,
@@ -2703,14 +2878,44 @@
                     inicio: '2026-08-05',
                     prazo: '2026-08-20',
                     entregaDocente: '2026-08-22',
-                    membros: [
-                        { nome: 'Carlos', prazo: '2026-08-18', progresso: 20, funcao: 'Coordenador',
-                            observacoes: 'Fazendo levantamento', status: 'ativo', historico: [] },
-                        { nome: 'Fernanda', prazo: '2026-08-20', progresso: 10, funcao: 'Pesquisadora',
-                            observacoes: 'Aguardando dados', status: 'ativo', historico: [] },
-                        { nome: 'Lucas', prazo: '2026-08-15', progresso: 30, funcao: 'Redator',
-                            observacoes: 'Finalizando', status: 'ativo', historico: [] }
-                    ],
+                    membros: [{
+                        nome: 'Carlos',
+                        prazo: '2026-08-18',
+                        funcao: 'Coordenador',
+                        observacoes: 'Fazendo levantamento',
+                        status: 'ativo',
+                        entregas: [
+                            { descricao: 'Planejamento do projeto', concluido: true, data: '2026-08-06' },
+                            { descricao: 'Coordenação da equipe', concluido: false, data: null },
+                            { descricao: 'Revisão final', concluido: false, data: null }
+                        ],
+                        progresso: 33,
+                        historico: []
+                    }, {
+                        nome: 'Fernanda',
+                        prazo: '2026-08-20',
+                        funcao: 'Pesquisadora',
+                        observacoes: 'Aguardando dados',
+                        status: 'ativo',
+                        entregas: [
+                            { descricao: 'Pesquisa de campo', concluido: false, data: null },
+                            { descricao: 'Análise de dados', concluido: false, data: null }
+                        ],
+                        progresso: 0,
+                        historico: []
+                    }, {
+                        nome: 'Lucas',
+                        prazo: '2026-08-15',
+                        funcao: 'Redator',
+                        observacoes: 'Finalizando',
+                        status: 'ativo',
+                        entregas: [
+                            { descricao: 'Redação do projeto', concluido: true, data: '2026-08-10' },
+                            { descricao: 'Revisão do texto', concluido: false, data: null }
+                        ],
+                        progresso: 50,
+                        historico: []
+                    }],
                     observacoes: 'Projeto comunitário de educação ambiental para escolas públicas'
                 }];
                 localStorage.setItem('gda_atividades', JSON.stringify(atividades));
@@ -2724,7 +2929,7 @@
             const hoje = new Date();
             const prazo = new Date(a.prazo + 'T00:00:00');
             if (a.tipo === 'grupo' && a.membros && a.membros.length > 0) {
-                const todosConcluidos = a.membros.every(m => m.progresso >= 100 && m.status === 'concluido');
+                const todosConcluidos = a.membros.every(m => m.status === 'concluido');
                 if (todosConcluidos) return 'concluida';
             }
             if (a.tipo === 'individual' && a.progresso >= 100) return 'concluida';
@@ -2797,12 +3002,30 @@
                                     const statusClassesMembro = { 'ativo': 'ativo', 'concluido': 'concluido', 'removido': 'removido', 'enrolando': 'enrolando' };
                                     const statusLabelsMembro = { 'ativo': '🟢 Ativo', 'concluido': '🔵 Concluído', 'removido': '🔴 Removido', 'enrolando': '🟡 Enrolando' };
                                     const isFinalizado = statusMembro === 'concluido' || statusMembro === 'removido';
+                                    // Mostrar entregas
+                                    let entregasHtml = '';
+                                    if (m.entregas && m.entregas.length > 0) {
+                                        entregasHtml = `
+                                            <div class="entregas-container">
+                                                ${m.entregas.map((e, ei) => `
+                                                    <div class="entrega-item">
+                                                        <div class="checkbox ${e.concluido ? 'done' : ''}" onclick="toggleEntrega(${a.id}, ${idx}, ${ei})">
+                                                            ${e.concluido ? '<i class="fas fa-check"></i>' : ''}
+                                                        </div>
+                                                        <span class="descricao ${e.concluido ? 'done' : ''}">${e.descricao}</span>
+                                                        <span class="data-entrega">${e.concluido ? '✅ ' + new Date(e.data + 'T00:00:00').toLocaleDateString('pt-BR') : '⏳ Pendente'}</span>
+                                                    </div>
+                                                `).join('')}
+                                            </div>
+                                        `;
+                                    }
                                     return `
                                         <div class="membro-item">
                                             <span class="nome"><i class="fas fa-user"></i> ${m.nome || 'Sem nome'}</span>
                                             <span class="funcao">${m.funcao || 'Sem função'}</span>
                                             <span class="status-membro ${statusClassesMembro[statusMembro]}">${statusLabelsMembro[statusMembro]}</span>
                                             <span class="prazo-membro ${diasMembro <= 3 && m.progresso < 100 && statusMembro === 'ativo' ? 'urgente' : ''}"><i class="far fa-calendar-alt"></i> ${m.prazo ? new Date(m.prazo + 'T00:00:00').toLocaleDateString('pt-BR') : 'Sem prazo'}</span>
+                                            <span class="entregas-info">📋 ${m.entregas ? m.entregas.filter(e => e.concluido).length + '/' + m.entregas.length : '0'}</span>
                                             <span class="obs-membro" style="white-space:normal;overflow:visible;word-wrap:break-word;">${m.observacoes || 'Sem obs.'}</span>
                                             <span class="progresso-membro">${m.progresso || 0}%</span>
                                             ${!isFinalizado ? `
@@ -2813,6 +3036,7 @@
                                                 <button class="btn-detalhes" onclick="abrirPopupDetalhes(${a.id}, ${idx})" title="Ver detalhes"><i class="fas fa-eye"></i></button>
                                                 <button class="btn-finalizar ${statusMembro}" disabled title="Participação já finalizada"><i class="fas fa-check"></i> ${statusMembro === 'concluido' ? 'Concluído' : 'Removido'}</button>
                                             `}
+                                            ${entregasHtml}
                                         </div>
                                     `;
                                 }).join('')}
@@ -2846,51 +3070,27 @@
             updateStats();
         }
 
-        // ===== EDITAR PROGRESSO =====
+        // ===== EDITAR PROGRESSO (AGORA AUTOMÁTICO) =====
         window.editarProgresso = function(id) {
             const atividade = atividades.find(a => a.id === id);
             if (!atividade) return;
-            if (atividade.tipo === 'grupo') {
-                if (!atividade.membros || atividade.membros.length === 0) { alert('Esta atividade não tem membros para editar progresso.');
-                    return; }
-                const ativos = atividade.membros.filter(m => m.status === 'ativo');
-                if (ativos.length === 0) { alert('Todos os membros já foram finalizados.'); return; }
-                const membrosNomes = ativos.map((m, i) => `${i+1}. ${m.nome} (${m.progresso}%)`).join('\n');
-                const escolha = prompt(
-                    `Selecione o membro para ajustar o progresso:\n${membrosNomes}\n\nDigite o número do membro ou "0" para todos:`,
-                    '0');
-                if (escolha === null) return;
-                const idx = parseInt(escolha) - 1;
-                if (idx === -1) {
-                    const novo = prompt(
-                        `Progresso atual médio: ${calcularProgressoGrupo(atividade)}%\nDigite o novo percentual para TODOS os membros (0-100):`,
-                        ativos.reduce((acc, m) => acc + m.progresso, 0) / ativos.length);
-                    if (novo === null) return;
-                    const pct = parseInt(novo);
-                    if (isNaN(pct) || pct < 0 || pct > 100) { alert('Digite um valor entre 0 e 100.'); return; }
-                    ativos.forEach(m => m.progresso = pct);
-                } else if (idx >= 0 && idx < ativos.length) {
-                    const membro = ativos[idx];
-                    const novo = prompt(
-                        `Progresso atual de ${membro.nome}: ${membro.progresso}%\nDigite o novo percentual (0-100):`,
-                        membro.progresso);
-                    if (novo === null) return;
-                    const pct = parseInt(novo);
-                    if (isNaN(pct) || pct < 0 || pct > 100) { alert('Digite um valor entre 0 e 100.'); return; }
-                    membro.progresso = pct;
-                } else { alert('Número inválido.'); return; }
-            } else {
+            // Para atividades em grupo, o progresso é automático baseado nas entregas
+            // Para individuais, ainda pode ser manual
+            if (atividade.tipo === 'individual') {
                 const novo = prompt(`Progresso atual: ${atividade.progresso || 0}%\nDigite o novo percentual (0-100):`,
                     atividade.progresso || 0);
                 if (novo === null) return;
                 const pct = parseInt(novo);
                 if (isNaN(pct) || pct < 0 || pct > 100) { alert('Digite um valor entre 0 e 100.'); return; }
                 atividade.progresso = pct;
+                localStorage.setItem('gda_atividades', JSON.stringify(atividades));
+                renderAtividades();
+                verificarPrazos();
+                showNotification('✅ Progresso atualizado!', 'O progresso foi salvo com sucesso.');
+            } else {
+                showNotification('ℹ️ Progresso automático',
+                    'O progresso do grupo é calculado automaticamente com base nas entregas de cada membro.');
             }
-            localStorage.setItem('gda_atividades', JSON.stringify(atividades));
-            renderAtividades();
-            verificarPrazos();
-            showNotification('✅ Progresso atualizado!', 'O progresso foi salvo com sucesso.');
         };
 
         // ===== FILTROS =====
@@ -2923,6 +3123,23 @@
                 'T00:00:00').toLocaleDateString('pt-BR') : 'Não definido';
             document.getElementById('popupDetalhesProgresso').textContent = `${membro.progresso || 0}%`;
             document.getElementById('popupDetalhesObservacoes').textContent = membro.observacoes || 'Nenhuma observação';
+
+            // Entregas
+            const entregasContainer = document.getElementById('popupDetalhesEntregas');
+            if (membro.entregas && membro.entregas.length > 0) {
+                entregasContainer.innerHTML = membro.entregas.map(e =>
+                    `
+                        <div class="entrega-item">
+                            <span class="status-icon">${e.concluido ? '✅' : '⏳'}</span>
+                            <span class="descricao ${e.concluido ? 'done' : ''}">${e.descricao}</span>
+                            <span class="data">${e.concluido ? 'Concluído em ' + new Date(e.data + 'T00:00:00').toLocaleDateString('pt-BR') : 'Pendente'}</span>
+                        </div>
+                    `
+                ).join('');
+            } else {
+                entregasContainer.innerHTML =
+                    `<div style="color:var(--color-text-muted);font-size:13px;">Nenhuma entrega definida para este membro.</div>`;
+            }
 
             // Histórico completo
             const historicoLista = document.getElementById('popupDetalhesHistoricoLista');
@@ -3046,6 +3263,7 @@
                 `
                     <div class="historico-item"><span class="data">📅 ${new Date().toLocaleDateString('pt-BR')}</span> <strong>Status atual:</strong> ${getStatusMembroLabel(membro.status || 'ativo')}</div>
                     <div class="historico-item"><span class="data">📊</span> <strong>Progresso:</strong> ${membro.progresso || 0}%</div>
+                    <div class="historico-item"><span class="data">📋</span> <strong>Entregas:</strong> ${membro.entregas ? membro.entregas.filter(e => e.concluido).length + '/' + membro.entregas.length : '0'}</div>
                     <div class="historico-item"><span class="data">📝</span> <strong>Observações:</strong> ${membro.observacoes || 'Nenhuma'}</div>
                 `;
             if (membro.historico && membro.historico.length > 0) {
@@ -3144,8 +3362,22 @@
             const hoje = new Date();
             const prazoPadrao = new Date(hoje);
             prazoPadrao.setDate(prazoPadrao.getDate() + 14);
-            membrosTemp.push({ nome: '', funcao: '', prazo: prazoPadrao.toISOString().split('T')[0], progresso: 0,
-                observacoes: '', status: 'ativo', historico: [] });
+            // Entregas padrão para o membro (3 entregas genéricas)
+            const entregasPadrao = [
+                { descricao: 'Pesquisa/Levantamento de dados', concluido: false, data: null },
+                { descricao: 'Desenvolvimento da tarefa', concluido: false, data: null },
+                { descricao: 'Revisão e finalização', concluido: false, data: null }
+            ];
+            membrosTemp.push({
+                nome: '',
+                funcao: '',
+                prazo: prazoPadrao.toISOString().split('T')[0],
+                progresso: 0,
+                observacoes: '',
+                status: 'ativo',
+                entregas: entregasPadrao,
+                historico: []
+            });
             renderizarMembros();
         };
 
@@ -3266,11 +3498,22 @@
                 if (editandoId) {
                     const idx = atividades.findIndex(a => a.id === editandoId);
                     if (idx !== -1) {
+                        // Recalcular progresso dos membros
+                        if (tipo === 'grupo') {
+                            membrosTemp.forEach(m => {
+                                m.progresso = calcularProgressoMembro(m);
+                            });
+                        }
                         atividades[idx] = { ...atividades[idx], titulo, tipo, disciplina, inicio, prazo, entregaDocente,
                             observacoes: observacoes || '', membros: tipo === 'grupo' ? membrosTemp : [],
                             progresso: tipo === 'individual' ? (atividades[idx].progresso || 0) : 0 };
                     }
                 } else {
+                    if (tipo === 'grupo') {
+                        membrosTemp.forEach(m => {
+                            m.progresso = calcularProgressoMembro(m);
+                        });
+                    }
                     const novaAtividade = { id: Date.now(), titulo, tipo, disciplina, inicio, prazo, entregaDocente,
                         observacoes: observacoes || '', membros: tipo === 'grupo' ? membrosTemp : [],
                         progresso: tipo === 'individual' ? 0 : 0 };
@@ -3489,9 +3732,9 @@
         console.log('🚀 GDA Acadêmico carregado!');
         console.log('📋 Usuário:', USUARIO);
         console.log('📅 Data de Entrega ao Docente implementada!');
-        console.log('👥 Gestão completa de membros: função, status, finalização e histórico!');
+        console.log('📋 Progresso automático baseado em entregas!');
+        console.log('👥 Gestão completa de membros: função, entregas, status e histórico!');
         console.log('🔍 Botão "Ver Detalhes" com histórico completo do membro!');
-        console.log('📝 Observações dos membros sem cortes no dashboard!');
     </script>
 
 </body>
