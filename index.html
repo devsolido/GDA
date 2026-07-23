@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet" />
 
-    <!-- ===== BACKENDLESS SDK ===== -->
     <script src="https://cdn.jsdelivr.net/npm/backendless/dist/backendless.min.js"></script>
 
     <style>
@@ -47,7 +46,6 @@
             position: relative;
         }
 
-        /* ===== MARCA D'ÁGUA ESTILO BANCO ===== */
         body::before {
             content: '';
             position: fixed;
@@ -712,7 +710,7 @@
             display: inline-block;
         }
 
-        /* ===== ATIVIDADES - DASHBOARD MELHORADO ===== */
+        /* ===== ATIVIDADES - DASHBOARD ===== */
         .atividades-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -809,8 +807,19 @@
         .atividade-card .datas .prazo.urgente {
             color: var(--color-danger);
         }
-        .atividade-card .datas .prazo.urgente strong {
-            color: var(--color-danger);
+
+        .atividade-card .observacoes {
+            font-size: 13px;
+            color: var(--color-text-muted);
+            margin: 6px 0 10px;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            border-left: 3px solid var(--color-accent);
+        }
+
+        .atividade-card .observacoes strong {
+            color: var(--color-text);
         }
 
         .atividade-card .membros-info {
@@ -832,9 +841,10 @@
         }
 
         .atividade-card .membro-item {
-            display: flex;
+            display: grid;
+            grid-template-columns: 1fr 0.8fr 0.6fr 0.5fr auto;
+            gap: 8px;
             align-items: center;
-            justify-content: space-between;
             padding: 6px 0;
             font-size: 13px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.03);
@@ -847,7 +857,7 @@
         .atividade-card .membro-item .nome {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .atividade-card .membro-item .nome i {
@@ -860,6 +870,7 @@
             padding: 2px 12px;
             border-radius: 30px;
             font-weight: 600;
+            text-align: center;
         }
 
         .atividade-card .membro-item .status-membro.concluido {
@@ -884,20 +895,37 @@
             color: var(--color-danger);
         }
 
+        .atividade-card .membro-item .obs-membro {
+            font-size: 12px;
+            color: var(--color-text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100px;
+        }
+
         .atividade-card .membro-item .progresso-membro {
             font-size: 12px;
             font-weight: 600;
             color: var(--color-accent);
+            text-align: right;
         }
 
-        .atividade-card .descricao {
-            font-size: 13px;
-            color: var(--color-text-muted);
-            margin: 6px 0 10px;
-            padding: 8px 12px;
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 8px;
-            border-left: 3px solid var(--color-accent);
+        .atividade-card .membro-item .btn-novo-prazo {
+            background: rgba(255, 179, 0, 0.08);
+            border: 1px solid rgba(255, 179, 0, 0.1);
+            color: var(--color-accent);
+            padding: 2px 10px;
+            border-radius: 30px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
+            white-space: nowrap;
+        }
+
+        .atividade-card .membro-item .btn-novo-prazo:hover {
+            background: rgba(255, 179, 0, 0.15);
         }
 
         .atividade-card .progresso-area {
@@ -1099,7 +1127,7 @@
             font-size: 16px;
         }
 
-        /* ===== MODAL MELHORADO ===== */
+        /* ===== MODAL PRINCIPAL ===== */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -1121,7 +1149,7 @@
             background: var(--color-secondary);
             border-radius: 24px;
             padding: 32px 36px;
-            max-width: 700px;
+            max-width: 720px;
             width: 92%;
             border: 1px solid var(--color-border);
             box-shadow: var(--shadow);
@@ -1182,11 +1210,6 @@
             cursor: pointer;
         }
 
-        .modal input[type="date"]::-moz-calendar-picker-indicator {
-            filter: invert(1);
-            cursor: pointer;
-        }
-
         .modal textarea {
             resize: vertical;
             min-height: 60px;
@@ -1198,7 +1221,7 @@
             margin-top: 4px;
         }
 
-        /* ===== ÁREA DE MEMBROS - MELHORADA ===== */
+        /* ===== ÁREA DE MEMBROS NO MODAL ===== */
         .modal .membros-area {
             margin-top: 10px;
             padding: 16px;
@@ -1230,8 +1253,8 @@
 
         .modal .membro-row {
             display: grid;
-            grid-template-columns: 1fr 0.7fr auto;
-            gap: 12px;
+            grid-template-columns: 1fr 0.7fr 0.7fr 0.6fr auto;
+            gap: 10px;
             align-items: center;
             margin-bottom: 10px;
             padding: 12px 14px;
@@ -1247,7 +1270,7 @@
         }
 
         .modal .membro-row input {
-            padding: 8px 14px;
+            padding: 8px 12px;
             border-radius: 8px;
             border: 1px solid var(--color-border);
             background: #121820;
@@ -1265,7 +1288,7 @@
         }
 
         .modal .membro-row input[type="date"] {
-            min-width: 140px;
+            min-width: 120px;
         }
 
         .modal .membro-row input[type="date"]::-webkit-calendar-picker-indicator {
@@ -1273,17 +1296,11 @@
             cursor: pointer;
         }
 
-        .modal .membro-row .membro-actions {
-            display: flex;
-            gap: 6px;
-            align-items: center;
-        }
-
         .modal .membro-row .btn-remove-membro {
             background: rgba(229, 57, 53, 0.08);
             border: 1px solid rgba(229, 57, 53, 0.08);
             color: var(--color-danger);
-            padding: 6px 14px;
+            padding: 6px 12px;
             border-radius: 30px;
             font-size: 12px;
             cursor: pointer;
@@ -1292,7 +1309,7 @@
             white-space: nowrap;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
         }
 
         .modal .membro-row .btn-remove-membro:hover {
@@ -1358,6 +1375,167 @@
             background: rgba(255, 255, 255, 0.08);
         }
 
+        /* ===== POPUP REPRAZO ===== */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 500;
+            align-items: center;
+            justify-content: center;
+        }
+        .popup-overlay.open {
+            display: flex;
+        }
+
+        .popup {
+            background: var(--color-secondary);
+            border-radius: 24px;
+            padding: 32px 36px;
+            max-width: 480px;
+            width: 92%;
+            border: 1px solid var(--color-border);
+            box-shadow: var(--shadow);
+            animation: popupIn 0.3s ease;
+        }
+
+        @keyframes popupIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .popup h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .popup h3 i {
+            color: var(--color-accent);
+        }
+
+        .popup .popup-subtitle {
+            font-size: 14px;
+            color: var(--color-text-muted);
+            margin-bottom: 20px;
+        }
+
+        .popup label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--color-text-muted);
+            margin-top: 14px;
+            margin-bottom: 5px;
+        }
+
+        .popup input,
+        .popup textarea {
+            width: 100%;
+            padding: 10px 16px;
+            border-radius: 10px;
+            border: 1px solid var(--color-border);
+            background: #1a232e;
+            color: #e8edf4;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .popup input:focus,
+        .popup textarea:focus {
+            border-color: var(--color-accent);
+            box-shadow: 0 0 0 3px rgba(255, 179, 0, 0.08);
+        }
+
+        .popup input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+        }
+
+        .popup textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .popup .popup-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .popup .popup-actions button {
+            padding: 10px 28px;
+            border-radius: 30px;
+            border: none;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .popup .popup-actions .btn-confirm {
+            background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
+            color: var(--color-primary);
+        }
+
+        .popup .popup-actions .btn-confirm:hover {
+            transform: scale(1.02);
+        }
+
+        .popup .popup-actions .btn-cancel {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--color-text-muted);
+        }
+
+        .popup .popup-actions .btn-cancel:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .popup .historico-prazos {
+            margin-top: 16px;
+            padding: 12px 14px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            border: 1px solid var(--color-border);
+            max-height: 120px;
+            overflow-y: auto;
+        }
+
+        .popup .historico-prazos .historico-item {
+            font-size: 12px;
+            color: var(--color-text-muted);
+            padding: 4px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+        }
+
+        .popup .historico-prazos .historico-item:last-child {
+            border-bottom: none;
+        }
+
+        .popup .historico-prazos .historico-item strong {
+            color: var(--color-text);
+        }
+
+        .popup .historico-prazos .historico-item .data {
+            color: var(--color-accent);
+        }
+
         /* ===== RESPONSIVO ===== */
         @media (max-width: 768px) {
             .modal .membro-row {
@@ -1374,6 +1552,24 @@
             .modal {
                 padding: 20px;
                 max-width: 95%;
+            }
+            .popup {
+                padding: 24px 20px;
+                max-width: 95%;
+            }
+            .atividade-card .membro-item {
+                grid-template-columns: 1fr 1fr;
+                gap: 4px;
+                font-size: 12px;
+            }
+            .atividade-card .membro-item .obs-membro {
+                max-width: unset;
+                grid-column: span 2;
+            }
+            .atividade-card .membro-item .btn-novo-prazo {
+                grid-column: span 2;
+                width: 100%;
+                text-align: center;
             }
         }
 
@@ -1477,10 +1673,35 @@
         <div class="notif-body" id="notifBody">Você tem prazos próximos.</div>
     </div>
 
+    <!-- ===== POPUP REPRAZO ===== -->
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popup">
+            <h3><i class="fas fa-calendar-alt"></i> Replanejar Prazo</h3>
+            <div class="popup-subtitle" id="popupMembroNome">Alterando prazo de: <strong>João</strong></div>
+
+            <label>Novo Prazo *</label>
+            <input type="date" id="popupNovoPrazo" />
+
+            <label>Justificativa para o replanejamento *</label>
+            <textarea id="popupJustificativa" placeholder="Explique o motivo da alteração do prazo..."></textarea>
+
+            <div id="popupHistorico">
+                <label>Histórico de Alterações</label>
+                <div class="historico-prazos" id="popupHistoricoLista">
+                    <!-- Inserido via JS -->
+                </div>
+            </div>
+
+            <div class="popup-actions">
+                <button class="btn-cancel" onclick="fecharPopupReprazo()">Cancelar</button>
+                <button class="btn-confirm" onclick="confirmarReprazo()"><i class="fas fa-save"></i> Confirmar</button>
+            </div>
+        </div>
+    </div>
+
     <!-- ===== CONTAINER ===== -->
     <div class="container" id="mainContainer">
 
-        <!-- ===== TOP BAR ===== -->
         <div class="top-bar">
             <h1>📊 Dashboard <small>Controle Ambiental · 2026.2</small></h1>
             <div class="clock">
@@ -1489,7 +1710,6 @@
             </div>
         </div>
 
-        <!-- ===== BOTÕES DE SINCRONIZAÇÃO ===== -->
         <div class="sync-buttons">
             <button class="sync-btn" id="syncBackendless" onclick="sincronizarBackendless()">
                 <i class="fas fa-cloud-upload-alt"></i> Salvar na Nuvem
@@ -1503,7 +1723,6 @@
             <span class="sync-status" id="syncStatus">✅ Pronto</span>
         </div>
 
-        <!-- ===== STATS ===== -->
         <div class="stats-grid">
             <div class="stat-card">
                 <span class="icon"><i class="fas fa-book"></i></span>
@@ -1595,7 +1814,6 @@
             </div>
         </div>
 
-        <!-- ===== FOOTER ===== -->
         <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--color-border);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;color:var(--color-text-muted);">
             <span><i class="fas fa-database"></i> Dados salvos localmente</span>
             <span>Igor Veras Morais · F1052574</span>
@@ -1634,7 +1852,7 @@
                     </div>
                 </div>
 
-                <!-- Área para membros (grupo) - MELHORADA -->
+                <!-- Área para membros (grupo) -->
                 <div id="membrosArea" style="display:none;margin-top:10px;">
                     <label>Membros do Grupo</label>
                     <div class="membros-area">
@@ -1648,12 +1866,12 @@
                         <button type="button" class="btn-add-membro" onclick="adicionarMembro()">
                             <i class="fas fa-plus"></i> Adicionar Membro
                         </button>
-                        <div class="help-text">Cada membro pode ter um prazo individual diferente do grupo.</div>
+                        <div class="help-text">Cada membro pode ter um prazo individual e observações específicas.</div>
                     </div>
                 </div>
 
-                <label id="descLabel">Descrição</label>
-                <textarea id="formDesc" placeholder="Descrição da atividade"></textarea>
+                <label>Observações da Atividade</label>
+                <textarea id="formObservacoes" placeholder="Observações gerais sobre a atividade..."></textarea>
 
                 <div class="modal-actions">
                     <button type="button" class="btn-secondary" onclick="closeModal()">Cancelar</button>
@@ -1682,6 +1900,10 @@
         let filtroAtual = 'todas';
         let membrosTemp = [];
         let editandoId = null;
+
+        // Variáveis para o popup de reprazo
+        let popupAtividadeId = null;
+        let popupMembroIndex = null;
 
         const checklistItems = [
             { id: 'linkedin', label: 'Verificar LinkedIn', icon: 'fab fa-linkedin' },
@@ -1737,7 +1959,7 @@
         setInterval(updateClock, 1000);
 
         // ==========================================
-        // TOGGLE SUBMENU SISTEMAS
+        // TOGGLE SUBMENU
         // ==========================================
         const toggleBtn = document.getElementById('sistemasToggle');
         const submenu = document.getElementById('submenuSistemas');
@@ -1847,12 +2069,14 @@
                     inicio: '2026-08-01',
                     prazo: '2026-08-10',
                     membros: [
-                        { nome: 'João', prazo: '2026-08-08', progresso: 100 },
-                        { nome: 'Maria', prazo: '2026-08-10', progresso: 60 },
-                        { nome: 'Pedro', prazo: '2026-08-05', progresso: 0 },
-                        { nome: 'Ana', prazo: '2026-08-09', progresso: 40 }
+                        { nome: 'João', prazo: '2026-08-08', progresso: 100, observacoes: 'Já apresentou', historico: [] },
+                        { nome: 'Maria', prazo: '2026-08-10', progresso: 60, observacoes: 'Revisando slides',
+                        historico: [] },
+                        { nome: 'Pedro', prazo: '2026-08-05', progresso: 0, observacoes: 'Não entregou a parte',
+                            historico: [{ data: '2026-07-28', justificativa: 'Problemas pessoais' }] },
+                        { nome: 'Ana', prazo: '2026-08-09', progresso: 40, observacoes: 'Pesquisando', historico: [] }
                     ],
-                    desc: 'Apresentação de 20 min sobre saneamento básico'
+                    observacoes: 'Apresentação de 20 min sobre saneamento básico'
                 }, {
                     id: 2,
                     titulo: 'Relatório de Campo',
@@ -1861,7 +2085,7 @@
                     inicio: '2026-07-20',
                     prazo: '2026-07-28',
                     membros: [],
-                    desc: 'Entrega do relatório sobre visita técnica à estação de tratamento',
+                    observacoes: 'Entrega do relatório sobre visita técnica à estação de tratamento',
                     progresso: 70
                 }, {
                     id: 3,
@@ -1871,11 +2095,14 @@
                     inicio: '2026-08-05',
                     prazo: '2026-08-20',
                     membros: [
-                        { nome: 'Carlos', prazo: '2026-08-18', progresso: 20 },
-                        { nome: 'Fernanda', prazo: '2026-08-20', progresso: 10 },
-                        { nome: 'Lucas', prazo: '2026-08-15', progresso: 30 }
+                        { nome: 'Carlos', prazo: '2026-08-18', progresso: 20, observacoes: 'Fazendo levantamento',
+                            historico: [] },
+                        { nome: 'Fernanda', prazo: '2026-08-20', progresso: 10, observacoes: 'Aguardando dados',
+                            historico: [] },
+                        { nome: 'Lucas', prazo: '2026-08-15', progresso: 30, observacoes: 'Finalizando',
+                        historico: [] }
                     ],
-                    desc: 'Projeto comunitário de educação ambiental para escolas públicas'
+                    observacoes: 'Projeto comunitário de educação ambiental para escolas públicas'
                 }];
                 localStorage.setItem('gda_atividades', JSON.stringify(atividades));
             }
@@ -1946,6 +2173,11 @@
                     'concluida': 'concluida',
                     'atrasada': 'atrasada'
                 };
+                const statusIcon = {
+                    'andamento': '⏳',
+                    'concluida': '✅',
+                    'atrasada': '⚠️'
+                };
 
                 const hoje = new Date();
                 const prazo = new Date(a.prazo + 'T00:00:00');
@@ -1959,18 +2191,11 @@
                     progresso = a.progresso || 0;
                 }
 
-                // Status icon
-                const statusIcon = {
-                    'andamento': '⏳',
-                    'concluida': '✅',
-                    'atrasada': '⚠️'
-                };
-
                 let membrosHtml = '';
                 if (isGrupo && a.membros && a.membros.length > 0) {
                     membrosHtml = `
                             <div class="membros-lista">
-                                ${a.membros.map(m => {
+                                ${a.membros.map((m, idx) => {
                                     const prazoMembro = new Date(m.prazo + 'T00:00:00');
                                     const diasMembro = Math.ceil((prazoMembro - hoje) / (1000 * 60 * 60 * 24));
                                     const statusMembro = m.progresso >= 100 ? 'concluido' : 
@@ -1989,8 +2214,14 @@
                                             </span>
                                             <span class="prazo-membro ${diasMembro <= 3 && m.progresso < 100 ? 'urgente' : ''}">
                                                 <i class="far fa-calendar-alt"></i> ${new Date(m.prazo + 'T00:00:00').toLocaleDateString('pt-BR')}
-                                                <span class="progresso-membro">${m.progresso}%</span>
                                             </span>
+                                            <span class="obs-membro" title="${m.observacoes || ''}">
+                                                <i class="fas fa-comment"></i> ${m.observacoes || 'Sem observações'}
+                                            </span>
+                                            <span class="progresso-membro">${m.progresso}%</span>
+                                            <button class="btn-novo-prazo" onclick="abrirPopupReprazo(${a.id}, ${idx})">
+                                                <i class="fas fa-clock"></i> Novo Prazo
+                                            </button>
                                         </div>
                                     `;
                                 }).join('')}
@@ -2013,12 +2244,16 @@
                                 <span class="inicio"><i class="fas fa-play"></i> <strong>Início:</strong> ${new Date(a.inicio + 'T00:00:00').toLocaleDateString('pt-BR')}</span>
                                 <span class="prazo ${urgente ? 'urgente' : ''}"><i class="far fa-calendar-alt"></i> <strong>Prazo:</strong> ${new Date(a.prazo + 'T00:00:00').toLocaleDateString('pt-BR')} ${status === 'atrasada' ? '⚠️' : ''}</span>
                             </div>
+                            ${a.observacoes ? `
+                                <div class="observacoes">
+                                    <strong><i class="fas fa-sticky-note"></i> Observações:</strong> ${a.observacoes}
+                                </div>
+                            ` : ''}
                             ${isGrupo ? `
                                 <div class="membros-info"><i class="fas fa-users"></i> <span>${a.membros.length} membros</span></div>
                                 ${membrosHtml}
                             ` : `
                                 <div class="membros-info"><i class="fas fa-user"></i> Individual</div>
-                                ${a.desc ? `<div class="descricao">${a.desc}</div>` : ''}
                             `}
                             <div class="progresso-area">
                                 <div class="bar" onclick="editarProgresso(${a.id})" title="Clique para ajustar o progresso">
@@ -2108,7 +2343,96 @@
         });
 
         // ==========================================
-        // MODAL - GERENCIAR MEMBROS (MELHORADO)
+        // POPUP REPRAZO
+        // ==========================================
+        window.abrirPopupReprazo = function(atividadeId, membroIndex) {
+            popupAtividadeId = atividadeId;
+            popupMembroIndex = membroIndex;
+
+            const atividade = atividades.find(a => a.id === atividadeId);
+            if (!atividade) return;
+
+            const membro = atividade.membros[membroIndex];
+            if (!membro) return;
+
+            document.getElementById('popupMembroNome').innerHTML =
+                `Alterando prazo de: <strong>${membro.nome}</strong> (atual: ${new Date(membro.prazo + 'T00:00:00').toLocaleDateString('pt-BR')})`;
+
+            // Preencher data atual
+            const hoje = new Date();
+            const novoPrazo = new Date(hoje);
+            novoPrazo.setDate(novoPrazo.getDate() + 7);
+            document.getElementById('popupNovoPrazo').value = novoPrazo.toISOString().split('T')[0];
+
+            document.getElementById('popupJustificativa').value = '';
+
+            // Histórico
+            const historicoLista = document.getElementById('popupHistoricoLista');
+            if (membro.historico && membro.historico.length > 0) {
+                historicoLista.innerHTML = membro.historico.map(h =>
+                    `<div class="historico-item">
+                            <span class="data">📅 ${new Date(h.data + 'T00:00:00').toLocaleDateString('pt-BR')}</span>
+                            <strong>→ ${new Date(h.novoPrazo + 'T00:00:00').toLocaleDateString('pt-BR')}</strong>
+                            <br><span style="font-size:11px;color:var(--color-text-muted);">${h.justificativa}</span>
+                        </div>`
+                ).join('');
+                document.getElementById('popupHistorico').style.display = 'block';
+            } else {
+                historicoLista.innerHTML =
+                    `<div class="historico-item" style="color:var(--color-text-muted);">Nenhuma alteração registrada.</div>`;
+                document.getElementById('popupHistorico').style.display = 'block';
+            }
+
+            document.getElementById('popupOverlay').classList.add('open');
+        };
+
+        window.fecharPopupReprazo = function() {
+            document.getElementById('popupOverlay').classList.remove('open');
+            popupAtividadeId = null;
+            popupMembroIndex = null;
+        };
+
+        window.confirmarReprazo = function() {
+            const novoPrazo = document.getElementById('popupNovoPrazo').value;
+            const justificativa = document.getElementById('popupJustificativa').value.trim();
+
+            if (!novoPrazo) {
+                alert('Selecione um novo prazo.');
+                return;
+            }
+            if (!justificativa) {
+                alert('Digite uma justificativa para o replanejamento.');
+                return;
+            }
+
+            const atividade = atividades.find(a => a.id === popupAtividadeId);
+            if (!atividade) return;
+
+            const membro = atividade.membros[popupMembroIndex];
+            if (!membro) return;
+
+            // Registrar histórico
+            if (!membro.historico) membro.historico = [];
+            membro.historico.push({
+                data: new Date().toISOString().split('T')[0],
+                novoPrazo: novoPrazo,
+                justificativa: justificativa
+            });
+
+            // Atualizar prazo
+            membro.prazo = novoPrazo;
+
+            localStorage.setItem('gda_atividades', JSON.stringify(atividades));
+            renderAtividades();
+            fecharPopupReprazo();
+            verificarPrazos();
+
+            showNotification('✅ Prazo atualizado!',
+                `Prazo de ${membro.nome} foi alterado para ${new Date(novoPrazo + 'T00:00:00').toLocaleDateString('pt-BR')}`);
+        };
+
+        // ==========================================
+        // MODAL - GERENCIAR MEMBROS
         // ==========================================
         function renderizarMembros() {
             const container = document.getElementById('membrosContainer');
@@ -2131,11 +2455,11 @@
                     <div class="membro-row">
                         <input type="text" value="${m.nome}" placeholder="Nome do membro" onchange="membrosTemp[${i}].nome = this.value" />
                         <input type="date" value="${m.prazo}" onchange="membrosTemp[${i}].prazo = this.value" />
-                        <div class="membro-actions">
-                            <button type="button" class="btn-remove-membro" onclick="removerMembro(${i})">
-                                <i class="fas fa-times"></i> Remover
-                            </button>
-                        </div>
+                        <input type="text" value="${m.observacoes || ''}" placeholder="Obs." onchange="membrosTemp[${i}].observacoes = this.value" />
+                        <span style="font-size:12px;color:var(--color-text-muted);">${m.progresso || 0}%</span>
+                        <button type="button" class="btn-remove-membro" onclick="removerMembro(${i})">
+                            <i class="fas fa-times"></i> Remover
+                        </button>
                     </div>
                 `
             ).join('');
@@ -2150,7 +2474,9 @@
             membrosTemp.push({
                 nome: '',
                 prazo: prazoPadrao.toISOString().split('T')[0],
-                progresso: 0
+                progresso: 0,
+                observacoes: '',
+                historico: []
             });
             renderizarMembros();
         };
@@ -2161,7 +2487,7 @@
         };
 
         // ==========================================
-        // MODAL - DISCIPLINAS (CORRIGIDO)
+        // MODAL - DISCIPLINAS
         // ==========================================
         function populateDisciplinas() {
             const select = document.getElementById('formDisciplina');
@@ -2188,7 +2514,6 @@
             const prazoPadrao = new Date(hoje);
             prazoPadrao.setDate(prazoPadrao.getDate() + 14);
 
-            // Garantir que as disciplinas estejam carregadas
             populateDisciplinas();
 
             if (editData) {
@@ -2199,7 +2524,7 @@
                 document.getElementById('formDisciplina').value = editData.disciplina;
                 document.getElementById('formInicio').value = editData.inicio || inicioPadrao.toISOString().split('T')[0];
                 document.getElementById('formPrazo').value = editData.prazo || prazoPadrao.toISOString().split('T')[0];
-                document.getElementById('formDesc').value = editData.desc || '';
+                document.getElementById('formObservacoes').value = editData.observacoes || '';
                 editandoId = editData.id;
 
                 if (editData.tipo === 'grupo' && editData.membros) {
@@ -2207,8 +2532,6 @@
                 }
 
                 document.getElementById('membrosArea').style.display = editData.tipo === 'grupo' ? 'block' : 'none';
-                document.getElementById('descLabel').textContent = editData.tipo === 'grupo' ? 'Descrição do Projeto' :
-                    'Descrição';
 
                 if (editData.tipo === 'grupo') {
                     renderizarMembros();
@@ -2219,17 +2542,14 @@
                 document.getElementById('formInicio').value = inicioPadrao.toISOString().split('T')[0];
                 document.getElementById('formPrazo').value = prazoPadrao.toISOString().split('T')[0];
                 document.getElementById('membrosArea').style.display = 'none';
-                document.getElementById('descLabel').textContent = 'Descrição';
                 editandoId = null;
             }
 
             overlay.classList.add('open');
 
-            // Evento para mostrar/esconder área de membros
             document.getElementById('formTipo').onchange = function() {
                 const isGrupo = this.value === 'grupo';
                 document.getElementById('membrosArea').style.display = isGrupo ? 'block' : 'none';
-                document.getElementById('descLabel').textContent = isGrupo ? 'Descrição do Projeto' : 'Descrição';
                 if (isGrupo && membrosTemp.length === 0) {
                     adicionarMembro();
                 }
@@ -2255,7 +2575,7 @@
             const disciplina = document.getElementById('formDisciplina').value;
             const inicio = document.getElementById('formInicio').value;
             const prazo = document.getElementById('formPrazo').value;
-            const desc = document.getElementById('formDesc').value.trim();
+            const observacoes = document.getElementById('formObservacoes').value.trim();
 
             if (!titulo || !disciplina || !inicio || !prazo) {
                 alert('Preencha todos os campos obrigatórios.');
@@ -2284,7 +2604,7 @@
                         disciplina,
                         inicio,
                         prazo,
-                        desc: desc || '',
+                        observacoes: observacoes || '',
                         membros: tipo === 'grupo' ? membrosTemp : [],
                         progresso: tipo === 'individual' ? (atividades[idx].progresso || 0) : 0
                     };
@@ -2297,7 +2617,7 @@
                     disciplina,
                     inicio,
                     prazo,
-                    desc: desc || '',
+                    observacoes: observacoes || '',
                     membros: tipo === 'grupo' ? membrosTemp : [],
                     progresso: tipo === 'individual' ? 0 : 0
                 };
@@ -2383,7 +2703,7 @@
         };
 
         // ==========================================
-        // SINCRONIZAÇÃO COM BACKENDLESS
+        // SINCRONIZAÇÃO
         // ==========================================
         function setSyncStatus(msg, type = '') {
             const el = document.getElementById('syncStatus');
@@ -2496,7 +2816,7 @@
         };
 
         // ==========================================
-        // STATS GERAIS
+        // STATS
         // ==========================================
         function updateStats() {
             const total = checklistItems.length;
@@ -2548,7 +2868,8 @@
         console.log('🚀 GDA Acadêmico carregado!');
         console.log('📋 Usuário:', USUARIO);
         console.log('💾 Dados salvos localmente e sincronizados com Backendless');
-        console.log('👥 Atividades em grupo com prazos individuais implementados!');
+        console.log('👥 Atividades em grupo com prazos individuais e observações!');
+        console.log('📝 Botão "Novo Prazo" com pop-up de justificativa implementado!');
     </script>
 
 </body>
