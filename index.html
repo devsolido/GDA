@@ -712,7 +712,7 @@
             display: inline-block;
         }
 
-        /* ===== ATIVIDADES ===== */
+        /* ===== ATIVIDADES - DASHBOARD MELHORADO ===== */
         .atividades-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -730,6 +730,11 @@
             padding: 20px 22px;
             border: 1px solid var(--color-border);
             position: relative;
+            transition: var(--transition);
+        }
+
+        .atividade-card:hover {
+            border-color: rgba(255, 179, 0, 0.1);
         }
 
         .atividade-card .tipo {
@@ -755,10 +760,21 @@
             font-size: 13px;
             color: var(--color-text-muted);
             margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
+
+        .atividade-card .disciplina i {
+            color: var(--color-accent);
+            font-size: 14px;
+        }
+
         .atividade-card .titulo {
-            font-size: 16px;
+            font-size: 17px;
             font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--color-text);
         }
 
         .atividade-card .datas {
@@ -767,11 +783,23 @@
             flex-wrap: wrap;
             font-size: 13px;
             color: var(--color-text-muted);
-            margin: 6px 0 8px;
+            margin: 6px 0 10px;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
         }
+
+        .atividade-card .datas span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
         .atividade-card .datas span strong {
             color: var(--color-text);
         }
+
         .atividade-card .datas .inicio {
             color: var(--color-info);
         }
@@ -781,19 +809,23 @@
         .atividade-card .datas .prazo.urgente {
             color: var(--color-danger);
         }
+        .atividade-card .datas .prazo.urgente strong {
+            color: var(--color-danger);
+        }
 
-        .atividade-card .membros {
+        .atividade-card .membros-info {
             font-size: 13px;
             color: var(--color-text-muted);
             margin: 6px 0 10px;
         }
-        .atividade-card .membros span {
+
+        .atividade-card .membros-info span {
             color: var(--color-text);
         }
 
         .atividade-card .membros-lista {
             margin: 8px 0 6px;
-            padding: 8px 12px;
+            padding: 10px 14px;
             background: rgba(255, 255, 255, 0.02);
             border-radius: 8px;
             border: 1px solid var(--color-border);
@@ -803,10 +835,11 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 4px 0;
+            padding: 6px 0;
             font-size: 13px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
         }
+
         .atividade-card .membro-item:last-child {
             border-bottom: none;
         }
@@ -814,23 +847,31 @@
         .atividade-card .membro-item .nome {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
+
+        .atividade-card .membro-item .nome i {
+            color: var(--color-accent);
+            font-size: 14px;
+        }
+
         .atividade-card .membro-item .status-membro {
             font-size: 11px;
-            padding: 1px 10px;
+            padding: 2px 12px;
             border-radius: 30px;
+            font-weight: 600;
         }
+
         .atividade-card .membro-item .status-membro.concluido {
-            background: rgba(76, 175, 80, 0.1);
+            background: rgba(76, 175, 80, 0.12);
             color: var(--color-success);
         }
         .atividade-card .membro-item .status-membro.andamento {
-            background: rgba(255, 179, 0, 0.1);
+            background: rgba(255, 179, 0, 0.12);
             color: var(--color-accent);
         }
         .atividade-card .membro-item .status-membro.pendente {
-            background: rgba(229, 57, 53, 0.1);
+            background: rgba(229, 57, 53, 0.12);
             color: var(--color-danger);
         }
 
@@ -838,25 +879,46 @@
             font-size: 12px;
             color: var(--color-text-muted);
         }
+
         .atividade-card .membro-item .prazo-membro.urgente {
             color: var(--color-danger);
+        }
+
+        .atividade-card .membro-item .progresso-membro {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--color-accent);
+        }
+
+        .atividade-card .descricao {
+            font-size: 13px;
+            color: var(--color-text-muted);
+            margin: 6px 0 10px;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            border-left: 3px solid var(--color-accent);
         }
 
         .atividade-card .progresso-area {
             display: flex;
             align-items: center;
             gap: 12px;
-            margin-top: 10px;
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px solid var(--color-border);
         }
+
         .atividade-card .progresso-area .bar {
             flex: 1;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.05);
+            height: 8px;
+            background: rgba(255, 255, 255, 0.06);
             border-radius: 10px;
             overflow: hidden;
             cursor: pointer;
             position: relative;
         }
+
         .atividade-card .progresso-area .bar .fill {
             height: 100%;
             border-radius: 10px;
@@ -864,17 +926,19 @@
             transition: 0.6s ease;
             width: 0%;
         }
+
         .atividade-card .progresso-area .pct {
-            font-size: 13px;
-            font-weight: 600;
+            font-size: 14px;
+            font-weight: 700;
             color: var(--color-accent);
-            min-width: 40px;
+            min-width: 45px;
             text-align: right;
             cursor: pointer;
-            padding: 2px 8px;
-            border-radius: 6px;
+            padding: 4px 10px;
+            border-radius: 8px;
             transition: var(--transition);
         }
+
         .atividade-card .progresso-area .pct:hover {
             background: rgba(255, 179, 0, 0.08);
         }
@@ -884,9 +948,12 @@
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
+            padding-top: 10px;
+            border-top: 1px solid var(--color-border);
         }
+
         .atividade-card .acoes button {
-            padding: 4px 14px;
+            padding: 5px 16px;
             border-radius: 20px;
             font-size: 12px;
             cursor: pointer;
@@ -896,13 +963,16 @@
             background: rgba(255, 255, 255, 0.02);
             color: var(--color-text-muted);
         }
+
         .atividade-card .acoes button:hover {
             background: rgba(255, 255, 255, 0.05);
         }
+
         .atividade-card .acoes .btn-edit:hover {
             border-color: var(--color-accent);
             color: var(--color-accent);
         }
+
         .atividade-card .acoes .btn-delete:hover {
             border-color: var(--color-danger);
             color: var(--color-danger);
@@ -914,21 +984,23 @@
             top: 16px;
             right: 16px;
             font-size: 10px;
-            font-weight: 600;
-            padding: 2px 12px;
+            font-weight: 700;
+            padding: 3px 14px;
             border-radius: 30px;
             text-transform: uppercase;
+            letter-spacing: 0.3px;
         }
+
         .atividade-card .badge-status.em-andamento {
-            background: rgba(255, 179, 0, 0.1);
+            background: rgba(255, 179, 0, 0.12);
             color: var(--color-accent);
         }
         .atividade-card .badge-status.concluida {
-            background: rgba(76, 175, 80, 0.1);
+            background: rgba(76, 175, 80, 0.12);
             color: var(--color-success);
         }
         .atividade-card .badge-status.atrasada {
-            background: rgba(229, 57, 53, 0.1);
+            background: rgba(229, 57, 53, 0.12);
             color: var(--color-danger);
         }
 
@@ -948,6 +1020,7 @@
             justify-content: center;
             gap: 10px;
         }
+
         .btn-add-atividade:hover {
             border-color: var(--color-accent);
             color: var(--color-accent);
@@ -1026,7 +1099,7 @@
             font-size: 16px;
         }
 
-        /* ===== MODAL ===== */
+        /* ===== MODAL MELHORADO ===== */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -1048,31 +1121,40 @@
             background: var(--color-secondary);
             border-radius: 24px;
             padding: 32px 36px;
-            max-width: 640px;
-            width: 90%;
+            max-width: 700px;
+            width: 92%;
             border: 1px solid var(--color-border);
             box-shadow: var(--shadow);
-            max-height: 90vh;
+            max-height: 92vh;
             overflow-y: auto;
         }
+
         .modal h2 {
-            font-size: 20px;
-            margin-bottom: 20px;
+            font-size: 22px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
+
+        .modal h2 i {
+            color: var(--color-accent);
+        }
+
         .modal label {
             display: block;
             font-size: 13px;
             font-weight: 600;
             color: var(--color-text-muted);
             margin-top: 14px;
-            margin-bottom: 4px;
+            margin-bottom: 5px;
         }
 
         .modal input,
         .modal select,
         .modal textarea {
             width: 100%;
-            padding: 10px 14px;
+            padding: 10px 16px;
             border-radius: 10px;
             border: 1px solid var(--color-border);
             background: #1a232e;
@@ -1116,59 +1198,121 @@
             margin-top: 4px;
         }
 
-        .modal .membros-container {
+        /* ===== ÁREA DE MEMBROS - MELHORADA ===== */
+        .modal .membros-area {
             margin-top: 10px;
-            padding: 12px;
+            padding: 16px;
             background: rgba(255, 255, 255, 0.02);
-            border-radius: 8px;
+            border-radius: 12px;
             border: 1px solid var(--color-border);
         }
 
-        .modal .membro-row {
+        .modal .membros-area .membros-header {
             display: flex;
-            gap: 10px;
+            justify-content: space-between;
             align-items: center;
-            margin-bottom: 8px;
-            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .modal .membros-area .membros-header span {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--color-text-muted);
+        }
+
+        .modal .membros-area .membros-header .count {
+            font-size: 12px;
+            color: var(--color-accent);
+            background: rgba(255, 179, 0, 0.08);
+            padding: 2px 12px;
+            border-radius: 30px;
+        }
+
+        .modal .membro-row {
+            display: grid;
+            grid-template-columns: 1fr 0.7fr auto;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 12px 14px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            transition: var(--transition);
+        }
+
+        .modal .membro-row:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.06);
         }
 
         .modal .membro-row input {
-            flex: 1;
-            min-width: 120px;
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--color-border);
+            background: #121820;
+            color: #e8edf4;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            outline: none;
+            transition: var(--transition);
+            width: 100%;
+        }
+
+        .modal .membro-row input:focus {
+            border-color: var(--color-accent);
+            box-shadow: 0 0 0 3px rgba(255, 179, 0, 0.06);
         }
 
         .modal .membro-row input[type="date"] {
-            flex: 0.6;
-            min-width: 100px;
+            min-width: 140px;
+        }
+
+        .modal .membro-row input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            cursor: pointer;
+        }
+
+        .modal .membro-row .membro-actions {
+            display: flex;
+            gap: 6px;
+            align-items: center;
         }
 
         .modal .membro-row .btn-remove-membro {
-            background: rgba(229, 57, 53, 0.1);
-            border: 1px solid rgba(229, 57, 53, 0.1);
+            background: rgba(229, 57, 53, 0.08);
+            border: 1px solid rgba(229, 57, 53, 0.08);
             color: var(--color-danger);
-            padding: 6px 12px;
+            padding: 6px 14px;
             border-radius: 30px;
             font-size: 12px;
             cursor: pointer;
             transition: var(--transition);
             font-family: 'Inter', sans-serif;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .modal .membro-row .btn-remove-membro:hover {
-            background: rgba(229, 57, 53, 0.2);
+            background: rgba(229, 57, 53, 0.15);
         }
 
         .modal .btn-add-membro {
             background: rgba(255, 255, 255, 0.03);
             border: 1px dashed var(--color-border);
             color: var(--color-text-muted);
-            padding: 6px 16px;
+            padding: 8px 20px;
             border-radius: 30px;
-            font-size: 12px;
+            font-size: 13px;
             cursor: pointer;
             transition: var(--transition);
             font-family: 'Inter', sans-serif;
-            margin-top: 4px;
+            margin-top: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .modal .btn-add-membro:hover {
@@ -1180,10 +1324,13 @@
         .modal .modal-actions {
             display: flex;
             gap: 12px;
-            margin-top: 24px;
+            margin-top: 28px;
+            padding-top: 20px;
+            border-top: 1px solid var(--color-border);
         }
+
         .modal .modal-actions button {
-            padding: 10px 28px;
+            padding: 10px 32px;
             border-radius: 30px;
             border: none;
             font-weight: 700;
@@ -1192,28 +1339,47 @@
             transition: var(--transition);
             font-family: 'Inter', sans-serif;
         }
+
         .modal .modal-actions .btn-primary {
             background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
             color: var(--color-primary);
         }
+
         .modal .modal-actions .btn-primary:hover {
             transform: scale(1.02);
         }
+
         .modal .modal-actions .btn-secondary {
             background: rgba(255, 255, 255, 0.05);
             color: var(--color-text-muted);
         }
+
         .modal .modal-actions .btn-secondary:hover {
             background: rgba(255, 255, 255, 0.08);
         }
 
         /* ===== RESPONSIVO ===== */
+        @media (max-width: 768px) {
+            .modal .membro-row {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+            .modal .membro-row input[type="date"] {
+                min-width: unset;
+            }
+            .modal .membro-row .btn-remove-membro {
+                justify-content: center;
+                width: 100%;
+            }
+            .modal {
+                padding: 20px;
+                max-width: 95%;
+            }
+        }
+
         @media (max-width: 480px) {
             .stats-grid {
                 grid-template-columns: 1fr 1fr;
-            }
-            .modal {
-                padding: 24px 20px;
             }
             .top-bar h1 {
                 font-size: 20px;
@@ -1234,20 +1400,9 @@
                 width: 100%;
                 justify-content: center;
             }
-            .modal .membro-row {
+            .atividade-card .datas {
                 flex-direction: column;
-                align-items: stretch;
-            }
-            .modal .membro-row input {
-                width: 100%;
-                min-width: unset;
-            }
-            .modal .membro-row input[type="date"] {
-                width: 100%;
-                min-width: unset;
-            }
-            .modal .membro-row .btn-remove-membro {
-                align-self: flex-end;
+                gap: 4px;
             }
         }
     </style>
@@ -1452,41 +1607,51 @@
     <!-- ===== MODAL ===== -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal">
-            <h2 id="modalTitle"><i class="fas fa-plus-circle" style="color:var(--color-accent);"></i> Nova Atividade</h2>
+            <h2 id="modalTitle"><i class="fas fa-plus-circle"></i> Nova Atividade</h2>
             <form id="atividadeForm">
-                <label>Título da Atividade</label>
+                <label>Título da Atividade *</label>
                 <input type="text" id="formTitulo" placeholder="Ex: Apresentação de seminário" required />
 
-                <label>Tipo</label>
+                <label>Tipo *</label>
                 <select id="formTipo">
                     <option value="individual">Individual</option>
                     <option value="grupo">Em Grupo</option>
                 </select>
 
-                <label>Disciplina</label>
+                <label>Disciplina *</label>
                 <select id="formDisciplina">
                     <!-- Inserido via JS -->
                 </select>
 
-                <label>Data de Início</label>
-                <input type="date" id="formInicio" required />
-
-                <label>Prazo Máximo do Grupo / Individual</label>
-                <input type="date" id="formPrazo" required />
-
-                <!-- Área para membros (grupo) -->
-                <div id="membrosArea" style="display:none;">
-                    <label>Membros do Grupo</label>
-                    <div class="membros-container" id="membrosContainer">
-                        <!-- Inserido via JS -->
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                    <div>
+                        <label>Data de Início *</label>
+                        <input type="date" id="formInicio" required />
                     </div>
-                    <button type="button" class="btn-add-membro" onclick="adicionarMembro()">
-                        <i class="fas fa-plus"></i> Adicionar Membro
-                    </button>
-                    <div class="help-text">Cada membro pode ter um prazo individual diferente do grupo.</div>
+                    <div>
+                        <label>Prazo Final *</label>
+                        <input type="date" id="formPrazo" required />
+                    </div>
                 </div>
 
-                <!-- Descrição (para individual) -->
+                <!-- Área para membros (grupo) - MELHORADA -->
+                <div id="membrosArea" style="display:none;margin-top:10px;">
+                    <label>Membros do Grupo</label>
+                    <div class="membros-area">
+                        <div class="membros-header">
+                            <span><i class="fas fa-users"></i> Lista de Membros</span>
+                            <span class="count" id="membrosCount">0 membros</span>
+                        </div>
+                        <div id="membrosContainer">
+                            <!-- Inserido via JS -->
+                        </div>
+                        <button type="button" class="btn-add-membro" onclick="adicionarMembro()">
+                            <i class="fas fa-plus"></i> Adicionar Membro
+                        </button>
+                        <div class="help-text">Cada membro pode ter um prazo individual diferente do grupo.</div>
+                    </div>
+                </div>
+
                 <label id="descLabel">Descrição</label>
                 <textarea id="formDesc" placeholder="Descrição da atividade"></textarea>
 
@@ -1723,13 +1888,11 @@
             const hoje = new Date();
             const prazo = new Date(a.prazo + 'T00:00:00');
 
-            // Para grupo, verifica se todos os membros concluíram
             if (a.tipo === 'grupo' && a.membros && a.membros.length > 0) {
                 const todosConcluidos = a.membros.every(m => m.progresso >= 100);
                 if (todosConcluidos) return 'concluida';
             }
 
-            // Para individual
             if (a.tipo === 'individual' && a.progresso >= 100) return 'concluida';
 
             if (prazo < hoje) return 'atrasada';
@@ -1775,8 +1938,8 @@
                 const status = getStatusAtividade(a);
                 const statusLabels = {
                     'andamento': 'Em andamento',
-                    'concluida': '✅ Concluída',
-                    'atrasada': '⚠️ Atrasada'
+                    'concluida': 'Concluída',
+                    'atrasada': 'Atrasada'
                 };
                 const statusClasses = {
                     'andamento': 'em-andamento',
@@ -1786,11 +1949,9 @@
 
                 const hoje = new Date();
                 const prazo = new Date(a.prazo + 'T00:00:00');
-                const inicio = new Date(a.inicio + 'T00:00:00');
                 const diasRestantes = Math.ceil((prazo - hoje) / (1000 * 60 * 60 * 24));
                 const urgente = diasRestantes <= 3 && diasRestantes >= 0 && status !== 'concluida';
 
-                // Progresso do grupo ou individual
                 let progresso = 0;
                 if (isGrupo) {
                     progresso = calcularProgressoGrupo(a);
@@ -1798,7 +1959,13 @@
                     progresso = a.progresso || 0;
                 }
 
-                // Para grupo, mostrar lista de membros
+                // Status icon
+                const statusIcon = {
+                    'andamento': '⏳',
+                    'concluida': '✅',
+                    'atrasada': '⚠️'
+                };
+
                 let membrosHtml = '';
                 if (isGrupo && a.membros && a.membros.length > 0) {
                     membrosHtml = `
@@ -1806,7 +1973,6 @@
                                 ${a.membros.map(m => {
                                     const prazoMembro = new Date(m.prazo + 'T00:00:00');
                                     const diasMembro = Math.ceil((prazoMembro - hoje) / (1000 * 60 * 60 * 24));
-                                    const urgenteMembro = diasMembro <= 3 && diasMembro >= 0 && m.progresso < 100;
                                     const statusMembro = m.progresso >= 100 ? 'concluido' : 
                                                         (prazoMembro < hoje && m.progresso < 100 ? 'pendente' : 'andamento');
                                     const statusLabelsMembro = {
@@ -1821,9 +1987,9 @@
                                                 ${m.nome}
                                                 <span class="status-membro ${statusMembro}">${statusLabelsMembro[statusMembro]}</span>
                                             </span>
-                                            <span class="prazo-membro ${urgenteMembro ? 'urgente' : ''}">
+                                            <span class="prazo-membro ${diasMembro <= 3 && m.progresso < 100 ? 'urgente' : ''}">
                                                 <i class="far fa-calendar-alt"></i> ${new Date(m.prazo + 'T00:00:00').toLocaleDateString('pt-BR')}
-                                                ${m.progresso}%
+                                                <span class="progresso-membro">${m.progresso}%</span>
                                             </span>
                                         </div>
                                     `;
@@ -1834,23 +2000,25 @@
 
                 return `
                         <div class="atividade-card">
-                            <span class="badge-status ${statusClasses[status]}">${statusLabels[status]}</span>
+                            <span class="badge-status ${statusClasses[status]}">${statusIcon[status]} ${statusLabels[status]}</span>
                             <span class="tipo ${isGrupo ? 'grupo' : 'individual'}">
                                 <i class="fas ${isGrupo ? 'fa-users' : 'fa-user'}"></i>
                                 ${isGrupo ? 'Em Grupo' : 'Individual'}
                             </span>
-                            <div class="disciplina">📚 ${a.disciplina}</div>
+                            <div class="disciplina">
+                                <i class="fas fa-book"></i> ${a.disciplina}
+                            </div>
                             <div class="titulo">${a.titulo}</div>
                             <div class="datas">
                                 <span class="inicio"><i class="fas fa-play"></i> <strong>Início:</strong> ${new Date(a.inicio + 'T00:00:00').toLocaleDateString('pt-BR')}</span>
-                                <span class="prazo ${urgente ? 'urgente' : ''}"><i class="far fa-calendar-alt"></i> <strong>Prazo:</strong> ${new Date(a.prazo + 'T00:00:00').toLocaleDateString('pt-BR')} ${status === 'atrasada' ? '⚠️ Atrasado!' : urgente ? '🔥 Prazo próximo!' : ''}</span>
+                                <span class="prazo ${urgente ? 'urgente' : ''}"><i class="far fa-calendar-alt"></i> <strong>Prazo:</strong> ${new Date(a.prazo + 'T00:00:00').toLocaleDateString('pt-BR')} ${status === 'atrasada' ? '⚠️' : ''}</span>
                             </div>
                             ${isGrupo ? `
-                                <div class="membros"><i class="fas fa-users"></i> ${a.membros.length} membros</div>
+                                <div class="membros-info"><i class="fas fa-users"></i> <span>${a.membros.length} membros</span></div>
                                 ${membrosHtml}
                             ` : `
-                                <div class="membros"><i class="fas fa-user"></i> Individual</div>
-                                ${a.desc ? `<div style="font-size:13px;color:var(--color-text-muted);margin:4px 0 8px;">${a.desc}</div>` : ''}
+                                <div class="membros-info"><i class="fas fa-user"></i> Individual</div>
+                                ${a.desc ? `<div class="descricao">${a.desc}</div>` : ''}
                             `}
                             <div class="progresso-area">
                                 <div class="bar" onclick="editarProgresso(${a.id})" title="Clique para ajustar o progresso">
@@ -1875,7 +2043,6 @@
             if (!atividade) return;
 
             if (atividade.tipo === 'grupo') {
-                // Para grupo, perguntar qual membro
                 const membrosNomes = atividade.membros.map((m, i) => `${i+1}. ${m.nome} (${m.progresso}%)`).join('\n');
                 const escolha = prompt(
                     `Selecione o membro para ajustar o progresso:\n${membrosNomes}\n\nDigite o número do membro ou "0" para todos:`,
@@ -1885,7 +2052,6 @@
 
                 const idx = parseInt(escolha) - 1;
                 if (idx === -1) {
-                    // Ajustar todos os membros
                     const novo = prompt(
                         `Progresso atual médio: ${calcularProgressoGrupo(atividade)}%\nDigite o novo percentual para TODOS os membros (0-100):`,
                         atividade.membros.reduce((acc, m) => acc + m.progresso, 0) / atividade.membros.length
@@ -1942,18 +2108,21 @@
         });
 
         // ==========================================
-        // MODAL - GERENCIAR MEMBROS
+        // MODAL - GERENCIAR MEMBROS (MELHORADO)
         // ==========================================
         function renderizarMembros() {
             const container = document.getElementById('membrosContainer');
+            const count = document.getElementById('membrosCount');
+
             if (membrosTemp.length === 0) {
                 container.innerHTML =
                     `
-                        <div style="text-align:center;padding:12px;color:var(--color-text-muted);font-size:13px;">
-                            <i class="fas fa-users" style="display:block;margin-bottom:6px;"></i>
+                        <div style="text-align:center;padding:16px;color:var(--color-text-muted);font-size:13px;border:1px dashed var(--color-border);border-radius:8px;">
+                            <i class="fas fa-users" style="display:block;font-size:24px;margin-bottom:8px;opacity:0.3;"></i>
                             Adicione os membros do grupo abaixo.
                         </div>
                     `;
+                count.textContent = '0 membros';
                 return;
             }
 
@@ -1962,12 +2131,16 @@
                     <div class="membro-row">
                         <input type="text" value="${m.nome}" placeholder="Nome do membro" onchange="membrosTemp[${i}].nome = this.value" />
                         <input type="date" value="${m.prazo}" onchange="membrosTemp[${i}].prazo = this.value" />
-                        <button type="button" class="btn-remove-membro" onclick="removerMembro(${i})">
-                            <i class="fas fa-times"></i> Remover
-                        </button>
+                        <div class="membro-actions">
+                            <button type="button" class="btn-remove-membro" onclick="removerMembro(${i})">
+                                <i class="fas fa-times"></i> Remover
+                            </button>
+                        </div>
                     </div>
                 `
             ).join('');
+
+            count.textContent = `${membrosTemp.length} membro${membrosTemp.length > 1 ? 's' : ''}`;
         }
 
         window.adicionarMembro = function() {
@@ -1988,14 +2161,21 @@
         };
 
         // ==========================================
-        // MODAL - ABRIR/FECHAR
+        // MODAL - DISCIPLINAS (CORRIGIDO)
         // ==========================================
         function populateDisciplinas() {
             const select = document.getElementById('formDisciplina');
             const nomes = [...new Set(turmas.map(t => t.nome))];
+            if (nomes.length === 0) {
+                select.innerHTML = `<option value="">Carregando disciplinas...</option>`;
+                return;
+            }
             select.innerHTML = nomes.map(n => `<option value="${n}">${n}</option>`).join('');
         }
 
+        // ==========================================
+        // MODAL - ABRIR/FECHAR
+        // ==========================================
         window.openModal = function(editData) {
             const overlay = document.getElementById('modalOverlay');
             const form = document.getElementById('atividadeForm');
@@ -2003,15 +2183,17 @@
             membrosTemp = [];
             editandoId = null;
 
-            // Definir datas padrão
             const hoje = new Date();
             const inicioPadrao = new Date(hoje);
             const prazoPadrao = new Date(hoje);
             prazoPadrao.setDate(prazoPadrao.getDate() + 14);
 
+            // Garantir que as disciplinas estejam carregadas
+            populateDisciplinas();
+
             if (editData) {
                 document.getElementById('modalTitle').innerHTML =
-                    `<i class="fas fa-edit" style="color:var(--color-accent);"></i> Editar Atividade`;
+                    `<i class="fas fa-edit"></i> Editar Atividade`;
                 document.getElementById('formTitulo').value = editData.titulo;
                 document.getElementById('formTipo').value = editData.tipo;
                 document.getElementById('formDisciplina').value = editData.disciplina;
@@ -2024,7 +2206,6 @@
                     membrosTemp = JSON.parse(JSON.stringify(editData.membros));
                 }
 
-                // Mostrar/ocultar área de membros
                 document.getElementById('membrosArea').style.display = editData.tipo === 'grupo' ? 'block' : 'none';
                 document.getElementById('descLabel').textContent = editData.tipo === 'grupo' ? 'Descrição do Projeto' :
                     'Descrição';
@@ -2034,7 +2215,7 @@
                 }
             } else {
                 document.getElementById('modalTitle').innerHTML =
-                    `<i class="fas fa-plus-circle" style="color:var(--color-accent);"></i> Nova Atividade`;
+                    `<i class="fas fa-plus-circle"></i> Nova Atividade`;
                 document.getElementById('formInicio').value = inicioPadrao.toISOString().split('T')[0];
                 document.getElementById('formPrazo').value = prazoPadrao.toISOString().split('T')[0];
                 document.getElementById('membrosArea').style.display = 'none';
@@ -2049,7 +2230,7 @@
                 const isGrupo = this.value === 'grupo';
                 document.getElementById('membrosArea').style.display = isGrupo ? 'block' : 'none';
                 document.getElementById('descLabel').textContent = isGrupo ? 'Descrição do Projeto' : 'Descrição';
-                if (isGrupo && !editData) {
+                if (isGrupo && membrosTemp.length === 0) {
                     adicionarMembro();
                 }
             };
@@ -2082,7 +2263,6 @@
             }
 
             if (tipo === 'grupo') {
-                // Validar membros
                 const membrosInvalidos = membrosTemp.filter(m => !m.nome.trim() || !m.prazo);
                 if (membrosInvalidos.length > 0) {
                     alert('Todos os membros devem ter nome e prazo definidos.');
@@ -2095,7 +2275,6 @@
             }
 
             if (editandoId) {
-                // Editar
                 const idx = atividades.findIndex(a => a.id === editandoId);
                 if (idx !== -1) {
                     atividades[idx] = {
@@ -2111,7 +2290,6 @@
                     };
                 }
             } else {
-                // Criar nova
                 const novaAtividade = {
                     id: Date.now(),
                     titulo,
@@ -2132,7 +2310,6 @@
             updateStats();
             verificarPrazos();
 
-            // Resetar membros
             membrosTemp = [];
             editandoId = null;
         });
@@ -2365,13 +2542,6 @@
         // ==========================================
         loadChecklist();
         loadAtividades();
-
-        // Adicionar um membro padrão ao abrir modal de grupo pela primeira vez
-        document.getElementById('formTipo').addEventListener('change', function() {
-            if (this.value === 'grupo' && membrosTemp.length === 0) {
-                adicionarMembro();
-            }
-        });
 
         setInterval(verificarPrazos, 300000);
 
