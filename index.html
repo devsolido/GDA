@@ -44,22 +44,49 @@
             position: relative;
         }
 
-        /* ===== MARCA D'ÁGUA - ACOMPANHA O USUÁRIO ===== */
-        body::after {
-            content: 'F1052574';
+        /* ===== MARCA D'ÁGUA ESTILO BANCO ===== */
+        /* Fundo com listras diagonais sutis */
+        body::before {
+            content: '';
             position: fixed;
-            /* ← FIXO: acompanha o scroll */
-            bottom: 30px;
-            right: 40px;
-            font-size: 100px;
-            font-weight: 900;
-            color: rgba(255, 179, 0, 0.03);
-            letter-spacing: 8px;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             pointer-events: none;
-            z-index: 9999;
-            transform: rotate(-4deg);
+            z-index: 0;
+            background-image: repeating-linear-gradient(
+                -45deg,
+                transparent,
+                transparent 120px,
+                rgba(255, 179, 0, 0.015) 120px,
+                rgba(255, 179, 0, 0.015) 130px
+            );
+        }
+
+        /* Texto repetido estilo banco */
+        body::after {
+            content: 'F1052574 F1052574 F1052574 F1052574 F1052574 F1052574 F1052574 F1052574 F1052574 F1052574 F1052574 F1052574 F1052574 F1052574 F1052574 F1052574';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            font-size: 28px;
+            font-weight: 900;
+            color: rgba(255, 179, 0, 0.025);
+            letter-spacing: 6px;
+            pointer-events: none;
+            z-index: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: rotate(-25deg) scale(1.8);
+            white-space: nowrap;
             user-select: none;
-            text-shadow: 0 0 30px rgba(255, 179, 0, 0.02);
+            font-family: 'Inter', sans-serif;
+            text-shadow: none;
+            line-height: 2.5;
         }
 
         ::-webkit-scrollbar {
@@ -335,10 +362,26 @@
                 margin-left: 0;
             }
             body::after {
-                font-size: 50px;
-                bottom: 12px;
-                right: 16px;
-                letter-spacing: 4px;
+                font-size: 16px;
+                letter-spacing: 3px;
+                transform: rotate(-25deg) scale(2);
+            }
+            body::before {
+                background-image: repeating-linear-gradient(
+                    -45deg,
+                    transparent,
+                    transparent 80px,
+                    rgba(255, 179, 0, 0.015) 80px,
+                    rgba(255, 179, 0, 0.015) 85px
+                );
+            }
+        }
+
+        @media (max-width: 400px) {
+            body::after {
+                font-size: 12px;
+                transform: rotate(-25deg) scale(2.5);
+                letter-spacing: 2px;
             }
         }
 
@@ -862,7 +905,7 @@
             font-size: 16px;
         }
 
-        /* ===== MODAL - CORRIGIDO ===== */
+        /* ===== MODAL ===== */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -904,7 +947,6 @@
             margin-bottom: 4px;
         }
 
-        /* ===== CORREÇÃO: INPUTS, SELECTS E TEXTAREA ===== */
         .modal input,
         .modal select,
         .modal textarea {
@@ -913,9 +955,7 @@
             border-radius: 10px;
             border: 1px solid var(--color-border);
             background: #1a232e;
-            /* ← FUNDO ESCURO */
             color: #e8edf4;
-            /* ← TEXTO CLARO */
             font-family: 'Inter', sans-serif;
             font-size: 14px;
             outline: none;
@@ -929,18 +969,13 @@
             box-shadow: 0 0 0 3px rgba(255, 179, 0, 0.08);
         }
 
-        /* ===== CORREÇÃO: OPÇÕES DO SELECT ===== */
         .modal select option {
             background: #121820;
-            /* ← FUNDO ESCURO PARA OPÇÕES */
             color: #e8edf4;
-            /* ← TEXTO CLARO */
         }
 
-        /* ===== CORREÇÃO: ÍCONE DO CALENDÁRIO ===== */
         .modal input[type="date"]::-webkit-calendar-picker-indicator {
             filter: invert(1);
-            /* ← DEIXA O ÍCONE BRANCO */
             cursor: pointer;
         }
 
@@ -1006,12 +1041,6 @@
             .filtros-atividades button {
                 font-size: 11px;
                 padding: 3px 12px;
-            }
-            body::after {
-                font-size: 40px;
-                bottom: 10px;
-                right: 15px;
-                letter-spacing: 3px;
             }
         }
     </style>
@@ -1425,7 +1454,6 @@
 
                 let filtered = [...atividades];
 
-                // Aplicar filtro
                 if (filtroAtual !== 'todas') {
                     if (filtroAtual === 'individual' || filtroAtual === 'grupo') {
                         filtered = filtered.filter(a => a.tipo === filtroAtual);
@@ -1501,7 +1529,6 @@
                 updateStats();
             }
 
-            // ===== EDITAR PROGRESSO =====
             window.editarProgresso = function(id) {
                 const atividade = atividades.find(a => a.id === id);
                 if (!atividade) return;
@@ -1522,7 +1549,6 @@
                 verificarPrazos();
             };
 
-            // ===== FILTROS =====
             document.querySelectorAll('.filtros-atividades button').forEach(btn => {
                 btn.addEventListener('click', function() {
                     document.querySelectorAll('.filtros-atividades button').forEach(b => b.classList.remove(
@@ -1533,7 +1559,6 @@
                 });
             });
 
-            // ===== NOTIFICAÇÕES =====
             let notifTimeout = null;
 
             function verificarPrazos() {
@@ -1725,7 +1750,6 @@
             loadChecklist();
             loadAtividades();
 
-            // Verificar prazos a cada 5 minutos
             setInterval(verificarPrazos, 300000);
 
         })();
