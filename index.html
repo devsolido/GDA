@@ -102,7 +102,7 @@
             background: rgba(255, 179, 0, 0.3);
         }
 
-        /* ===== SPLASH / BOAS-VINDAS ===== */
+        /* ===== SPLASH ===== */
         .splash-overlay {
             position: fixed;
             top: 0;
@@ -2096,7 +2096,7 @@
         </div>
     </div>
 
-    <!-- ===== JAVASCRIPT ===== -->
+    <!-- ===== JAVASCRIPT COMPLETO CORRIGIDO ===== -->
     <script>
         // ==========================================
         // CONFIGURAÇÃO DO BACKENDLESS
@@ -2108,16 +2108,12 @@
         Backendless.initApp(APP_ID, API_KEY);
 
         // ==========================================
-        // SPLASH / BOAS-VINDAS
+        // SPLASH
         // ==========================================
-        let splashVisible = true;
-
         window.entrarNoSistema = function() {
             document.getElementById('splashOverlay').classList.add('hidden');
-            splashVisible = false;
-            // Mostra notificação de boas-vindas
             setTimeout(() => {
-                showNotification('👋 Bem-vindo!', 'Sistema GDA Acadêmico carregado com sucesso.');
+                showNotification('👋 Bem-vindo!', 'Sistema GDA Acadêmico carregado.');
             }, 400);
         };
 
@@ -2129,7 +2125,6 @@
         let filtroAtual = 'todas';
         let membrosTemp = [];
         let editandoId = null;
-
         let popupAtividadeId = null;
         let popupMembroIndex = null;
 
@@ -2276,15 +2271,13 @@
                     localStorage.setItem('gda_checklist', JSON.stringify(checklistState));
                     renderChecklist();
                     updateStats();
-                    // Salvar automaticamente no Backendless se estiver logado
-                    salvarNoBackendlessSilencioso();
                 });
             });
             updateStats();
         }
 
         // ==========================================
-        // ATIVIDADES
+        // ATIVIDADES - CORRIGIDO
         // ==========================================
         function loadAtividades() {
             const saved = localStorage.getItem('gda_atividades');
@@ -2421,8 +2414,11 @@
                     progresso = a.progresso || 0;
                 }
 
+                // ===== CORREÇÃO: Verificar se membros existe e é um array =====
+                const temMembros = a.membros && Array.isArray(a.membros) && a.membros.length > 0;
+
                 let membrosHtml = '';
-                if (isGrupo && a.membros && a.membros.length > 0) {
+                if (isGrupo && temMembros) {
                     membrosHtml = `
                             <div class="membros-lista">
                                 ${a.membros.map((m, idx) => {
@@ -2439,16 +2435,16 @@
                                         <div class="membro-item">
                                             <span class="nome">
                                                 <i class="fas fa-user"></i>
-                                                ${m.nome}
+                                                ${m.nome || 'Sem nome'}
                                                 <span class="status-membro ${statusMembro}">${statusLabelsMembro[statusMembro]}</span>
                                             </span>
                                             <span class="prazo-membro ${diasMembro <= 3 && m.progresso < 100 ? 'urgente' : ''}">
-                                                <i class="far fa-calendar-alt"></i> ${new Date(m.prazo + 'T00:00:00').toLocaleDateString('pt-BR')}
+                                                <i class="far fa-calendar-alt"></i> ${m.prazo ? new Date(m.prazo + 'T00:00:00').toLocaleDateString('pt-BR') : 'Sem prazo'}
                                             </span>
                                             <span class="obs-membro" title="${m.observacoes || ''}">
                                                 <i class="fas fa-comment"></i> ${m.observacoes || 'Sem observações'}
                                             </span>
-                                            <span class="progresso-membro">${m.progresso}%</span>
+                                            <span class="progresso-membro">${m.progresso || 0}%</span>
                                             <button class="btn-novo-prazo" onclick="abrirPopupReprazo(${a.id}, ${idx})">
                                                 <i class="fas fa-clock"></i> Novo Prazo
                                             </button>
@@ -2467,12 +2463,12 @@
                                 ${isGrupo ? 'Em Grupo' : 'Individual'}
                             </span>
                             <div class="disciplina">
-                                <i class="fas fa-book"></i> ${a.disciplina}
+                                <i class="fas fa-book"></i> ${a.disciplina || 'Sem disciplina'}
                             </div>
-                            <div class="titulo">${a.titulo}</div>
+                            <div class="titulo">${a.titulo || 'Sem título'}</div>
                             <div class="datas">
-                                <span class="inicio"><i class="fas fa-play"></i> <strong>Início:</strong> ${new Date(a.inicio + 'T00:00:00').toLocaleDateString('pt-BR')}</span>
-                                <span class="prazo ${urgente ? 'urgente' : ''}"><i class="far fa-calendar-alt"></i> <strong>Prazo:</strong> ${new Date(a.prazo + 'T00:00:00').toLocaleDateString('pt-BR')} ${status === 'atrasada' ? '⚠️' : ''}</span>
+                                <span class="inicio"><i class="fas fa-play"></i> <strong>Início:</strong> ${a.inicio ? new Date(a.inicio + 'T00:00:00').toLocaleDateString('pt-BR') : 'Não definido'}</span>
+                                <span class="prazo ${urgente ? 'urgente' : ''}"><i class="far fa-calendar-alt"></i> <strong>Prazo:</strong> ${a.prazo ? new Date(a.prazo + 'T00:00:00').toLocaleDateString('pt-BR') : 'Não definido'} ${status === 'atrasada' ? '⚠️' : ''}</span>
                             </div>
                             ${a.observacoes ? `
                                 <div class="observacoes">
@@ -2480,7 +2476,7 @@
                                 </div>
                             ` : ''}
                             ${isGrupo ? `
-                                <div class="membros-info"><i class="fas fa-users"></i> <span>${a.membros.length} membros</span></div>
+                                <div class="membros-info"><i class="fas fa-users"></i> <span>${temMembros ? a.membros.length : 0} membros</span></div>
                                 ${membrosHtml}
                             ` : `
                                 <div class="membros-info"><i class="fas fa-user"></i> Individual</div>
@@ -2508,6 +2504,10 @@
             if (!atividade) return;
 
             if (atividade.tipo === 'grupo') {
+                if (!atividade.membros || atividade.membros.length === 0) {
+                    alert('Esta atividade não tem membros para editar progresso.');
+                    return;
+                }
                 const membrosNomes = atividade.membros.map((m, i) => `${i+1}. ${m.nome} (${m.progresso}%)`).join('\n');
                 const escolha = prompt(
                     `Selecione o membro para ajustar o progresso:\n${membrosNomes}\n\nDigite o número do membro ou "0" para todos:`,
@@ -2559,7 +2559,6 @@
             localStorage.setItem('gda_atividades', JSON.stringify(atividades));
             renderAtividades();
             verificarPrazos();
-            salvarNoBackendlessSilencioso();
             showNotification('✅ Progresso atualizado!', 'O progresso foi salvo com sucesso.');
         };
 
@@ -2582,10 +2581,16 @@
             popupMembroIndex = membroIndex;
 
             const atividade = atividades.find(a => a.id === atividadeId);
-            if (!atividade) return;
+            if (!atividade) {
+                showNotification('❌ Erro!', 'Atividade não encontrada.');
+                return;
+            }
 
-            const membro = atividade.membros[membroIndex];
-            if (!membro) return;
+            const membro = atividade.membros && atividade.membros[membroIndex];
+            if (!membro) {
+                showNotification('❌ Erro!', 'Membro não encontrado.');
+                return;
+            }
 
             document.getElementById('popupMembroNome').innerHTML =
                 `Alterando prazo de: <strong>${membro.nome}</strong> (atual: ${new Date(membro.prazo + 'T00:00:00').toLocaleDateString('pt-BR')})`;
@@ -2637,7 +2642,7 @@
             const atividade = atividades.find(a => a.id === popupAtividadeId);
             if (!atividade) return;
 
-            const membro = atividade.membros[popupMembroIndex];
+            const membro = atividade.membros && atividade.membros[popupMembroIndex];
             if (!membro) return;
 
             if (!membro.historico) membro.historico = [];
@@ -2653,7 +2658,6 @@
             renderAtividades();
             fecharPopupReprazo();
             verificarPrazos();
-            salvarNoBackendlessSilencioso();
 
             showNotification('✅ Prazo atualizado!',
                 `Prazo de ${membro.nome} foi alterado para ${new Date(novoPrazo + 'T00:00:00').toLocaleDateString('pt-BR')}`);
@@ -2747,15 +2751,15 @@
             if (editData) {
                 document.getElementById('modalTitle').innerHTML =
                     `<i class="fas fa-edit"></i> Editar Atividade`;
-                document.getElementById('formTitulo').value = editData.titulo;
-                document.getElementById('formTipo').value = editData.tipo;
-                document.getElementById('formDisciplina').value = editData.disciplina;
+                document.getElementById('formTitulo').value = editData.titulo || '';
+                document.getElementById('formTipo').value = editData.tipo || 'individual';
+                document.getElementById('formDisciplina').value = editData.disciplina || '';
                 document.getElementById('formInicio').value = editData.inicio || inicioPadrao.toISOString().split('T')[0];
                 document.getElementById('formPrazo').value = editData.prazo || prazoPadrao.toISOString().split('T')[0];
                 document.getElementById('formObservacoes').value = editData.observacoes || '';
                 editandoId = editData.id;
 
-                if (editData.tipo === 'grupo' && editData.membros) {
+                if (editData.tipo === 'grupo' && editData.membros && Array.isArray(editData.membros)) {
                     membrosTemp = JSON.parse(JSON.stringify(editData.membros));
                 }
 
@@ -2794,7 +2798,6 @@
             if (e.target === this) closeModal();
         });
 
-        // Fechar com ESC
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 if (document.getElementById('modalOverlay').classList.contains('open')) {
@@ -2807,7 +2810,7 @@
         });
 
         // ==========================================
-        // MODAL - SALVAR ATIVIDADE (MELHORADO)
+        // MODAL - SALVAR ATIVIDADE
         // ==========================================
         document.getElementById('atividadeForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -2882,9 +2885,6 @@
                 updateStats();
                 verificarPrazos();
 
-                // Salvar no Backendless silenciosamente
-                salvarNoBackendlessSilencioso();
-
                 showNotification('✅ Atividade salva!',
                     `${editandoId ? 'Atualizada' : 'Criada'} com sucesso: "${titulo}"`);
 
@@ -2909,7 +2909,6 @@
                 renderAtividades();
                 updateStats();
                 verificarPrazos();
-                salvarNoBackendlessSilencioso();
                 showNotification('🗑️ Atividade removida', `"${atividade?.titulo}" foi removida.`);
             }
         };
@@ -2918,42 +2917,6 @@
             const data = atividades.find(a => a.id === id);
             if (data) openModal(data);
         };
-
-        // ==========================================
-        // SALVAR NO BACKENDLESS (SILENCIOSO)
-        // ==========================================
-        function salvarNoBackendlessSilencioso() {
-            try {
-                const dados = {
-                    usuario: USUARIO,
-                    checklist: JSON.stringify(checklistState),
-                    atividades: JSON.stringify(atividades),
-                    data_atualizacao: new Date().toISOString()
-                };
-
-                Backendless.Data.of('UsuarioGDA')
-                    .find({ where: `usuario = '${USUARIO}'` })
-                    .then((result) => {
-                        if (result.length > 0) {
-                            const obj = result[0];
-                            obj.checklist = dados.checklist;
-                            obj.atividades = dados.atividades;
-                            obj.data_atualizacao = dados.data_atualizacao;
-                            return Backendless.Data.of('UsuarioGDA').save(obj);
-                        } else {
-                            return Backendless.Data.of('UsuarioGDA').save(dados);
-                        }
-                    })
-                    .then(() => {
-                        console.log('💾 Dados salvos silenciosamente no Backendless');
-                    })
-                    .catch((error) => {
-                        console.warn('⚠️ Erro ao salvar no Backendless (silencioso):', error);
-                    });
-            } catch (e) {
-                console.warn('⚠️ Erro no salvamento silencioso:', e);
-            }
-        }
 
         // ==========================================
         // NOTIFICAÇÕES
@@ -3045,7 +3008,6 @@
                 .then((saved) => {
                     setSyncStatus('✅ Salvo na nuvem!', 'success');
                     showNotification('☁️ Sincronizado!', 'Dados salvos com sucesso na nuvem.');
-                    console.log('✅ Dados salvos no Backendless:', saved);
                     setTimeout(() => setSyncStatus('✅ Pronto', ''), 3000);
                 })
                 .catch((error) => {
@@ -3175,17 +3137,10 @@
 
         setInterval(verificarPrazos, 300000);
 
-        // Salvar automaticamente a cada 5 minutos
-        setInterval(() => {
-            salvarNoBackendlessSilencioso();
-        }, 300000);
-
         console.log('🚀 GDA Acadêmico carregado!');
         console.log('📋 Usuário:', USUARIO);
-        console.log('💾 Dados salvos localmente e sincronizados com Backendless');
-        console.log('👥 Atividades em grupo com prazos individuais e observações!');
-        console.log('📝 Botão "Novo Prazo" com pop-up de justificativa implementado!');
-        console.log('🎨 Splash de boas-vindas e notificações de salvamento ativas!');
+        console.log('💾 Dados salvos localmente');
+        console.log('✅ Versão corrigida - erros de undefined resolvidos!');
     </script>
 
 </body>
