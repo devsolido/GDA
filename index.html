@@ -175,28 +175,6 @@
             color: var(--color-text);
         }
 
-        .splash-content .user-info {
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 12px;
-            padding: 12px 16px;
-            margin-bottom: 20px;
-            border: 1px solid var(--color-border);
-            text-align: left;
-        }
-
-        .splash-content .user-info .label {
-            font-size: 11px;
-            color: var(--color-text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .splash-content .user-info .value {
-            font-size: 15px;
-            font-weight: 600;
-            margin-top: 2px;
-        }
-
         .splash-content .btn-entrar {
             background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
             color: var(--color-primary);
@@ -862,9 +840,14 @@
         .relatorio-section {
             background: var(--color-card);
             border-radius: var(--radius);
-            padding: 20px 24px;
+            padding: 24px 28px;
             border: 1px solid var(--color-border);
             margin-bottom: 32px;
+            transition: var(--transition);
+        }
+
+        .relatorio-section:hover {
+            border-color: rgba(255, 179, 0, 0.08);
         }
 
         .relatorio-section .relatorio-header {
@@ -873,7 +856,7 @@
             align-items: center;
             flex-wrap: wrap;
             gap: 12px;
-            margin-bottom: 16px;
+            margin-bottom: 20px;
         }
 
         .relatorio-section .relatorio-header h3 {
@@ -882,24 +865,27 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            color: var(--color-text);
         }
 
         .relatorio-section .relatorio-header h3 i {
             color: var(--color-accent);
+            font-size: 20px;
         }
 
         .relatorio-section .relatorio-header .badge {
             font-size: 12px;
             background: rgba(255, 179, 0, 0.08);
             color: var(--color-accent);
-            padding: 2px 14px;
+            padding: 4px 16px;
             border-radius: 30px;
+            font-weight: 600;
         }
 
         .relatorio-form {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            gap: 14px;
         }
 
         .relatorio-form .full-width {
@@ -910,14 +896,15 @@
             font-size: 13px;
             font-weight: 600;
             color: var(--color-text-muted);
-            margin-bottom: 4px;
+            margin-bottom: 6px;
             display: block;
         }
 
         .relatorio-form select,
-        .relatorio-form textarea {
+        .relatorio-form textarea,
+        .relatorio-form input[type="number"] {
             width: 100%;
-            padding: 10px 14px;
+            padding: 10px 16px;
             border-radius: 10px;
             border: 1px solid var(--color-border);
             background: rgba(255, 255, 255, 0.02);
@@ -928,15 +915,24 @@
             transition: var(--transition);
         }
 
+        .relatorio-form select:hover,
+        .relatorio-form textarea:hover,
+        .relatorio-form input[type="number"]:hover {
+            background: rgba(255, 255, 255, 0.04);
+        }
+
         .relatorio-form select:focus,
-        .relatorio-form textarea:focus {
+        .relatorio-form textarea:focus,
+        .relatorio-form input[type="number"]:focus {
             border-color: var(--color-accent);
             box-shadow: 0 0 0 3px rgba(255, 179, 0, 0.08);
+            background: rgba(255, 255, 255, 0.04);
         }
 
         .relatorio-form select option {
             background: #121820;
             color: #e8edf4;
+            padding: 8px;
         }
 
         .relatorio-form textarea {
@@ -944,11 +940,21 @@
             min-height: 80px;
         }
 
+        .relatorio-form input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        .relatorio-form input[type="number"]::-webkit-inner-spin-button,
+        .relatorio-form input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
         .relatorio-form .btn-salvar-relatorio {
             background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
             color: var(--color-primary);
             border: none;
-            padding: 10px 24px;
+            padding: 10px 28px;
             border-radius: 30px;
             font-weight: 700;
             font-size: 14px;
@@ -966,10 +972,27 @@
             box-shadow: 0 4px 20px rgba(255, 179, 0, 0.2);
         }
 
+        .relatorio-form .btn-salvar-relatorio.secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--color-text-muted);
+        }
+
+        .relatorio-form .btn-salvar-relatorio.secondary:hover {
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: none;
+        }
+
+        .relatorio-form .form-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            grid-column: span 2;
+        }
+
         /* ===== LISTA DE RELATÓRIOS ===== */
         .relatorios-lista {
             margin-top: 16px;
-            max-height: 300px;
+            max-height: 350px;
             overflow-y: auto;
             padding-right: 4px;
         }
@@ -977,37 +1000,59 @@
         .relatorios-lista::-webkit-scrollbar {
             width: 4px;
         }
+        .relatorios-lista::-webkit-scrollbar-track {
+            background: transparent;
+        }
         .relatorios-lista::-webkit-scrollbar-thumb {
             background: rgba(255, 179, 0, 0.2);
             border-radius: 10px;
         }
 
+        .relatorios-lista .empty-state {
+            text-align: center;
+            padding: 30px 20px;
+            color: var(--color-text-muted);
+            font-size: 14px;
+            border: 1px dashed var(--color-border);
+            border-radius: 12px;
+        }
+
+        .relatorios-lista .empty-state i {
+            display: block;
+            font-size: 32px;
+            margin-bottom: 8px;
+            opacity: 0.3;
+        }
+
         .relatorio-item {
             display: flex;
             gap: 14px;
-            padding: 12px 14px;
+            padding: 12px 16px;
             background: rgba(255, 255, 255, 0.02);
             border-radius: 10px;
             border: 1px solid rgba(255, 255, 255, 0.03);
             margin-bottom: 8px;
             transition: var(--transition);
+            align-items: center;
         }
 
         .relatorio-item:hover {
             background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.06);
         }
 
         .relatorio-item .data {
             font-size: 12px;
             color: var(--color-accent);
             min-width: 100px;
+            font-weight: 500;
         }
 
         .relatorio-item .disciplina {
             font-size: 13px;
             font-weight: 600;
             color: var(--color-text);
-            min-width: 120px;
+            min-width: 140px;
         }
 
         .relatorio-item .texto {
@@ -1015,6 +1060,15 @@
             font-size: 13px;
             color: var(--color-text-muted);
             line-height: 1.5;
+            min-width: 150px;
+        }
+
+        .relatorio-item .horas {
+            font-size: 12px;
+            color: var(--color-success);
+            min-width: 60px;
+            text-align: right;
+            font-weight: 600;
         }
 
         .relatorio-item .btn-delete-relatorio {
@@ -1024,18 +1078,13 @@
             cursor: pointer;
             font-size: 14px;
             transition: var(--transition);
-            padding: 0 4px;
+            padding: 4px 8px;
+            border-radius: 6px;
         }
 
         .relatorio-item .btn-delete-relatorio:hover {
             color: var(--color-danger);
-        }
-
-        .relatorio-item .horas {
-            font-size: 12px;
-            color: var(--color-success);
-            min-width: 60px;
-            text-align: right;
+            background: rgba(229, 57, 53, 0.08);
         }
 
         /* ===== ATIVIDADES ===== */
@@ -2377,9 +2426,28 @@
             .relatorio-form .full-width {
                 grid-column: span 1;
             }
+            .relatorio-form .form-actions {
+                grid-column: span 1;
+                flex-direction: column;
+            }
+            .relatorio-form .btn-salvar-relatorio {
+                width: 100%;
+            }
             .relatorio-item {
                 flex-wrap: wrap;
                 gap: 6px;
+            }
+            .relatorio-item .data,
+            .relatorio-item .disciplina,
+            .relatorio-item .horas {
+                min-width: unset;
+            }
+            .relatorio-item .texto {
+                width: 100%;
+                order: 1;
+            }
+            .relatorio-item .btn-delete-relatorio {
+                margin-left: auto;
             }
         }
 
@@ -2424,26 +2492,45 @@
             .splash-content .splash-message {
                 font-size: 13px;
             }
+            .relatorio-section {
+                padding: 16px;
+            }
+            .relatorio-section .relatorio-header h3 {
+                font-size: 16px;
+            }
+            .relatorio-item {
+                padding: 10px 12px;
+            }
+            .relatorio-item .data {
+                font-size: 11px;
+            }
+            .relatorio-item .disciplina {
+                font-size: 12px;
+            }
+            .relatorio-item .texto {
+                font-size: 12px;
+            }
         }
     </style>
 </head>
 <body>
 
-   <!-- ===== SPLASH ===== -->
-<div class="splash-overlay" id="splashOverlay">
-    <div class="splash-content">
-        <div class="logo-icon">GDA</div>
-        <h1>GDA<span>.</span></h1>
-        <div class="splash-message">
-            Bem-vindo(a)!<br />
-            <strong>Bora sobreviver a mais um semestre?</strong> 💪📚
+    <!-- ===== SPLASH ===== -->
+    <div class="splash-overlay" id="splashOverlay">
+        <div class="splash-content">
+            <div class="logo-icon">GDA</div>
+            <h1>GDA<span>.</span></h1>
+            <div class="splash-message">
+                Bem-vindo(a)!<br />
+                <strong>Bora sobreviver a mais um semestre?</strong> 💪📚
+            </div>
+            <button class="btn-entrar" onclick="entrarNoSistema()">
+                <i class="fas fa-sign-in-alt"></i> Entrar no Sistema
+            </button>
+            <div class="versao">v2.2 · F1052574</div>
         </div>
-        <button class="btn-entrar" onclick="entrarNoSistema()">
-            <i class="fas fa-sign-in-alt"></i> Entrar no Sistema
-        </button>
-        <div class="versao">v2.2 · F1052574</div>
     </div>
-</div>
+
     <!-- ===== SIDEBAR ===== -->
     <header>
         <div class="logo">
@@ -2696,11 +2783,11 @@
                         <label>📝 O que estudei hoje?</label>
                         <textarea id="relatorioTexto" placeholder="Descreva o que você estudou, resumos, dúvidas, etc." required></textarea>
                     </div>
-                    <div class="full-width" style="display:flex;gap:12px;flex-wrap:wrap;">
+                    <div class="form-actions">
                         <button type="submit" class="btn-salvar-relatorio">
                             <i class="fas fa-save"></i> Salvar Relatório
                         </button>
-                        <button type="button" class="btn-salvar-relatorio" style="background:rgba(255,255,255,0.05);color:var(--color-text-muted);" onclick="limparRelatorios()">
+                        <button type="button" class="btn-salvar-relatorio secondary" onclick="limparRelatorios()">
                             <i class="fas fa-trash-alt"></i> Limpar Todos
                         </button>
                     </div>
@@ -2994,149 +3081,133 @@
             updateStats();
         }
 
-       // ==========================================
-// RELATÓRIOS DIÁRIOS (CORRIGIDO)
-// ==========================================
-function loadRelatorios() {
-    const saved = localStorage.getItem('gda_relatorios');
-    if (saved) {
-        try { relatorios = JSON.parse(saved); } catch { relatorios = []; }
-    }
-    renderRelatorios();
-    // Aguarda um momento para garantir que as turmas estão carregadas
-    setTimeout(() => {
-        populateDisciplinasRelatorio();
-    }, 100);
-}
+        // ==========================================
+        // RELATÓRIOS DIÁRIOS (CORRIGIDO)
+        // ==========================================
+        function loadRelatorios() {
+            const saved = localStorage.getItem('gda_relatorios');
+            if (saved) {
+                try { relatorios = JSON.parse(saved); } catch { relatorios = []; }
+            }
+            renderRelatorios();
+            setTimeout(() => {
+                populateDisciplinasRelatorio();
+            }, 100);
+        }
 
-function renderRelatorios() {
-    const container = document.getElementById('relatoriosLista');
-    if (!container) return;
-    
-    if (relatorios.length === 0) {
-        container.innerHTML =
-            `
-                <div class="empty-state">
-                    <i class="fas fa-inbox"></i>
-                    Nenhum relatório registrado hoje.
-                </div>
-            `;
-        return;
-    }
+        function renderRelatorios() {
+            const container = document.getElementById('relatoriosLista');
+            if (!container) return;
 
-    // Ordenar por data (mais recente primeiro)
-    const sorted = [...relatorios].sort((a, b) => new Date(b.data) - new Date(a.data));
+            if (relatorios.length === 0) {
+                container.innerHTML =
+                    `
+                        <div class="empty-state">
+                            <i class="fas fa-inbox"></i>
+                            Nenhum relatório registrado.
+                        </div>
+                    `;
+                return;
+            }
 
-    container.innerHTML = sorted.map(r =>
-        `
-            <div class="relatorio-item">
-                <span class="data"><i class="far fa-calendar-alt"></i> ${new Date(r.data + 'T00:00:00').toLocaleDateString('pt-BR')}</span>
-                <span class="disciplina">📚 ${r.disciplina}</span>
-                <span class="horas">⏱️ ${r.tempo}min</span>
-                <span class="texto">${r.texto}</span>
-                <button class="btn-delete-relatorio" onclick="deletarRelatorio(${r.id})" title="Remover relatório">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-        `
-    ).join('');
-}
+            const sorted = [...relatorios].sort((a, b) => new Date(b.data) - new Date(a.data));
 
-function populateDisciplinasRelatorio() {
-    const select = document.getElementById('relatorioDisciplina');
-    if (!select) {
-        console.warn('Elemento relatorioDisciplina não encontrado');
-        return;
-    }
-    
-    // Usa o array turmas (já definido globalmente)
-    let nomes = [];
-    
-    // Verifica se turmas está definido e tem dados
-    if (typeof turmas !== 'undefined' && turmas && turmas.length > 0) {
-        nomes = [...new Set(turmas.map(t => t.nome))];
-    }
-    
-    // Fallback: se não encontrou disciplinas, usa a lista fixa
-    if (nomes.length === 0) {
-        console.warn('Nenhuma disciplina encontrada, usando fallback...');
-        const fallbackNomes = [
-            'ARTES',
-            'FILOSOFIA',
-            'FUNDAMENTOS DE SANEAMENTO E SAÚDE PÚBLICA',
-            'GEOGRAFIA',
-            'INFORMÁTICA BÁSICA',
-            'INTRODUÇÃO AO TÉCNICO EM CONTROLE AMBIENTAL',
-            'LIBRAS',
-            'LÍNGUA PORTUGUESA',
-            'MATEMÁTICA',
-            'METODOLOGIA DE PROJETOS AMBIENTAIS',
-            'QUÍMICA',
-            'SEGURANÇA E SAÚDE OCUPACIONAL',
-            'SOCIOLOGIA',
-            'TÉCNICAS EM EDUCAÇÃO AMBIENTAL'
-        ];
-        select.innerHTML = `<option value="">Selecione uma disciplina</option>` +
-            fallbackNomes.map(n => `<option value="${n}">${n}</option>`).join('');
-        return;
-    }
-    
-    select.innerHTML = `<option value="">Selecione uma disciplina</option>` +
-        nomes.map(n => `<option value="${n}">${n}</option>`).join('');
-}
+            container.innerHTML = sorted.map(r =>
+                `
+                    <div class="relatorio-item">
+                        <span class="data"><i class="far fa-calendar-alt"></i> ${new Date(r.data + 'T00:00:00').toLocaleDateString('pt-BR')}</span>
+                        <span class="disciplina">📚 ${r.disciplina}</span>
+                        <span class="horas">⏱️ ${r.tempo}min</span>
+                        <span class="texto">${r.texto}</span>
+                        <button class="btn-delete-relatorio" onclick="deletarRelatorio(${r.id})" title="Remover relatório">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                `
+            ).join('');
+        }
 
-document.getElementById('relatorioForm').addEventListener('submit', function(e) {
-    e.preventDefault();
+        function populateDisciplinasRelatorio() {
+            const select = document.getElementById('relatorioDisciplina');
+            if (!select) {
+                console.warn('Elemento relatorioDisciplina não encontrado');
+                return;
+            }
 
-    const disciplina = document.getElementById('relatorioDisciplina').value;
-    const tempo = parseInt(document.getElementById('relatorioTempo').value);
-    const texto = document.getElementById('relatorioTexto').value.trim();
+            let nomes = [];
 
-    if (!disciplina) { alert('Selecione uma disciplina.'); return; }
-    if (!tempo || tempo < 1) { alert('Informe um tempo válido (mínimo 1 minuto).'); return; }
-    if (!texto) { alert('Descreva o que você estudou.'); return; }
+            if (typeof turmas !== 'undefined' && turmas && turmas.length > 0) {
+                nomes = [...new Set(turmas.map(t => t.nome))];
+            }
 
-    const novoRelatorio = {
-        id: Date.now(),
-        data: new Date().toISOString().split('T')[0],
-        disciplina: disciplina,
-        tempo: tempo,
-        texto: texto
-    };
+            if (nomes.length === 0) {
+                console.warn('Nenhuma disciplina encontrada, usando fallback...');
+                const fallbackNomes = [
+                    'ARTES', 'FILOSOFIA', 'FUNDAMENTOS DE SANEAMENTO E SAÚDE PÚBLICA',
+                    'GEOGRAFIA', 'INFORMÁTICA BÁSICA', 'INTRODUÇÃO AO TÉCNICO EM CONTROLE AMBIENTAL',
+                    'LIBRAS', 'LÍNGUA PORTUGUESA', 'MATEMÁTICA', 'METODOLOGIA DE PROJETOS AMBIENTAIS',
+                    'QUÍMICA', 'SEGURANÇA E SAÚDE OCUPACIONAL', 'SOCIOLOGIA', 'TÉCNICAS EM EDUCAÇÃO AMBIENTAL'
+                ];
+                select.innerHTML = `<option value="">Selecione uma disciplina</option>` +
+                    fallbackNomes.map(n => `<option value="${n}">${n}</option>`).join('');
+                return;
+            }
 
-    relatorios.push(novoRelatorio);
-    localStorage.setItem('gda_relatorios', JSON.stringify(relatorios));
-    renderRelatorios();
-    document.getElementById('relatorioTexto').value = '';
-    document.getElementById('relatorioTempo').value = '';
-    document.getElementById('relatorioDisciplina').value = '';
+            select.innerHTML = `<option value="">Selecione uma disciplina</option>` +
+                nomes.map(n => `<option value="${n}">${n}</option>`).join('');
+        }
 
-    showNotification('✅ Relatório salvo!', 'Seu estudo foi registrado com sucesso.');
-});
+        document.getElementById('relatorioForm').addEventListener('submit', function(e) {
+            e.preventDefault();
 
-window.deletarRelatorio = function(id) {
-    if (confirm('Tem certeza que deseja remover este relatório?')) {
-        relatorios = relatorios.filter(r => r.id !== id);
-        localStorage.setItem('gda_relatorios', JSON.stringify(relatorios));
-        renderRelatorios();
-        showNotification('🗑️ Removido!', 'Relatório removido com sucesso.');
-    }
-};
+            const disciplina = document.getElementById('relatorioDisciplina').value;
+            const tempo = parseInt(document.getElementById('relatorioTempo').value);
+            const texto = document.getElementById('relatorioTexto').value.trim();
 
-window.limparRelatorios = function() {
-    if (confirm('Tem certeza que deseja remover TODOS os relatórios?')) {
-        relatorios = [];
-        localStorage.setItem('gda_relatorios', JSON.stringify(relatorios));
-        renderRelatorios();
-        showNotification('🗑️ Limpo!', 'Todos os relatórios foram removidos.');
-    }
-};
+            if (!disciplina) { alert('Selecione uma disciplina.'); return; }
+            if (!tempo || tempo < 1) { alert('Informe um tempo válido (mínimo 1 minuto).'); return; }
+            if (!texto) { alert('Descreva o que você estudou.'); return; }
 
-// Função para recarregar as disciplinas manualmente (se necessário)
-window.recarregarDisciplinasRelatorio = function() {
-    populateDisciplinasRelatorio();
-    showNotification('🔄 Atualizado!', 'Lista de disciplinas recarregada.');
-};
+            const novoRelatorio = {
+                id: Date.now(),
+                data: new Date().toISOString().split('T')[0],
+                disciplina: disciplina,
+                tempo: tempo,
+                texto: texto
+            };
+
+            relatorios.push(novoRelatorio);
+            localStorage.setItem('gda_relatorios', JSON.stringify(relatorios));
+            renderRelatorios();
+            document.getElementById('relatorioTexto').value = '';
+            document.getElementById('relatorioTempo').value = '';
+            document.getElementById('relatorioDisciplina').value = '';
+
+            showNotification('✅ Relatório salvo!', 'Seu estudo foi registrado com sucesso.');
+        });
+
+        window.deletarRelatorio = function(id) {
+            if (confirm('Tem certeza que deseja remover este relatório?')) {
+                relatorios = relatorios.filter(r => r.id !== id);
+                localStorage.setItem('gda_relatorios', JSON.stringify(relatorios));
+                renderRelatorios();
+                showNotification('🗑️ Removido!', 'Relatório removido com sucesso.');
+            }
+        };
+
+        window.limparRelatorios = function() {
+            if (confirm('Tem certeza que deseja remover TODOS os relatórios?')) {
+                relatorios = [];
+                localStorage.setItem('gda_relatorios', JSON.stringify(relatorios));
+                renderRelatorios();
+                showNotification('🗑️ Limpo!', 'Todos os relatórios foram removidos.');
+            }
+        };
+
+        window.recarregarDisciplinasRelatorio = function() {
+            populateDisciplinasRelatorio();
+            showNotification('🔄 Atualizado!', 'Lista de disciplinas recarregada.');
+        };
 
         // ==========================================
         // FUNÇÃO PARA CALCULAR PROGRESSO DO MEMBRO
@@ -3304,7 +3375,181 @@ window.recarregarDisciplinasRelatorio = function() {
             verificarPrazos();
         }
 
-        // ... (continuação do código com as funções já existentes)
+        function getStatusAtividade(a) {
+            const hoje = new Date();
+            const prazo = new Date(a.prazo + 'T00:00:00');
+            if (a.tipo === 'grupo' && a.membros && a.membros.length > 0) {
+                const todosConcluidos = a.membros.every(m => m.progresso >= 100 && m.status === 'concluido');
+                if (todosConcluidos) return 'concluida';
+            }
+            if (a.tipo === 'individual' && a.progresso >= 100) return 'concluida';
+            if (prazo < hoje) return 'atrasada';
+            return 'andamento';
+        }
+
+        function calcularProgressoGrupo(a) {
+            if (!a.membros || a.membros.length === 0) return 0;
+            const ativos = a.membros.filter(m => m.status === 'ativo');
+            if (ativos.length === 0) return 0;
+            const total = ativos.reduce((acc, m) => acc + (m.progresso || 0), 0);
+            return Math.round(total / ativos.length);
+        }
+
+        function getStatusMembro(m) { return m.status || 'ativo'; }
+
+        function getStatusMembroLabel(status) {
+            const labels = { 'ativo': '🟢 Ativo', 'concluido': '🔵 Concluído', 'removido': '🔴 Removido',
+                'enrolando': '🟡 Enrolando' };
+            return labels[status] || '🟢 Ativo';
+        }
+
+        function renderAtividades() {
+            const container = document.getElementById('atividadesContainer');
+            let filtered = [...atividades];
+            if (filtroAtual !== 'todas') {
+                if (filtroAtual === 'individual' || filtroAtual === 'grupo') {
+                    filtered = filtered.filter(a => a.tipo === filtroAtual);
+                } else {
+                    filtered = filtered.filter(a => getStatusAtividade(a) === filtroAtual);
+                }
+            }
+            if (filtered.length === 0) {
+                container.innerHTML =
+                    `
+                        <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--color-text-muted);background:var(--color-card);border-radius:var(--radius);border:1px solid var(--color-border);">
+                            <i class="fas fa-inbox" style="font-size:32px;display:block;margin-bottom:12px;color:rgba(255,179,0,0.1);"></i>
+                            ${atividades.length === 0 ? 'Nenhuma atividade cadastrada.' : 'Nenhuma atividade com este filtro.'}
+                            ${atividades.length === 0 ? 'Clique em "Nova Atividade" para começar.' : ''}
+                        </div>
+                    `;
+                updateStats();
+                return;
+            }
+            const sorted = [...filtered].sort((a, b) => new Date(a.prazo) - new Date(b.prazo));
+            container.innerHTML = sorted.map(a => {
+                const isGrupo = a.tipo === 'grupo';
+                const status = getStatusAtividade(a);
+                const statusLabels = { 'andamento': 'Em andamento', 'concluida': 'Concluída', 'atrasada': 'Atrasada' };
+                const statusClasses = { 'andamento': 'em-andamento', 'concluida': 'concluida',
+                'atrasada': 'atrasada' };
+                const statusIcon = { 'andamento': '⏳', 'concluida': '✅', 'atrasada': '⚠️' };
+                const hoje = new Date();
+                const prazo = new Date(a.prazo + 'T00:00:00');
+                const diasRestantes = Math.ceil((prazo - hoje) / (1000 * 60 * 60 * 24));
+                const urgente = diasRestantes <= 3 && diasRestantes >= 0 && status !== 'concluida';
+                let progresso = 0;
+                if (isGrupo) { progresso = calcularProgressoGrupo(a); } else { progresso = a.progresso || 0; }
+                const temMembros = a.membros && Array.isArray(a.membros) && a.membros.length > 0;
+                let membrosHtml = '';
+                if (isGrupo && temMembros) {
+                    membrosHtml =
+                        `
+                            <div class="membros-lista">
+                                ${a.membros.map((m, idx) => {
+                                    const prazoMembro = new Date(m.prazo + 'T00:00:00');
+                                    const diasMembro = Math.ceil((prazoMembro - hoje) / (1000 * 60 * 60 * 24));
+                                    const statusMembro = getStatusMembro(m);
+                                    const statusClassesMembro = { 'ativo': 'ativo', 'concluido': 'concluido', 'removido': 'removido', 'enrolando': 'enrolando' };
+                                    const statusLabelsMembro = { 'ativo': '🟢 Ativo', 'concluido': '🔵 Concluído', 'removido': '🔴 Removido', 'enrolando': '🟡 Enrolando' };
+                                    const isFinalizado = statusMembro === 'concluido' || statusMembro === 'removido';
+                                    let entregasHtml = '';
+                                    if (m.entregas && m.entregas.length > 0) {
+                                        entregasHtml = `
+                                            <div class="entregas-container">
+                                                ${m.entregas.map((e, ei) => `
+                                                    <div class="entrega-item">
+                                                        <div class="checkbox ${e.concluido ? 'done' : ''}" onclick="toggleEntrega(${a.id}, ${idx}, ${ei})">
+                                                            ${e.concluido ? '<i class="fas fa-check"></i>' : ''}
+                                                        </div>
+                                                        <span class="descricao ${e.concluido ? 'done' : ''}">${e.descricao}</span>
+                                                        <span class="data-entrega">${e.concluido ? '✅ ' + new Date(e.data + 'T00:00:00').toLocaleDateString('pt-BR') : '⏳ Pendente'}</span>
+                                                    </div>
+                                                `).join('')}
+                                            </div>
+                                        `;
+                                    }
+                                    return `
+                                        <div class="membro-item">
+                                            <span class="nome"><i class="fas fa-user"></i> ${m.nome || 'Sem nome'}</span>
+                                            <span class="funcao">${m.funcao || 'Sem função'}</span>
+                                            <span class="status-membro ${statusClassesMembro[statusMembro]}">${statusLabelsMembro[statusMembro]}</span>
+                                            <span class="prazo-membro ${diasMembro <= 3 && m.progresso < 100 && statusMembro === 'ativo' ? 'urgente' : ''}"><i class="far fa-calendar-alt"></i> ${m.prazo ? new Date(m.prazo + 'T00:00:00').toLocaleDateString('pt-BR') : 'Sem prazo'}</span>
+                                            <span class="entregas-info">📋 ${m.entregas ? m.entregas.filter(e => e.concluido).length + '/' + m.entregas.length : '0'}</span>
+                                            <span class="obs-membro" style="white-space:normal;overflow:visible;word-wrap:break-word;">${m.observacoes || 'Sem obs.'}</span>
+                                            <span class="progresso-membro">${m.progresso || 0}%</span>
+                                            ${!isFinalizado ? `
+                                                <button class="btn-detalhes" onclick="abrirPopupDetalhes(${a.id}, ${idx})" title="Ver detalhes"><i class="fas fa-eye"></i></button>
+                                                <button class="btn-novo-prazo" onclick="abrirPopupReprazo(${a.id}, ${idx})" title="Alterar prazo"><i class="fas fa-clock"></i></button>
+                                                <button class="btn-finalizar" onclick="abrirPopupFinalizar(${a.id}, ${idx})" title="Finalizar participação"><i class="fas fa-check"></i></button>
+                                            ` : `
+                                                <button class="btn-detalhes" onclick="abrirPopupDetalhes(${a.id}, ${idx})" title="Ver detalhes"><i class="fas fa-eye"></i></button>
+                                                <button class="btn-finalizar ${statusMembro}" disabled title="Participação já finalizada"><i class="fas fa-check"></i> ${statusMembro === 'concluido' ? 'Concluído' : 'Removido'}</button>
+                                            `}
+                                            ${entregasHtml}
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        `;
+                }
+                return `
+                        <div class="atividade-card">
+                            <span class="badge-status ${statusClasses[status]}">${statusIcon[status]} ${statusLabels[status]}</span>
+                            <span class="tipo ${isGrupo ? 'grupo' : 'individual'}"><i class="fas ${isGrupo ? 'fa-users' : 'fa-user'}"></i> ${isGrupo ? 'Em Grupo' : 'Individual'}</span>
+                            <div class="disciplina"><i class="fas fa-book"></i> ${a.disciplina || 'Sem disciplina'}</div>
+                            <div class="titulo">${a.titulo || 'Sem título'}</div>
+                            <div class="datas">
+                                <span class="inicio"><i class="fas fa-play"></i> <strong>Início:</strong> ${a.inicio ? new Date(a.inicio + 'T00:00:00').toLocaleDateString('pt-BR') : 'Não definido'}</span>
+                                <span class="prazo ${urgente ? 'urgente' : ''}"><i class="far fa-calendar-alt"></i> <strong>Prazo:</strong> ${a.prazo ? new Date(a.prazo + 'T00:00:00').toLocaleDateString('pt-BR') : 'Não definido'} ${status === 'atrasada' ? '⚠️' : ''}</span>
+                                <span class="entrega"><i class="fas fa-user-graduate"></i> <strong>Entrega ao Docente:</strong> ${a.entregaDocente ? new Date(a.entregaDocente + 'T00:00:00').toLocaleDateString('pt-BR') : 'Não definido'}</span>
+                            </div>
+                            ${a.observacoes ? `<div class="observacoes"><strong><i class="fas fa-sticky-note"></i> Observações:</strong> ${a.observacoes}</div>` : ''}
+                            ${isGrupo ? `<div class="membros-info"><i class="fas fa-users"></i> <span>${temMembros ? a.membros.filter(m => m.status === 'ativo').length : 0} membros ativos</span></div>${membrosHtml}` : `<div class="membros-info"><i class="fas fa-user"></i> Individual</div>`}
+                            <div class="progresso-area">
+                                <div class="bar" onclick="editarProgresso(${a.id})" title="Clique para ajustar o progresso"><div class="fill" style="width:${progresso}%;"></div></div>
+                                <span class="pct" onclick="editarProgresso(${a.id})" title="Clique para ajustar">${progresso}%</span>
+                            </div>
+                            <div class="acoes">
+                                <button class="btn-edit" onclick="editarAtividade(${a.id})"><i class="fas fa-edit"></i> Editar</button>
+                                <button class="btn-delete" onclick="deletarAtividade(${a.id})"><i class="fas fa-trash-alt"></i> Remover</button>
+                            </div>
+                        </div>
+                    `;
+            }).join('');
+            updateStats();
+        }
+
+        // ===== EDITAR PROGRESSO =====
+        window.editarProgresso = function(id) {
+            const atividade = atividades.find(a => a.id === id);
+            if (!atividade) return;
+            if (atividade.tipo === 'individual') {
+                const novo = prompt(`Progresso atual: ${atividade.progresso || 0}%\nDigite o novo percentual (0-100):`,
+                    atividade.progresso || 0);
+                if (novo === null) return;
+                const pct = parseInt(novo);
+                if (isNaN(pct) || pct < 0 || pct > 100) { alert('Digite um valor entre 0 e 100.'); return; }
+                atividade.progresso = pct;
+                localStorage.setItem('gda_atividades', JSON.stringify(atividades));
+                renderAtividades();
+                verificarPrazos();
+                showNotification('✅ Progresso atualizado!', 'O progresso foi salvo com sucesso.');
+            } else {
+                showNotification('ℹ️ Progresso automático',
+                    'O progresso do grupo é calculado automaticamente com base nas entregas de cada membro.');
+            }
+        };
+
+        // ===== FILTROS =====
+        document.querySelectorAll('.filtros-atividades button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filtros-atividades button').forEach(b => b.classList.remove(
+                'active'));
+                this.classList.add('active');
+                filtroAtual = this.dataset.filtro;
+                renderAtividades();
+            });
+        });
 
         // ==========================================
         // POPUP DETALHES DO MEMBRO
@@ -3730,7 +3975,205 @@ window.recarregarDisciplinasRelatorio = function() {
             }
         });
 
-        // ... (restante das funções já existentes)
+        window.deletarAtividade = function(id) {
+            if (confirm('Tem certeza que deseja remover esta atividade?')) {
+                const atividade = atividades.find(a => a.id === id);
+                atividades = atividades.filter(a => a.id !== id);
+                localStorage.setItem('gda_atividades', JSON.stringify(atividades));
+                renderAtividades();
+                updateStats();
+                verificarPrazos();
+                showNotification('🗑️ Atividade removida', `"${atividade?.titulo}" foi removida.`);
+            }
+        };
+
+        window.editarAtividade = function(id) {
+            const data = atividades.find(a => a.id === id);
+            if (data) openModal(data);
+        };
+
+        // ==========================================
+        // NOTIFICAÇÕES
+        // ==========================================
+        let notifTimeout = null;
+
+        function verificarPrazos() {
+            const hoje = new Date();
+            const prazosProximos = atividades.filter(a => {
+                if (getStatusAtividade(a) === 'concluida') return false;
+                const prazo = new Date(a.prazo + 'T00:00:00');
+                const dias = Math.ceil((prazo - hoje) / (1000 * 60 * 60 * 24));
+                return dias >= 0 && dias <= 3;
+            });
+            const atrasadas = atividades.filter(a => {
+                if (getStatusAtividade(a) === 'concluida') return false;
+                const prazo = new Date(a.prazo + 'T00:00:00');
+                return prazo < hoje;
+            });
+            let msg = '';
+            if (atrasadas.length > 0) { msg += `⚠️ ${atrasadas.length} atividade(s) atrasada(s). `; }
+            if (prazosProximos.length > 0) { msg += `🔥 ${prazosProximos.length} atividade(s) com prazo próximo.`; }
+            if (msg) { showNotification('📢 Atenção!', msg); }
+        }
+
+        window.showNotification = function(title, body) {
+            const el = document.getElementById('notification');
+            document.getElementById('notifTitle').textContent = title;
+            document.getElementById('notifBody').textContent = body;
+            el.classList.add('show');
+            if (notifTimeout) clearTimeout(notifTimeout);
+            notifTimeout = setTimeout(() => { el.classList.remove('show'); }, 5000);
+        };
+
+        window.closeNotification = function() {
+            document.getElementById('notification').classList.remove('show');
+            if (notifTimeout) { clearTimeout(notifTimeout);
+                notifTimeout = null; }
+        };
+
+        // ==========================================
+        // SINCRONIZAÇÃO
+        // ==========================================
+        function setSyncStatus(msg, type = '') {
+            const el = document.getElementById('syncStatus');
+            el.textContent = msg;
+            el.className = 'sync-status ' + type;
+        }
+
+        window.sincronizarBackendless = function() {
+            const btn = document.getElementById('syncBackendless');
+            btn.disabled = true;
+            setSyncStatus('⏳ Salvando...', 'sync-ing');
+            const dados = { usuario: USUARIO, checklist: JSON.stringify(checklistState),
+                atividades: JSON.stringify(atividades), data_atualizacao: new Date().toISOString() };
+            Backendless.Data.of('UsuarioGDA')
+                .find({ where: `usuario = '${USUARIO}'` })
+                .then((result) => {
+                    if (result.length > 0) {
+                        const obj = result[0];
+                        obj.checklist = dados.checklist;
+                        obj.atividades = dados.atividades;
+                        obj.data_atualizacao = dados.data_atualizacao;
+                        return Backendless.Data.of('UsuarioGDA').save(obj);
+                    } else { return Backendless.Data.of('UsuarioGDA').save(dados); }
+                })
+                .then((saved) => {
+                    setSyncStatus('✅ Salvo na nuvem!', 'success');
+                    showNotification('☁️ Sincronizado!', 'Dados salvos com sucesso na nuvem.');
+                    setTimeout(() => setSyncStatus('✅ Pronto', ''), 3000);
+                })
+                .catch((error) => {
+                    console.error('❌ Erro ao salvar:', error);
+                    setSyncStatus('❌ Erro: ' + error.message, 'error');
+                    showNotification('❌ Erro!', 'Falha ao salvar na nuvem.');
+                })
+                .finally(() => { btn.disabled = false; });
+        };
+
+        window.carregarDoBackendless = function() {
+            const btn = document.getElementById('loadBackendless');
+            btn.disabled = true;
+            setSyncStatus('⏳ Carregando...', 'sync-ing');
+            Backendless.Data.of('UsuarioGDA')
+                .find({ where: `usuario = '${USUARIO}'` })
+                .then((result) => {
+                    if (result.length === 0) {
+                        setSyncStatus('ℹ️ Nenhum dado encontrado', '');
+                        showNotification('ℹ️ Nada encontrado', 'Nenhum dado salvo na nuvem.');
+                        return;
+                    }
+                    const dados = result[0];
+                    let atualizado = false;
+                    if (dados.checklist) {
+                        try { const parsed = JSON.parse(dados.checklist);
+                            checklistState = parsed;
+                            localStorage.setItem('gda_checklist', JSON.stringify(parsed));
+                            renderChecklist();
+                            atualizado = true; } catch (e) { console.warn('Erro ao parsear checklist:', e); }
+                    }
+                    if (dados.atividades) {
+                        try { const parsed = JSON.parse(dados.atividades);
+                            atividades = parsed;
+                            localStorage.setItem('gda_atividades', JSON.stringify(parsed));
+                            renderAtividades();
+                            atualizado = true; } catch (e) { console.warn('Erro ao parsear atividades:', e); }
+                    }
+                    if (atualizado) {
+                        setSyncStatus('✅ Dados carregados!', 'success');
+                        showNotification('☁️ Carregado!', 'Dados recuperados da nuvem com sucesso.');
+                        verificarPrazos();
+                        updateStats();
+                    } else {
+                        setSyncStatus('ℹ️ Nenhum dado novo', '');
+                        showNotification('ℹ️ Atualizado', 'Os dados já estão sincronizados.');
+                    }
+                    setTimeout(() => setSyncStatus('✅ Pronto', ''), 3000);
+                })
+                .catch((error) => {
+                    console.error('❌ Erro ao carregar:', error);
+                    setSyncStatus('❌ Erro: ' + error.message, 'error');
+                    showNotification('❌ Erro!', 'Falha ao carregar dados da nuvem.');
+                })
+                .finally(() => { btn.disabled = false; });
+        };
+
+        window.limparDados = function() {
+            if (confirm(
+                    '⚠️ Tem certeza que deseja limpar todos os dados LOCAIS? (Os dados na nuvem não serão afetados)')) {
+                localStorage.removeItem('gda_checklist');
+                localStorage.removeItem('gda_atividades');
+                showNotification('🗑️ Limpo!', 'Dados locais removidos. Recarregando...');
+                setTimeout(() => location.reload(), 1000);
+            }
+        };
+
+        // ==========================================
+        // STATS
+        // ==========================================
+        function updateStats() {
+            const total = checklistItems.length;
+            const done = checklistItems.filter(item => checklistState[item.id] === true).length;
+            const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+            document.getElementById('checkPct').textContent = `${pct}%`;
+            document.getElementById('checkDoneCount').textContent = done;
+            const totalAtiv = atividades.length;
+            const grupo = atividades.filter(a => a.tipo === 'grupo').length;
+            const individual = atividades.filter(a => a.tipo === 'individual').length;
+            document.getElementById('totalAtividades').textContent = totalAtiv;
+            document.getElementById('totalGrupo').textContent = grupo;
+            document.getElementById('totalIndividual').textContent = individual;
+            document.getElementById('atividadeBadge').textContent = totalAtiv;
+        }
+
+        // ==========================================
+        // NAVEGAÇÃO
+        // ==========================================
+        document.querySelectorAll('.navbar a[data-section]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelectorAll('.navbar a[data-section]').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+                const section = this.dataset.section;
+                const map = { 'dashboard': 'mainContainer', 'turmas': 'section-turmas',
+                    'atividades': 'section-atividades', 'checklist': 'section-checklist',
+                    'relatorios': 'section-relatorios' };
+                const target = document.getElementById(map[section]);
+                if (target) { target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+            });
+        });
+
+        // ==========================================
+        // INICIALIZAÇÃO
+        // ==========================================
+        loadChecklist();
+        loadRelatorios();
+        loadAtividades();
+        setInterval(verificarPrazos, 300000);
+
+        console.log('🚀 GDA Acadêmico carregado!');
+        console.log('📋 Usuário:', USUARIO);
+        console.log('📝 Relatório Diário de Estudos funcionando!');
+        console.log('📚 Disciplinas carregadas com fallback!');
     </script>
 
 </body>
