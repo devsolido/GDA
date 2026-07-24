@@ -2994,102 +2994,149 @@
             updateStats();
         }
 
-        // ==========================================
-        // RELATÓRIOS DIÁRIOS
-        // ==========================================
-        function loadRelatorios() {
-            const saved = localStorage.getItem('gda_relatorios');
-            if (saved) {
-                try { relatorios = JSON.parse(saved); } catch { relatorios = []; }
-            }
-            renderRelatorios();
-            populateDisciplinasRelatorio();
-        }
+       // ==========================================
+// RELATÓRIOS DIÁRIOS (CORRIGIDO)
+// ==========================================
+function loadRelatorios() {
+    const saved = localStorage.getItem('gda_relatorios');
+    if (saved) {
+        try { relatorios = JSON.parse(saved); } catch { relatorios = []; }
+    }
+    renderRelatorios();
+    // Aguarda um momento para garantir que as turmas estão carregadas
+    setTimeout(() => {
+        populateDisciplinasRelatorio();
+    }, 100);
+}
 
-        function renderRelatorios() {
-            const container = document.getElementById('relatoriosLista');
-            if (relatorios.length === 0) {
-                container.innerHTML =
-                    `
-                        <div style="text-align:center;padding:20px;color:var(--color-text-muted);font-size:14px;">
-                            <i class="fas fa-inbox" style="display:block;font-size:32px;margin-bottom:8px;opacity:0.3;"></i>
-                            Nenhum relatório registrado hoje.
-                        </div>
-                    `;
-                return;
-            }
+function renderRelatorios() {
+    const container = document.getElementById('relatoriosLista');
+    if (!container) return;
+    
+    if (relatorios.length === 0) {
+        container.innerHTML =
+            `
+                <div class="empty-state">
+                    <i class="fas fa-inbox"></i>
+                    Nenhum relatório registrado hoje.
+                </div>
+            `;
+        return;
+    }
 
-            // Ordenar por data (mais recente primeiro)
-            const sorted = [...relatorios].sort((a, b) => new Date(b.data) - new Date(a.data));
+    // Ordenar por data (mais recente primeiro)
+    const sorted = [...relatorios].sort((a, b) => new Date(b.data) - new Date(a.data));
 
-            container.innerHTML = sorted.map(r =>
-                `
-                    <div class="relatorio-item">
-                        <span class="data"><i class="far fa-calendar-alt"></i> ${new Date(r.data + 'T00:00:00').toLocaleDateString('pt-BR')}</span>
-                        <span class="disciplina">📚 ${r.disciplina}</span>
-                        <span class="horas">⏱️ ${r.tempo}min</span>
-                        <span class="texto">${r.texto}</span>
-                        <button class="btn-delete-relatorio" onclick="deletarRelatorio(${r.id})" title="Remover relatório">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                `
-            ).join('');
-        }
+    container.innerHTML = sorted.map(r =>
+        `
+            <div class="relatorio-item">
+                <span class="data"><i class="far fa-calendar-alt"></i> ${new Date(r.data + 'T00:00:00').toLocaleDateString('pt-BR')}</span>
+                <span class="disciplina">📚 ${r.disciplina}</span>
+                <span class="horas">⏱️ ${r.tempo}min</span>
+                <span class="texto">${r.texto}</span>
+                <button class="btn-delete-relatorio" onclick="deletarRelatorio(${r.id})" title="Remover relatório">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        `
+    ).join('');
+}
 
-        function populateDisciplinasRelatorio() {
-            const select = document.getElementById('relatorioDisciplina');
-            const nomes = [...new Set(turmas.map(t => t.nome))];
-            select.innerHTML = `<option value="">Selecione uma disciplina</option>` +
-                nomes.map(n => `<option value="${n}">${n}</option>`).join('');
-        }
+function populateDisciplinasRelatorio() {
+    const select = document.getElementById('relatorioDisciplina');
+    if (!select) {
+        console.warn('Elemento relatorioDisciplina não encontrado');
+        return;
+    }
+    
+    // Usa o array turmas (já definido globalmente)
+    let nomes = [];
+    
+    // Verifica se turmas está definido e tem dados
+    if (typeof turmas !== 'undefined' && turmas && turmas.length > 0) {
+        nomes = [...new Set(turmas.map(t => t.nome))];
+    }
+    
+    // Fallback: se não encontrou disciplinas, usa a lista fixa
+    if (nomes.length === 0) {
+        console.warn('Nenhuma disciplina encontrada, usando fallback...');
+        const fallbackNomes = [
+            'ARTES',
+            'FILOSOFIA',
+            'FUNDAMENTOS DE SANEAMENTO E SAÚDE PÚBLICA',
+            'GEOGRAFIA',
+            'INFORMÁTICA BÁSICA',
+            'INTRODUÇÃO AO TÉCNICO EM CONTROLE AMBIENTAL',
+            'LIBRAS',
+            'LÍNGUA PORTUGUESA',
+            'MATEMÁTICA',
+            'METODOLOGIA DE PROJETOS AMBIENTAIS',
+            'QUÍMICA',
+            'SEGURANÇA E SAÚDE OCUPACIONAL',
+            'SOCIOLOGIA',
+            'TÉCNICAS EM EDUCAÇÃO AMBIENTAL'
+        ];
+        select.innerHTML = `<option value="">Selecione uma disciplina</option>` +
+            fallbackNomes.map(n => `<option value="${n}">${n}</option>`).join('');
+        return;
+    }
+    
+    select.innerHTML = `<option value="">Selecione uma disciplina</option>` +
+        nomes.map(n => `<option value="${n}">${n}</option>`).join('');
+}
 
-        document.getElementById('relatorioForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+document.getElementById('relatorioForm').addEventListener('submit', function(e) {
+    e.preventDefault();
 
-            const disciplina = document.getElementById('relatorioDisciplina').value;
-            const tempo = parseInt(document.getElementById('relatorioTempo').value);
-            const texto = document.getElementById('relatorioTexto').value.trim();
+    const disciplina = document.getElementById('relatorioDisciplina').value;
+    const tempo = parseInt(document.getElementById('relatorioTempo').value);
+    const texto = document.getElementById('relatorioTexto').value.trim();
 
-            if (!disciplina) { alert('Selecione uma disciplina.'); return; }
-            if (!tempo || tempo < 1) { alert('Informe um tempo válido (mínimo 1 minuto).'); return; }
-            if (!texto) { alert('Descreva o que você estudou.'); return; }
+    if (!disciplina) { alert('Selecione uma disciplina.'); return; }
+    if (!tempo || tempo < 1) { alert('Informe um tempo válido (mínimo 1 minuto).'); return; }
+    if (!texto) { alert('Descreva o que você estudou.'); return; }
 
-            const novoRelatorio = {
-                id: Date.now(),
-                data: new Date().toISOString().split('T')[0],
-                disciplina: disciplina,
-                tempo: tempo,
-                texto: texto
-            };
+    const novoRelatorio = {
+        id: Date.now(),
+        data: new Date().toISOString().split('T')[0],
+        disciplina: disciplina,
+        tempo: tempo,
+        texto: texto
+    };
 
-            relatorios.push(novoRelatorio);
-            localStorage.setItem('gda_relatorios', JSON.stringify(relatorios));
-            renderRelatorios();
-            document.getElementById('relatorioTexto').value = '';
-            document.getElementById('relatorioTempo').value = '';
-            document.getElementById('relatorioDisciplina').value = '';
+    relatorios.push(novoRelatorio);
+    localStorage.setItem('gda_relatorios', JSON.stringify(relatorios));
+    renderRelatorios();
+    document.getElementById('relatorioTexto').value = '';
+    document.getElementById('relatorioTempo').value = '';
+    document.getElementById('relatorioDisciplina').value = '';
 
-            showNotification('✅ Relatório salvo!', 'Seu estudo foi registrado com sucesso.');
-        });
+    showNotification('✅ Relatório salvo!', 'Seu estudo foi registrado com sucesso.');
+});
 
-        window.deletarRelatorio = function(id) {
-            if (confirm('Tem certeza que deseja remover este relatório?')) {
-                relatorios = relatorios.filter(r => r.id !== id);
-                localStorage.setItem('gda_relatorios', JSON.stringify(relatorios));
-                renderRelatorios();
-                showNotification('🗑️ Removido!', 'Relatório removido com sucesso.');
-            }
-        };
+window.deletarRelatorio = function(id) {
+    if (confirm('Tem certeza que deseja remover este relatório?')) {
+        relatorios = relatorios.filter(r => r.id !== id);
+        localStorage.setItem('gda_relatorios', JSON.stringify(relatorios));
+        renderRelatorios();
+        showNotification('🗑️ Removido!', 'Relatório removido com sucesso.');
+    }
+};
 
-        window.limparRelatorios = function() {
-            if (confirm('Tem certeza que deseja remover TODOS os relatórios?')) {
-                relatorios = [];
-                localStorage.setItem('gda_relatorios', JSON.stringify(relatorios));
-                renderRelatorios();
-                showNotification('🗑️ Limpo!', 'Todos os relatórios foram removidos.');
-            }
-        };
+window.limparRelatorios = function() {
+    if (confirm('Tem certeza que deseja remover TODOS os relatórios?')) {
+        relatorios = [];
+        localStorage.setItem('gda_relatorios', JSON.stringify(relatorios));
+        renderRelatorios();
+        showNotification('🗑️ Limpo!', 'Todos os relatórios foram removidos.');
+    }
+};
+
+// Função para recarregar as disciplinas manualmente (se necessário)
+window.recarregarDisciplinasRelatorio = function() {
+    populateDisciplinasRelatorio();
+    showNotification('🔄 Atualizado!', 'Lista de disciplinas recarregada.');
+};
 
         // ==========================================
         // FUNÇÃO PARA CALCULAR PROGRESSO DO MEMBRO
