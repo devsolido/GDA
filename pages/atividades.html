@@ -1,0 +1,21 @@
+﻿<div class="page" id="page-atividades">
+    <div class="section-title">
+        <i class="fas fa-tasks"></i> Atividades
+        <span class="badge" id="atividadeBadge">0</span>
+        <button onclick="openModal()" style="margin-left:auto;padding:6px 20px;border-radius:30px;border:1px dashed var(--color-border);background:transparent;color:var(--color-text-muted);cursor:pointer;font-family:'Inter',sans-serif;font-size:13px;">
+            <i class="fas fa-plus"></i> Nova Atividade
+        </button>
+    </div>
+    <div class="filtros-atividades">
+        <button class="active" data-filtro="todas">📋 Todas</button>
+        <button data-filtro="individual">👤 Individual</button>
+        <button data-filtro="grupo">👥 Grupo</button>
+        <button data-filtro="andamento">⏳ Em andamento</button>
+        <button data-filtro="concluida">✅ Concluídas</button>
+        <button data-filtro="atrasada">⚠️ Atrasadas</button>
+        <button data-filtro="alta">🔴 Alta</button>
+        <button data-filtro="media">🟡 Média</button>
+        <button data-filtro="baixa">🟢 Baixa</button>
+    </div>
+    <div class="atividades-grid" id="atividadesContainer"></div>
+</div>
