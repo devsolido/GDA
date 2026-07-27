@@ -357,7 +357,7 @@
             }
         }
 
-        /* ===== DASHBOARD - TELA INICIAL ===== */
+        /* ===== TELA INICIAL (PÁGINA INICIAL) ===== */
         .welcome-hero {
             background: linear-gradient(135deg, var(--color-card), var(--color-secondary));
             border-radius: var(--radius);
@@ -427,7 +427,6 @@
             color: var(--color-text);
         }
 
-        /* Clock em destaque */
         .clock-hero {
             display: flex;
             align-items: center;
@@ -711,55 +710,8 @@
             margin-top: 12px;
         }
 
-        /* ===== ATIVIDADES COM PARTICIPANTES ===== */
-        .participantes-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin: 8px 0 10px;
-        }
-        .participante-tag {
-            background: rgba(255, 179, 0, 0.08);
-            color: var(--color-accent);
-            padding: 2px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .participante-tag .prazo-individual {
-            font-size: 10px;
-            color: var(--color-text-muted);
-            background: rgba(255, 255, 255, 0.05);
-            padding: 0 6px;
-            border-radius: 10px;
-        }
-        .participante-tag .prazo-individual.urgente {
-            color: var(--color-danger);
-        }
-        .participante-tag .prazo-individual.ok {
-            color: var(--color-success);
-        }
-
-        .btn-add-participante {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px dashed var(--color-border);
-            border-radius: 20px;
-            padding: 2px 12px;
-            font-size: 12px;
-            color: var(--color-text-muted);
-            cursor: pointer;
-            transition: var(--transition);
-            font-family: 'Inter', sans-serif;
-        }
-        .btn-add-participante:hover {
-            border-color: var(--color-accent);
-            color: var(--color-accent);
-        }
-
-        /* ===== ESTILOS EXISTENTES ===== */
-        .top-bar {
+        /* ===== DASHBOARD (ESTATÍSTICAS) ===== */
+        .dashboard-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -767,17 +719,17 @@
             gap: 12px;
             margin-bottom: 24px;
         }
-        .top-bar h1 {
+        .dashboard-header h1 {
             font-size: 24px;
             font-weight: 700;
         }
-        .top-bar h1 small {
+        .dashboard-header h1 small {
             font-size: 14px;
             font-weight: 400;
             color: var(--color-text-muted);
             margin-left: 10px;
         }
-        .top-bar .clock {
+        .dashboard-header .clock {
             font-size: 18px;
             font-weight: 600;
             background: var(--color-card);
@@ -785,7 +737,7 @@
             border-radius: 30px;
             border: 1px solid var(--color-border);
         }
-        .top-bar .clock .sec {
+        .dashboard-header .clock .sec {
             font-size: 13px;
             color: var(--color-text-muted);
             font-weight: 400;
@@ -823,6 +775,38 @@
             color: rgba(255, 179, 0, 0.1);
         }
 
+        /* ===== ATIVIDADES COM PARTICIPANTES ===== */
+        .participantes-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin: 8px 0 10px;
+        }
+        .participante-tag {
+            background: rgba(255, 179, 0, 0.08);
+            color: var(--color-accent);
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .participante-tag .prazo-individual {
+            font-size: 10px;
+            color: var(--color-text-muted);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0 6px;
+            border-radius: 10px;
+        }
+        .participante-tag .prazo-individual.urgente {
+            color: var(--color-danger);
+        }
+        .participante-tag .prazo-individual.ok {
+            color: var(--color-success);
+        }
+
+        /* ===== ESTILOS EXISTENTES ===== */
         .section {
             margin-bottom: 32px;
             scroll-margin-top: 20px;
@@ -1725,6 +1709,10 @@
             .clock-hero {
                 justify-content: flex-start;
             }
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
 
         @media (max-width: 600px) {
@@ -1850,6 +1838,14 @@
             .welcome-hero::before {
                 display: none;
             }
+            .dashboard-header h1 {
+                font-size: 18px;
+            }
+            .dashboard-header h1 small {
+                font-size: 11px;
+                display: block;
+                margin-left: 0;
+            }
         }
     </style>
 </head>
@@ -1867,7 +1863,7 @@
             <button class="btn-entrar" onclick="entrarNoSistema()">
                 <i class="fas fa-sign-in-alt"></i> Entrar no Sistema
             </button>
-            <div class="versao">v3.0 · Nova</div>
+            <div class="versao">v3.0 · Multi Páginas</div>
         </div>
     </div>
 
@@ -1880,10 +1876,16 @@
         <div class="navbar">
             <div class="nav-label">Menu</div>
 
-            <!-- TELA INICIAL (ANTIGO DASHBOARD) -->
-            <a href="#" data-page="dashboard" class="active">
+            <!-- ===== TELA INICIAL ===== -->
+            <a href="#" data-page="inicial" class="active">
                 <span class="material-icons-sharp">home</span>
                 <h3>Tela Inicial</h3>
+            </a>
+
+            <!-- ===== DASHBOARD ===== -->
+            <a href="#" data-page="dashboard">
+                <span class="material-icons-sharp">dashboard</span>
+                <h3>Dashboard</h3>
             </a>
 
             <a href="#" data-page="checklist">
@@ -2224,9 +2226,9 @@
         };
 
         // ==========================================
-        // RENDERIZAÇÃO DASHBOARD (TELA INICIAL)
+        // RENDERIZAÇÃO TELA INICIAL
         // ==========================================
-        function renderDashboard() {
+        function renderTelaInicial() {
             // Saudações
             const saudacao = getSaudacao();
             const emoji = getEmojiSaudacao();
@@ -2247,11 +2249,10 @@
             if (elDay) elDay.textContent = diasSemana[hoje.getDay()];
             if (elDate) elDate.textContent = `${hoje.getDate()} de ${meses[hoje.getMonth()]} de ${hoje.getFullYear()}`;
 
-            // Aulas hoje (exemplo)
             const elAulas = document.getElementById('aulasHoje');
             if (elAulas) elAulas.textContent = '4';
 
-            // Clock (atualizado em tempo real)
+            // Clock
             updateClockDisplay();
 
             // Checklist
@@ -2263,7 +2264,7 @@
             if (elCheckDone) elCheckDone.textContent = done;
             if (elCheckBar) elCheckBar.style.width = `${pct}%`;
 
-            // Atividades
+            // Atividades concluídas
             const totalAtiv = atividades.length;
             const concluidas = atividades.filter(a => {
                 const subtarefas = a.subtarefas || [];
@@ -2285,7 +2286,7 @@
             if (elHoras) elHoras.textContent = horasFormatadas > 0 ? `${horasFormatadas}h${minutosFormatados > 0 ? ` ${minutosFormatados}min` : ''}` :
                 `${minutosFormatados}min`;
             const elEstudoBar = document.getElementById('estudoProgressBar');
-            const metaEstudo = 120; // meta de 2h por dia
+            const metaEstudo = 120;
             if (elEstudoBar) elEstudoBar.style.width = `${Math.min(100, (horasHoje / metaEstudo) * 100)}%`;
 
             // Média geral
@@ -2304,7 +2305,7 @@
             if (elMedia) elMedia.textContent = mediaGeral.toFixed(1);
             if (elMediaBar) elMediaBar.style.width = `${Math.min(100, (mediaGeral / 10) * 100)}%`;
 
-            // Progresso do semestre (termina 18/12/2026)
+            // Progresso do semestre
             const dataInicio = new Date('2026-02-10');
             const dataFim = new Date('2026-12-18');
             const totalSemanas = Math.ceil((dataFim - dataInicio) / (1000 * 60 * 60 * 24 * 7));
@@ -2339,21 +2340,7 @@
                 else elProgressMsg.textContent = '🌟 O primeiro passo é o mais importante! Você já começou!';
             }
 
-            // Stats cards (mantidos)
-            const elTotalAtiv = document.getElementById('totalAtividades');
-            const elTotalGrupo = document.getElementById('totalGrupo');
-            const elTotalIndividual = document.getElementById('totalIndividual');
-            const elCheckDone2 = document.getElementById('checkDoneCount2');
-            const elMediaGeral2 = document.getElementById('mediaGeral');
-
-            if (elTotalAtiv) elTotalAtiv.textContent = totalAtiv;
-            if (elTotalGrupo) elTotalGrupo.textContent = atividades.filter(a => a.tipo === 'grupo').length;
-            if (elTotalIndividual) elTotalIndividual.textContent = atividades.filter(a => a.tipo === 'individual')
-            .length;
-            if (elCheckDone2) elCheckDone2.textContent = done;
-            if (elMediaGeral2) elMediaGeral2.textContent = mediaGeral.toFixed(1);
-
-            // Frase do dia (se não tiver carregada)
+            // Frase do dia
             const elQuote = document.getElementById('dailyQuote');
             const elAuthor = document.getElementById('quoteAuthor');
             if (elQuote && !elQuote.dataset.loaded) {
@@ -2366,6 +2353,44 @@
         }
 
         // ==========================================
+        // RENDERIZAÇÃO DASHBOARD (ESTATÍSTICAS)
+        // ==========================================
+        function renderDashboard() {
+            const totalAtiv = atividades.length;
+            const grupo = atividades.filter(a => a.tipo === 'grupo').length;
+            const individual = atividades.filter(a => a.tipo === 'individual').length;
+
+            const total = checklistItems.length;
+            const done = checklistItems.filter(item => checklistState[item.id] === true).length;
+
+            let medias = [];
+            turmas.forEach(d => {
+                const nota = notas[d.cod] || { b1: '', b2: '', b3: '', b4: '' };
+                const valores = [parseFloat(nota.b1), parseFloat(nota.b2), parseFloat(nota.b3), parseFloat(nota.b4)];
+                const validas = valores.filter(v => !isNaN(v));
+                if (validas.length > 0) {
+                    medias.push(validas.reduce((a, b) => a + b, 0) / validas.length);
+                }
+            });
+            const mediaGeral = medias.length > 0 ? (medias.reduce((a, b) => a + b, 0) / medias.length) : 0;
+
+            const elTotalAtiv = document.getElementById('totalAtividades');
+            const elTotalGrupo = document.getElementById('totalGrupo');
+            const elTotalIndividual = document.getElementById('totalIndividual');
+            const elCheckDone = document.getElementById('checkDoneCountDashboard');
+            const elMediaGeral = document.getElementById('mediaGeralDashboard');
+
+            if (elTotalAtiv) elTotalAtiv.textContent = totalAtiv;
+            if (elTotalGrupo) elTotalGrupo.textContent = grupo;
+            if (elTotalIndividual) elTotalIndividual.textContent = individual;
+            if (elCheckDone) elCheckDone.textContent = done;
+            if (elMediaGeral) elMediaGeral.textContent = mediaGeral.toFixed(1);
+
+            // Clock do dashboard
+            updateClockDisplay();
+        }
+
+        // ==========================================
         // RELÓGIO
         // ==========================================
         function updateClockDisplay() {
@@ -2374,17 +2399,17 @@
             const m = String(now.getMinutes()).padStart(2, '0');
             const s = String(now.getSeconds()).padStart(2, '0');
 
-            // Clock do dashboard (topo)
-            const timeEl = document.getElementById('clockDisplay');
-            const secEl = document.getElementById('secondsDisplay');
-            if (timeEl) timeEl.textContent = `${h}:${m}`;
-            if (secEl) secEl.textContent = s;
-
-            // Clock hero (tela inicial)
+            // Clock da tela inicial
             const heroTime = document.getElementById('clockHeroTime');
             const heroSec = document.getElementById('clockHeroSeconds');
             if (heroTime) heroTime.textContent = `${h}:${m}`;
             if (heroSec) heroSec.textContent = s;
+
+            // Clock do dashboard
+            const timeEl = document.getElementById('clockDisplay');
+            const secEl = document.getElementById('secondsDisplay');
+            if (timeEl) timeEl.textContent = `${h}:${m}`;
+            if (secEl) secEl.textContent = s;
         }
 
         // ==========================================
@@ -2397,7 +2422,6 @@
             const elAuthor = document.getElementById('quoteAuthor');
             if (elQuote) elQuote.textContent = random.frase;
             if (elAuthor) elAuthor.textContent = random.autor;
-            // Animação sutil
             const card = document.querySelector('.quote-card');
             if (card) {
                 card.style.transition = '0.3s ease';
@@ -2434,6 +2458,7 @@
                     checklistState[id] = !checklistState[id];
                     saveData('gda_checklist', checklistState);
                     renderChecklist();
+                    renderTelaInicial();
                     renderDashboard();
                 });
             });
@@ -2481,7 +2506,7 @@
         }
 
         // ==========================================
-        // ATIVIDADES (COM PARTICIPANTES E PRAZOS)
+        // ATIVIDADES
         // ==========================================
         function renderAtividades() {
             const container = document.getElementById('atividadesContainer');
@@ -2501,7 +2526,6 @@
                     Math.round((a.subtarefas.filter(st => st.concluido).length / a.subtarefas.length) * 100) :
                     (a.progresso || 0);
 
-                // Renderiza participantes com prazos individuais
                 let participantesHtml = '';
                 if (a.participantes && a.participantes.length > 0) {
                     participantesHtml = `
@@ -2645,6 +2669,7 @@
             notas[cod][bimestre] = valor;
             saveData('gda_notas', notas);
             renderNotas();
+            renderTelaInicial();
             renderDashboard();
         };
 
@@ -2653,6 +2678,7 @@
                 atividades = atividades.filter(a => a.id !== id);
                 saveData('gda_atividades', atividades);
                 renderAtividades();
+                renderTelaInicial();
                 renderDashboard();
             }
         };
@@ -2727,7 +2753,7 @@
         // ==========================================
         async function loadPages() {
             const container = document.getElementById('pageContainer');
-            const pages = ['dashboard', 'checklist', 'turmas', 'atividades', 'notas', 'relatorios'];
+            const pages = ['inicial', 'dashboard', 'checklist', 'turmas', 'atividades', 'notas', 'relatorios'];
 
             for (const page of pages) {
                 try {
@@ -2741,10 +2767,10 @@
                     const pageDiv = document.createElement('div');
                     pageDiv.id = `page-${page}`;
                     pageDiv.className = 'page';
-                    if (page === 'dashboard') pageDiv.classList.add('active');
+                    if (page === 'inicial') pageDiv.classList.add('active');
 
                     let content = '';
-                    if (page === 'dashboard') {
+                    if (page === 'inicial') {
                         content = `
                             <!-- TELA INICIAL COMPLETA -->
                             <div class="welcome-hero">
@@ -2887,14 +2913,24 @@
                                     </div>
                                 </div>
                             </div>
+                        `;
+                    } else if (page === 'dashboard') {
+                        content = `
+                            <div class="dashboard-header">
+                                <h1>📊 Dashboard <small>Controle Ambiental · 2026.2</small></h1>
+                                <div class="clock">
+                                    <span id="clockDisplay">00:00</span>
+                                    <span class="sec" id="secondsDisplay">00</span>
+                                </div>
+                            </div>
 
                             <div class="stats-grid">
                                 <div class="stat-card"><span class="icon"><i class="fas fa-book"></i></span><div class="number">14</div><div class="label">Turmas Matriculadas</div></div>
                                 <div class="stat-card"><span class="icon"><i class="fas fa-tasks"></i></span><div class="number" id="totalAtividades">0</div><div class="label">Atividades</div></div>
                                 <div class="stat-card"><span class="icon"><i class="fas fa-users"></i></span><div class="number" id="totalGrupo">0</div><div class="label">Atividades em Grupo</div></div>
                                 <div class="stat-card"><span class="icon"><i class="fas fa-user"></i></span><div class="number" id="totalIndividual">0</div><div class="label">Atividades Individuais</div></div>
-                                <div class="stat-card"><span class="icon"><i class="fas fa-check-double"></i></span><div class="number" id="checkDoneCount2">0</div><div class="label">Checklist Concluído</div></div>
-                                <div class="stat-card"><span class="icon"><i class="fas fa-graduation-cap"></i></span><div class="number" id="mediaGeral">0.0</div><div class="label">Média Geral</div></div>
+                                <div class="stat-card"><span class="icon"><i class="fas fa-check-double"></i></span><div class="number" id="checkDoneCountDashboard">0</div><div class="label">Checklist Concluído</div></div>
+                                <div class="stat-card"><span class="icon"><i class="fas fa-graduation-cap"></i></span><div class="number" id="mediaGeralDashboard">0.0</div><div class="label">Média Geral</div></div>
                             </div>
                         `;
                     } else if (page === 'checklist') {
@@ -2987,6 +3023,7 @@
             renderAtividades();
             renderNotas();
             renderRelatorios();
+            renderTelaInicial();
             renderDashboard();
 
             // Navegação
@@ -3005,12 +3042,11 @@
                         'active'));
                     this.classList.add('active');
                     const filtro = this.dataset.filtro;
-                    // Implementar filtro aqui
                     console.log('Filtro selecionado:', filtro);
                 });
             });
 
-            console.log('✅ GDA Acadêmico v3.0 - Tela Inicial + Participantes carregados!');
+            console.log('✅ GDA Acadêmico v3.0 - Tela Inicial + Dashboard carregados!');
         }
 
         // ==========================================
@@ -3037,6 +3073,7 @@
                 });
                 saveData('gda_relatorios', relatorios);
                 renderRelatorios();
+                renderTelaInicial();
                 renderDashboard();
                 document.getElementById('relatorioTexto').value = '';
                 document.getElementById('relatorioTempo').value = '';
@@ -3106,6 +3143,7 @@
 
                 saveData('gda_atividades', atividades);
                 renderAtividades();
+                renderTelaInicial();
                 renderDashboard();
                 closeModal();
                 alert('✅ Atividade salva!');
@@ -3179,7 +3217,8 @@
             relatorios: relatorios.length,
             checklist: Object.keys(checklistState).length
         });
-        console.log('✅ Tela Inicial com saudações, frases, progresso e participantes implementados!');
+        console.log('✅ Tela Inicial + Dashboard separados!');
+        console.log('✅ Participantes com prazos individuais implementados!');
     </script>
 
 </body>
