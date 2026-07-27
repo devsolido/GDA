@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8" />
@@ -12,6 +12,1138 @@
 
     <link rel="stylesheet" href="styles/style.css" />
     <link rel="icon" href="favicon.ico" />
+
+    <style>
+        /* ===== RESET & VARIÁVEIS ===== */
+        :root {
+            --color-primary: #0b0f15;
+            --color-secondary: #121820;
+            --color-card: #1a232e;
+            --color-border: rgba(255, 255, 255, 0.06);
+            --color-text: #e8edf4;
+            --color-text-muted: #7a8ea8;
+            --color-accent: #ffb300;
+            --color-accent-hover: #f57f17;
+            --color-danger: #e53935;
+            --color-success: #4caf50;
+            --color-warning: #ff8f00;
+            --color-info: #1565c0;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --radius: 16px;
+            --transition: 0.3s ease;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--color-primary);
+            color: var(--color-text);
+            min-height: 100vh;
+            display: flex;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 179, 0, 0.2); border-radius: 10px; }
+
+        /* ===== SPLASH ===== */
+        .splash-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: var(--color-primary);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+        .splash-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .splash-content {
+            text-align: center;
+            max-width: 460px;
+            padding: 40px 36px;
+            background: var(--color-card);
+            border-radius: 24px;
+            border: 1px solid var(--color-border);
+            box-shadow: var(--shadow);
+            animation: fadeInUp 0.6s ease;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .splash-content .logo-icon {
+            width: 72px; height: 72px;
+            background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--color-primary);
+            margin: 0 auto 16px;
+        }
+        .splash-content h1 { font-size: 28px; font-weight: 700; margin-bottom: 4px; color: var(--color-text); }
+        .splash-content h1 span { color: var(--color-accent); }
+        .splash-content .splash-message { font-size: 16px; color: var(--color-text-muted); margin-bottom: 24px; line-height: 1.6; }
+        .splash-content .btn-entrar {
+            background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
+            color: var(--color-primary);
+            border: none;
+            padding: 14px 48px;
+            border-radius: 40px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
+            width: 100%;
+        }
+        .splash-content .btn-entrar:hover { transform: scale(1.02); box-shadow: 0 8px 32px rgba(255, 179, 0, 0.2); }
+        .splash-content .versao { font-size: 12px; color: var(--color-text-muted); margin-top: 16px; opacity: 0.5; }
+
+        /* ===== SIDEBAR ===== */
+        header {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            width: 260px;
+            background: var(--color-secondary);
+            border-right: 1px solid var(--color-border);
+            display: flex;
+            flex-direction: column;
+            padding: 20px 14px;
+            z-index: 100;
+            transition: var(--transition);
+            overflow-y: auto;
+        }
+
+        header .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--color-border);
+            margin-bottom: 16px;
+        }
+
+        header .logo .logo-icon {
+            width: 44px; height: 44px;
+            background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 18px;
+            color: var(--color-primary);
+        }
+
+        header .logo h2 { font-size: 20px; font-weight: 700; color: var(--color-text); }
+        header .logo h2 span { color: var(--color-accent); }
+
+        header .navbar {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            flex: 1;
+        }
+
+        header .navbar .nav-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--color-text-muted);
+            padding: 12px 16px 6px;
+            opacity: 0.5;
+            font-weight: 600;
+        }
+
+        header .navbar a {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 10px 16px;
+            border-radius: 12px;
+            color: var(--color-text-muted);
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        header .navbar a:hover {
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--color-text);
+        }
+        header .navbar a.active {
+            background: rgba(255, 179, 0, 0.08);
+            color: var(--color-accent);
+        }
+        header .navbar a .material-icons-sharp { font-size: 22px; }
+        header .navbar a h3 { font-weight: 500; font-size: 14px; }
+        header .navbar a .badge-link {
+            margin-left: auto;
+            font-size: 11px;
+            background: rgba(255, 179, 0, 0.08);
+            color: var(--color-accent);
+            padding: 1px 10px;
+            border-radius: 30px;
+        }
+
+        .submenu-sistemas {
+            display: none;
+            flex-direction: column;
+            gap: 2px;
+            margin-left: 16px;
+            padding-left: 16px;
+            border-left: 1px solid var(--color-border);
+        }
+        .submenu-sistemas.open { display: flex; }
+
+        .submenu-sistemas a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 14px;
+            border-radius: 10px;
+            color: var(--color-text-muted);
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 13px;
+        }
+        .submenu-sistemas a:hover {
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--color-text);
+        }
+        .submenu-sistemas a i {
+            width: 18px;
+            color: var(--color-accent);
+            font-size: 14px;
+        }
+        .submenu-sistemas a .status-dot {
+            margin-left: auto;
+            font-size: 8px;
+            color: var(--color-success);
+        }
+
+        header .user-info {
+            padding: 14px 12px;
+            border-top: 1px solid var(--color-border);
+            margin-top: auto;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        header .user-info .avatar {
+            width: 38px; height: 38px;
+            border-radius: 50%;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 2px solid var(--color-accent);
+        }
+
+        header .user-info .avatar img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        header .user-info .name { font-size: 13px; font-weight: 600; }
+        header .user-info .role { font-size: 11px; color: var(--color-text-muted); }
+
+        /* ===== CONTAINER ===== */
+        .container {
+            margin-left: 260px;
+            flex: 1;
+            padding: 24px 32px 20px;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===== PÁGINAS ===== */
+        .page {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        .page.active { display: block; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== TOP BAR ===== */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .top-bar h1 { font-size: 24px; font-weight: 700; }
+        .top-bar h1 small {
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--color-text-muted);
+            margin-left: 10px;
+        }
+
+        .top-bar .clock {
+            font-size: 18px;
+            font-weight: 600;
+            background: var(--color-card);
+            padding: 6px 20px;
+            border-radius: 30px;
+            border: 1px solid var(--color-border);
+        }
+        .top-bar .clock .sec {
+            font-size: 13px;
+            color: var(--color-text-muted);
+            font-weight: 400;
+        }
+
+        /* ===== STATS ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .stat-card {
+            background: var(--color-card);
+            border-radius: var(--radius);
+            padding: 18px 20px;
+            border: 1px solid var(--color-border);
+            transition: var(--transition);
+        }
+        .stat-card:hover { border-color: rgba(255, 179, 0, 0.1); }
+        .stat-card .number {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--color-accent);
+        }
+        .stat-card .label {
+            font-size: 13px;
+            color: var(--color-text-muted);
+            margin-top: 4px;
+        }
+        .stat-card .icon {
+            float: right;
+            font-size: 24px;
+            color: rgba(255, 179, 0, 0.1);
+        }
+
+        /* ===== SECTION ===== */
+        .section {
+            margin-bottom: 32px;
+            scroll-margin-top: 20px;
+        }
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .section-title i { color: var(--color-accent); }
+        .section-title .badge {
+            font-size: 12px;
+            font-weight: 600;
+            background: rgba(255, 179, 0, 0.1);
+            color: var(--color-accent);
+            padding: 2px 14px;
+            border-radius: 30px;
+        }
+
+        /* ===== CHECKLIST ===== */
+        .checklist-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px 24px;
+            background: var(--color-card);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            border: 1px solid var(--color-border);
+        }
+        @media (max-width: 700px) { .checklist-grid { grid-template-columns: 1fr; } }
+
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 6px 8px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .check-item:hover { background: rgba(255, 255, 255, 0.02); }
+        .check-item .box {
+            width: 20px; height: 20px;
+            border-radius: 6px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: var(--transition);
+            font-size: 11px;
+            color: var(--color-primary);
+        }
+        .check-item .box.done {
+            background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
+            border-color: var(--color-accent);
+        }
+        .check-item .label {
+            font-size: 13px;
+            flex: 1;
+            color: var(--color-text);
+        }
+        .check-item .label.done {
+            color: var(--color-text-muted);
+            text-decoration: line-through;
+        }
+        .check-item .icon-status {
+            color: var(--color-text-muted);
+            font-size: 14px;
+        }
+        .check-item .icon-status.done { color: var(--color-success); }
+
+        /* ===== TURMAS ===== */
+        .table-wrapper {
+            background: var(--color-card);
+            border-radius: var(--radius);
+            border: 1px solid var(--color-border);
+            overflow: hidden;
+            overflow-x: auto;
+        }
+
+        .table-search {
+            padding: 14px 18px;
+            background: rgba(255, 255, 255, 0.01);
+            border-bottom: 1px solid var(--color-border);
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .table-search input {
+            flex: 1;
+            min-width: 200px;
+            padding: 8px 16px;
+            border-radius: 30px;
+            border: 1px solid var(--color-border);
+            background: rgba(255, 255, 255, 0.02);
+            color: var(--color-text);
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            outline: none;
+            transition: var(--transition);
+        }
+        .table-search input:focus { border-color: var(--color-accent); }
+        .table-search input::placeholder { color: var(--color-text-muted); }
+        .table-search .search-count {
+            font-size: 12px;
+            color: var(--color-text-muted);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            min-width: 700px;
+        }
+        table thead { background: rgba(255, 255, 255, 0.02); }
+        table th {
+            text-align: left;
+            padding: 14px 18px;
+            font-weight: 600;
+            color: var(--color-text-muted);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            border-bottom: 1px solid var(--color-border);
+        }
+        table td {
+            padding: 12px 18px;
+            border-bottom: 1px solid var(--color-border);
+            color: var(--color-text);
+        }
+        table tr:last-child td { border-bottom: none; }
+        table tr:hover td { background: rgba(255, 255, 255, 0.01); }
+        table .cod {
+            font-weight: 600;
+            color: var(--color-accent);
+            font-size: 12px;
+        }
+        table .prof {
+            font-size: 12px;
+            color: var(--color-text-muted);
+        }
+        table .turma {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--color-info);
+        }
+        table .horario {
+            font-size: 12px;
+            color: var(--color-text-muted);
+        }
+        table .status {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 14px;
+            border-radius: 30px;
+            background: rgba(76, 175, 80, 0.12);
+            color: var(--color-success);
+            display: inline-block;
+        }
+
+        /* ===== RELATÓRIOS ===== */
+        .relatorio-section {
+            background: var(--color-card);
+            border-radius: var(--radius);
+            padding: 24px 28px;
+            border: 1px solid var(--color-border);
+            margin-bottom: 32px;
+            transition: var(--transition);
+        }
+        .relatorio-section:hover { border-color: rgba(255, 179, 0, 0.08); }
+
+        .relatorio-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .relatorio-header h3 {
+            font-size: 18px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--color-text);
+        }
+        .relatorio-header h3 i { color: var(--color-accent); font-size: 20px; }
+        .relatorio-header .badge {
+            font-size: 12px;
+            background: rgba(255, 179, 0, 0.08);
+            color: var(--color-accent);
+            padding: 4px 16px;
+            border-radius: 30px;
+            font-weight: 600;
+        }
+
+        .relatorio-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+        .relatorio-form .full-width { grid-column: span 2; }
+        .relatorio-form label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--color-text-muted);
+            margin-bottom: 6px;
+            display: block;
+        }
+        .relatorio-form select,
+        .relatorio-form textarea,
+        .relatorio-form input[type="number"] {
+            width: 100%;
+            padding: 10px 16px;
+            border-radius: 10px;
+            border: 1px solid var(--color-border);
+            background: rgba(255, 255, 255, 0.02);
+            color: var(--color-text);
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            outline: none;
+            transition: var(--transition);
+        }
+        .relatorio-form select:focus,
+        .relatorio-form textarea:focus,
+        .relatorio-form input[type="number"]:focus {
+            border-color: var(--color-accent);
+            box-shadow: 0 0 0 3px rgba(255, 179, 0, 0.08);
+        }
+        .relatorio-form textarea { resize: vertical; min-height: 80px; }
+        .relatorio-form .btn-salvar-relatorio {
+            background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
+            color: var(--color-primary);
+            border: none;
+            padding: 10px 28px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: center;
+        }
+        .relatorio-form .btn-salvar-relatorio:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 20px rgba(255, 179, 0, 0.2);
+        }
+        .relatorio-form .form-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            grid-column: span 2;
+        }
+
+        .relatorios-lista {
+            margin-top: 16px;
+            max-height: 450px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+        .relatorios-lista::-webkit-scrollbar { width: 4px; }
+        .relatorios-lista::-webkit-scrollbar-track { background: transparent; }
+        .relatorios-lista::-webkit-scrollbar-thumb { background: rgba(255, 179, 0, 0.2); border-radius: 10px; }
+
+        .relatorios-lista .empty-state {
+            text-align: center;
+            padding: 30px 20px;
+            color: var(--color-text-muted);
+            font-size: 14px;
+            border: 1px dashed var(--color-border);
+            border-radius: 12px;
+        }
+        .relatorios-lista .empty-state i {
+            display: block;
+            font-size: 32px;
+            margin-bottom: 8px;
+            opacity: 0.3;
+        }
+
+        .relatorio-dia {
+            margin-bottom: 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            border: 1px solid var(--color-border);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+        .relatorio-dia:hover { border-color: rgba(255, 179, 0, 0.1); }
+
+        .relatorio-dia-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 18px;
+            background: rgba(255, 179, 0, 0.04);
+            border-bottom: 2px solid var(--color-border);
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .relatorio-dia-header .data-dia {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--color-accent);
+        }
+        .relatorio-dia-header .data-dia i { margin-right: 8px; }
+        .relatorio-dia-header .total-dia {
+            font-size: 13px;
+            color: var(--color-text-muted);
+            background: rgba(255, 255, 255, 0.03);
+            padding: 4px 14px;
+            border-radius: 30px;
+        }
+
+        .relatorio-dia-itens { padding: 4px 0; }
+        .relatorio-dia-itens .relatorio-item {
+            border: none;
+            border-radius: 0;
+            margin-bottom: 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            padding: 10px 18px;
+            display: flex;
+            gap: 14px;
+            align-items: center;
+            transition: var(--transition);
+        }
+        .relatorio-dia-itens .relatorio-item:last-child { border-bottom: none; }
+        .relatorio-dia-itens .relatorio-item:hover { background: rgba(255, 255, 255, 0.02); }
+        .relatorio-dia-itens .relatorio-item .disciplina {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--color-text);
+            min-width: 140px;
+        }
+        .relatorio-dia-itens .relatorio-item .horas {
+            font-size: 12px;
+            color: var(--color-success);
+            min-width: 60px;
+            text-align: right;
+            font-weight: 600;
+        }
+        .relatorio-dia-itens .relatorio-item .texto {
+            flex: 1;
+            font-size: 13px;
+            color: var(--color-text-muted);
+            line-height: 1.5;
+            min-width: 150px;
+        }
+
+        /* ===== ATIVIDADES ===== */
+        .atividades-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        @media (max-width: 900px) { .atividades-grid { grid-template-columns: 1fr; } }
+
+        .atividade-card {
+            background: var(--color-card);
+            border-radius: var(--radius);
+            padding: 20px 22px;
+            border: 1px solid var(--color-border);
+            position: relative;
+            transition: var(--transition);
+        }
+        .atividade-card:hover { border-color: rgba(255, 179, 0, 0.1); }
+        .atividade-card.prioridade-alta { border-left: 4px solid var(--color-danger); }
+        .atividade-card.prioridade-media { border-left: 4px solid var(--color-warning); }
+        .atividade-card.prioridade-baixa { border-left: 4px solid var(--color-success); }
+
+        .atividade-card .titulo {
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--color-text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .atividade-card .disciplina {
+            font-size: 13px;
+            color: var(--color-text-muted);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .atividade-card .disciplina i { color: var(--color-accent); font-size: 14px; }
+        .atividade-card .datas {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            font-size: 13px;
+            color: var(--color-text-muted);
+            margin: 6px 0 10px;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+        .atividade-card .datas span { display: flex; align-items: center; gap: 6px; }
+        .atividade-card .datas span strong { color: var(--color-text); }
+
+        .atividade-card .progresso-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px solid var(--color-border);
+        }
+        .atividade-card .progresso-area .bar {
+            flex: 1;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .atividade-card .progresso-area .bar .fill {
+            height: 100%;
+            border-radius: 10px;
+            background: linear-gradient(90deg, var(--color-accent), var(--color-accent-hover));
+            transition: 0.6s ease;
+            width: 0%;
+        }
+        .atividade-card .progresso-area .pct {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--color-accent);
+            min-width: 45px;
+            text-align: right;
+        }
+
+        .atividade-card .acoes {
+            margin-top: 12px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            padding-top: 10px;
+            border-top: 1px solid var(--color-border);
+        }
+        .atividade-card .acoes button {
+            padding: 5px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: var(--transition);
+            border: 1px solid var(--color-border);
+            background: rgba(255, 255, 255, 0.02);
+            color: var(--color-text-muted);
+        }
+        .atividade-card .acoes button:hover { background: rgba(255, 255, 255, 0.05); }
+        .atividade-card .acoes .btn-edit:hover {
+            border-color: var(--color-accent);
+            color: var(--color-accent);
+        }
+        .atividade-card .acoes .btn-delete:hover {
+            border-color: var(--color-danger);
+            color: var(--color-danger);
+            background: rgba(229, 57, 53, 0.05);
+        }
+
+        .btn-add-atividade {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px dashed var(--color-border);
+            border-radius: var(--radius);
+            padding: 16px;
+            text-align: center;
+            color: var(--color-text-muted);
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .btn-add-atividade:hover {
+            border-color: var(--color-accent);
+            color: var(--color-accent);
+            background: rgba(255, 179, 0, 0.03);
+        }
+
+        .filtros-atividades {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        .filtros-atividades button {
+            padding: 4px 16px;
+            border-radius: 30px;
+            border: 1px solid var(--color-border);
+            background: transparent;
+            color: var(--color-text-muted);
+            font-size: 12px;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .filtros-atividades button:hover { background: rgba(255, 255, 255, 0.03); }
+        .filtros-atividades button.active {
+            background: rgba(255, 179, 0, 0.08);
+            color: var(--color-accent);
+            border-color: rgba(255, 179, 0, 0.1);
+        }
+
+        /* ===== NOTAS ===== */
+        .notas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+        .notas-card {
+            background: var(--color-card);
+            border-radius: var(--radius);
+            padding: 18px 20px;
+            border: 1px solid var(--color-border);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        .notas-card:hover {
+            border-color: rgba(255, 179, 0, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .notas-card .disciplina-nome {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            color: var(--color-text);
+        }
+        .notas-card .disciplina-nome .codigo {
+            font-size: 12px;
+            color: var(--color-text-muted);
+            font-weight: 400;
+        }
+
+        .notas-bimestres {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .nota-bimestre {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 8px 6px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid var(--color-border);
+            transition: var(--transition);
+        }
+        .nota-bimestre:focus-within {
+            border-color: var(--color-accent);
+            background: rgba(255, 179, 0, 0.03);
+        }
+        .nota-bimestre .bimestre-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+            letter-spacing: 0.3px;
+        }
+        .nota-bimestre input {
+            width: 100%;
+            padding: 4px 2px;
+            background: transparent;
+            border: none;
+            color: var(--color-text);
+            font-size: 18px;
+            font-weight: 700;
+            text-align: center;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            transition: var(--transition);
+        }
+        .nota-bimestre input:focus { border-bottom: 2px solid var(--color-accent); }
+        .nota-bimestre input::placeholder {
+            color: var(--color-text-muted);
+            font-weight: 400;
+            font-size: 14px;
+        }
+
+        .notas-resultado {
+            padding: 12px 14px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            border: 1px solid var(--color-border);
+            margin-top: 8px;
+        }
+        .notas-resultado .resultado-principal {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .notas-resultado .media {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        .notas-resultado .media.aprovado { color: var(--color-success); }
+        .notas-resultado .media.reprovado { color: var(--color-danger); }
+        .notas-resultado .media.recuperacao { color: var(--color-warning); }
+        .notas-resultado .media.aguardando { color: var(--color-text-muted); }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-overlay.open { display: flex; }
+
+        .modal {
+            background: var(--color-secondary);
+            border-radius: 24px;
+            padding: 32px 36px;
+            max-width: 820px;
+            width: 100%;
+            border: 1px solid var(--color-border);
+            box-shadow: var(--shadow);
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        .modal::-webkit-scrollbar { width: 4px; }
+        .modal::-webkit-scrollbar-thumb { background: rgba(255, 179, 0, 0.2); border-radius: 10px; }
+
+        .modal h2 {
+            font-size: 22px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--color-text);
+        }
+        .modal h2 i { color: var(--color-accent); }
+
+        .modal label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--color-text-muted);
+            margin-top: 14px;
+            margin-bottom: 5px;
+        }
+        .modal input,
+        .modal select,
+        .modal textarea {
+            width: 100%;
+            padding: 10px 16px;
+            border-radius: 10px;
+            border: 1px solid var(--color-border);
+            background: #1a232e;
+            color: #e8edf4;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            outline: none;
+            transition: var(--transition);
+        }
+        .modal input:focus,
+        .modal select:focus,
+        .modal textarea:focus {
+            border-color: var(--color-accent);
+            box-shadow: 0 0 0 3px rgba(255, 179, 0, 0.08);
+        }
+        .modal select option { background: #121820; color: #e8edf4; }
+        .modal input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
+        .modal textarea { resize: vertical; min-height: 60px; }
+
+        .modal .modal-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 28px;
+            padding-top: 20px;
+            border-top: 1px solid var(--color-border);
+        }
+        .modal .modal-actions button {
+            padding: 10px 32px;
+            border-radius: 30px;
+            border: none;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
+        }
+        .modal .modal-actions .btn-primary {
+            background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
+            color: var(--color-primary);
+        }
+        .modal .modal-actions .btn-primary:hover { transform: scale(1.02); }
+        .modal .modal-actions .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--color-text-muted);
+        }
+        .modal .modal-actions .btn-secondary:hover { background: rgba(255, 255, 255, 0.08); }
+
+        /* ===== RESPONSIVIDADE ===== */
+        @media (max-width: 1024px) {
+            header { width: 72px; padding: 16px 10px; }
+            header .logo h2, header .navbar a h3, header .navbar .nav-label,
+            header .user-info .name, header .user-info .role,
+            header .navbar a .badge-link, .submenu-sistemas { display: none !important; }
+            header .logo .logo-icon { width: 36px; height: 36px; font-size: 14px; }
+            header .navbar a { justify-content: center; padding: 12px 8px; }
+            header .navbar a .material-icons-sharp { display: block; font-size: 26px; }
+            header .user-info { justify-content: center; }
+            header .user-info .avatar { width: 32px; height: 32px; }
+            .container { margin-left: 72px; }
+        }
+
+        @media (max-width: 768px) {
+            .modal { padding: 20px; }
+            .notas-bimestres { grid-template-columns: repeat(2, 1fr); }
+            .notas-grid { grid-template-columns: 1fr; }
+            .relatorio-form { grid-template-columns: 1fr; }
+            .relatorio-form .full-width { grid-column: span 1; }
+            .relatorio-form .form-actions { grid-column: span 1; flex-direction: column; }
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 16px; margin-left: 0; }
+            header {
+                width: 100%;
+                height: auto;
+                position: relative;
+                flex-direction: row;
+                padding: 10px 14px;
+                flex-wrap: wrap;
+                border-right: none;
+                border-bottom: 1px solid var(--color-border);
+            }
+            header .logo {
+                padding-bottom: 0;
+                border-bottom: none;
+                margin-bottom: 0;
+                flex: 1;
+            }
+            header .navbar {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 2px;
+            }
+            header .navbar a { padding: 6px 10px; font-size: 12px; }
+            header .navbar a h3 { display: none; }
+            header .navbar .nav-label { display: none; }
+            header .user-info { display: none; }
+            .submenu-sistemas { display: none !important; }
+            .container { margin-left: 0; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .top-bar h1 { font-size: 20px; }
+            .top-bar h1 small { font-size: 12px; display: block; margin-left: 0; }
+            .atividades-grid { grid-template-columns: 1fr; }
+            .checklist-grid { grid-template-columns: 1fr; }
+            .splash-content { padding: 20px 16px; }
+            .splash-content .logo-icon { width: 48px; height: 48px; font-size: 20px; }
+            .splash-content h1 { font-size: 20px; }
+            .splash-content .splash-message { font-size: 13px; }
+            .relatorio-section { padding: 16px; }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .filtros-atividades { gap: 4px; }
+            .filtros-atividades button { font-size: 11px; padding: 3px 12px; }
+            .notas-bimestres { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
 </head>
 <body>
 
@@ -105,8 +1237,9 @@
 
     <!-- ===== CONTAINER PRINCIPAL ===== -->
     <div class="container" id="mainContainer">
-        <!-- Páginas carregadas aqui -->
-        <div id="pageContainer"></div>
+        <div id="pageContainer">
+            <!-- As páginas serão carregadas aqui pelo JavaScript -->
+        </div>
     </div>
 
     <!-- ===== MODAL ===== -->
@@ -137,54 +1270,673 @@
     </div>
 
     <!-- ===== SCRIPTS ===== -->
-    <script type="module">
-        // Importa tudo
-        import './js/app.js';
-        import './js/router.js';
-        
-        // Carrega as páginas
-        async function loadPages() {
-            const container = document.getElementById('pageContainer');
-            const pages = ['dashboard', 'checklist', 'turmas', 'atividades', 'notas', 'relatorios'];
-            
-            for (const page of pages) {
-                try {
-                    const response = await fetch(pages/.html);
-                    const html = await response.text();
-                    container.insertAdjacentHTML('beforeend', html);
-                } catch (error) {
-                    console.error(Erro ao carregar :, error);
+    <script>
+        // ==========================================
+        // CONFIGURAÇÃO
+        // ==========================================
+        const APP_ID = '1BF3914F-116E-4BD6-BA55-D9720E1219C7';
+        const API_KEY = 'C3CEF6C4-9697-49FC-BFF2-F99A95A9855A';
+        const USUARIO = 'igor_veras';
+
+        // ==========================================
+        // DADOS
+        // ==========================================
+        const turmas = [
+            { cod: 'TICAM0147', nome: 'ARTES', professor: 'THAYS ALVES COSTA', turma: 'B2371M', horario: '6M34' },
+            { cod: 'TICAM0152', nome: 'FILOSOFIA', professor: 'JESSIKA CURTINAZ DA SILVA', turma: 'B2371M', horario: '4M56' },
+            { cod: 'TICAM0159', nome: 'FUNDAMENTOS DE SANEAMENTO E SAÚDE PÚBLICA', professor: 'DANIELLE IVANA PEREIRA DOS SANTOS', turma: 'B2371M', horario: '3M34' },
+            { cod: 'TICAM0153', nome: 'GEOGRAFIA', professor: 'SILVANA DE SOUSA SILVA', turma: 'B2371M', horario: '5M12' },
+            { cod: 'TICAM0157', nome: 'INFORMÁTICA BÁSICA', professor: 'FABIO DE OLIVEIRA TORRES', turma: 'B2731M', horario: '4M12' },
+            { cod: 'TICAM0154', nome: 'INTRODUÇÃO AO TÉCNICO EM CONTROLE AMBIENTAL', professor: 'SAMARA AVELINO DE SOUZA FRANCA', turma: 'B2731M', horario: '6M12' },
+            { cod: 'TICAM0146', nome: 'LIBRAS', professor: 'ANDREZA DOS SANTOS FLEXA', turma: 'B2731M', horario: '5M34' },
+            { cod: 'TICAM0145', nome: 'LÍNGUA PORTUGUESA', professor: 'KAUANA DE CARVALHO PENALVA', turma: 'B2731M', horario: '2M456' },
+            { cod: 'TICAM0148', nome: 'MATEMÁTICA', professor: 'SÓRIA PEREIRA LIMA SOARES', turma: 'B2371M', horario: '2M123' },
+            { cod: 'TICAM0156', nome: 'METODOLOGIA DE PROJETOS AMBIENTAIS', professor: 'ADANNA DE SOUZA ANDRADE', turma: 'B2371M', horario: '3M56' },
+            { cod: 'TICAM0149', nome: 'QUÍMICA', professor: 'EDLÉIA APARECIDA FERREIRA DE SOUSA', turma: 'B2371M', horario: '3M12' },
+            { cod: 'TICAM0155', nome: 'SEGURANÇA E SAÚDE OCUPACIONAL', professor: 'EDLÉIA APARECIDA FERREIRA DE SOUSA e HALENE HELENSIEVA QUEIROZ MORAES', turma: 'B2371M', horario: '6M56' },
+            { cod: 'TICAM0150', nome: 'SOCIOLOGIA', professor: 'MARCELO MELO DOS SANTOS', turma: 'B2371M', horario: '5M56' },
+            { cod: 'TICAM0158', nome: 'TÉCNICAS EM EDUCAÇÃO AMBIENTAL', professor: 'DANIELLE IVANA PEREIRA DOS SANTOS', turma: 'B2371M', horario: '4M34' }
+        ];
+
+        const checklistItems = [
+            { id: 'linkedin', label: 'Verificar LinkedIn', icon: 'fab fa-linkedin' },
+            { id: 'gupy', label: 'Gupy - Vaga Aprendiz Home Office', icon: 'fas fa-briefcase' },
+            { id: 'sigaa', label: 'Verificar SIGAA (notas/frequência)', icon: 'fas fa-university' },
+            { id: 'calendario', label: 'Verificar calendário e compromissos', icon: 'fas fa-calendar-alt' },
+            { id: 'intercambios', label: 'Intercâmbios - Oportunidades', icon: 'fas fa-globe-americas' },
+            { id: 'ingles', label: 'Estudar Inglês (30 min)', icon: 'fas fa-language' }
+        ];
+
+        // ==========================================
+        // STORAGE
+        // ==========================================
+        function loadData(key, defaultValue) {
+            try {
+                const data = localStorage.getItem(key);
+                return data ? JSON.parse(data) : defaultValue;
+            } catch { return defaultValue; }
+        }
+
+        function saveData(key, data) {
+            try {
+                localStorage.setItem(key, JSON.stringify(data));
+                return true;
+            } catch { return false; }
+        }
+
+        // ==========================================
+        // ESTADO GLOBAL
+        // ==========================================
+        let atividades = loadData('gda_atividades', []);
+        let notas = loadData('gda_notas', {});
+        let relatorios = loadData('gda_relatorios', []);
+        let checklistState = loadData('gda_checklist', {});
+
+        // ==========================================
+        // RENDERIZAÇÃO DAS PÁGINAS
+        // ==========================================
+        function renderDashboard() {
+            const total = checklistItems.length;
+            const done = checklistItems.filter(item => checklistState[item.id] === true).length;
+            const el = document.getElementById('checkDoneCount');
+            if (el) el.textContent = done;
+
+            const totalAtiv = atividades.length;
+            const grupo = atividades.filter(a => a.tipo === 'grupo').length;
+            const individual = atividades.filter(a => a.tipo === 'individual').length;
+            const elTotal = document.getElementById('totalAtividades');
+            const elGrupo = document.getElementById('totalGrupo');
+            const elIndividual = document.getElementById('totalIndividual');
+            if (elTotal) elTotal.textContent = totalAtiv;
+            if (elGrupo) elGrupo.textContent = grupo;
+            if (elIndividual) elIndividual.textContent = individual;
+
+            let medias = [];
+            turmas.forEach(d => {
+                const nota = notas[d.cod] || { b1: '', b2: '', b3: '', b4: '' };
+                const valores = [parseFloat(nota.b1), parseFloat(nota.b2), parseFloat(nota.b3), parseFloat(nota.b4)];
+                const validas = valores.filter(v => !isNaN(v));
+                if (validas.length > 0) {
+                    medias.push(validas.reduce((a, b) => a + b, 0) / validas.length);
                 }
+            });
+            const mediaGeral = medias.length > 0 ? (medias.reduce((a, b) => a + b, 0) / medias.length) : 0;
+            const elMedia = document.getElementById('mediaGeral');
+            if (elMedia) elMedia.textContent = mediaGeral.toFixed(1);
+        }
+
+        function renderChecklist() {
+            const container = document.getElementById('checklistContainer');
+            if (!container) return;
+
+            checklistItems.forEach(item => {
+                if (checklistState[item.id] === undefined) checklistState[item.id] = false;
+            });
+
+            container.innerHTML = checklistItems.map(item => {
+                const done = checklistState[item.id] || false;
+                return `
+                    <div class="check-item" data-id="${item.id}">
+                        <div class="box ${done ? 'done' : ''}">${done ? '<i class="fas fa-check"></i>' : ''}</div>
+                        <span class="label ${done ? 'done' : ''}"><i class="${item.icon}" style="margin-right:8px;color:#ffb300;width:16px;"></i>${item.label}</span>
+                        <span class="icon-status ${done ? 'done' : ''}">${done ? '<i class="fas fa-check-circle"></i>' : '<i class="far fa-circle"></i>'}</span>
+                    </div>
+                `;
+            }).join('');
+
+            document.querySelectorAll('.check-item').forEach(el => {
+                el.addEventListener('click', function() {
+                    const id = this.dataset.id;
+                    checklistState[id] = !checklistState[id];
+                    saveData('gda_checklist', checklistState);
+                    renderChecklist();
+                    renderDashboard();
+                });
+            });
+
+            const total = checklistItems.length;
+            const done = checklistItems.filter(item => checklistState[item.id] === true).length;
+            const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+            const el = document.getElementById('checkPct');
+            if (el) el.textContent = `${pct}%`;
+        }
+
+        function renderTurmas() {
+            const tbody = document.getElementById('turmasTableBody');
+            if (!tbody) return;
+
+            tbody.innerHTML = turmas.map(t =>
+                `<tr>
+                    <td class="cod">${t.cod}</td>
+                    <td><strong>${t.nome}</strong><br><span class="prof">${t.professor}</span></td>
+                    <td class="turma">${t.turma}</td>
+                    <td><span class="status"><i class="fas fa-check-circle"></i> Matriculado</span></td>
+                    <td class="horario">${t.horario}</td>
+                </tr>`
+            ).join('');
+
+            // Busca
+            const searchInput = document.getElementById('searchTurma');
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    const filter = this.value.toLowerCase();
+                    const rows = tbody.querySelectorAll('tr');
+                    let count = 0;
+                    rows.forEach(row => {
+                        const text = row.textContent.toLowerCase();
+                        const visible = text.includes(filter);
+                        row.style.display = visible ? '' : 'none';
+                        if (visible) count++;
+                    });
+                    const countEl = document.getElementById('searchCount');
+                    if (countEl) countEl.textContent = `Mostrando ${count} de ${turmas.length}`;
+                });
             }
         }
-        
-        loadPages().then(() => {
-            console.log('✅ Páginas carregadas!');
-        });
-    </script>
 
-    <script>
-        // ===== FUNÇÕES GLOBAIS =====
+        function renderAtividades() {
+            const container = document.getElementById('atividadesContainer');
+            if (!container) return;
+
+            if (atividades.length === 0) {
+                container.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--color-text-muted);background:var(--color-card);border-radius:var(--radius);border:1px solid var(--color-border);">
+                    <i class="fas fa-inbox" style="font-size:32px;display:block;margin-bottom:12px;color:rgba(255,179,0,0.1);"></i>
+                    Nenhuma atividade cadastrada. Clique em "Nova Atividade" para começar.
+                </div>`;
+                return;
+            }
+
+            container.innerHTML = atividades.map(a => {
+                const progresso = a.subtarefas && a.subtarefas.length > 0 ? 
+                    Math.round((a.subtarefas.filter(st => st.concluido).length / a.subtarefas.length) * 100) : 
+                    (a.progresso || 0);
+
+                return `
+                    <div class="atividade-card prioridade-${a.prioridade}">
+                        <div class="disciplina"><i class="fas fa-book"></i> ${a.disciplina || 'Sem disciplina'}</div>
+                        <div class="titulo">${a.titulo || 'Sem título'}</div>
+                        <div class="datas">
+                            <span>📅 Início: ${a.inicio ? new Date(a.inicio + 'T00:00:00').toLocaleDateString('pt-BR') : 'Não definido'}</span>
+                            <span>⏰ Prazo: ${a.prazo ? new Date(a.prazo + 'T00:00:00').toLocaleDateString('pt-BR') : 'Não definido'}</span>
+                        </div>
+                        <div class="progresso-area">
+                            <div class="bar"><div class="fill" style="width:${progresso}%;"></div></div>
+                            <span class="pct">${progresso}%</span>
+                        </div>
+                        <div class="acoes">
+                            <button class="btn-edit" onclick="editarAtividade(${a.id})"><i class="fas fa-edit"></i> Editar</button>
+                            <button class="btn-delete" onclick="deletarAtividade(${a.id})"><i class="fas fa-trash-alt"></i> Remover</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderNotas() {
+            const container = document.getElementById('notasContainer');
+            if (!container) return;
+
+            container.innerHTML = turmas.map(d => {
+                const nota = notas[d.cod] || { b1: '', b2: '', b3: '', b4: '' };
+                const valores = [nota.b1, nota.b2, nota.b3, nota.b4];
+                const validas = valores.filter(v => v !== '' && !isNaN(parseFloat(v))).map(v => parseFloat(v));
+                const media = validas.length > 0 ? (validas.reduce((a, b) => a + b, 0) / validas.length) : 0;
+                const status = media >= 7 ? 'aprovado' : (validas.length === 4 ? 'reprovado' : 'recuperacao');
+                const statusText = media >= 7 ? '✅ Aprovado' : (validas.length === 4 ? '❌ Reprovado' : '🟡 Em andamento');
+
+                return `
+                    <div class="notas-card">
+                        <div class="disciplina-nome">${d.nome} <span class="codigo">${d.cod}</span></div>
+                        <div class="notas-bimestres">
+                            ${[1,2,3,4].map(b => `
+                                <div class="nota-bimestre">
+                                    <div class="bimestre-label">${b}º Bim</div>
+                                    <input type="number" min="0" max="10" step="0.1" 
+                                        value="${nota['b'+b] || ''}" 
+                                        onchange="atualizarNota('${d.cod}', 'b${b}', this.value)"
+                                        placeholder="--" />
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="notas-resultado">
+                            <div class="resultado-principal">
+                                <span class="media ${status}">${validas.length > 0 ? media.toFixed(1) : '--'}</span>
+                                <span style="font-size:13px;color:var(--color-text-muted);">${validas.length}/4 bimestres</span>
+                                <span style="font-size:12px;font-weight:600;color:${media >= 7 ? 'var(--color-success)' : 'var(--color-warning)'};">${statusText}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderRelatorios() {
+            const container = document.getElementById('relatoriosLista');
+            if (!container) return;
+
+            if (relatorios.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        Nenhum relatório registrado.
+                    </div>
+                `;
+                return;
+            }
+
+            const grouped = {};
+            relatorios.forEach(r => {
+                if (!grouped[r.data]) grouped[r.data] = [];
+                grouped[r.data].push(r);
+            });
+
+            const datas = Object.keys(grouped).sort((a, b) => new Date(b) - new Date(a));
+
+            container.innerHTML = datas.map(dataKey => {
+                const items = grouped[dataKey];
+                const totalTempo = items.reduce((acc, r) => acc + r.tempo, 0);
+                const totalHoras = Math.floor(totalTempo / 60);
+                const totalMinutos = totalTempo % 60;
+                const totalTexto = totalHoras > 0 ? `${totalHoras}h ${totalMinutos}min` : `${totalMinutos}min`;
+
+                return `
+                    <div class="relatorio-dia">
+                        <div class="relatorio-dia-header">
+                            <span class="data-dia"><i class="far fa-calendar-alt"></i> ${new Date(dataKey + 'T00:00:00').toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' })}</span>
+                            <span class="total-dia">📊 ${items.length} registro(s) · ⏱️ ${totalTexto}</span>
+                        </div>
+                        <div class="relatorio-dia-itens">
+                            ${items.map(r => `
+                                <div class="relatorio-item">
+                                    <span class="disciplina">📚 ${r.disciplina}</span>
+                                    <span class="horas">⏱️ ${r.tempo}min</span>
+                                    <span class="texto">${r.texto}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ==========================================
+        // FUNÇÕES DE AÇÃO
+        // ==========================================
+        window.atualizarNota = function(cod, bimestre, valor) {
+            if (!notas[cod]) notas[cod] = { b1: '', b2: '', b3: '', b4: '' };
+            notas[cod][bimestre] = valor;
+            saveData('gda_notas', notas);
+            renderNotas();
+            renderDashboard();
+        };
+
+        window.deletarAtividade = function(id) {
+            if (confirm('Remover esta atividade?')) {
+                atividades = atividades.filter(a => a.id !== id);
+                saveData('gda_atividades', atividades);
+                renderAtividades();
+                renderDashboard();
+            }
+        };
+
+        window.editarAtividade = function(id) {
+            const atividade = atividades.find(a => a.id === id);
+            if (!atividade) return;
+            document.getElementById('formTitulo').value = atividade.titulo || '';
+            document.getElementById('formTipo').value = atividade.tipo || 'individual';
+            document.getElementById('formPrioridade').value = atividade.prioridade || 'media';
+            document.getElementById('formDisciplina').value = atividade.disciplina || '';
+            document.getElementById('formInicio').value = atividade.inicio || '';
+            document.getElementById('formPrazo').value = atividade.prazo || '';
+            document.getElementById('formEntregaDocente').value = atividade.entregaDocente || '';
+            document.getElementById('formObservacoes').value = atividade.observacoes || '';
+            document.getElementById('modalTitle').innerHTML = '<i class="fas fa-edit"></i> Editar Atividade';
+            document.getElementById('modalOverlay').classList.add('open');
+            window.editandoId = id;
+        };
+
+        window.openModal = function() {
+            document.getElementById('atividadeForm').reset();
+            document.getElementById('modalTitle').innerHTML = '<i class="fas fa-plus-circle"></i> Nova Atividade';
+            document.getElementById('modalOverlay').classList.add('open');
+            window.editandoId = null;
+        };
+
+        window.closeModal = function() {
+            document.getElementById('modalOverlay').classList.remove('open');
+        };
+
         window.entrarNoSistema = function() {
             document.getElementById('splashOverlay').classList.add('hidden');
         };
 
-        // ===== RELÓGIO =====
+        // ==========================================
+        // ROTEAMENTO
+        // ==========================================
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+            const target = document.getElementById(`page-${pageId}`);
+            if (target) target.classList.add('active');
+
+            document.querySelectorAll('.navbar a[data-page]').forEach(link => {
+                link.classList.toggle('active', link.dataset.page === pageId);
+            });
+        }
+
+        // ==========================================
+        // CARREGAR PÁGINAS
+        // ==========================================
+        async function loadPages() {
+            const container = document.getElementById('pageContainer');
+            const pages = ['dashboard', 'checklist', 'turmas', 'atividades', 'notas', 'relatorios'];
+
+            for (const page of pages) {
+                try {
+                    const response = await fetch(`pages/${page}.html`);
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    const html = await response.text();
+                    container.insertAdjacentHTML('beforeend', html);
+                } catch (error) {
+                    console.error(`Erro ao carregar ${page}:`, error);
+                    // Fallback: criar a página dinamicamente
+                    const pageDiv = document.createElement('div');
+                    pageDiv.id = `page-${page}`;
+                    pageDiv.className = 'page';
+                    if (page === 'dashboard') pageDiv.classList.add('active');
+                    
+                    let content = '';
+                    if (page === 'dashboard') {
+                        content = `
+                            <div class="top-bar">
+                                <h1>📊 Dashboard <small>Controle Ambiental · 2026.2</small></h1>
+                                <div class="clock">
+                                    <span id="clockDisplay">00:00</span>
+                                    <span class="sec" id="secondsDisplay">00</span>
+                                </div>
+                            </div>
+                            <div class="stats-grid">
+                                <div class="stat-card"><span class="icon"><i class="fas fa-book"></i></span><div class="number">14</div><div class="label">Turmas Matriculadas</div></div>
+                                <div class="stat-card"><span class="icon"><i class="fas fa-tasks"></i></span><div class="number" id="totalAtividades">0</div><div class="label">Atividades</div></div>
+                                <div class="stat-card"><span class="icon"><i class="fas fa-users"></i></span><div class="number" id="totalGrupo">0</div><div class="label">Atividades em Grupo</div></div>
+                                <div class="stat-card"><span class="icon"><i class="fas fa-user"></i></span><div class="number" id="totalIndividual">0</div><div class="label">Atividades Individuais</div></div>
+                                <div class="stat-card"><span class="icon"><i class="fas fa-check-double"></i></span><div class="number" id="checkDoneCount">0</div><div class="label">Checklist Concluído</div></div>
+                                <div class="stat-card"><span class="icon"><i class="fas fa-graduation-cap"></i></span><div class="number" id="mediaGeral">0.0</div><div class="label">Média Geral</div></div>
+                            </div>
+                        `;
+                    } else if (page === 'checklist') {
+                        content = `
+                            <div class="section-title">
+                                <i class="fas fa-clipboard-list"></i> Checklist Diário
+                                <span class="badge" id="checkPct">0%</span>
+                            </div>
+                            <div class="checklist-grid" id="checklistContainer"></div>
+                        `;
+                    } else if (page === 'turmas') {
+                        content = `
+                            <div class="section-title">
+                                <i class="fas fa-class"></i> Turmas Matriculadas
+                                <span class="badge">14 disciplinas</span>
+                            </div>
+                            <div class="table-wrapper">
+                                <div class="table-search">
+                                    <input type="text" id="searchTurma" placeholder="🔍 Buscar disciplina, professor ou código..." />
+                                    <span class="search-count" id="searchCount">Mostrando 14 de 14</span>
+                                </div>
+                                <table>
+                                    <thead><tr><th>Cód.</th><th>Componente Curricular / Docente</th><th>Turma</th><th>Status</th><th>Horário</th></tr></thead>
+                                    <tbody id="turmasTableBody"></tbody>
+                                </table>
+                            </div>
+                        `;
+                    } else if (page === 'atividades') {
+                        content = `
+                            <div class="section-title">
+                                <i class="fas fa-tasks"></i> Atividades
+                                <span class="badge" id="atividadeBadge">0</span>
+                                <button onclick="openModal()" style="margin-left:auto;padding:6px 20px;border-radius:30px;border:1px dashed var(--color-border);background:transparent;color:var(--color-text-muted);cursor:pointer;font-family:'Inter',sans-serif;font-size:13px;">
+                                    <i class="fas fa-plus"></i> Nova Atividade
+                                </button>
+                            </div>
+                            <div class="filtros-atividades">
+                                <button class="active" data-filtro="todas">📋 Todas</button>
+                                <button data-filtro="individual">👤 Individual</button>
+                                <button data-filtro="grupo">👥 Grupo</button>
+                            </div>
+                            <div class="atividades-grid" id="atividadesContainer"></div>
+                        `;
+                    } else if (page === 'notas') {
+                        content = `
+                            <div class="section-title">
+                                <i class="fas fa-graduation-cap"></i> Módulo de Notas
+                                <span class="badge">📊 Média ≥ 7.0 = Aprovado</span>
+                            </div>
+                            <div class="notas-grid" id="notasContainer"></div>
+                        `;
+                    } else if (page === 'relatorios') {
+                        content = `
+                            <div class="relatorio-section">
+                                <div class="relatorio-header">
+                                    <h3><i class="fas fa-pen-alt"></i> Relatório Diário de Estudos</h3>
+                                    <span class="badge">📝 Registre seu progresso</span>
+                                </div>
+                                <form class="relatorio-form" id="relatorioForm">
+                                    <div>
+                                        <label>📚 Disciplina</label>
+                                        <select id="relatorioDisciplina" required><option value="">Selecione</option></select>
+                                    </div>
+                                    <div>
+                                        <label>⏱️ Tempo (minutos)</label>
+                                        <input type="number" id="relatorioTempo" placeholder="Ex: 120" min="1" required />
+                                    </div>
+                                    <div class="full-width">
+                                        <label>📝 O que estudei hoje?</label>
+                                        <textarea id="relatorioTexto" placeholder="Descreva o que você estudou..." required></textarea>
+                                    </div>
+                                    <div class="form-actions">
+                                        <button type="submit" class="btn-salvar-relatorio"><i class="fas fa-save"></i> Salvar</button>
+                                    </div>
+                                </form>
+                                <div class="relatorios-lista" id="relatoriosLista"></div>
+                            </div>
+                        `;
+                    }
+                    pageDiv.innerHTML = content;
+                    container.appendChild(pageDiv);
+                }
+            }
+
+            // Inicializa após carregar
+            renderChecklist();
+            renderTurmas();
+            renderAtividades();
+            renderNotas();
+            renderRelatorios();
+            renderDashboard();
+
+            // Navegação
+            document.querySelectorAll('.navbar a[data-page]').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const page = this.dataset.page;
+                    showPage(page);
+                });
+            });
+
+            console.log('✅ GDA Acadêmico v3.0 carregado!');
+        }
+
+        // ==========================================
+        // RELÓGIO
+        // ==========================================
         function updateClock() {
             const now = new Date();
             const h = String(now.getHours()).padStart(2, '0');
             const m = String(now.getMinutes()).padStart(2, '0');
             const s = String(now.getSeconds()).padStart(2, '0');
-            document.getElementById('clockDisplay').textContent = ${h}:;
-            document.getElementById('secondsDisplay').textContent = s;
+            const clock = document.getElementById('clockDisplay');
+            const sec = document.getElementById('secondsDisplay');
+            if (clock) clock.textContent = `${h}:${m}`;
+            if (sec) sec.textContent = s;
         }
-        updateClock();
-        setInterval(updateClock, 1000);
 
-        // ===== TOGGLE SUBMENU =====
-        document.getElementById('sistemasToggle').addEventListener('click', function(e) {
-            e.preventDefault();
-            document.getElementById('submenuSistemas').classList.toggle('open');
+        // ==========================================
+        // FORMULÁRIO DE RELATÓRIO
+        // ==========================================
+        document.addEventListener('submit', function(e) {
+            if (e.target.id === 'relatorioForm') {
+                e.preventDefault();
+                const disciplina = document.getElementById('relatorioDisciplina').value;
+                const tempo = parseInt(document.getElementById('relatorioTempo').value);
+                const texto = document.getElementById('relatorioTexto').value.trim();
+                
+                if (!disciplina || !tempo || !texto) {
+                    alert('Preencha todos os campos!');
+                    return;
+                }
+
+                relatorios.push({
+                    id: Date.now(),
+                    data: new Date().toISOString().split('T')[0],
+                    disciplina,
+                    tempo,
+                    texto
+                });
+                saveData('gda_relatorios', relatorios);
+                renderRelatorios();
+                document.getElementById('relatorioTexto').value = '';
+                document.getElementById('relatorioTempo').value = '';
+                document.getElementById('relatorioDisciplina').value = '';
+                alert('✅ Relatório salvo!');
+            }
+        });
+
+        // ==========================================
+        // FORMULÁRIO DE ATIVIDADE
+        // ==========================================
+        document.addEventListener('submit', function(e) {
+            if (e.target.id === 'atividadeForm') {
+                e.preventDefault();
+                const titulo = document.getElementById('formTitulo').value.trim();
+                const tipo = document.getElementById('formTipo').value;
+                const prioridade = document.getElementById('formPrioridade').value;
+                const disciplina = document.getElementById('formDisciplina').value;
+                const inicio = document.getElementById('formInicio').value;
+                const prazo = document.getElementById('formPrazo').value;
+                const entregaDocente = document.getElementById('formEntregaDocente').value;
+                const observacoes = document.getElementById('formObservacoes').value.trim();
+
+                if (!titulo || !disciplina || !inicio || !prazo || !entregaDocente) {
+                    alert('Preencha todos os campos obrigatórios.');
+                    return;
+                }
+
+                if (window.editandoId) {
+                    const idx = atividades.findIndex(a => a.id === window.editandoId);
+                    if (idx !== -1) {
+                        atividades[idx] = { ...atividades[idx], titulo, tipo, prioridade, disciplina, inicio, prazo, entregaDocente, observacoes };
+                    }
+                } else {
+                    atividades.push({
+                        id: Date.now(),
+                        titulo,
+                        tipo,
+                        prioridade,
+                        disciplina,
+                        inicio,
+                        prazo,
+                        entregaDocente,
+                        observacoes,
+                        subtarefas: [],
+                        progresso: 0
+                    });
+                }
+
+                saveData('gda_atividades', atividades);
+                renderAtividades();
+                renderDashboard();
+                closeModal();
+                alert('✅ Atividade salva!');
+                window.editandoId = null;
+            }
+        });
+
+        // ==========================================
+        // POPULAR SELECTS
+        // ==========================================
+        function populateSelects() {
+            const select = document.getElementById('formDisciplina');
+            if (select) {
+                select.innerHTML = turmas.map(t => `<option value="${t.nome}">${t.nome}</option>`).join('');
+            }
+
+            const relatorioSelect = document.getElementById('relatorioDisciplina');
+            if (relatorioSelect) {
+                relatorioSelect.innerHTML = `<option value="">Selecione</option>` + 
+                    turmas.map(t => `<option value="${t.nome}">${t.nome}</option>`).join('');
+            }
+        }
+
+        // ==========================================
+        // MODAL - CLICK FORA
+        // ==========================================
+        document.addEventListener('click', function(e) {
+            const modal = document.getElementById('modalOverlay');
+            if (e.target === modal) closeModal();
+        });
+
+        // ==========================================
+        // TOGGLE SUBMENU
+        // ==========================================
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('#sistemasToggle')) {
+                e.preventDefault();
+                document.getElementById('submenuSistemas').classList.toggle('open');
+            }
+        });
+
+        // ==========================================
+        // FILTROS ATIVIDADES
+        // ==========================================
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.filtros-atividades button')) {
+                const btn = e.target.closest('.filtros-atividades button');
+                document.querySelectorAll('.filtros-atividades button').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                // Implementar filtro aqui
+            }
+        });
+
+        // ==========================================
+        // INICIALIZAÇÃO
+        // ==========================================
+        document.addEventListener('DOMContentLoaded', function() {
+            populateSelects();
+            loadPages();
+            updateClock();
+            setInterval(updateClock, 1000);
+
+            // Definir datas padrão no modal
+            const hoje = new Date();
+            const prazo = new Date(hoje);
+            prazo.setDate(prazo.getDate() + 14);
+            const entrega = new Date(hoje);
+            entrega.setDate(entrega.getDate() + 16);
+
+            const inicioEl = document.getElementById('formInicio');
+            const prazoEl = document.getElementById('formPrazo');
+            const entregaEl = document.getElementById('formEntregaDocente');
+            if (inicioEl) inicioEl.value = hoje.toISOString().split('T')[0];
+            if (prazoEl) prazoEl.value = prazo.toISOString().split('T')[0];
+            if (entregaEl) entregaEl.value = entrega.toISOString().split('T')[0];
+        });
+
+        console.log('🚀 GDA Acadêmico v3.0 - Versão Estável');
+        console.log('📋 Usuário:', USUARIO);
+        console.log('📊 Dados carregados:', {
+            atividades: atividades.length,
+            notas: Object.keys(notas).length,
+            relatorios: relatorios.length,
+            checklist: Object.keys(checklistState).length
         });
     </script>
 
