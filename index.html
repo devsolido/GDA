@@ -14,7 +14,9 @@
     <link rel="icon" href="favicon.ico" />
 
     <style>
-        /* ===== RESET & VARIÁVEIS ===== */
+        /* ============================================================
+               CSS COMPLETO (mesmo estilo anterior, sem alterações significativas)
+               ============================================================ */
         :root {
             --color-primary: #0b0f15;
             --color-secondary: #121820;
@@ -357,7 +359,7 @@
             }
         }
 
-        /* ===== TELA INICIAL ===== */
+        /* ===== TELA INICIAL (SEM AÇÕES RÁPIDAS) ===== */
         .welcome-hero {
             background: linear-gradient(135deg, var(--color-card), var(--color-secondary));
             border-radius: var(--radius);
@@ -504,8 +506,8 @@
             border-color: var(--color-accent);
         }
 
-        /* Quick Actions - APENAS 2 BOTÕES */
-        .quick-actions {
+        /* Achievements (mantidos) */
+        .achievements {
             margin-bottom: 24px;
         }
         .section-label {
@@ -513,52 +515,6 @@
             font-weight: 600;
             color: var(--color-text);
             margin-bottom: 12px;
-        }
-        .action-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            max-width: 500px;
-        }
-        .action-btn {
-            background: var(--color-card);
-            border: 1px solid var(--color-border);
-            border-radius: var(--radius);
-            padding: 16px 20px;
-            cursor: pointer;
-            transition: var(--transition);
-            text-align: center;
-            color: var(--color-text);
-            font-family: 'Inter', sans-serif;
-        }
-        .action-btn:hover {
-            transform: translateY(-2px);
-            border-color: var(--color-accent);
-        }
-        .action-btn i {
-            font-size: 22px;
-            display: block;
-            margin-bottom: 4px;
-        }
-        .action-btn span {
-            font-size: 13px;
-            font-weight: 600;
-            display: block;
-        }
-        .action-btn small {
-            font-size: 10px;
-            color: var(--color-text-muted);
-        }
-        .action-btn.primary i {
-            color: var(--color-accent);
-        }
-        .action-btn.danger i {
-            color: var(--color-danger);
-        }
-
-        /* Achievements - APENAS 2 ITENS */
-        .achievements {
-            margin-bottom: 24px;
         }
         .achievement-grid {
             display: grid;
@@ -872,7 +828,7 @@
             color: var(--color-success);
         }
 
-        /* ===== ESTILOS EXISTENTES ===== */
+        /* ===== ESTILOS EXISTENTES (checklist, turmas, relatórios, etc.) ===== */
         .section {
             margin-bottom: 32px;
             scroll-margin-top: 20px;
@@ -2109,7 +2065,7 @@
             background: rgba(211, 47, 47, 0.4);
         }
 
-        /* ===== RESPONSIVIDADE ===== */
+        /* ===== RESPONSIVIDADE (mantida) ===== */
         @media (max-width: 1024px) {
             header {
                 width: 72px;
@@ -2166,9 +2122,6 @@
                 right: auto;
                 margin-top: 12px;
             }
-            .action-grid {
-                max-width: 100%;
-            }
             .achievement-grid {
                 max-width: 100%;
             }
@@ -2205,9 +2158,6 @@
             .achievement-grid {
                 grid-template-columns: 1fr 1fr;
             }
-            .action-grid {
-                grid-template-columns: 1fr 1fr;
-            }
             .clock-hero .time {
                 font-size: 20px;
             }
@@ -2238,12 +2188,6 @@
             }
             .relato-acoes {
                 flex-direction: column;
-            }
-            .action-grid {
-                grid-template-columns: 1fr;
-            }
-            .achievement-grid {
-                grid-template-columns: 1fr;
             }
         }
 
@@ -2296,9 +2240,6 @@
                 grid-template-columns: 1fr 1fr;
             }
             .achievement-grid {
-                grid-template-columns: 1fr;
-            }
-            .action-grid {
                 grid-template-columns: 1fr;
             }
             .atividades-grid {
@@ -2439,12 +2380,10 @@
                 <span class="material-icons-sharp">home</span>
                 <h3>Tela Inicial</h3>
             </a>
-
             <a href="#" data-page="dashboard">
                 <span class="material-icons-sharp">dashboard</span>
                 <h3>Dashboard</h3>
             </a>
-
             <a href="#" data-page="checklist">
                 <span class="material-icons-sharp">checklist</span>
                 <h3>Checklist</h3>
@@ -2697,7 +2636,6 @@
             'use strict';
 
             // ===== PROTEÇÃO CONTRA DDoS E ATAQUES =====
-            // Rate limiting - Máximo de 50 requisições por minuto
             const requestLog = {};
             const MAX_REQUESTS = 50;
             const TIME_WINDOW = 60000;
@@ -2717,10 +2655,10 @@
                 sanitizeInput: function(input) {
                     if (typeof input !== 'string') return input;
                     return input
-                        .replace(/[<>]/g, '') // Remove < e >
-                        .replace(/javascript:/gi, '') // Remove javascript:
-                        .replace(/on\w+=/gi, '') // Remove eventos inline
-                        .slice(0, 2000); // Limita tamanho
+                        .replace(/[<>]/g, '')
+                        .replace(/javascript:/gi, '')
+                        .replace(/on\w+=/gi, '')
+                        .slice(0, 2000);
                 }
             };
 
@@ -2728,16 +2666,11 @@
             console.log('%c⚠️ ACESSO RESTRITO ⚠️', 'font-size:20px;color:#ff0000;font-weight:bold;');
             console.log('%cEste sistema é monitorado 24/7.', 'font-size:14px;color:#ff6b6b;');
             console.log('%cTodas as ações são registradas.', 'font-size:14px;color:#ff6b6b;');
-
-            // Mensagem oculta (estilo ARG)
             console.log('%c[▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓] 42%', 'font-size:12px;color:#4ecdc4;');
             console.log('%c🔑 Chave de acesso: 0x7F3A9B2C', 'font-size:12px;color:#45b7d1;');
             console.log('%c📡 Sinal: --- ... --- ... ---', 'font-size:12px;color:#96ceb4;');
-
-            // Easter egg - comando secreto
             console.log('%c💀 Digite "acesso_liberado()" para mais informações', 'font-size:14px;color:#ffd93d;');
 
-            // Função secreta
             window.acesso_liberado = function() {
                 console.log('%c🚨 ACESSO NEGADO! 🚨', 'font-size:24px;color:#ff0000;font-weight:bold;');
                 console.log('%cVocê não tem permissão para acessar esta área.', 'font-size:14px;color:#ff6b6b;');
@@ -2746,32 +2679,12 @@
                 return false;
             };
 
-            // Sobrescreve console.log para filtrar informações sensíveis
-            const originalLog = console.log;
-            console.log = function() {
-                const args = Array.from(arguments);
-                const sensitive = ['password', 'token', 'key', 'secret', 'auth'];
-                const filtered = args.map(arg => {
-                    if (typeof arg === 'string') {
-                        let clean = arg;
-                        sensitive.forEach(word => {
-                            const regex = new RegExp(word + '[=:][^\\s]+', 'gi');
-                            clean = clean.replace(regex, word + '=••••••••');
-                        });
-                        return clean;
-                    }
-                    return arg;
-                });
-                originalLog.apply(console, filtered);
-            };
-
-            // ===== PROTEÇÃO CONTRA XSS =====
+            // ===== PROTEÇÃO XSS =====
             const originalInnerHTML = Object.getOwnPropertyDescriptor(Element.prototype, 'innerHTML');
             Object.defineProperty(Element.prototype, 'innerHTML', {
                 get: originalInnerHTML.get,
                 set: function(value) {
                     if (typeof value === 'string') {
-                        // Remove scripts e eventos maliciosos
                         const clean = value
                             .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
                             .replace(/on\w+\s*=/gi, '')
@@ -2782,15 +2695,9 @@
                 }
             });
 
-            // ===== PROTEÇÃO CONTRA CONSOLE HIJACKING =====
-            Object.freeze(console);
-            Object.freeze(console.log);
-            Object.freeze(console.warn);
-            Object.freeze(console.error);
-
-            // ===== PROTEÇÃO CONTRA ABERTURA DE DEVTOOLS =====
+            // ===== DETECÇÃO DE DEVTOOLS =====
             let devtoolsOpen = false;
-            const devtoolsCheck = function() {
+            setInterval(function() {
                 const threshold = 160;
                 const widthThreshold = window.outerWidth - window.innerWidth > threshold;
                 const heightThreshold = window.outerHeight - window.innerHeight > threshold;
@@ -2798,16 +2705,12 @@
                     if (!devtoolsOpen) {
                         devtoolsOpen = true;
                         console.warn('⚠️ Ferramentas de desenvolvedor detectadas!');
-                        // Limpa o console para esconder informações
                         setTimeout(() => { console.clear(); }, 100);
                     }
                 } else {
                     devtoolsOpen = false;
                 }
-            };
-
-            // Verifica a cada 2 segundos
-            setInterval(devtoolsCheck, 2000);
+            }, 2000);
 
             // ===== CONFIGURAÇÃO =====
             const APP_ID = '1BF3914F-116E-4BD6-BA55-D9720E1219C7';
@@ -3193,31 +3096,48 @@
 
                 const sorted = [...historicoPanico].sort((a, b) => b.id - a.id);
 
-                container.innerHTML = sorted.map(r => `
-                    <div class="panico-registro">
-                        <div class="header">
-                            <span class="disciplina">📚 ${r.disciplina}</span>
-                            <span class="data-hora">${r.data} · ${r.hora}</span>
-                            <span class="status ${r.resolvido ? 'resolvido' : 'pendente'}">
-                                ${r.resolvido ? '✅ Resolvido' : '⏳ Pendente'}
-                            </span>
+                container.innerHTML = sorted.map(r => {
+                    const statusClass = r.resolvido ? 'resolvido' : 'pendente';
+                    const statusText = r.resolvido ? '✅ Resolvido' : '⏳ Pendente';
+                    return `
+                        <div class="panico-registro" data-id="${r.id}">
+                            <div class="header">
+                                <span class="disciplina">📚 ${r.disciplina}</span>
+                                <span class="data-hora">${r.data} · ${r.hora}</span>
+                                <span class="status ${statusClass}">${statusText}</span>
+                            </div>
+                            <div class="motivo">${r.motivo}</div>
+                            <div style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap;">
+                                <button class="btn-resolver-panico" data-id="${r.id}" style="padding:4px 16px;border-radius:12px;border:1px solid var(--color-success);background:rgba(76,175,80,0.1);color:var(--color-success);cursor:pointer;font-size:12px;font-family:'Inter',sans-serif;">
+                                    ${r.resolvido ? '🔄 Desmarcar' : '✅ Marcar como resolvido'}
+                                </button>
+                                <button class="btn-deletar-panico" data-id="${r.id}" style="padding:4px 16px;border-radius:12px;border:1px solid var(--color-danger);background:rgba(229,57,53,0.1);color:var(--color-danger);cursor:pointer;font-size:12px;font-family:'Inter',sans-serif;">
+                                    🗑️ Remover
+                                </button>
+                            </div>
                         </div>
-                        <div class="motivo">${r.motivo}</div>
-                        <div style="margin-top:8px;">
-                            <button onclick="marcarPanicoResolvido(${r.id})" style="padding:2px 12px;border-radius:12px;border:1px solid var(--color-success);background:rgba(76,175,80,0.1);color:var(--color-success);cursor:pointer;font-size:11px;font-family:'Inter',sans-serif;">
-                                ✅ Marcar como resolvido
-                            </button>
-                            <button onclick="deletarRegistroPanico(${r.id})" style="padding:2px 12px;border-radius:12px;border:1px solid var(--color-danger);background:rgba(229,57,53,0.1);color:var(--color-danger);cursor:pointer;font-size:11px;font-family:'Inter',sans-serif;margin-left:4px;">
-                                🗑️ Remover
-                            </button>
-                        </div>
-                    </div>
-                `).join('');
+                    `;
+                }).join('');
+
+                // Event listeners para os botões (evita problemas com onclick)
+                document.querySelectorAll('.btn-resolver-panico').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        const id = parseInt(this.dataset.id);
+                        marcarPanicoResolvido(id);
+                    });
+                });
+
+                document.querySelectorAll('.btn-deletar-panico').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        const id = parseInt(this.dataset.id);
+                        deletarRegistroPanico(id);
+                    });
+                });
 
                 atualizarBadgePanico();
             }
 
-            window.marcarPanicoResolvido = function(id) {
+            function marcarPanicoResolvido(id) {
                 const registro = historicoPanico.find(r => r.id === id);
                 if (registro) {
                     registro.resolvido = !registro.resolvido;
@@ -3225,16 +3145,20 @@
                     renderHistoricoPanico();
                     atualizarBadgePanico();
                 }
-            };
+            }
 
-            window.deletarRegistroPanico = function(id) {
+            function deletarRegistroPanico(id) {
                 if (confirm('Remover este registro?')) {
                     historicoPanico = historicoPanico.filter(r => r.id !== id);
                     saveData('gda_historico_panico', historicoPanico);
                     renderHistoricoPanico();
                     atualizarBadgePanico();
                 }
-            };
+            }
+
+            // Tornar funções acessíveis globalmente (para os event listeners)
+            window.marcarPanicoResolvido = marcarPanicoResolvido;
+            window.deletarRegistroPanico = deletarRegistroPanico;
 
             // ===== RENDERIZAÇÃO TELA INICIAL =====
             function renderTelaInicial() {
@@ -3785,22 +3709,6 @@
                                     </button>
                                 </div>
 
-                                <div class="quick-actions">
-                                    <h3 class="section-label">⚡ Ações Rápidas</h3>
-                                    <div class="action-grid">
-                                        <button class="action-btn primary" onclick="openModal()">
-                                            <i class="fas fa-plus-circle"></i>
-                                            <span>Nova Atividade</span>
-                                            <small>Adicione uma tarefa</small>
-                                        </button>
-                                        <button class="action-btn danger" onclick="abrirPanico()">
-                                            <i class="fas fa-exclamation-triangle"></i>
-                                            <span>🚨 Pânico</span>
-                                            <small>Precisa de ajuda?</small>
-                                        </button>
-                                    </div>
-                                </div>
-
                                 <div class="achievements">
                                     <h3 class="section-label">🏆 Conquistas de Hoje</h3>
                                     <div class="achievement-grid">
@@ -4158,24 +4066,18 @@
                 setInterval(updateClockDisplay, 1000);
                 atualizarBadgePanico();
 
-                // Mensagem secreta no console
-                console.log('%c▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓', 'font-size:8px;color:#4ecdc4;');
-                console.log('%c▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓', 'font-size:8px;color:#4ecdc4;');
                 console.log('%c▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓', 'font-size:8px;color:#4ecdc4;');
                 console.log('%c   SISTEMA GDA v3.0 - MODO SEGURO ATIVADO   ', 'font-size:16px;color:#ffd93d;font-weight:bold;');
                 console.log('%c▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓', 'font-size:8px;color:#4ecdc4;');
-                console.log('%c▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓', 'font-size:8px;color:#4ecdc4;');
-                console.log('%c▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓', 'font-size:8px;color:#4ecdc4;');
+                console.log('%c🔐 Sistema inicializado com sucesso.', 'font-size:12px;color:#45b7d1;');
+                console.log('%c📡 Canal seguro estabelecido.', 'font-size:12px;color:#96ceb4;');
+                console.log('%c⚠️ Este sistema é monitorado.', 'font-size:12px;color:#ff6b6b;');
             });
-
-            console.log('%c🔐 Sistema inicializado com sucesso.', 'font-size:12px;color:#45b7d1;');
-            console.log('%c📡 Canal seguro estabelecido.', 'font-size:12px;color:#96ceb4;');
-            console.log('%c⚠️ Este sistema é monitorado.', 'font-size:12px;color:#ff6b6b;');
 
         })(); // Fim do IIFE - Proteção de escopo
 
         // ============================================================
-        //  FIM DO SISTEMA - NADA ALÉM DISSO FUNCIONA
+        //  FIM DO SISTEMA
         // ============================================================
     </script>
 
