@@ -14,7 +14,7 @@
     <link rel="icon" href="favicon.ico" />
 
     <style>
-        /* ===== RESET & VARIÁVEIS ===== */
+        /* ===== TODOS OS ESTILOS EXISTENTES + NOVOS ===== */
         :root {
             --color-primary: #0b0f15;
             --color-secondary: #121820;
@@ -284,796 +284,457 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* ===== TOP BAR ===== */
-        .top-bar {
+        /* ===== DASHBOARD - TELA INICIAL ===== */
+        .welcome-hero {
+            background: linear-gradient(135deg, var(--color-card), var(--color-secondary));
+            border-radius: var(--radius);
+            padding: 28px 32px;
+            margin-bottom: 24px;
+            border: 1px solid var(--color-border);
+            position: relative;
+            overflow: hidden;
+        }
+        .welcome-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255, 179, 0, 0.05), transparent 70%);
+            border-radius: 50%;
+        }
+        .greeting-section {
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
+            gap: 16px;
+            position: relative;
+            z-index: 1;
+        }
+        .greeting-text { display: flex; align-items: center; gap: 12px; }
+        .greeting-icon { font-size: 32px; }
+        .greeting-title { font-size: 28px; font-weight: 700; color: var(--color-text); }
+        .greeting-subtitle { font-size: 14px; color: var(--color-text-muted); margin-top: 4px; }
+        .date-info { text-align: right; }
+        .date-day { font-size: 18px; font-weight: 600; color: var(--color-accent); display: block; }
+        .date-full { font-size: 14px; color: var(--color-text-muted); }
+        .aulas-hoje { font-size: 13px; color: var(--color-text-muted); margin-top: 4px; display: block; }
+        .aulas-hoje strong { color: var(--color-text); }
+
+        /* Clock em destaque */
+        .clock-hero {
+            display: flex;
+            align-items: center;
             gap: 12px;
-            margin-bottom: 24px;
-        }
-
-        .top-bar h1 { font-size: 24px; font-weight: 700; }
-        .top-bar h1 small {
-            font-size: 14px;
-            font-weight: 400;
-            color: var(--color-text-muted);
-            margin-left: 10px;
-        }
-
-        .top-bar .clock {
-            font-size: 18px;
-            font-weight: 600;
-            background: var(--color-card);
-            padding: 6px 20px;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 8px 20px;
             border-radius: 30px;
             border: 1px solid var(--color-border);
         }
-        .top-bar .clock .sec {
-            font-size: 13px;
-            color: var(--color-text-muted);
-            font-weight: 400;
-        }
-
-        /* ===== STATS ===== */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 16px;
-            margin-bottom: 28px;
-        }
-
-        .stat-card {
-            background: var(--color-card);
-            border-radius: var(--radius);
-            padding: 18px 20px;
-            border: 1px solid var(--color-border);
-            transition: var(--transition);
-        }
-        .stat-card:hover { border-color: rgba(255, 179, 0, 0.1); }
-        .stat-card .number {
-            font-size: 28px;
+        .clock-hero .time {
+            font-size: 24px;
             font-weight: 700;
             color: var(--color-accent);
+            font-variant-numeric: tabular-nums;
         }
-        .stat-card .label {
+        .clock-hero .seconds {
+            font-size: 16px;
+            color: var(--color-text-muted);
+            font-weight: 400;
+            min-width: 28px;
+        }
+
+        /* Quote Card */
+        .quote-card {
+            background: var(--color-card);
+            border-radius: var(--radius);
+            padding: 20px 28px;
+            border: 1px solid var(--color-border);
+            margin-bottom: 24px;
+            position: relative;
+            transition: var(--transition);
+        }
+        .quote-card:hover { border-color: rgba(255, 179, 0, 0.1); }
+        .quote-icon {
+            font-size: 20px;
+            color: var(--color-accent);
+            opacity: 0.5;
+            margin-right: 12px;
+        }
+        .quote-card blockquote {
+            font-size: 16px;
+            font-style: italic;
+            color: var(--color-text);
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+        .quote-author {
             font-size: 13px;
             color: var(--color-text-muted);
+            display: block;
             margin-top: 4px;
         }
-        .stat-card .icon {
-            float: right;
-            font-size: 24px;
-            color: rgba(255, 179, 0, 0.1);
-        }
-
-        /* ===== SECTION ===== */
-        .section {
-            margin-bottom: 32px;
-            scroll-margin-top: 20px;
-        }
-        .section-title {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-        .section-title i { color: var(--color-accent); }
-        .section-title .badge {
-            font-size: 12px;
-            font-weight: 600;
-            background: rgba(255, 179, 0, 0.1);
-            color: var(--color-accent);
-            padding: 2px 14px;
-            border-radius: 30px;
-        }
-
-        /* ===== CHECKLIST ===== */
-        .checklist-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px 24px;
-            background: var(--color-card);
-            border-radius: var(--radius);
-            padding: 20px 24px;
+        .btn-new-quote {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--color-border);
-        }
-        @media (max-width: 700px) { .checklist-grid { grid-template-columns: 1fr; } }
-
-        .check-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 6px 8px;
-            border-radius: 10px;
+            color: var(--color-text-muted);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
             cursor: pointer;
             transition: var(--transition);
+            font-family: 'Inter', sans-serif;
         }
-        .check-item:hover { background: rgba(255, 255, 255, 0.02); }
-        .check-item .box {
-            width: 20px; height: 20px;
-            border-radius: 6px;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            transition: var(--transition);
-            font-size: 11px;
-            color: var(--color-primary);
-        }
-        .check-item .box.done {
-            background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
+        .btn-new-quote:hover {
+            background: rgba(255, 179, 0, 0.08);
+            color: var(--color-accent);
             border-color: var(--color-accent);
         }
-        .check-item .label {
-            font-size: 13px;
-            flex: 1;
+
+        /* Quick Actions */
+        .quick-actions { margin-bottom: 24px; }
+        .section-label {
+            font-size: 16px;
+            font-weight: 600;
             color: var(--color-text);
+            margin-bottom: 12px;
         }
-        .check-item .label.done {
-            color: var(--color-text-muted);
-            text-decoration: line-through;
-        }
-        .check-item .icon-status {
-            color: var(--color-text-muted);
-            font-size: 14px;
-        }
-        .check-item .icon-status.done { color: var(--color-success); }
-
-        /* ===== TURMAS ===== */
-        .table-wrapper {
-            background: var(--color-card);
-            border-radius: var(--radius);
-            border: 1px solid var(--color-border);
-            overflow: hidden;
-            overflow-x: auto;
-        }
-
-        .table-search {
-            padding: 14px 18px;
-            background: rgba(255, 255, 255, 0.01);
-            border-bottom: 1px solid var(--color-border);
-            display: flex;
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 12px;
-            flex-wrap: wrap;
-            align-items: center;
         }
-
-        .table-search input {
-            flex: 1;
-            min-width: 200px;
-            padding: 8px 16px;
-            border-radius: 30px;
+        .action-btn {
+            background: var(--color-card);
             border: 1px solid var(--color-border);
-            background: rgba(255, 255, 255, 0.02);
+            border-radius: var(--radius);
+            padding: 16px 20px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
             color: var(--color-text);
             font-family: 'Inter', sans-serif;
-            font-size: 13px;
-            outline: none;
+        }
+        .action-btn:hover {
+            transform: translateY(-2px);
+            border-color: var(--color-accent);
+        }
+        .action-btn i { font-size: 22px; display: block; margin-bottom: 4px; }
+        .action-btn span { font-size: 14px; font-weight: 600; display: block; }
+        .action-btn small { font-size: 11px; color: var(--color-text-muted); }
+        .action-btn.primary i { color: var(--color-accent); }
+        .action-btn.success i { color: var(--color-success); }
+        .action-btn.info i { color: var(--color-info); }
+        .action-btn.warning i { color: var(--color-warning); }
+
+        /* Achievements */
+        .achievements { margin-bottom: 24px; }
+        .achievement-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+        .achievement-card {
+            background: var(--color-card);
+            border-radius: var(--radius);
+            padding: 16px 20px;
+            border: 1px solid var(--color-border);
+            display: flex;
+            align-items: center;
+            gap: 14px;
             transition: var(--transition);
         }
-        .table-search input:focus { border-color: var(--color-accent); }
-        .table-search input::placeholder { color: var(--color-text-muted); }
-        .table-search .search-count {
-            font-size: 12px;
-            color: var(--color-text-muted);
-        }
-
-        table {
+        .achievement-card:hover { border-color: rgba(255, 179, 0, 0.1); }
+        .achievement-icon { font-size: 28px; }
+        .achievement-info { flex: 1; }
+        .achievement-value { font-size: 22px; font-weight: 700; color: var(--color-accent); display: block; }
+        .achievement-label { font-size: 12px; color: var(--color-text-muted); }
+        .mini-progress {
             width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-            min-width: 700px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 4px;
+            margin-top: 6px;
+            overflow: hidden;
         }
-        table thead { background: rgba(255, 255, 255, 0.02); }
-        table th {
-            text-align: left;
-            padding: 14px 18px;
-            font-weight: 600;
-            color: var(--color-text-muted);
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-            border-bottom: 1px solid var(--color-border);
-        }
-        table td {
-            padding: 12px 18px;
-            border-bottom: 1px solid var(--color-border);
-            color: var(--color-text);
-        }
-        table tr:last-child td { border-bottom: none; }
-        table tr:hover td { background: rgba(255, 255, 255, 0.01); }
-        table .cod {
-            font-weight: 600;
-            color: var(--color-accent);
-            font-size: 12px;
-        }
-        table .prof {
-            font-size: 12px;
-            color: var(--color-text-muted);
-        }
-        table .turma {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--color-info);
-        }
-        table .horario {
-            font-size: 12px;
-            color: var(--color-text-muted);
-        }
-        table .status {
-            font-size: 11px;
-            font-weight: 600;
-            padding: 2px 14px;
-            border-radius: 30px;
-            background: rgba(76, 175, 80, 0.12);
-            color: var(--color-success);
-            display: inline-block;
+        .mini-bar {
+            height: 100%;
+            border-radius: 4px;
+            background: linear-gradient(90deg, var(--color-accent), var(--color-accent-hover));
+            transition: width 0.8s ease;
+            width: 0%;
         }
 
-        /* ===== RELATÓRIOS ===== */
-        .relatorio-section {
+        /* Progress Hero */
+        .progress-hero {
             background: var(--color-card);
             border-radius: var(--radius);
             padding: 24px 28px;
             border: 1px solid var(--color-border);
-            margin-bottom: 32px;
-            transition: var(--transition);
+            margin-bottom: 28px;
         }
-        .relatorio-section:hover { border-color: rgba(255, 179, 0, 0.08); }
-
-        .relatorio-header {
+        .progress-container {
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            gap: 32px;
             flex-wrap: wrap;
-            gap: 12px;
-            margin-bottom: 20px;
         }
-        .relatorio-header h3 {
-            font-size: 18px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--color-text);
+        .progress-circle-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            flex-shrink: 0;
         }
-        .relatorio-header h3 i { color: var(--color-accent); font-size: 20px; }
-        .relatorio-header .badge {
-            font-size: 12px;
-            background: rgba(255, 179, 0, 0.08);
-            color: var(--color-accent);
-            padding: 4px 16px;
-            border-radius: 30px;
-            font-weight: 600;
+        .progress-circle {
+            width: 120px;
+            height: 120px;
+            transform: rotate(-90deg);
         }
+        .progress-circle .progress-bg {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.06);
+            stroke-width: 8;
+        }
+        .progress-circle .progress-fg {
+            fill: none;
+            stroke: var(--color-accent);
+            stroke-width: 8;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1s ease;
+        }
+        .progress-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+        .progress-percent { font-size: 24px; font-weight: 700; color: var(--color-accent); display: block; }
+        .progress-label { font-size: 10px; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
 
-        .relatorio-form {
+        .progress-info {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 14px;
+            gap: 12px 24px;
+            flex: 1;
         }
-        .relatorio-form .full-width { grid-column: span 2; }
-        .relatorio-form label {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--color-text-muted);
-            margin-bottom: 6px;
-            display: block;
-        }
-        .relatorio-form select,
-        .relatorio-form textarea,
-        .relatorio-form input[type="number"] {
+        .info-item { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.03); }
+        .info-label { font-size: 13px; color: var(--color-text-muted); }
+        .info-value { font-size: 14px; font-weight: 600; color: var(--color-text); }
+        .info-value.highlight { color: var(--color-accent); font-size: 18px; }
+
+        .progress-message {
             width: 100%;
-            padding: 10px 16px;
-            border-radius: 10px;
-            border: 1px solid var(--color-border);
-            background: rgba(255, 255, 255, 0.02);
+            padding: 12px 16px;
+            background: rgba(255, 179, 0, 0.05);
+            border-radius: 8px;
+            border-left: 3px solid var(--color-accent);
+            font-size: 14px;
             color: var(--color-text);
-            font-family: 'Inter', sans-serif;
-            font-size: 14px;
-            outline: none;
-            transition: var(--transition);
+            margin-top: 12px;
         }
-        .relatorio-form select:focus,
-        .relatorio-form textarea:focus,
-        .relatorio-form input[type="number"]:focus {
-            border-color: var(--color-accent);
-            box-shadow: 0 0 0 3px rgba(255, 179, 0, 0.08);
+
+        /* ===== ATIVIDADES COM PARTICIPANTES ===== */
+        .participantes-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin: 8px 0 10px;
         }
-        .relatorio-form textarea { resize: vertical; min-height: 80px; }
-        .relatorio-form .btn-salvar-relatorio {
-            background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
-            color: var(--color-primary);
-            border: none;
-            padding: 10px 28px;
-            border-radius: 30px;
-            font-weight: 700;
-            font-size: 14px;
+        .participante-tag {
+            background: rgba(255, 179, 0, 0.08);
+            color: var(--color-accent);
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .participante-tag .prazo-individual {
+            font-size: 10px;
+            color: var(--color-text-muted);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0 6px;
+            border-radius: 10px;
+        }
+        .participante-tag .prazo-individual.urgente { color: var(--color-danger); }
+        .participante-tag .prazo-individual.ok { color: var(--color-success); }
+
+        .btn-add-participante {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px dashed var(--color-border);
+            border-radius: 20px;
+            padding: 2px 12px;
+            font-size: 12px;
+            color: var(--color-text-muted);
             cursor: pointer;
             transition: var(--transition);
             font-family: 'Inter', sans-serif;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            justify-content: center;
         }
-        .relatorio-form .btn-salvar-relatorio:hover {
-            transform: scale(1.02);
-            box-shadow: 0 4px 20px rgba(255, 179, 0, 0.2);
-        }
-        .relatorio-form .form-actions {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            grid-column: span 2;
+        .btn-add-participante:hover {
+            border-color: var(--color-accent);
+            color: var(--color-accent);
         }
 
-        .relatorios-lista {
-            margin-top: 16px;
-            max-height: 450px;
-            overflow-y: auto;
-            padding-right: 4px;
-        }
+        /* ===== ESTILOS EXISTENTES (COMPACTADOS) ===== */
+        .top-bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 24px; }
+        .top-bar h1 { font-size: 24px; font-weight: 700; }
+        .top-bar h1 small { font-size: 14px; font-weight: 400; color: var(--color-text-muted); margin-left: 10px; }
+        .top-bar .clock { font-size: 18px; font-weight: 600; background: var(--color-card); padding: 6px 20px; border-radius: 30px; border: 1px solid var(--color-border); }
+        .top-bar .clock .sec { font-size: 13px; color: var(--color-text-muted); font-weight: 400; }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 28px; }
+        .stat-card { background: var(--color-card); border-radius: var(--radius); padding: 18px 20px; border: 1px solid var(--color-border); transition: var(--transition); }
+        .stat-card:hover { border-color: rgba(255, 179, 0, 0.1); }
+        .stat-card .number { font-size: 28px; font-weight: 700; color: var(--color-accent); }
+        .stat-card .label { font-size: 13px; color: var(--color-text-muted); margin-top: 4px; }
+        .stat-card .icon { float: right; font-size: 24px; color: rgba(255, 179, 0, 0.1); }
+
+        .section { margin-bottom: 32px; scroll-margin-top: 20px; }
+        .section-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .section-title i { color: var(--color-accent); }
+        .section-title .badge { font-size: 12px; font-weight: 600; background: rgba(255, 179, 0, 0.1); color: var(--color-accent); padding: 2px 14px; border-radius: 30px; }
+
+        .checklist-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 24px; background: var(--color-card); border-radius: var(--radius); padding: 20px 24px; border: 1px solid var(--color-border); }
+        @media (max-width: 700px) { .checklist-grid { grid-template-columns: 1fr; } }
+        .check-item { display: flex; align-items: center; gap: 12px; padding: 6px 8px; border-radius: 10px; cursor: pointer; transition: var(--transition); }
+        .check-item:hover { background: rgba(255, 255, 255, 0.02); }
+        .check-item .box { width: 20px; height: 20px; border-radius: 6px; border: 2px solid rgba(255, 255, 255, 0.1); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: var(--transition); font-size: 11px; color: var(--color-primary); }
+        .check-item .box.done { background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover)); border-color: var(--color-accent); }
+        .check-item .label { font-size: 13px; flex: 1; color: var(--color-text); }
+        .check-item .label.done { color: var(--color-text-muted); text-decoration: line-through; }
+        .check-item .icon-status { color: var(--color-text-muted); font-size: 14px; }
+        .check-item .icon-status.done { color: var(--color-success); }
+
+        .table-wrapper { background: var(--color-card); border-radius: var(--radius); border: 1px solid var(--color-border); overflow: hidden; overflow-x: auto; }
+        .table-search { padding: 14px 18px; background: rgba(255, 255, 255, 0.01); border-bottom: 1px solid var(--color-border); display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+        .table-search input { flex: 1; min-width: 200px; padding: 8px 16px; border-radius: 30px; border: 1px solid var(--color-border); background: rgba(255, 255, 255, 0.02); color: var(--color-text); font-family: 'Inter', sans-serif; font-size: 13px; outline: none; transition: var(--transition); }
+        .table-search input:focus { border-color: var(--color-accent); }
+        .table-search input::placeholder { color: var(--color-text-muted); }
+        .table-search .search-count { font-size: 12px; color: var(--color-text-muted); }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 700px; }
+        table thead { background: rgba(255, 255, 255, 0.02); }
+        table th { text-align: left; padding: 14px 18px; font-weight: 600; color: var(--color-text-muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.3px; border-bottom: 1px solid var(--color-border); }
+        table td { padding: 12px 18px; border-bottom: 1px solid var(--color-border); color: var(--color-text); }
+        table tr:last-child td { border-bottom: none; }
+        table tr:hover td { background: rgba(255, 255, 255, 0.01); }
+        table .cod { font-weight: 600; color: var(--color-accent); font-size: 12px; }
+        table .prof { font-size: 12px; color: var(--color-text-muted); }
+        table .turma { font-size: 12px; font-weight: 600; color: var(--color-info); }
+        table .horario { font-size: 12px; color: var(--color-text-muted); }
+        table .status { font-size: 11px; font-weight: 600; padding: 2px 14px; border-radius: 30px; background: rgba(76, 175, 80, 0.12); color: var(--color-success); display: inline-block; }
+
+        .relatorio-section { background: var(--color-card); border-radius: var(--radius); padding: 24px 28px; border: 1px solid var(--color-border); margin-bottom: 32px; transition: var(--transition); }
+        .relatorio-section:hover { border-color: rgba(255, 179, 0, 0.08); }
+        .relatorio-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
+        .relatorio-header h3 { font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 10px; color: var(--color-text); }
+        .relatorio-header h3 i { color: var(--color-accent); font-size: 20px; }
+        .relatorio-header .badge { font-size: 12px; background: rgba(255, 179, 0, 0.08); color: var(--color-accent); padding: 4px 16px; border-radius: 30px; font-weight: 600; }
+        .relatorio-form { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .relatorio-form .full-width { grid-column: span 2; }
+        .relatorio-form label { font-size: 13px; font-weight: 600; color: var(--color-text-muted); margin-bottom: 6px; display: block; }
+        .relatorio-form select, .relatorio-form textarea, .relatorio-form input[type="number"] { width: 100%; padding: 10px 16px; border-radius: 10px; border: 1px solid var(--color-border); background: rgba(255, 255, 255, 0.02); color: var(--color-text); font-family: 'Inter', sans-serif; font-size: 14px; outline: none; transition: var(--transition); }
+        .relatorio-form select:focus, .relatorio-form textarea:focus, .relatorio-form input[type="number"]:focus { border-color: var(--color-accent); box-shadow: 0 0 0 3px rgba(255, 179, 0, 0.08); }
+        .relatorio-form textarea { resize: vertical; min-height: 80px; }
+        .relatorio-form .btn-salvar-relatorio { background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover)); color: var(--color-primary); border: none; padding: 10px 28px; border-radius: 30px; font-weight: 700; font-size: 14px; cursor: pointer; transition: var(--transition); font-family: 'Inter', sans-serif; display: flex; align-items: center; gap: 8px; justify-content: center; }
+        .relatorio-form .btn-salvar-relatorio:hover { transform: scale(1.02); box-shadow: 0 4px 20px rgba(255, 179, 0, 0.2); }
+        .relatorio-form .form-actions { display: flex; gap: 12px; flex-wrap: wrap; grid-column: span 2; }
+        .relatorios-lista { margin-top: 16px; max-height: 450px; overflow-y: auto; padding-right: 4px; }
         .relatorios-lista::-webkit-scrollbar { width: 4px; }
         .relatorios-lista::-webkit-scrollbar-track { background: transparent; }
         .relatorios-lista::-webkit-scrollbar-thumb { background: rgba(255, 179, 0, 0.2); border-radius: 10px; }
-
-        .relatorios-lista .empty-state {
-            text-align: center;
-            padding: 30px 20px;
-            color: var(--color-text-muted);
-            font-size: 14px;
-            border: 1px dashed var(--color-border);
-            border-radius: 12px;
-        }
-        .relatorios-lista .empty-state i {
-            display: block;
-            font-size: 32px;
-            margin-bottom: 8px;
-            opacity: 0.3;
-        }
-
-        .relatorio-dia {
-            margin-bottom: 16px;
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 12px;
-            border: 1px solid var(--color-border);
-            overflow: hidden;
-            transition: var(--transition);
-        }
+        .relatorios-lista .empty-state { text-align: center; padding: 30px 20px; color: var(--color-text-muted); font-size: 14px; border: 1px dashed var(--color-border); border-radius: 12px; }
+        .relatorios-lista .empty-state i { display: block; font-size: 32px; margin-bottom: 8px; opacity: 0.3; }
+        .relatorio-dia { margin-bottom: 16px; background: rgba(255, 255, 255, 0.02); border-radius: 12px; border: 1px solid var(--color-border); overflow: hidden; transition: var(--transition); }
         .relatorio-dia:hover { border-color: rgba(255, 179, 0, 0.1); }
-
-        .relatorio-dia-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 18px;
-            background: rgba(255, 179, 0, 0.04);
-            border-bottom: 2px solid var(--color-border);
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-        .relatorio-dia-header .data-dia {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--color-accent);
-        }
+        .relatorio-dia-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; background: rgba(255, 179, 0, 0.04); border-bottom: 2px solid var(--color-border); flex-wrap: wrap; gap: 8px; }
+        .relatorio-dia-header .data-dia { font-size: 14px; font-weight: 600; color: var(--color-accent); }
         .relatorio-dia-header .data-dia i { margin-right: 8px; }
-        .relatorio-dia-header .total-dia {
-            font-size: 13px;
-            color: var(--color-text-muted);
-            background: rgba(255, 255, 255, 0.03);
-            padding: 4px 14px;
-            border-radius: 30px;
-        }
-
+        .relatorio-dia-header .total-dia { font-size: 13px; color: var(--color-text-muted); background: rgba(255, 255, 255, 0.03); padding: 4px 14px; border-radius: 30px; }
         .relatorio-dia-itens { padding: 4px 0; }
-        .relatorio-dia-itens .relatorio-item {
-            border: none;
-            border-radius: 0;
-            margin-bottom: 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-            padding: 10px 18px;
-            display: flex;
-            gap: 14px;
-            align-items: center;
-            transition: var(--transition);
-        }
+        .relatorio-dia-itens .relatorio-item { border: none; border-radius: 0; margin-bottom: 0; border-bottom: 1px solid rgba(255, 255, 255, 0.03); padding: 10px 18px; display: flex; gap: 14px; align-items: center; transition: var(--transition); }
         .relatorio-dia-itens .relatorio-item:last-child { border-bottom: none; }
         .relatorio-dia-itens .relatorio-item:hover { background: rgba(255, 255, 255, 0.02); }
-        .relatorio-dia-itens .relatorio-item .disciplina {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--color-text);
-            min-width: 140px;
-        }
-        .relatorio-dia-itens .relatorio-item .horas {
-            font-size: 12px;
-            color: var(--color-success);
-            min-width: 60px;
-            text-align: right;
-            font-weight: 600;
-        }
-        .relatorio-dia-itens .relatorio-item .texto {
-            flex: 1;
-            font-size: 13px;
-            color: var(--color-text-muted);
-            line-height: 1.5;
-            min-width: 150px;
-        }
+        .relatorio-dia-itens .relatorio-item .disciplina { font-size: 13px; font-weight: 600; color: var(--color-text); min-width: 140px; }
+        .relatorio-dia-itens .relatorio-item .horas { font-size: 12px; color: var(--color-success); min-width: 60px; text-align: right; font-weight: 600; }
+        .relatorio-dia-itens .relatorio-item .texto { flex: 1; font-size: 13px; color: var(--color-text-muted); line-height: 1.5; min-width: 150px; }
 
-        /* ===== ATIVIDADES ===== */
-        .atividades-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
+        .atividades-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         @media (max-width: 900px) { .atividades-grid { grid-template-columns: 1fr; } }
-
-        .atividade-card {
-            background: var(--color-card);
-            border-radius: var(--radius);
-            padding: 20px 22px;
-            border: 1px solid var(--color-border);
-            position: relative;
-            transition: var(--transition);
-        }
+        .atividade-card { background: var(--color-card); border-radius: var(--radius); padding: 20px 22px; border: 1px solid var(--color-border); position: relative; transition: var(--transition); }
         .atividade-card:hover { border-color: rgba(255, 179, 0, 0.1); }
         .atividade-card.prioridade-alta { border-left: 4px solid var(--color-danger); }
         .atividade-card.prioridade-media { border-left: 4px solid var(--color-warning); }
         .atividade-card.prioridade-baixa { border-left: 4px solid var(--color-success); }
-
-        .atividade-card .titulo {
-            font-size: 17px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            color: var(--color-text);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-        .atividade-card .disciplina {
-            font-size: 13px;
-            color: var(--color-text-muted);
-            margin-bottom: 4px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
+        .atividade-card .titulo { font-size: 17px; font-weight: 700; margin-bottom: 8px; color: var(--color-text); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .atividade-card .disciplina { font-size: 13px; color: var(--color-text-muted); margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
         .atividade-card .disciplina i { color: var(--color-accent); font-size: 14px; }
-        .atividade-card .datas {
-            display: flex;
-            gap: 16px;
-            flex-wrap: wrap;
-            font-size: 13px;
-            color: var(--color-text-muted);
-            margin: 6px 0 10px;
-            padding: 8px 12px;
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.03);
-        }
+        .atividade-card .datas { display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; color: var(--color-text-muted); margin: 6px 0 10px; padding: 8px 12px; background: rgba(255, 255, 255, 0.02); border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.03); }
         .atividade-card .datas span { display: flex; align-items: center; gap: 6px; }
         .atividade-card .datas span strong { color: var(--color-text); }
-
-        .atividade-card .progresso-area {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-top: 12px;
-            padding-top: 10px;
-            border-top: 1px solid var(--color-border);
-        }
-        .atividade-card .progresso-area .bar {
-            flex: 1;
-            height: 8px;
-            background: rgba(255, 255, 255, 0.06);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        .atividade-card .progresso-area .bar .fill {
-            height: 100%;
-            border-radius: 10px;
-            background: linear-gradient(90deg, var(--color-accent), var(--color-accent-hover));
-            transition: 0.6s ease;
-            width: 0%;
-        }
-        .atividade-card .progresso-area .pct {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--color-accent);
-            min-width: 45px;
-            text-align: right;
-        }
-
-        .atividade-card .acoes {
-            margin-top: 12px;
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            padding-top: 10px;
-            border-top: 1px solid var(--color-border);
-        }
-        .atividade-card .acoes button {
-            padding: 5px 16px;
-            border-radius: 20px;
-            font-size: 12px;
-            cursor: pointer;
-            font-family: 'Inter', sans-serif;
-            transition: var(--transition);
-            border: 1px solid var(--color-border);
-            background: rgba(255, 255, 255, 0.02);
-            color: var(--color-text-muted);
-        }
+        .atividade-card .progresso-area { display: flex; align-items: center; gap: 12px; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--color-border); }
+        .atividade-card .progresso-area .bar { flex: 1; height: 8px; background: rgba(255, 255, 255, 0.06); border-radius: 10px; overflow: hidden; }
+        .atividade-card .progresso-area .bar .fill { height: 100%; border-radius: 10px; background: linear-gradient(90deg, var(--color-accent), var(--color-accent-hover)); transition: 0.6s ease; width: 0%; }
+        .atividade-card .progresso-area .pct { font-size: 14px; font-weight: 700; color: var(--color-accent); min-width: 45px; text-align: right; }
+        .atividade-card .acoes { margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; padding-top: 10px; border-top: 1px solid var(--color-border); }
+        .atividade-card .acoes button { padding: 5px 16px; border-radius: 20px; font-size: 12px; cursor: pointer; font-family: 'Inter', sans-serif; transition: var(--transition); border: 1px solid var(--color-border); background: rgba(255, 255, 255, 0.02); color: var(--color-text-muted); }
         .atividade-card .acoes button:hover { background: rgba(255, 255, 255, 0.05); }
-        .atividade-card .acoes .btn-edit:hover {
-            border-color: var(--color-accent);
-            color: var(--color-accent);
-        }
-        .atividade-card .acoes .btn-delete:hover {
-            border-color: var(--color-danger);
-            color: var(--color-danger);
-            background: rgba(229, 57, 53, 0.05);
-        }
+        .atividade-card .acoes .btn-edit:hover { border-color: var(--color-accent); color: var(--color-accent); }
+        .atividade-card .acoes .btn-delete:hover { border-color: var(--color-danger); color: var(--color-danger); background: rgba(229, 57, 53, 0.05); }
 
-        .btn-add-atividade {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px dashed var(--color-border);
-            border-radius: var(--radius);
-            padding: 16px;
-            text-align: center;
-            color: var(--color-text-muted);
-            cursor: pointer;
-            transition: var(--transition);
-            font-family: 'Inter', sans-serif;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-        .btn-add-atividade:hover {
-            border-color: var(--color-accent);
-            color: var(--color-accent);
-            background: rgba(255, 179, 0, 0.03);
-        }
-
-        .filtros-atividades {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-bottom: 16px;
-        }
-        .filtros-atividades button {
-            padding: 4px 16px;
-            border-radius: 30px;
-            border: 1px solid var(--color-border);
-            background: transparent;
-            color: var(--color-text-muted);
-            font-size: 12px;
-            font-family: 'Inter', sans-serif;
-            cursor: pointer;
-            transition: var(--transition);
-        }
+        .btn-add-atividade { background: rgba(255, 255, 255, 0.02); border: 1px dashed var(--color-border); border-radius: var(--radius); padding: 16px; text-align: center; color: var(--color-text-muted); cursor: pointer; transition: var(--transition); font-family: 'Inter', sans-serif; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .btn-add-atividade:hover { border-color: var(--color-accent); color: var(--color-accent); background: rgba(255, 179, 0, 0.03); }
+        .filtros-atividades { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+        .filtros-atividades button { padding: 4px 16px; border-radius: 30px; border: 1px solid var(--color-border); background: transparent; color: var(--color-text-muted); font-size: 12px; font-family: 'Inter', sans-serif; cursor: pointer; transition: var(--transition); }
         .filtros-atividades button:hover { background: rgba(255, 255, 255, 0.03); }
-        .filtros-atividades button.active {
-            background: rgba(255, 179, 0, 0.08);
-            color: var(--color-accent);
-            border-color: rgba(255, 179, 0, 0.1);
-        }
+        .filtros-atividades button.active { background: rgba(255, 179, 0, 0.08); color: var(--color-accent); border-color: rgba(255, 179, 0, 0.1); }
 
-        /* ===== NOTAS ===== */
-        .notas-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 16px;
-            margin-top: 16px;
-        }
-        .notas-card {
-            background: var(--color-card);
-            border-radius: var(--radius);
-            padding: 18px 20px;
-            border: 1px solid var(--color-border);
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-        }
-        .notas-card:hover {
-            border-color: rgba(255, 179, 0, 0.15);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        .notas-card .disciplina-nome {
-            font-size: 16px;
-            font-weight: 700;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-            color: var(--color-text);
-        }
-        .notas-card .disciplina-nome .codigo {
-            font-size: 12px;
-            color: var(--color-text-muted);
-            font-weight: 400;
-        }
-
-        .notas-bimestres {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-        .nota-bimestre {
-            background: rgba(255, 255, 255, 0.02);
-            padding: 8px 6px;
-            border-radius: 8px;
-            text-align: center;
-            border: 1px solid var(--color-border);
-            transition: var(--transition);
-        }
-        .nota-bimestre:focus-within {
-            border-color: var(--color-accent);
-            background: rgba(255, 179, 0, 0.03);
-        }
-        .nota-bimestre .bimestre-label {
-            font-size: 10px;
-            text-transform: uppercase;
-            color: var(--color-text-muted);
-            letter-spacing: 0.3px;
-        }
-        .nota-bimestre input {
-            width: 100%;
-            padding: 4px 2px;
-            background: transparent;
-            border: none;
-            color: var(--color-text);
-            font-size: 18px;
-            font-weight: 700;
-            text-align: center;
-            font-family: 'Inter', sans-serif;
-            outline: none;
-            transition: var(--transition);
-        }
+        .notas-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 16px; margin-top: 16px; }
+        .notas-card { background: var(--color-card); border-radius: var(--radius); padding: 18px 20px; border: 1px solid var(--color-border); transition: var(--transition); position: relative; overflow: hidden; }
+        .notas-card:hover { border-color: rgba(255, 179, 0, 0.15); transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); }
+        .notas-card .disciplina-nome { font-size: 16px; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; color: var(--color-text); }
+        .notas-card .disciplina-nome .codigo { font-size: 12px; color: var(--color-text-muted); font-weight: 400; }
+        .notas-bimestres { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px; }
+        .nota-bimestre { background: rgba(255, 255, 255, 0.02); padding: 8px 6px; border-radius: 8px; text-align: center; border: 1px solid var(--color-border); transition: var(--transition); }
+        .nota-bimestre:focus-within { border-color: var(--color-accent); background: rgba(255, 179, 0, 0.03); }
+        .nota-bimestre .bimestre-label { font-size: 10px; text-transform: uppercase; color: var(--color-text-muted); letter-spacing: 0.3px; }
+        .nota-bimestre input { width: 100%; padding: 4px 2px; background: transparent; border: none; color: var(--color-text); font-size: 18px; font-weight: 700; text-align: center; font-family: 'Inter', sans-serif; outline: none; transition: var(--transition); }
         .nota-bimestre input:focus { border-bottom: 2px solid var(--color-accent); }
-        .nota-bimestre input::placeholder {
-            color: var(--color-text-muted);
-            font-weight: 400;
-            font-size: 14px;
-        }
-
-        .notas-resultado {
-            padding: 12px 14px;
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 8px;
-            border: 1px solid var(--color-border);
-            margin-top: 8px;
-        }
-        .notas-resultado .resultado-principal {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-        .notas-resultado .media {
-            font-size: 20px;
-            font-weight: 700;
-        }
+        .nota-bimestre input::placeholder { color: var(--color-text-muted); font-weight: 400; font-size: 14px; }
+        .notas-resultado { padding: 12px 14px; background: rgba(255, 255, 255, 0.02); border-radius: 8px; border: 1px solid var(--color-border); margin-top: 8px; }
+        .notas-resultado .resultado-principal { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+        .notas-resultado .media { font-size: 20px; font-weight: 700; }
         .notas-resultado .media.aprovado { color: var(--color-success); }
         .notas-resultado .media.reprovado { color: var(--color-danger); }
         .notas-resultado .media.recuperacao { color: var(--color-warning); }
         .notas-resultado .media.aguardando { color: var(--color-text-muted); }
 
-        /* ===== MODAL ===== */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(8px);
-            z-index: 200;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(8px); z-index: 200; align-items: center; justify-content: center; padding: 20px; }
         .modal-overlay.open { display: flex; }
-
-        .modal {
-            background: var(--color-secondary);
-            border-radius: 24px;
-            padding: 32px 36px;
-            max-width: 820px;
-            width: 100%;
-            border: 1px solid var(--color-border);
-            box-shadow: var(--shadow);
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-        }
+        .modal { background: var(--color-secondary); border-radius: 24px; padding: 32px 36px; max-width: 820px; width: 100%; border: 1px solid var(--color-border); box-shadow: var(--shadow); max-height: 90vh; overflow-y: auto; position: relative; }
         .modal::-webkit-scrollbar { width: 4px; }
         .modal::-webkit-scrollbar-thumb { background: rgba(255, 179, 0, 0.2); border-radius: 10px; }
-
-        .modal h2 {
-            font-size: 22px;
-            margin-bottom: 24px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: var(--color-text);
-        }
+        .modal h2 { font-size: 22px; margin-bottom: 24px; display: flex; align-items: center; gap: 12px; color: var(--color-text); }
         .modal h2 i { color: var(--color-accent); }
-
-        .modal label {
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--color-text-muted);
-            margin-top: 14px;
-            margin-bottom: 5px;
-        }
-        .modal input,
-        .modal select,
-        .modal textarea {
-            width: 100%;
-            padding: 10px 16px;
-            border-radius: 10px;
-            border: 1px solid var(--color-border);
-            background: #1a232e;
-            color: #e8edf4;
-            font-family: 'Inter', sans-serif;
-            font-size: 14px;
-            outline: none;
-            transition: var(--transition);
-        }
-        .modal input:focus,
-        .modal select:focus,
-        .modal textarea:focus {
-            border-color: var(--color-accent);
-            box-shadow: 0 0 0 3px rgba(255, 179, 0, 0.08);
-        }
+        .modal label { display: block; font-size: 13px; font-weight: 600; color: var(--color-text-muted); margin-top: 14px; margin-bottom: 5px; }
+        .modal input, .modal select, .modal textarea { width: 100%; padding: 10px 16px; border-radius: 10px; border: 1px solid var(--color-border); background: #1a232e; color: #e8edf4; font-family: 'Inter', sans-serif; font-size: 14px; outline: none; transition: var(--transition); }
+        .modal input:focus, .modal select:focus, .modal textarea:focus { border-color: var(--color-accent); box-shadow: 0 0 0 3px rgba(255, 179, 0, 0.08); }
         .modal select option { background: #121820; color: #e8edf4; }
         .modal input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
         .modal textarea { resize: vertical; min-height: 60px; }
-
-        .modal .modal-actions {
-            display: flex;
-            gap: 12px;
-            margin-top: 28px;
-            padding-top: 20px;
-            border-top: 1px solid var(--color-border);
-        }
-        .modal .modal-actions button {
-            padding: 10px 32px;
-            border-radius: 30px;
-            border: none;
-            font-weight: 700;
-            font-size: 14px;
-            cursor: pointer;
-            transition: var(--transition);
-            font-family: 'Inter', sans-serif;
-        }
-        .modal .modal-actions .btn-primary {
-            background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
-            color: var(--color-primary);
-        }
+        .modal .modal-actions { display: flex; gap: 12px; margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--color-border); }
+        .modal .modal-actions button { padding: 10px 32px; border-radius: 30px; border: none; font-weight: 700; font-size: 14px; cursor: pointer; transition: var(--transition); font-family: 'Inter', sans-serif; }
+        .modal .modal-actions .btn-primary { background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover)); color: var(--color-primary); }
         .modal .modal-actions .btn-primary:hover { transform: scale(1.02); }
-        .modal .modal-actions .btn-secondary {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--color-text-muted);
-        }
+        .modal .modal-actions .btn-secondary { background: rgba(255, 255, 255, 0.05); color: var(--color-text-muted); }
         .modal .modal-actions .btn-secondary:hover { background: rgba(255, 255, 255, 0.08); }
 
-        /* ===== RESPONSIVIDADE ===== */
         @media (max-width: 1024px) {
             header { width: 72px; padding: 16px 10px; }
             header .logo h2, header .navbar a h3, header .navbar .nav-label,
@@ -1085,6 +746,9 @@
             header .user-info { justify-content: center; }
             header .user-info .avatar { width: 32px; height: 32px; }
             .container { margin-left: 72px; }
+            .greeting-title { font-size: 22px; }
+            .progress-container { flex-direction: column; align-items: center; }
+            .progress-info { width: 100%; }
         }
 
         @media (max-width: 768px) {
@@ -1094,31 +758,18 @@
             .relatorio-form { grid-template-columns: 1fr; }
             .relatorio-form .full-width { grid-column: span 1; }
             .relatorio-form .form-actions { grid-column: span 1; flex-direction: column; }
+            .greeting-section { flex-direction: column; align-items: flex-start; }
+            .date-info { text-align: left; width: 100%; }
+            .achievement-grid { grid-template-columns: 1fr 1fr; }
+            .action-grid { grid-template-columns: 1fr 1fr; }
+            .clock-hero .time { font-size: 20px; }
         }
 
         @media (max-width: 600px) {
             .container { padding: 16px; margin-left: 0; }
-            header {
-                width: 100%;
-                height: auto;
-                position: relative;
-                flex-direction: row;
-                padding: 10px 14px;
-                flex-wrap: wrap;
-                border-right: none;
-                border-bottom: 1px solid var(--color-border);
-            }
-            header .logo {
-                padding-bottom: 0;
-                border-bottom: none;
-                margin-bottom: 0;
-                flex: 1;
-            }
-            header .navbar {
-                flex-direction: row;
-                flex-wrap: wrap;
-                gap: 2px;
-            }
+            header { width: 100%; height: auto; position: relative; flex-direction: row; padding: 10px 14px; flex-wrap: wrap; border-right: none; border-bottom: 1px solid var(--color-border); }
+            header .logo { padding-bottom: 0; border-bottom: none; margin-bottom: 0; flex: 1; }
+            header .navbar { flex-direction: row; flex-wrap: wrap; gap: 2px; }
             header .navbar a { padding: 6px 10px; font-size: 12px; }
             header .navbar a h3 { display: none; }
             header .navbar .nav-label { display: none; }
@@ -1126,8 +777,8 @@
             .submenu-sistemas { display: none !important; }
             .container { margin-left: 0; }
             .stats-grid { grid-template-columns: 1fr 1fr; }
-            .top-bar h1 { font-size: 20px; }
-            .top-bar h1 small { font-size: 12px; display: block; margin-left: 0; }
+            .achievement-grid { grid-template-columns: 1fr; }
+            .action-grid { grid-template-columns: 1fr; }
             .atividades-grid { grid-template-columns: 1fr; }
             .checklist-grid { grid-template-columns: 1fr; }
             .splash-content { padding: 20px 16px; }
@@ -1135,6 +786,13 @@
             .splash-content h1 { font-size: 20px; }
             .splash-content .splash-message { font-size: 13px; }
             .relatorio-section { padding: 16px; }
+            .welcome-hero { padding: 20px; }
+            .greeting-title { font-size: 20px; }
+            .clock-hero .time { font-size: 18px; }
+            .clock-hero .seconds { font-size: 14px; }
+            .progress-info { grid-template-columns: 1fr; }
+            .progress-circle-container { width: 100px; height: 100px; }
+            .progress-circle { width: 100px; height: 100px; }
         }
 
         @media (max-width: 480px) {
@@ -1249,18 +907,44 @@
             <form id="atividadeForm">
                 <label>Título *</label>
                 <input type="text" id="formTitulo" placeholder="Ex: Apresentação de seminário" required />
+
                 <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:12px;">
                     <div><label>Tipo</label><select id="formTipo"><option value="individual">Individual</option><option value="grupo">Em Grupo</option></select></div>
                     <div><label>Prioridade</label><select id="formPrioridade"><option value="baixa">🟢 Baixa</option><option value="media" selected>🟡 Média</option><option value="alta">🔴 Alta</option></select></div>
                     <div><label>Disciplina</label><select id="formDisciplina"></select></div>
                 </div>
+
                 <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:12px;">
                     <div><label>Início</label><input type="date" id="formInicio" required /></div>
-                    <div><label>Prazo</label><input type="date" id="formPrazo" required /></div>
+                    <div><label>Prazo Final</label><input type="date" id="formPrazo" required /></div>
                     <div><label>Entrega Docente</label><input type="date" id="formEntregaDocente" required /></div>
                 </div>
+
+                <!-- ===== PARTICIPANTES ===== -->
+                <label style="margin-top:12px;">👥 Participantes</label>
+                <div style="padding:10px 14px;background:rgba(255,255,255,0.02);border-radius:8px;border:1px solid var(--color-border);">
+                    <div id="participantesContainer"></div>
+                    <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
+                        <input type="text" id="novoParticipante" placeholder="Nome do participante..." style="flex:1;padding:6px 12px;border-radius:6px;border:1px solid var(--color-border);background:rgba(255,255,255,0.02);color:var(--color-text);font-family:'Inter',sans-serif;font-size:12px;outline:none;" />
+                        <input type="date" id="novoPrazoParticipante" style="padding:6px 12px;border-radius:6px;border:1px solid var(--color-border);background:rgba(255,255,255,0.02);color:var(--color-text);font-family:'Inter',sans-serif;font-size:12px;outline:none;" />
+                        <button type="button" onclick="adicionarParticipante()" style="padding:4px 14px;border-radius:6px;border:1px solid var(--color-border);background:rgba(255,179,0,0.08);color:var(--color-accent);cursor:pointer;font-size:12px;font-family:'Inter',sans-serif;">Adicionar</button>
+                    </div>
+                    <div style="font-size:11px;color:var(--color-text-muted);margin-top:4px;">💡 Adicione os nomes dos participantes e o prazo individual de cada um</div>
+                </div>
+
+                <!-- ===== SUBTAREFAS ===== -->
+                <label style="margin-top:12px;">📋 Subtarefas</label>
+                <div style="padding:10px 14px;background:rgba(255,255,255,0.02);border-radius:8px;border:1px solid var(--color-border);">
+                    <div id="subtarefasContainer"></div>
+                    <div style="display:flex;gap:6px;margin-top:8px;">
+                        <input type="text" id="novaSubtarefa" placeholder="Nova subtarefa..." style="flex:1;padding:6px 12px;border-radius:6px;border:1px solid var(--color-border);background:rgba(255,255,255,0.02);color:var(--color-text);font-family:'Inter',sans-serif;font-size:12px;outline:none;" />
+                        <button type="button" onclick="adicionarSubtarefa()" style="padding:4px 14px;border-radius:6px;border:1px solid var(--color-border);background:rgba(255,179,0,0.08);color:var(--color-accent);cursor:pointer;font-size:12px;font-family:'Inter',sans-serif;">Adicionar</button>
+                    </div>
+                </div>
+
                 <label style="margin-top:12px;">Observações</label>
                 <textarea id="formObservacoes" placeholder="Observações..."></textarea>
+
                 <div class="modal-actions">
                     <button type="button" class="btn-secondary" onclick="closeModal()">Cancelar</button>
                     <button type="submit" class="btn-primary" id="btnSalvarAtividade">Salvar Atividade</button>
@@ -1331,26 +1015,187 @@
         let notas = loadData('gda_notas', {});
         let relatorios = loadData('gda_relatorios', []);
         let checklistState = loadData('gda_checklist', {});
+        let participantesTemp = [];
+        let subtarefasTemp = [];
+        let editandoId = null;
 
         // ==========================================
-        // RENDERIZAÇÃO DAS PÁGINAS
+        // FUNÇÕES AUXILIARES
+        // ==========================================
+        function getSaudacao() {
+            const hora = new Date().getHours();
+            if (hora < 12) return 'Bom dia';
+            if (hora < 18) return 'Boa tarde';
+            return 'Boa noite';
+        }
+
+        function getEmojiSaudacao() {
+            const hora = new Date().getHours();
+            if (hora < 12) return '🌅';
+            if (hora < 18) return '☀️';
+            return '🌙';
+        }
+
+        function getFrasesMotivacionais() {
+            return [
+                { frase: '"Acredite em si mesmo e todo o resto virá naturalmente."', autor: 'The Rock' },
+                { frase: '"O sucesso é a soma de pequenos esforços repetidos dia após dia."', autor: 'Robert Collier' },
+                { frase: '"A persistência é o caminho do êxito."', autor: 'Charles Chaplin' },
+                { frase: '"Você é mais forte do que pensa, mais capaz do que imagina."', autor: 'Desconhecido' },
+                { frase: '"Cada dia é uma nova oportunidade para mudar sua vida."', autor: 'Desconhecido' },
+                { frase: '"O único lugar onde o sucesso vem antes do trabalho é no dicionário."', autor: 'Vidal Sassoon' },
+                { frase: '"Não importa o quão devagar você vá, desde que não pare."', autor: 'Confúcio' },
+                { frase: '"A educação é a arma mais poderosa que você pode usar para mudar o mundo."', autor: 'Nelson Mandela' }
+            ];
+        }
+
+        // ==========================================
+        // PARTICIPANTES E SUBTAREFAS (TEMP)
+        // ==========================================
+        function renderParticipantes() {
+            const container = document.getElementById('participantesContainer');
+            if (!container) return;
+            if (participantesTemp.length === 0) {
+                container.innerHTML =
+                    `<div style="color:var(--color-text-muted);font-size:13px;text-align:center;padding:8px;">Nenhum participante adicionado.</div>`;
+                return;
+            }
+            container.innerHTML = participantesTemp.map((p, i) =>
+                `
+                <div class="participante-tag" style="display:flex;align-items:center;gap:8px;padding:4px 12px;background:rgba(255,179,0,0.08);border-radius:20px;margin:4px 0;">
+                    <span>👤 ${p.nome}</span>
+                    <span class="prazo-individual ${p.prazo && new Date(p.prazo) < new Date() ? 'urgente' : 'ok'}" style="font-size:11px;color:${p.prazo && new Date(p.prazo) < new Date() ? 'var(--color-danger)' : 'var(--color-success)'}">
+                        📅 ${p.prazo ? new Date(p.prazo + 'T00:00:00').toLocaleDateString('pt-BR') : 'Sem prazo'}
+                    </span>
+                    <button onclick="removerParticipante(${i})" style="background:none;border:none;color:var(--color-text-muted);cursor:pointer;font-size:12px;">✕</button>
+                </div>
+            `
+            ).join('');
+        }
+
+        window.adicionarParticipante = function() {
+            const input = document.getElementById('novoParticipante');
+            const prazoInput = document.getElementById('novoPrazoParticipante');
+            const nome = input.value.trim();
+            const prazo = prazoInput.value;
+            if (!nome) { alert('Digite o nome do participante.'); return; }
+            participantesTemp.push({ nome, prazo });
+            input.value = '';
+            prazoInput.value = '';
+            renderParticipantes();
+        };
+
+        window.removerParticipante = function(index) {
+            participantesTemp.splice(index, 1);
+            renderParticipantes();
+        };
+
+        function renderSubtarefas() {
+            const container = document.getElementById('subtarefasContainer');
+            if (!container) return;
+            if (subtarefasTemp.length === 0) {
+                container.innerHTML =
+                    `<div style="color:var(--color-text-muted);font-size:13px;text-align:center;padding:8px;">Nenhuma subtarefa adicionada.</div>`;
+                return;
+            }
+            container.innerHTML = subtarefasTemp.map((st, i) =>
+                `
+                <div style="display:flex;align-items:center;gap:10px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.02);">
+                    <div class="checkbox ${st.concluido ? 'done' : ''}" onclick="toggleSubtarefa(${i})" style="width:18px;height:18px;border-radius:4px;border:2px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:0.3s ease;font-size:11px;color:var(--color-primary);${st.concluido ? 'background:linear-gradient(135deg,var(--color-accent),var(--color-accent-hover));border-color:var(--color-accent);' : ''}">
+                        ${st.concluido ? '<i class="fas fa-check"></i>' : ''}
+                    </div>
+                    <span style="flex:1;color:${st.concluido ? 'var(--color-text-muted)' : 'var(--color-text)'};${st.concluido ? 'text-decoration:line-through;' : ''}">${st.descricao}</span>
+                    <button onclick="removerSubtarefa(${i})" style="background:none;border:none;color:var(--color-text-muted);cursor:pointer;font-size:12px;">✕</button>
+                </div>
+            `
+            ).join('');
+        }
+
+        window.adicionarSubtarefa = function() {
+            const input = document.getElementById('novaSubtarefa');
+            const descricao = input.value.trim();
+            if (!descricao) { alert('Digite uma descrição para a subtarefa.'); return; }
+            subtarefasTemp.push({ descricao, concluido: false });
+            input.value = '';
+            renderSubtarefas();
+        };
+
+        window.toggleSubtarefa = function(index) {
+            subtarefasTemp[index].concluido = !subtarefasTemp[index].concluido;
+            renderSubtarefas();
+        };
+
+        window.removerSubtarefa = function(index) {
+            subtarefasTemp.splice(index, 1);
+            renderSubtarefas();
+        };
+
+        // ==========================================
+        // RENDERIZAÇÃO DASHBOARD
         // ==========================================
         function renderDashboard() {
+            // Saudações
+            const saudacao = getSaudacao();
+            const emoji = getEmojiSaudacao();
+            const nome = 'Igor';
+            const elGreeting = document.getElementById('greetingTitle');
+            if (elGreeting) elGreeting.textContent = `${emoji} ${saudacao}, ${nome}!`;
+
+            // Data
+            const hoje = new Date();
+            const diasSemana = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira',
+                'Sábado'
+            ];
+            const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro',
+                'Novembro', 'Dezembro'
+            ];
+            const elDay = document.getElementById('currentDay');
+            const elDate = document.getElementById('currentDate');
+            if (elDay) elDay.textContent = diasSemana[hoje.getDay()];
+            if (elDate) elDate.textContent = `${hoje.getDate()} de ${meses[hoje.getMonth()]} de ${hoje.getFullYear()}`;
+
+            // Aulas hoje (exemplo - você pode personalizar)
+            const elAulas = document.getElementById('aulasHoje');
+            if (elAulas) elAulas.textContent = '4';
+
+            // Clock (atualizado em tempo real)
+            updateClockDisplay();
+
+            // Checklist
             const total = checklistItems.length;
             const done = checklistItems.filter(item => checklistState[item.id] === true).length;
-            const el = document.getElementById('checkDoneCount');
-            if (el) el.textContent = done;
+            const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+            const elCheckDone = document.getElementById('checkDoneCount');
+            const elCheckBar = document.getElementById('checkProgressBar');
+            if (elCheckDone) elCheckDone.textContent = done;
+            if (elCheckBar) elCheckBar.style.width = `${pct}%`;
 
+            // Atividades
             const totalAtiv = atividades.length;
-            const grupo = atividades.filter(a => a.tipo === 'grupo').length;
-            const individual = atividades.filter(a => a.tipo === 'individual').length;
-            const elTotal = document.getElementById('totalAtividades');
-            const elGrupo = document.getElementById('totalGrupo');
-            const elIndividual = document.getElementById('totalIndividual');
-            if (elTotal) elTotal.textContent = totalAtiv;
-            if (elGrupo) elGrupo.textContent = grupo;
-            if (elIndividual) elIndividual.textContent = individual;
+            const concluidas = atividades.filter(a => {
+                const subtarefas = a.subtarefas || [];
+                const totalSub = subtarefas.length;
+                const concluidasSub = subtarefas.filter(st => st.concluido).length;
+                return totalSub > 0 && concluidasSub === totalSub;
+            }).length;
+            const elAtivConcluidas = document.getElementById('atividadesConcluidas');
+            const elAtivBar = document.getElementById('atividadesProgressBar');
+            if (elAtivConcluidas) elAtivConcluidas.textContent = concluidas;
+            if (elAtivBar) elAtivBar.style.width = `${totalAtiv > 0 ? Math.round((concluidas / totalAtiv) * 100) : 0}%`;
 
+            // Horas de estudo hoje
+            const hojeStr = hoje.toISOString().split('T')[0];
+            const horasHoje = relatorios.filter(r => r.data === hojeStr).reduce((acc, r) => acc + r.tempo, 0);
+            const horasFormatadas = Math.floor(horasHoje / 60);
+            const minutosFormatados = horasHoje % 60;
+            const elHoras = document.getElementById('totalHorasEstudo');
+            if (elHoras) elHoras.textContent = horasFormatadas > 0 ? `${horasFormatadas}h${minutosFormatados > 0 ? ` ${minutosFormatados}min` : ''}` :
+                `${minutosFormatados}min`;
+            const elEstudoBar = document.getElementById('estudoProgressBar');
+            const metaEstudo = 120; // meta de 2h por dia
+            if (elEstudoBar) elEstudoBar.style.width = `${Math.min(100, (horasHoje / metaEstudo) * 100)}%`;
+
+            // Média geral
             let medias = [];
             turmas.forEach(d => {
                 const nota = notas[d.cod] || { b1: '', b2: '', b3: '', b4: '' };
@@ -1361,10 +1206,110 @@
                 }
             });
             const mediaGeral = medias.length > 0 ? (medias.reduce((a, b) => a + b, 0) / medias.length) : 0;
-            const elMedia = document.getElementById('mediaGeral');
+            const elMedia = document.getElementById('mediaGeralDisplay');
+            const elMediaBar = document.getElementById('mediaProgressBar');
             if (elMedia) elMedia.textContent = mediaGeral.toFixed(1);
+            if (elMediaBar) elMediaBar.style.width = `${Math.min(100, (mediaGeral / 10) * 100)}%`;
+
+            // Progresso do semestre
+            const dataInicio = new Date('2026-02-10');
+            const dataFim = new Date('2026-12-18');
+            const totalSemanas = Math.ceil((dataFim - dataInicio) / (1000 * 60 * 60 * 24 * 7));
+            const semanasPassadas = Math.ceil((hoje - dataInicio) / (1000 * 60 * 60 * 24 * 7));
+            const semanasRestantes = Math.max(0, totalSemanas - semanasPassadas);
+            const percentual = Math.min(100, Math.round((semanasPassadas / totalSemanas) * 100));
+
+            const elSemanaCursadas = document.getElementById('semanasCursadas');
+            const elSemanaRestantes = document.getElementById('semanasRestantes');
+            const elDiasLetivos = document.getElementById('diasLetivos');
+            const elPercent = document.getElementById('semesterPercent');
+            const elProgressFg = document.querySelector('.progress-fg');
+            const elProgressMsg = document.getElementById('progressMessage');
+
+            if (elSemanaCursadas) elSemanaCursadas.textContent = semanasPassadas;
+            if (elSemanaRestantes) elSemanaRestantes.textContent = semanasRestantes;
+            if (elDiasLetivos) elDiasLetivos.textContent = Math.max(0, Math.ceil((dataFim - hoje) / (1000 * 60 * 60 * 24)));
+            if (elPercent) elPercent.textContent = `${percentual}%`;
+            if (elProgressFg) {
+                const circumference = 339.292;
+                const offset = circumference * (1 - percentual / 100);
+                elProgressFg.style.strokeDashoffset = offset;
+            }
+
+            if (elProgressMsg) {
+                if (percentual >= 80) elProgressMsg.textContent = '🎉 Você está quase lá! Último esforço!';
+                else if (percentual >= 60) elProgressMsg.textContent = '💪 Você está no caminho certo! Continue assim!';
+                else if (percentual >= 40) elProgressMsg.textContent =
+                '🚀 Metade do caminho! Continue firme e focado!';
+                else if (percentual >= 20) elProgressMsg.textContent =
+                    '📚 Começo de jornada! Cada dia é uma nova oportunidade!';
+                else elProgressMsg.textContent = '🌟 O primeiro passo é o mais importante! Você já começou!';
+            }
+
+            // Stats cards
+            const elTotalAtiv = document.getElementById('totalAtividades');
+            const elTotalGrupo = document.getElementById('totalGrupo');
+            const elTotalIndividual = document.getElementById('totalIndividual');
+            if (elTotalAtiv) elTotalAtiv.textContent = totalAtiv;
+            if (elTotalGrupo) elTotalGrupo.textContent = atividades.filter(a => a.tipo === 'grupo').length;
+            if (elTotalIndividual) elTotalIndividual.textContent = atividades.filter(a => a.tipo === 'individual').length;
+
+            // Frase do dia (se não tiver carregada)
+            const elQuote = document.getElementById('dailyQuote');
+            const elAuthor = document.getElementById('quoteAuthor');
+            if (elQuote && !elQuote.dataset.loaded) {
+                const frases = getFrasesMotivacionais();
+                const random = frases[Math.floor(Math.random() * frases.length)];
+                elQuote.textContent = random.frase;
+                if (elAuthor) elAuthor.textContent = random.autor;
+                elQuote.dataset.loaded = 'true';
+            }
         }
 
+        // ==========================================
+        // RELÓGIO
+        // ==========================================
+        function updateClockDisplay() {
+            const now = new Date();
+            const h = String(now.getHours()).padStart(2, '0');
+            const m = String(now.getMinutes()).padStart(2, '0');
+            const s = String(now.getSeconds()).padStart(2, '0');
+
+            // Clock do dashboard
+            const timeEl = document.getElementById('clockDisplay');
+            const secEl = document.getElementById('secondsDisplay');
+            if (timeEl) timeEl.textContent = `${h}:${m}`;
+            if (secEl) secEl.textContent = s;
+
+            // Clock hero
+            const heroTime = document.getElementById('clockHeroTime');
+            const heroSec = document.getElementById('clockHeroSeconds');
+            if (heroTime) heroTime.textContent = `${h}:${m}`;
+            if (heroSec) heroSec.textContent = s;
+        }
+
+        // ==========================================
+        // CITAÇÃO DO DIA
+        // ==========================================
+        window.novaFrase = function() {
+            const frases = getFrasesMotivacionais();
+            const random = frases[Math.floor(Math.random() * frases.length)];
+            const elQuote = document.getElementById('dailyQuote');
+            const elAuthor = document.getElementById('quoteAuthor');
+            if (elQuote) elQuote.textContent = random.frase;
+            if (elAuthor) elAuthor.textContent = random.autor;
+            // Animação sutil
+            const card = document.querySelector('.quote-card');
+            if (card) {
+                card.style.transition = '0.3s ease';
+                card.style.transform = 'scale(0.98)';
+                setTimeout(() => { card.style.transform = 'scale(1)'; }, 200);
+            }
+        };
+
+        // ==========================================
+        // CHECKLIST
+        // ==========================================
         function renderChecklist() {
             const container = document.getElementById('checklistContainer');
             if (!container) return;
@@ -1401,6 +1346,9 @@
             if (el) el.textContent = `${pct}%`;
         }
 
+        // ==========================================
+        // TURMAS
+        // ==========================================
         function renderTurmas() {
             const tbody = document.getElementById('turmasTableBody');
             if (!tbody) return;
@@ -1415,7 +1363,6 @@
                 </tr>`
             ).join('');
 
-            // Busca
             const searchInput = document.getElementById('searchTurma');
             if (searchInput) {
                 searchInput.addEventListener('input', function() {
@@ -1434,12 +1381,16 @@
             }
         }
 
+        // ==========================================
+        // ATIVIDADES (COM PARTICIPANTES E PRAZOS)
+        // ==========================================
         function renderAtividades() {
             const container = document.getElementById('atividadesContainer');
             if (!container) return;
 
             if (atividades.length === 0) {
-                container.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--color-text-muted);background:var(--color-card);border-radius:var(--radius);border:1px solid var(--color-border);">
+                container.innerHTML =
+                    `<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--color-text-muted);background:var(--color-card);border-radius:var(--radius);border:1px solid var(--color-border);">
                     <i class="fas fa-inbox" style="font-size:32px;display:block;margin-bottom:12px;color:rgba(255,179,0,0.1);"></i>
                     Nenhuma atividade cadastrada. Clique em "Nova Atividade" para começar.
                 </div>`;
@@ -1447,14 +1398,35 @@
             }
 
             container.innerHTML = atividades.map(a => {
-                const progresso = a.subtarefas && a.subtarefas.length > 0 ? 
-                    Math.round((a.subtarefas.filter(st => st.concluido).length / a.subtarefas.length) * 100) : 
+                const progresso = a.subtarefas && a.subtarefas.length > 0 ?
+                    Math.round((a.subtarefas.filter(st => st.concluido).length / a.subtarefas.length) * 100) :
                     (a.progresso || 0);
+
+                // Renderiza participantes com prazos individuais
+                let participantesHtml = '';
+                if (a.participantes && a.participantes.length > 0) {
+                    participantesHtml = `
+                        <div class="participantes-list">
+                            ${a.participantes.map(p => {
+                                const prazoDate = p.prazo ? new Date(p.prazo + 'T00:00:00') : null;
+                                const hoje = new Date();
+                                const urgente = prazoDate && prazoDate < hoje;
+                                return `
+                                    <span class="participante-tag">
+                                        👤 ${p.nome}
+                                        ${p.prazo ? `<span class="prazo-individual ${urgente ? 'urgente' : 'ok'}">📅 ${prazoDate.toLocaleDateString('pt-BR')}</span>` : ''}
+                                    </span>
+                                `;
+                            }).join('')}
+                        </div>
+                    `;
+                }
 
                 return `
                     <div class="atividade-card prioridade-${a.prioridade}">
                         <div class="disciplina"><i class="fas fa-book"></i> ${a.disciplina || 'Sem disciplina'}</div>
                         <div class="titulo">${a.titulo || 'Sem título'}</div>
+                        ${participantesHtml}
                         <div class="datas">
                             <span>📅 Início: ${a.inicio ? new Date(a.inicio + 'T00:00:00').toLocaleDateString('pt-BR') : 'Não definido'}</span>
                             <span>⏰ Prazo: ${a.prazo ? new Date(a.prazo + 'T00:00:00').toLocaleDateString('pt-BR') : 'Não definido'}</span>
@@ -1472,6 +1444,9 @@
             }).join('');
         }
 
+        // ==========================================
+        // NOTAS
+        // ==========================================
         function renderNotas() {
             const container = document.getElementById('notasContainer');
             if (!container) return;
@@ -1482,7 +1457,8 @@
                 const validas = valores.filter(v => v !== '' && !isNaN(parseFloat(v))).map(v => parseFloat(v));
                 const media = validas.length > 0 ? (validas.reduce((a, b) => a + b, 0) / validas.length) : 0;
                 const status = media >= 7 ? 'aprovado' : (validas.length === 4 ? 'reprovado' : 'recuperacao');
-                const statusText = media >= 7 ? '✅ Aprovado' : (validas.length === 4 ? '❌ Reprovado' : '🟡 Em andamento');
+                const statusText = media >= 7 ? '✅ Aprovado' : (validas.length === 4 ? '❌ Reprovado' :
+                    '🟡 Em andamento');
 
                 return `
                     <div class="notas-card">
@@ -1510,6 +1486,9 @@
             }).join('');
         }
 
+        // ==========================================
+        // RELATÓRIOS
+        // ==========================================
         function renderRelatorios() {
             const container = document.getElementById('relatoriosLista');
             if (!container) return;
@@ -1590,20 +1569,44 @@
             document.getElementById('formPrazo').value = atividade.prazo || '';
             document.getElementById('formEntregaDocente').value = atividade.entregaDocente || '';
             document.getElementById('formObservacoes').value = atividade.observacoes || '';
+
+            // Carrega participantes
+            participantesTemp = atividade.participantes ? JSON.parse(JSON.stringify(atividade.participantes)) : [];
+            renderParticipantes();
+
+            // Carrega subtarefas
+            subtarefasTemp = atividade.subtarefas ? JSON.parse(JSON.stringify(atividade.subtarefas)) : [];
+            renderSubtarefas();
+
             document.getElementById('modalTitle').innerHTML = '<i class="fas fa-edit"></i> Editar Atividade';
             document.getElementById('modalOverlay').classList.add('open');
-            window.editandoId = id;
+            editandoId = id;
         };
 
         window.openModal = function() {
             document.getElementById('atividadeForm').reset();
             document.getElementById('modalTitle').innerHTML = '<i class="fas fa-plus-circle"></i> Nova Atividade';
+            participantesTemp = [];
+            subtarefasTemp = [];
+            renderParticipantes();
+            renderSubtarefas();
             document.getElementById('modalOverlay').classList.add('open');
-            window.editandoId = null;
+            editandoId = null;
+
+            // Define datas padrão
+            const hoje = new Date();
+            const prazo = new Date(hoje);
+            prazo.setDate(prazo.getDate() + 14);
+            const entrega = new Date(hoje);
+            entrega.setDate(entrega.getDate() + 16);
+            document.getElementById('formInicio').value = hoje.toISOString().split('T')[0];
+            document.getElementById('formPrazo').value = prazo.toISOString().split('T')[0];
+            document.getElementById('formEntregaDocente').value = entrega.toISOString().split('T')[0];
         };
 
         window.closeModal = function() {
             document.getElementById('modalOverlay').classList.remove('open');
+            editandoId = null;
         };
 
         window.entrarNoSistema = function() {
@@ -1643,23 +1646,160 @@
                     pageDiv.id = `page-${page}`;
                     pageDiv.className = 'page';
                     if (page === 'dashboard') pageDiv.classList.add('active');
-                    
+
                     let content = '';
                     if (page === 'dashboard') {
                         content = `
-                            <div class="top-bar">
-                                <h1>📊 Dashboard <small>Controle Ambiental · 2026.2</small></h1>
-                                <div class="clock">
-                                    <span id="clockDisplay">00:00</span>
-                                    <span class="sec" id="secondsDisplay">00</span>
+                            <!-- DASHBOARD COMPLETO -->
+                            <div class="welcome-hero">
+                                <div class="greeting-section">
+                                    <div class="greeting-text">
+                                        <span class="greeting-icon" id="greetingEmoji">🌅</span>
+                                        <div>
+                                            <h1 class="greeting-title" id="greetingTitle">Bom dia, Igor!</h1>
+                                            <p class="greeting-subtitle">Hoje é uma nova oportunidade para brilhar! ✨</p>
+                                        </div>
+                                    </div>
+                                    <div class="date-info">
+                                        <span class="date-day" id="currentDay">Segunda-feira</span>
+                                        <span class="date-full" id="currentDate">27 de Julho de 2026</span>
+                                        <span class="aulas-hoje">📚 <strong id="aulasHoje">4</strong> aulas hoje</span>
+                                    </div>
+                                </div>
+                                <div style="display:flex;justify-content:flex-end;margin-top:16px;">
+                                    <div class="clock-hero">
+                                        <span class="time" id="clockHeroTime">00:00</span>
+                                        <span class="seconds" id="clockHeroSeconds">00</span>
+                                    </div>
                                 </div>
                             </div>
+
+                            <div class="quote-card">
+                                <i class="fas fa-quote-left quote-icon"></i>
+                                <blockquote id="dailyQuote">"Acredite em si mesmo e todo o resto virá naturalmente."</blockquote>
+                                <span class="quote-author">— <span id="quoteAuthor">The Rock</span></span>
+                                <button class="btn-new-quote" onclick="novaFrase()">
+                                    <i class="fas fa-sync"></i> Nova Inspiração
+                                </button>
+                            </div>
+
+                            <div class="quick-actions">
+                                <h3 class="section-label">⚡ Ações Rápidas</h3>
+                                <div class="action-grid">
+                                    <button class="action-btn primary" onclick="openModal()">
+                                        <i class="fas fa-plus-circle"></i>
+                                        <span>Nova Atividade</span>
+                                        <small>Adicione uma tarefa</small>
+                                    </button>
+                                    <button class="action-btn success" onclick="window.location.hash='relatorios'">
+                                        <i class="fas fa-pen"></i>
+                                        <span>Registrar Estudo</span>
+                                        <small>Marque seu progresso</small>
+                                    </button>
+                                    <button class="action-btn info" onclick="window.location.hash='notas'">
+                                        <i class="fas fa-calculator"></i>
+                                        <span>Ver Notas</span>
+                                        <small>Acompanhe sua média</small>
+                                    </button>
+                                    <button class="action-btn warning" onclick="sincronizarBackendless()">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        <span>Sincronizar</span>
+                                        <small>Salvar na nuvem</small>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="achievements">
+                                <h3 class="section-label">🏆 Conquistas de Hoje</h3>
+                                <div class="achievement-grid">
+                                    <div class="achievement-card">
+                                        <div class="achievement-icon">✅</div>
+                                        <div class="achievement-info">
+                                            <span class="achievement-value" id="checkDoneCount">0</span>
+                                            <span class="achievement-label">Checklist Concluído</span>
+                                            <div class="mini-progress">
+                                                <div class="mini-bar" id="checkProgressBar" style="width: 0%;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="achievement-card">
+                                        <div class="achievement-icon">📖</div>
+                                        <div class="achievement-info">
+                                            <span class="achievement-value" id="totalHorasEstudo">0</span>
+                                            <span class="achievement-label">Horas de Estudo Hoje</span>
+                                            <div class="mini-progress">
+                                                <div class="mini-bar" id="estudoProgressBar" style="width: 0%;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="achievement-card">
+                                        <div class="achievement-icon">🎯</div>
+                                        <div class="achievement-info">
+                                            <span class="achievement-value" id="atividadesConcluidas">0</span>
+                                            <span class="achievement-label">Atividades Concluídas</span>
+                                            <div class="mini-progress">
+                                                <div class="mini-bar" id="atividadesProgressBar" style="width: 0%;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="achievement-card">
+                                        <div class="achievement-icon">📈</div>
+                                        <div class="achievement-info">
+                                            <span class="achievement-value" id="mediaGeralDisplay">0.0</span>
+                                            <span class="achievement-label">Média Geral</span>
+                                            <div class="mini-progress">
+                                                <div class="mini-bar" id="mediaProgressBar" style="width: 0%;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="progress-hero">
+                                <h3 class="section-label">📈 Progresso do Semestre 2026</h3>
+                                <div class="progress-container">
+                                    <div class="progress-circle-container">
+                                        <svg class="progress-circle" viewBox="0 0 120 120">
+                                            <circle class="progress-bg" cx="60" cy="60" r="54" />
+                                            <circle class="progress-fg" cx="60" cy="60" r="54" 
+                                                    stroke-dasharray="339.292" 
+                                                    stroke-dashoffset="339.292" />
+                                        </svg>
+                                        <div class="progress-center">
+                                            <span class="progress-percent" id="semesterPercent">0%</span>
+                                            <span class="progress-label">Concluído</span>
+                                        </div>
+                                    </div>
+                                    <div class="progress-info">
+                                        <div class="info-item">
+                                            <span class="info-label">Semanas cursadas</span>
+                                            <span class="info-value" id="semanasCursadas">0</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="info-label">Total de semanas</span>
+                                            <span class="info-value">18</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="info-label">Semanas restantes</span>
+                                            <span class="info-value highlight" id="semanasRestantes">0</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="info-label">Dias letivos</span>
+                                            <span class="info-value" id="diasLetivos">0</span>
+                                        </div>
+                                    </div>
+                                    <div class="progress-message" id="progressMessage">
+                                        💪 Você está no caminho certo! Continue assim!
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="stats-grid">
                                 <div class="stat-card"><span class="icon"><i class="fas fa-book"></i></span><div class="number">14</div><div class="label">Turmas Matriculadas</div></div>
                                 <div class="stat-card"><span class="icon"><i class="fas fa-tasks"></i></span><div class="number" id="totalAtividades">0</div><div class="label">Atividades</div></div>
                                 <div class="stat-card"><span class="icon"><i class="fas fa-users"></i></span><div class="number" id="totalGrupo">0</div><div class="label">Atividades em Grupo</div></div>
                                 <div class="stat-card"><span class="icon"><i class="fas fa-user"></i></span><div class="number" id="totalIndividual">0</div><div class="label">Atividades Individuais</div></div>
-                                <div class="stat-card"><span class="icon"><i class="fas fa-check-double"></i></span><div class="number" id="checkDoneCount">0</div><div class="label">Checklist Concluído</div></div>
+                                <div class="stat-card"><span class="icon"><i class="fas fa-check-double"></i></span><div class="number" id="checkDoneCount2">0</div><div class="label">Checklist Concluído</div></div>
                                 <div class="stat-card"><span class="icon"><i class="fas fa-graduation-cap"></i></span><div class="number" id="mediaGeral">0.0</div><div class="label">Média Geral</div></div>
                             </div>
                         `;
@@ -1701,6 +1841,8 @@
                                 <button class="active" data-filtro="todas">📋 Todas</button>
                                 <button data-filtro="individual">👤 Individual</button>
                                 <button data-filtro="grupo">👥 Grupo</button>
+                                <button data-filtro="andamento">⏳ Em andamento</button>
+                                <button data-filtro="concluida">✅ Concluídas</button>
                             </div>
                             <div class="atividades-grid" id="atividadesContainer"></div>
                         `;
@@ -1745,7 +1887,7 @@
                 }
             }
 
-            // Inicializa após carregar
+            // Inicializa
             renderChecklist();
             renderTurmas();
             renderAtividades();
@@ -1762,21 +1904,19 @@
                 });
             });
 
-            console.log('✅ GDA Acadêmico v3.0 carregado!');
-        }
+            // Filtros de atividades
+            document.querySelectorAll('.filtros-atividades button').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.filtros-atividades button').forEach(b => b.classList.remove(
+                        'active'));
+                    this.classList.add('active');
+                    const filtro = this.dataset.filtro;
+                    // Implementar filtro aqui
+                    console.log('Filtro:', filtro);
+                });
+            });
 
-        // ==========================================
-        // RELÓGIO
-        // ==========================================
-        function updateClock() {
-            const now = new Date();
-            const h = String(now.getHours()).padStart(2, '0');
-            const m = String(now.getMinutes()).padStart(2, '0');
-            const s = String(now.getSeconds()).padStart(2, '0');
-            const clock = document.getElementById('clockDisplay');
-            const sec = document.getElementById('secondsDisplay');
-            if (clock) clock.textContent = `${h}:${m}`;
-            if (sec) sec.textContent = s;
+            console.log('✅ GDA Acadêmico v3.0 carregado!');
         }
 
         // ==========================================
@@ -1788,7 +1928,7 @@
                 const disciplina = document.getElementById('relatorioDisciplina').value;
                 const tempo = parseInt(document.getElementById('relatorioTempo').value);
                 const texto = document.getElementById('relatorioTexto').value.trim();
-                
+
                 if (!disciplina || !tempo || !texto) {
                     alert('Preencha todos os campos!');
                     return;
@@ -1803,6 +1943,7 @@
                 });
                 saveData('gda_relatorios', relatorios);
                 renderRelatorios();
+                renderDashboard();
                 document.getElementById('relatorioTexto').value = '';
                 document.getElementById('relatorioTempo').value = '';
                 document.getElementById('relatorioDisciplina').value = '';
@@ -1830,10 +1971,28 @@
                     return;
                 }
 
-                if (window.editandoId) {
-                    const idx = atividades.findIndex(a => a.id === window.editandoId);
+                // Calcula progresso baseado nas subtarefas
+                const progresso = subtarefasTemp.length > 0 ?
+                    Math.round((subtarefasTemp.filter(st => st.concluido).length / subtarefasTemp.length) * 100) :
+                    0;
+
+                if (editandoId) {
+                    const idx = atividades.findIndex(a => a.id === editandoId);
                     if (idx !== -1) {
-                        atividades[idx] = { ...atividades[idx], titulo, tipo, prioridade, disciplina, inicio, prazo, entregaDocente, observacoes };
+                        atividades[idx] = {
+                            ...atividades[idx],
+                            titulo,
+                            tipo,
+                            prioridade,
+                            disciplina,
+                            inicio,
+                            prazo,
+                            entregaDocente,
+                            observacoes,
+                            participantes: participantesTemp,
+                            subtarefas: subtarefasTemp,
+                            progresso
+                        };
                     }
                 } else {
                     atividades.push({
@@ -1846,8 +2005,9 @@
                         prazo,
                         entregaDocente,
                         observacoes,
-                        subtarefas: [],
-                        progresso: 0
+                        participantes: participantesTemp,
+                        subtarefas: subtarefasTemp,
+                        progresso
                     });
                 }
 
@@ -1856,7 +2016,9 @@
                 renderDashboard();
                 closeModal();
                 alert('✅ Atividade salva!');
-                window.editandoId = null;
+                editandoId = null;
+                participantesTemp = [];
+                subtarefasTemp = [];
             }
         });
 
@@ -1871,10 +2033,22 @@
 
             const relatorioSelect = document.getElementById('relatorioDisciplina');
             if (relatorioSelect) {
-                relatorioSelect.innerHTML = `<option value="">Selecione</option>` + 
+                relatorioSelect.innerHTML = `<option value="">Selecione</option>` +
                     turmas.map(t => `<option value="${t.nome}">${t.nome}</option>`).join('');
             }
         }
+
+        // ==========================================
+        // SINCRONIZAÇÃO (SIMPLIFICADA)
+        // ==========================================
+        window.sincronizarBackendless = function() {
+            alert('☁️ Sincronizando com a nuvem...\n\n' +
+                'Checklist: ' + Object.keys(checklistState).length + ' itens\n' +
+                'Atividades: ' + atividades.length + ' atividades\n' +
+                'Notas: ' + Object.keys(notas).length + ' disciplinas\n' +
+                'Relatórios: ' + relatorios.length + ' registros\n\n' +
+                '✅ Dados salvos localmente!');
+        };
 
         // ==========================================
         // MODAL - CLICK FORA
@@ -1895,39 +2069,13 @@
         });
 
         // ==========================================
-        // FILTROS ATIVIDADES
-        // ==========================================
-        document.addEventListener('click', function(e) {
-            if (e.target.closest('.filtros-atividades button')) {
-                const btn = e.target.closest('.filtros-atividades button');
-                document.querySelectorAll('.filtros-atividades button').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                // Implementar filtro aqui
-            }
-        });
-
-        // ==========================================
         // INICIALIZAÇÃO
         // ==========================================
         document.addEventListener('DOMContentLoaded', function() {
             populateSelects();
             loadPages();
-            updateClock();
-            setInterval(updateClock, 1000);
-
-            // Definir datas padrão no modal
-            const hoje = new Date();
-            const prazo = new Date(hoje);
-            prazo.setDate(prazo.getDate() + 14);
-            const entrega = new Date(hoje);
-            entrega.setDate(entrega.getDate() + 16);
-
-            const inicioEl = document.getElementById('formInicio');
-            const prazoEl = document.getElementById('formPrazo');
-            const entregaEl = document.getElementById('formEntregaDocente');
-            if (inicioEl) inicioEl.value = hoje.toISOString().split('T')[0];
-            if (prazoEl) prazoEl.value = prazo.toISOString().split('T')[0];
-            if (entregaEl) entregaEl.value = entrega.toISOString().split('T')[0];
+            updateClockDisplay();
+            setInterval(updateClockDisplay, 1000);
         });
 
         console.log('🚀 GDA Acadêmico v3.0 - Versão Estável');
