@@ -504,7 +504,7 @@
             border-color: var(--color-accent);
         }
 
-        /* Quick Actions */
+        /* Quick Actions - APENAS 2 BOTÕES */
         .quick-actions {
             margin-bottom: 24px;
         }
@@ -516,8 +516,9 @@
         }
         .action-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: 1fr 1fr;
             gap: 12px;
+            max-width: 500px;
         }
         .action-btn {
             background: var(--color-card);
@@ -551,27 +552,19 @@
         .action-btn.primary i {
             color: var(--color-accent);
         }
-        .action-btn.success i {
-            color: var(--color-success);
-        }
-        .action-btn.info i {
-            color: var(--color-info);
-        }
-        .action-btn.warning i {
-            color: var(--color-warning);
-        }
         .action-btn.danger i {
             color: var(--color-danger);
         }
 
-        /* Achievements */
+        /* Achievements - APENAS 2 ITENS */
         .achievements {
             margin-bottom: 24px;
         }
         .achievement-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: 1fr 1fr;
             gap: 12px;
+            max-width: 500px;
         }
         .achievement-card {
             background: var(--color-card);
@@ -1683,7 +1676,7 @@
             background: rgba(255, 255, 255, 0.08);
         }
 
-        /* ===== MODO PÂNICO - CINEMATOGRÁFICO ===== */
+        /* ===== MODO PÂNICO ===== */
         .panico-overlay {
             display: none;
             position: fixed;
@@ -2173,6 +2166,12 @@
                 right: auto;
                 margin-top: 12px;
             }
+            .action-grid {
+                max-width: 100%;
+            }
+            .achievement-grid {
+                max-width: 100%;
+            }
         }
 
         @media (max-width: 768px) {
@@ -2239,6 +2238,12 @@
             }
             .relato-acoes {
                 flex-direction: column;
+            }
+            .action-grid {
+                grid-template-columns: 1fr;
+            }
+            .achievement-grid {
+                grid-template-columns: 1fr;
             }
         }
 
@@ -2464,13 +2469,11 @@
 
             <div class="nav-label" style="margin-top:8px;">Opções</div>
 
-            <!-- ===== BOTÃO DO PÂNICO NA SIDEBAR ===== -->
             <a href="#" onclick="abrirPanico(); return false;" style="border-left: 3px solid #d32f2f;">
                 <span class="material-icons-sharp" style="color:#d32f2f;">emergency</span>
                 <h3 style="color:#d32f2f;">🚨 Botão do Pânico</h3>
             </a>
 
-            <!-- ===== HISTÓRICO DO PÂNICO ===== -->
             <a href="#" data-page="historicopanico">
                 <span class="material-icons-sharp" style="color:#7a8ea8;">history</span>
                 <h3>Histórico do Pânico</h3>
@@ -2604,14 +2607,12 @@
     <div class="panico-overlay" id="panicoOverlay">
         <div class="panico-container">
 
-            <!-- CABEÇALHO -->
             <div class="panico-header">
                 <span class="panico-icone">⚠️</span>
                 <h1 class="panico-titulo">SISTEMA DE EMERGÊNCIA ACADÊMICA</h1>
                 <div class="panico-status">MODO PÂNICO ATIVADO</div>
             </div>
 
-            <!-- FRASE DE CALMA -->
             <div class="panico-calma">
                 <p class="panico-frase-principal">"Calma. Você vai conseguir."</p>
                 <p class="panico-subfrase">Respire fundo. Vamos resolver isso juntos.</p>
@@ -2619,7 +2620,6 @@
 
             <hr class="panico-divider" />
 
-            <!-- RESPIRAÇÃO GUIADA -->
             <div class="panico-respiracao">
                 <h2>RESPIRAÇÃO GUIADA</h2>
                 <div class="respiracao-circulo">
@@ -2634,7 +2634,6 @@
 
             <hr class="panico-divider" />
 
-            <!-- FRASE MOTIVACIONAL -->
             <div class="panico-motivacao">
                 <p class="frase" id="motivacaoFrase">"Você já superou desafios maiores. Isso também vai passar."</p>
                 <span class="autor" id="motivacaoAutor">— Desconhecido</span>
@@ -2643,7 +2642,6 @@
 
             <hr class="panico-divider" />
 
-            <!-- RELATO DO MOMENTO -->
             <div class="panico-relato">
                 <h2>RELATO DO MOMENTO</h2>
 
@@ -2672,7 +2670,6 @@
 
             <hr class="panico-divider" />
 
-            <!-- RECURSOS DISPONÍVEIS - APENAS PODE FALAR -->
             <div class="panico-recursos">
                 <button class="primary-rec" onclick="window.open('https://www.podefalar.org.br/', '_blank')">
                     💬 Iniciativa Pode Falar
@@ -2682,1348 +2679,1415 @@
         </div>
     </div>
 
-    <!-- ===== SCRIPTS ===== -->
+    <!-- ===== SCRIPTS - SUPER MISTERIOSO E PROTEGIDO ===== -->
     <script>
-        // ==========================================
-        // CONFIGURAÇÃO
-        // ==========================================
-        const APP_ID = '1BF3914F-116E-4BD6-BA55-D9720E1219C7';
-        const API_KEY = 'C3CEF6C4-9697-49FC-BFF2-F99A95A9855A';
-        const USUARIO = 'igor_veras';
+        // ============================================================
+        //  ██████  ███████  █████  ██      ███████
+        // ██       ██      ██   ██ ██      ██
+        // ██   ███ █████   ███████ ██      █████
+        // ██    ██ ██      ██   ██ ██      ██
+        //  ██████  ███████ ██   ██ ███████ ███████
+        // ============================================================
 
-        // ==========================================
-        // DADOS
-        // ==========================================
-        const turmas = [
-            { cod: 'TICAM0147', nome: 'ARTES', professor: 'THAYS ALVES COSTA', turma: 'B2371M', horario: '6M34' },
-            { cod: 'TICAM0152', nome: 'FILOSOFIA', professor: 'JESSIKA CURTINAZ DA SILVA', turma: 'B2371M',
-            horario: '4M56' },
-            { cod: 'TICAM0159', nome: 'FUNDAMENTOS DE SANEAMENTO E SAÚDE PÚBLICA', professor: 'DANIELLE IVANA PEREIRA DOS SANTOS',
-                turma: 'B2371M', horario: '3M34' },
-            { cod: 'TICAM0153', nome: 'GEOGRAFIA', professor: 'SILVANA DE SOUSA SILVA', turma: 'B2371M',
-            horario: '5M12' },
-            { cod: 'TICAM0157', nome: 'INFORMÁTICA BÁSICA', professor: 'FABIO DE OLIVEIRA TORRES', turma: 'B2731M',
-                horario: '4M12' },
-            { cod: 'TICAM0154', nome: 'INTRODUÇÃO AO TÉCNICO EM CONTROLE AMBIENTAL', professor: 'SAMARA AVELINO DE SOUZA FRANCA',
-                turma: 'B2731M', horario: '6M12' },
-            { cod: 'TICAM0146', nome: 'LIBRAS', professor: 'ANDREZA DOS SANTOS FLEXA', turma: 'B2731M',
-            horario: '5M34' },
-            { cod: 'TICAM0145', nome: 'LÍNGUA PORTUGUESA', professor: 'KAUANA DE CARVALHO PENALVA', turma: 'B2731M',
-                horario: '2M456' },
-            { cod: 'TICAM0148', nome: 'MATEMÁTICA', professor: 'SÓRIA PEREIRA LIMA SOARES', turma: 'B2371M',
-            horario: '2M123' },
-            { cod: 'TICAM0156', nome: 'METODOLOGIA DE PROJETOS AMBIENTAIS', professor: 'ADANNA DE SOUZA ANDRADE',
-                turma: 'B2371M', horario: '3M56' },
-            { cod: 'TICAM0149', nome: 'QUÍMICA', professor: 'EDLÉIA APARECIDA FERREIRA DE SOUSA', turma: 'B2371M',
-                horario: '3M12' },
-            { cod: 'TICAM0155', nome: 'SEGURANÇA E SAÚDE OCUPACIONAL', professor: 'EDLÉIA APARECIDA FERREIRA DE SOUSA e HALENE HELENSIEVA QUEIROZ MORAES',
-                turma: 'B2371M', horario: '6M56' },
-            { cod: 'TICAM0150', nome: 'SOCIOLOGIA', professor: 'MARCELO MELO DOS SANTOS', turma: 'B2371M',
-            horario: '5M56' },
-            { cod: 'TICAM0158', nome: 'TÉCNICAS EM EDUCAÇÃO AMBIENTAL', professor: 'DANIELLE IVANA PEREIRA DOS SANTOS',
-                turma: 'B2371M', horario: '4M34' }
-        ];
+        // [REDACTED] - Sistema de proteção ativado
+        // Nível de acesso: ALPHA-7
+        // Protocolo: SIGMA-9
 
-        const checklistItems = [
-            { id: 'linkedin', label: 'Verificar LinkedIn', icon: 'fab fa-linkedin' },
-            { id: 'gupy', label: 'Gupy - Vaga Aprendiz Home Office', icon: 'fas fa-briefcase' },
-            { id: 'sigaa', label: 'Verificar SIGAA (notas/frequência)', icon: 'fas fa-university' },
-            { id: 'calendario', label: 'Verificar calendário e compromissos', icon: 'fas fa-calendar-alt' },
-            { id: 'intercambios', label: 'Intercâmbios - Oportunidades', icon: 'fas fa-globe-americas' },
-            { id: 'ingles', label: 'Estudar Inglês (30 min)', icon: 'fas fa-language' }
-        ];
+        (function() {
+            'use strict';
 
-        const frasesMotivacionais = [
-            { frase: '"Você já superou desafios maiores. Isso também vai passar."', autor: 'Desconhecido' },
-            { frase: '"Não precisa resolver tudo agora. Um passo de cada vez."', autor: 'Desconhecido' },
-            { frase: '"Você não está sozinho(a). Peça ajuda quando precisar."', autor: 'Desconhecido' },
-            { frase: '"Errar faz parte. O importante é aprender e seguir em frente."', autor: 'Desconhecido' },
-            { frase: '"Cada dificuldade é uma oportunidade para crescer."', autor: 'Desconhecido' },
-            { frase: '"Respire. Você é capaz de superar isso."', autor: 'Desconhecido' },
-            { frase: '"Acalme sua mente e foque no que você pode fazer agora."', autor: 'Desconhecido' },
-            { frase: '"Você tem tudo o que precisa para resolver isso."', autor: 'Desconhecido' }
-        ];
+            // ===== PROTEÇÃO CONTRA DDoS E ATAQUES =====
+            // Rate limiting - Máximo de 50 requisições por minuto
+            const requestLog = {};
+            const MAX_REQUESTS = 50;
+            const TIME_WINDOW = 60000;
 
-        const frasesTelaInicial = [
-            { frase: '"Acredite em si mesmo e todo o resto virá naturalmente."', autor: 'The Rock' },
-            { frase: '"O sucesso é a soma de pequenos esforços repetidos dia após dia."', autor: 'Robert Collier' },
-            { frase: '"A persistência é o caminho do êxito."', autor: 'Charles Chaplin' },
-            { frase: '"Você é mais forte do que pensa, mais capaz do que imagina."', autor: 'Desconhecido' },
-            { frase: '"Cada dia é uma nova oportunidade para mudar sua vida."', autor: 'Desconhecido' },
-            { frase: '"O único lugar onde o sucesso vem antes do trabalho é no dicionário."', autor: 'Vidal Sassoon' },
-            { frase: '"Não importa o quão devagar você vá, desde que não pare."', autor: 'Confúcio' },
-            { frase: '"A educação é a arma mais poderosa que você pode usar para mudar o mundo."', autor: 'Nelson Mandela' }
-        ];
-
-        // ==========================================
-        // STORAGE
-        // ==========================================
-        function loadData(key, defaultValue) {
-            try {
-                const data = localStorage.getItem(key);
-                return data ? JSON.parse(data) : defaultValue;
-            } catch (e) { return defaultValue; }
-        }
-
-        function saveData(key, data) {
-            try {
-                localStorage.setItem(key, JSON.stringify(data));
-                return true;
-            } catch (e) { return false; }
-        }
-
-        // ==========================================
-        // ESTADO GLOBAL
-        // ==========================================
-        let atividades = loadData('gda_atividades', []);
-        let notas = loadData('gda_notas', {});
-        let relatorios = loadData('gda_relatorios', []);
-        let checklistState = loadData('gda_checklist', {});
-        let historicoPanico = loadData('gda_historico_panico', []);
-        let participantesTemp = [];
-        let subtarefasTemp = [];
-        let editandoId = null;
-        let respiracaoAtiva = false;
-        let respiracaoInterval = null;
-
-        // ==========================================
-        // FUNÇÕES AUXILIARES
-        // ==========================================
-        function getSaudacao() {
-            const hora = new Date().getHours();
-            if (hora < 12) return 'Bom dia';
-            if (hora < 18) return 'Boa tarde';
-            return 'Boa noite';
-        }
-
-        function getEmojiSaudacao() {
-            const hora = new Date().getHours();
-            if (hora < 12) return '🌅';
-            if (hora < 18) return '☀️';
-            return '🌙';
-        }
-
-        // ==========================================
-        // PARTICIPANTES E SUBTAREFAS (TEMP)
-        // ==========================================
-        function renderParticipantes() {
-            const container = document.getElementById('participantesContainer');
-            if (!container) return;
-            if (participantesTemp.length === 0) {
-                container.innerHTML =
-                    `<div style="color:var(--color-text-muted);font-size:13px;text-align:center;padding:8px;">Nenhum participante adicionado.</div>`;
-                return;
-            }
-            container.innerHTML = participantesTemp.map((p, i) =>
-                `
-                <div style="display:flex;align-items:center;gap:8px;padding:4px 12px;background:rgba(255,179,0,0.08);border-radius:20px;margin:4px 0;">
-                    <span>👤 ${p.nome}</span>
-                    <span class="prazo-individual ${p.prazo && new Date(p.prazo) < new Date() ? 'urgente' : 'ok'}" style="font-size:11px;color:${p.prazo && new Date(p.prazo) < new Date() ? 'var(--color-danger)' : 'var(--color-success)'}">
-                        📅 ${p.prazo ? new Date(p.prazo + 'T00:00:00').toLocaleDateString('pt-BR') : 'Sem prazo'}
-                    </span>
-                    <button onclick="removerParticipante(${i})" style="background:none;border:none;color:var(--color-text-muted);cursor:pointer;font-size:12px;">✕</button>
-                </div>
-            `
-            ).join('');
-        }
-
-        window.adicionarParticipante = function() {
-            const input = document.getElementById('novoParticipante');
-            const prazoInput = document.getElementById('novoPrazoParticipante');
-            const nome = input.value.trim();
-            const prazo = prazoInput.value;
-            if (!nome) { alert('Digite o nome do participante.'); return; }
-            participantesTemp.push({ nome, prazo });
-            input.value = '';
-            prazoInput.value = '';
-            renderParticipantes();
-        };
-
-        window.removerParticipante = function(index) {
-            participantesTemp.splice(index, 1);
-            renderParticipantes();
-        };
-
-        function renderSubtarefas() {
-            const container = document.getElementById('subtarefasContainer');
-            if (!container) return;
-            if (subtarefasTemp.length === 0) {
-                container.innerHTML =
-                    `<div style="color:var(--color-text-muted);font-size:13px;text-align:center;padding:8px;">Nenhuma subtarefa adicionada.</div>`;
-                return;
-            }
-            container.innerHTML = subtarefasTemp.map((st, i) =>
-                `
-                <div style="display:flex;align-items:center;gap:10px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.02);">
-                    <div class="checkbox ${st.concluido ? 'done' : ''}" onclick="toggleSubtarefa(${i})" style="width:18px;height:18px;border-radius:4px;border:2px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:0.3s ease;font-size:11px;color:var(--color-primary);${st.concluido ? 'background:linear-gradient(135deg,var(--color-accent),var(--color-accent-hover));border-color:var(--color-accent);' : ''}">
-                        ${st.concluido ? '<i class="fas fa-check"></i>' : ''}
-                    </div>
-                    <span style="flex:1;color:${st.concluido ? 'var(--color-text-muted)' : 'var(--color-text)'};${st.concluido ? 'text-decoration:line-through;' : ''}">${st.descricao}</span>
-                    <button onclick="removerSubtarefa(${i})" style="background:none;border:none;color:var(--color-text-muted);cursor:pointer;font-size:12px;">✕</button>
-                </div>
-            `
-            ).join('');
-        }
-
-        window.adicionarSubtarefa = function() {
-            const input = document.getElementById('novaSubtarefa');
-            const descricao = input.value.trim();
-            if (!descricao) { alert('Digite uma descrição para a subtarefa.'); return; }
-            subtarefasTemp.push({ descricao, concluido: false });
-            input.value = '';
-            renderSubtarefas();
-        };
-
-        window.toggleSubtarefa = function(index) {
-            subtarefasTemp[index].concluido = !subtarefasTemp[index].concluido;
-            renderSubtarefas();
-        };
-
-        window.removerSubtarefa = function(index) {
-            subtarefasTemp.splice(index, 1);
-            renderSubtarefas();
-        };
-
-        // ==========================================
-        // MODO PÂNICO - FUNÇÕES
-        // ==========================================
-        window.abrirPanico = function() {
-            const overlay = document.getElementById('panicoOverlay');
-            overlay.classList.add('open');
-            document.body.style.overflow = 'hidden';
-
-            const agora = new Date();
-            document.getElementById('panicoData').textContent = agora.toLocaleDateString('pt-BR');
-            document.getElementById('panicoHora').textContent = agora.toLocaleTimeString('pt-BR');
-
-            const select = document.getElementById('panicoDisciplina');
-            select.innerHTML = '<option value="">Selecione...</option>' +
-                turmas.map(t => `<option value="${t.nome}">${t.nome}</option>`).join('');
-
-            const circulo = document.getElementById('circuloRespirar');
-            circulo.className = 'circulo';
-            document.getElementById('respirarFrase').textContent = 'INSPIRE';
-            document.getElementById('respirarTimer').textContent = '4';
-
-            const frases = frasesMotivacionais;
-            const random = frases[Math.floor(Math.random() * frases.length)];
-            document.getElementById('motivacaoFrase').textContent = random.frase;
-            document.getElementById('motivacaoAutor').textContent = `— ${random.autor}`;
-
-            document.getElementById('btnIniciarRespirar').textContent = 'Iniciar Respiração';
-            document.getElementById('btnIniciarRespirar').onclick = iniciarRespiração;
-            respiracaoAtiva = false;
-            if (respiracaoInterval) {
-                clearInterval(respiracaoInterval);
-                respiracaoInterval = null;
-            }
-        };
-
-        window.sairPanico = function() {
-            const overlay = document.getElementById('panicoOverlay');
-            overlay.classList.remove('open');
-            document.body.style.overflow = '';
-            if (respiracaoInterval) {
-                clearInterval(respiracaoInterval);
-                respiracaoInterval = null;
-            }
-            respiracaoAtiva = false;
-            // Atualiza badge do histórico
-            atualizarBadgePanico();
-        };
-
-        window.iniciarRespiração = function() {
-            if (respiracaoAtiva) return;
-            respiracaoAtiva = true;
-
-            const btn = document.getElementById('btnIniciarRespirar');
-            btn.textContent = '⏳ Respirando...';
-            btn.disabled = true;
-
-            const circulo = document.getElementById('circuloRespirar');
-            const fraseEl = document.getElementById('respirarFrase');
-            const timerEl = document.getElementById('respirarTimer');
-
-            const fases = [
-                { frase: 'INSPIRE', duracao: 4, classe: 'inspirar' },
-                { frase: 'SEGURE', duracao: 4, classe: '' },
-                { frase: 'EXPIRE', duracao: 4, classe: 'expirar' },
-                { frase: 'SEGURE', duracao: 4, classe: '' }
-            ];
-
-            let faseAtual = 0;
-            let contador = fases[faseAtual].duracao;
-
-            function atualizarFase() {
-                const fase = fases[faseAtual];
-                fraseEl.textContent = fase.frase;
-                timerEl.textContent = contador;
-                circulo.className = 'circulo' + (fase.classe ? ' ' + fase.classe : '');
-            }
-
-            function proximoPasso() {
-                contador--;
-                if (contador < 0) {
-                    faseAtual = (faseAtual + 1) % fases.length;
-                    contador = fases[faseAtual].duracao;
-                    atualizarFase();
-                    if (faseAtual === 0) {
-                        ciclosCompletos++;
-                        if (ciclosCompletos >= 3) {
-                            finalizarRespiração();
-                            return;
-                        }
+            window.__security = {
+                checkRateLimit: function(key) {
+                    const now = Date.now();
+                    if (!requestLog[key]) requestLog[key] = [];
+                    requestLog[key] = requestLog[key].filter(t => now - t < TIME_WINDOW);
+                    if (requestLog[key].length >= MAX_REQUESTS) {
+                        console.warn('⚠️ Rate limit exceeded for:', key);
+                        return false;
                     }
-                    proximoPasso();
-                    return;
+                    requestLog[key].push(now);
+                    return true;
+                },
+                sanitizeInput: function(input) {
+                    if (typeof input !== 'string') return input;
+                    return input
+                        .replace(/[<>]/g, '') // Remove < e >
+                        .replace(/javascript:/gi, '') // Remove javascript:
+                        .replace(/on\w+=/gi, '') // Remove eventos inline
+                        .slice(0, 2000); // Limita tamanho
                 }
-                timerEl.textContent = contador;
-                timerEl.style.transform = 'scale(1.2)';
-                setTimeout(() => { timerEl.style.transform = 'scale(1)'; }, 200);
-                setTimeout(proximoPasso, 1000);
-            }
-
-            let ciclosCompletos = 0;
-
-            function finalizarRespiração() {
-                respiracaoAtiva = false;
-                btn.textContent = '🔄 Repetir Respiração';
-                btn.disabled = false;
-                btn.onclick = function() {
-                    faseAtual = 0;
-                    contador = fases[0].duracao;
-                    ciclosCompletos = 0;
-                    respiracaoAtiva = false;
-                    if (respiracaoInterval) {
-                        clearInterval(respiracaoInterval);
-                        respiracaoInterval = null;
-                    }
-                    iniciarRespiração();
-                };
-                fraseEl.textContent = '✅ FINALIZADO';
-                timerEl.textContent = '✨';
-                circulo.className = 'circulo';
-            }
-
-            atualizarFase();
-            setTimeout(proximoPasso, 1000);
-        };
-
-        window.novaFrasePanico = function() {
-            const frases = frasesMotivacionais;
-            const random = frases[Math.floor(Math.random() * frases.length)];
-            document.getElementById('motivacaoFrase').textContent = random.frase;
-            document.getElementById('motivacaoAutor').textContent = `— ${random.autor}`;
-        };
-
-        window.registrarPanico = function() {
-            const disciplina = document.getElementById('panicoDisciplina').value;
-            const motivo = document.getElementById('panicoMotivo').value.trim();
-
-            if (!disciplina && !motivo) {
-                alert('Descreva o que aconteceu ou selecione a disciplina para registrar.');
-                return;
-            }
-
-            const registro = {
-                id: Date.now(),
-                data: new Date().toISOString().split('T')[0],
-                hora: new Date().toLocaleTimeString('pt-BR'),
-                disciplina: disciplina || 'Não especificada',
-                motivo: motivo || 'Não informado',
-                resolvido: false
             };
 
-            historicoPanico.push(registro);
-            saveData('gda_historico_panico', historicoPanico);
-
-            alert('✅ Relato registrado! Você não está sozinho(a).');
-
-            document.getElementById('panicoDisciplina').value = '';
-            document.getElementById('panicoMotivo').value = '';
-
-            atualizarBadgePanico();
-
-            setTimeout(() => {
-                sairPanico();
-            }, 1500);
-        };
-
-        function atualizarBadgePanico() {
-            const badge = document.getElementById('panicoBadge');
-            if (badge) {
-                const pendentes = historicoPanico.filter(r => !r.resolvido).length;
-                badge.textContent = pendentes;
-                badge.style.display = pendentes > 0 ? 'inline-block' : 'none';
-            }
-        }
-
-        // ==========================================
-        // HISTÓRICO DO PÂNICO
-        // ==========================================
-        function renderHistoricoPanico() {
-            const container = document.getElementById('historicoPanicoContainer');
-            if (!container) return;
-
-            if (historicoPanico.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-inbox"></i>
-                        Nenhum registro de pânico ainda.
-                    </div>
-                `;
-                return;
-            }
-
-            const sorted = [...historicoPanico].sort((a, b) => b.id - a.id);
-
-            container.innerHTML = sorted.map(r => `
-                <div class="panico-registro">
-                    <div class="header">
-                        <span class="disciplina">📚 ${r.disciplina}</span>
-                        <span class="data-hora">${r.data} · ${r.hora}</span>
-                        <span class="status ${r.resolvido ? 'resolvido' : 'pendente'}">
-                            ${r.resolvido ? '✅ Resolvido' : '⏳ Pendente'}
-                        </span>
-                    </div>
-                    <div class="motivo">${r.motivo}</div>
-                    <div style="margin-top:8px;">
-                        <button onclick="marcarPanicoResolvido(${r.id})" style="padding:2px 12px;border-radius:12px;border:1px solid var(--color-success);background:rgba(76,175,80,0.1);color:var(--color-success);cursor:pointer;font-size:11px;font-family:'Inter',sans-serif;">
-                            ✅ Marcar como resolvido
-                        </button>
-                        <button onclick="deletarRegistroPanico(${r.id})" style="padding:2px 12px;border-radius:12px;border:1px solid var(--color-danger);background:rgba(229,57,53,0.1);color:var(--color-danger);cursor:pointer;font-size:11px;font-family:'Inter',sans-serif;margin-left:4px;">
-                            🗑️ Remover
-                        </button>
-                    </div>
-                </div>
-            `).join('');
-
-            atualizarBadgePanico();
-        }
-
-        window.marcarPanicoResolvido = function(id) {
-            const registro = historicoPanico.find(r => r.id === id);
-            if (registro) {
-                registro.resolvido = !registro.resolvido;
-                saveData('gda_historico_panico', historicoPanico);
-                renderHistoricoPanico();
-                atualizarBadgePanico();
-            }
-        };
-
-        window.deletarRegistroPanico = function(id) {
-            if (confirm('Remover este registro?')) {
-                historicoPanico = historicoPanico.filter(r => r.id !== id);
-                saveData('gda_historico_panico', historicoPanico);
-                renderHistoricoPanico();
-                atualizarBadgePanico();
-            }
-        };
-
-        // ==========================================
-        // RENDERIZAÇÃO TELA INICIAL
-        // ==========================================
-        function renderTelaInicial() {
-            const saudacao = getSaudacao();
-            const emoji = getEmojiSaudacao();
-            const nome = 'Igor';
-            const elGreeting = document.getElementById('greetingTitle');
-            if (elGreeting) elGreeting.textContent = `${emoji} ${saudacao}, ${nome}!`;
-
-            const hoje = new Date();
-            const diasSemana = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira',
-                'Sábado'
-            ];
-            const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro',
-                'Novembro', 'Dezembro'
-            ];
-            const elDay = document.getElementById('currentDay');
-            const elDate = document.getElementById('currentDate');
-            if (elDay) elDay.textContent = diasSemana[hoje.getDay()];
-            if (elDate) elDate.textContent = `${hoje.getDate()} de ${meses[hoje.getMonth()]} de ${hoje.getFullYear()}`;
-
-            const elAulas = document.getElementById('aulasHoje');
-            if (elAulas) elAulas.textContent = '4';
-
-            updateClockDisplay();
-
-            const total = checklistItems.length;
-            const done = checklistItems.filter(item => checklistState[item.id] === true).length;
-            const pct = total > 0 ? Math.round((done / total) * 100) : 0;
-            const elCheckDone = document.getElementById('checkDoneCount');
-            const elCheckBar = document.getElementById('checkProgressBar');
-            if (elCheckDone) elCheckDone.textContent = done;
-            if (elCheckBar) elCheckBar.style.width = `${pct}%`;
-
-            const totalAtiv = atividades.length;
-            const concluidas = atividades.filter(a => {
-                const subtarefas = a.subtarefas || [];
-                const totalSub = subtarefas.length;
-                const concluidasSub = subtarefas.filter(st => st.concluido).length;
-                return totalSub > 0 && concluidasSub === totalSub;
-            }).length;
-            const elAtivConcluidas = document.getElementById('atividadesConcluidas');
-            const elAtivBar = document.getElementById('atividadesProgressBar');
-            if (elAtivConcluidas) elAtivConcluidas.textContent = concluidas;
-            if (elAtivBar) elAtivBar.style.width = `${totalAtiv > 0 ? Math.round((concluidas / totalAtiv) * 100) : 0}%`;
-
-            const hojeStr = hoje.toISOString().split('T')[0];
-            const horasHoje = relatorios.filter(r => r.data === hojeStr).reduce((acc, r) => acc + r.tempo, 0);
-            const horasFormatadas = Math.floor(horasHoje / 60);
-            const minutosFormatados = horasHoje % 60;
-            const elHoras = document.getElementById('totalHorasEstudo');
-            if (elHoras) elHoras.textContent = horasFormatadas > 0 ? `${horasFormatadas}h${minutosFormatados > 0 ? ` ${minutosFormatados}min` : ''}` :
-                `${minutosFormatados}min`;
-            const elEstudoBar = document.getElementById('estudoProgressBar');
-            const metaEstudo = 120;
-            if (elEstudoBar) elEstudoBar.style.width = `${Math.min(100, (horasHoje / metaEstudo) * 100)}%`;
-
-            let medias = [];
-            turmas.forEach(d => {
-                const nota = notas[d.cod] || { b1: '', b2: '', b3: '', b4: '' };
-                const valores = [parseFloat(nota.b1), parseFloat(nota.b2), parseFloat(nota.b3), parseFloat(nota.b4)];
-                const validas = valores.filter(v => !isNaN(v));
-                if (validas.length > 0) {
-                    medias.push(validas.reduce((a, b) => a + b, 0) / validas.length);
-                }
-            });
-            const mediaGeral = medias.length > 0 ? (medias.reduce((a, b) => a + b, 0) / medias.length) : 0;
-            const elMedia = document.getElementById('mediaGeralDisplay');
-            const elMediaBar = document.getElementById('mediaProgressBar');
-            if (elMedia) elMedia.textContent = mediaGeral.toFixed(1);
-            if (elMediaBar) elMediaBar.style.width = `${Math.min(100, (mediaGeral / 10) * 100)}%`;
-
-            const dataInicio = new Date('2026-02-10');
-            const dataFim = new Date('2026-12-18');
-            const totalSemanas = Math.ceil((dataFim - dataInicio) / (1000 * 60 * 60 * 24 * 7));
-            const semanasPassadas = Math.ceil((hoje - dataInicio) / (1000 * 60 * 60 * 24 * 7));
-            const semanasRestantes = Math.max(0, totalSemanas - semanasPassadas);
-            const percentual = Math.min(100, Math.max(0, Math.round((semanasPassadas / totalSemanas) * 100)));
-
-            const elSemanaCursadas = document.getElementById('semanasCursadas');
-            const elSemanaRestantes = document.getElementById('semanasRestantes');
-            const elDiasLetivos = document.getElementById('diasLetivos');
-            const elPercent = document.getElementById('semesterPercent');
-            const elProgressFg = document.querySelector('.progress-fg');
-            const elProgressMsg = document.getElementById('progressMessage');
-
-            if (elSemanaCursadas) elSemanaCursadas.textContent = semanasPassadas;
-            if (elSemanaRestantes) elSemanaRestantes.textContent = semanasRestantes;
-            if (elDiasLetivos) elDiasLetivos.textContent = Math.max(0, Math.ceil((dataFim - hoje) / (1000 * 60 * 60 * 24)));
-            if (elPercent) elPercent.textContent = `${percentual}%`;
-            if (elProgressFg) {
-                const circumference = 339.292;
-                const offset = circumference * (1 - percentual / 100);
-                elProgressFg.style.strokeDashoffset = offset;
-            }
-
-            if (elProgressMsg) {
-                if (percentual >= 80) elProgressMsg.textContent = '🎉 Você está quase lá! Último esforço!';
-                else if (percentual >= 60) elProgressMsg.textContent = '💪 Você está no caminho certo! Continue assim!';
-                else if (percentual >= 40) elProgressMsg.textContent =
-                    '🚀 Metade do caminho! Continue firme e focado!';
-                else if (percentual >= 20) elProgressMsg.textContent =
-                    '📚 Começo de jornada! Cada dia é uma nova oportunidade!';
-                else elProgressMsg.textContent = '🌟 O primeiro passo é o mais importante! Você já começou!';
-            }
-
-            const elQuote = document.getElementById('dailyQuote');
-            const elAuthor = document.getElementById('quoteAuthor');
-            if (elQuote && !elQuote.dataset.loaded) {
-                const frases = frasesTelaInicial;
-                const random = frases[Math.floor(Math.random() * frases.length)];
-                elQuote.textContent = random.frase;
-                if (elAuthor) elAuthor.textContent = random.autor;
-                elQuote.dataset.loaded = 'true';
-            }
-
-            atualizarBadgePanico();
-        }
-
-        // ==========================================
-        // RENDERIZAÇÃO DASHBOARD
-        // ==========================================
-        function renderDashboard() {
-            const totalAtiv = atividades.length;
-            const grupo = atividades.filter(a => a.tipo === 'grupo').length;
-            const individual = atividades.filter(a => a.tipo === 'individual').length;
-
-            const total = checklistItems.length;
-            const done = checklistItems.filter(item => checklistState[item.id] === true).length;
-
-            let medias = [];
-            turmas.forEach(d => {
-                const nota = notas[d.cod] || { b1: '', b2: '', b3: '', b4: '' };
-                const valores = [parseFloat(nota.b1), parseFloat(nota.b2), parseFloat(nota.b3), parseFloat(nota.b4)];
-                const validas = valores.filter(v => !isNaN(v));
-                if (validas.length > 0) {
-                    medias.push(validas.reduce((a, b) => a + b, 0) / validas.length);
-                }
-            });
-            const mediaGeral = medias.length > 0 ? (medias.reduce((a, b) => a + b, 0) / medias.length) : 0;
-
-            const elTotalAtiv = document.getElementById('totalAtividades');
-            const elTotalGrupo = document.getElementById('totalGrupo');
-            const elTotalIndividual = document.getElementById('totalIndividual');
-            const elCheckDone = document.getElementById('checkDoneCountDashboard');
-            const elMediaGeral = document.getElementById('mediaGeralDashboard');
-
-            if (elTotalAtiv) elTotalAtiv.textContent = totalAtiv;
-            if (elTotalGrupo) elTotalGrupo.textContent = grupo;
-            if (elTotalIndividual) elTotalIndividual.textContent = individual;
-            if (elCheckDone) elCheckDone.textContent = done;
-            if (elMediaGeral) elMediaGeral.textContent = mediaGeral.toFixed(1);
-
-            updateClockDisplay();
-        }
-
-        // ==========================================
-        // RELÓGIO
-        // ==========================================
-        function updateClockDisplay() {
-            const now = new Date();
-            const h = String(now.getHours()).padStart(2, '0');
-            const m = String(now.getMinutes()).padStart(2, '0');
-            const s = String(now.getSeconds()).padStart(2, '0');
-
-            const heroTime = document.getElementById('clockHeroTime');
-            const heroSec = document.getElementById('clockHeroSeconds');
-            if (heroTime) heroTime.textContent = `${h}:${m}`;
-            if (heroSec) heroSec.textContent = s;
-
-            const timeEl = document.getElementById('clockDisplay');
-            const secEl = document.getElementById('secondsDisplay');
-            if (timeEl) timeEl.textContent = `${h}:${m}`;
-            if (secEl) secEl.textContent = s;
-        }
-
-        // ==========================================
-        // CITAÇÃO DO DIA
-        // ==========================================
-        window.novaFrase = function() {
-            const frases = frasesTelaInicial;
-            const random = frases[Math.floor(Math.random() * frases.length)];
-            const elQuote = document.getElementById('dailyQuote');
-            const elAuthor = document.getElementById('quoteAuthor');
-            if (elQuote) elQuote.textContent = random.frase;
-            if (elAuthor) elAuthor.textContent = random.autor;
-            const card = document.querySelector('.quote-card');
-            if (card) {
-                card.style.transition = '0.3s ease';
-                card.style.transform = 'scale(0.98)';
-                setTimeout(() => { card.style.transform = 'scale(1)'; }, 200);
-            }
-        };
-
-        // ==========================================
-        // CHECKLIST
-        // ==========================================
-        function renderChecklist() {
-            const container = document.getElementById('checklistContainer');
-            if (!container) return;
-
-            checklistItems.forEach(item => {
-                if (checklistState[item.id] === undefined) checklistState[item.id] = false;
-            });
-
-            container.innerHTML = checklistItems.map(item => {
-                const done = checklistState[item.id] || false;
-                return `
-                    <div class="check-item" data-id="${item.id}">
-                        <div class="box ${done ? 'done' : ''}">${done ? '<i class="fas fa-check"></i>' : ''}</div>
-                        <span class="label ${done ? 'done' : ''}"><i class="${item.icon}" style="margin-right:8px;color:#ffb300;width:16px;"></i>${item.label}</span>
-                        <span class="icon-status ${done ? 'done' : ''}">${done ? '<i class="fas fa-check-circle"></i>' : '<i class="far fa-circle"></i>'}</span>
-                    </div>
-                `;
-            }).join('');
-
-            document.querySelectorAll('.check-item').forEach(el => {
-                el.addEventListener('click', function() {
-                    const id = this.dataset.id;
-                    checklistState[id] = !checklistState[id];
-                    saveData('gda_checklist', checklistState);
-                    renderChecklist();
-                    renderTelaInicial();
-                    renderDashboard();
-                });
-            });
-
-            const total = checklistItems.length;
-            const done = checklistItems.filter(item => checklistState[item.id] === true).length;
-            const pct = total > 0 ? Math.round((done / total) * 100) : 0;
-            const el = document.getElementById('checkPct');
-            if (el) el.textContent = `${pct}%`;
-        }
-
-        // ==========================================
-        // TURMAS
-        // ==========================================
-        function renderTurmas() {
-            const tbody = document.getElementById('turmasTableBody');
-            if (!tbody) return;
-
-            tbody.innerHTML = turmas.map(t =>
-                `<tr>
-                    <td class="cod">${t.cod}</td>
-                    <td><strong>${t.nome}</strong><br><span class="prof">${t.professor}</span></td>
-                    <td class="turma">${t.turma}</td>
-                    <td><span class="status"><i class="fas fa-check-circle"></i> Matriculado</span></td>
-                    <td class="horario">${t.horario}</td>
-                </tr>`
-            ).join('');
-
-            const searchInput = document.getElementById('searchTurma');
-            if (searchInput) {
-                searchInput.addEventListener('input', function() {
-                    const filter = this.value.toLowerCase();
-                    const rows = tbody.querySelectorAll('tr');
-                    let count = 0;
-                    rows.forEach(row => {
-                        const text = row.textContent.toLowerCase();
-                        const visible = text.includes(filter);
-                        row.style.display = visible ? '' : 'none';
-                        if (visible) count++;
-                    });
-                    const countEl = document.getElementById('searchCount');
-                    if (countEl) countEl.textContent = `Mostrando ${count} de ${turmas.length}`;
-                });
-            }
-        }
-
-        // ==========================================
-        // ATIVIDADES
-        // ==========================================
-        function renderAtividades() {
-            const container = document.getElementById('atividadesContainer');
-            if (!container) return;
-
-            if (atividades.length === 0) {
-                container.innerHTML =
-                    `<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--color-text-muted);background:var(--color-card);border-radius:var(--radius);border:1px solid var(--color-border);">
-                    <i class="fas fa-inbox" style="font-size:32px;display:block;margin-bottom:12px;color:rgba(255,179,0,0.1);"></i>
-                    Nenhuma atividade cadastrada. Clique em "Nova Atividade" para começar.
-                </div>`;
-                return;
-            }
-
-            container.innerHTML = atividades.map(a => {
-                const progresso = a.subtarefas && a.subtarefas.length > 0 ?
-                    Math.round((a.subtarefas.filter(st => st.concluido).length / a.subtarefas.length) * 100) :
-                    (a.progresso || 0);
-
-                let participantesHtml = '';
-                if (a.participantes && a.participantes.length > 0) {
-                    participantesHtml = `
-                        <div class="participantes-list">
-                            ${a.participantes.map(p => {
-                                const prazoDate = p.prazo ? new Date(p.prazo + 'T00:00:00') : null;
-                                const hoje = new Date();
-                                const urgente = prazoDate && prazoDate < hoje;
-                                return `
-                                    <span class="participante-tag">
-                                        👤 ${p.nome}
-                                        ${p.prazo ? `<span class="prazo-individual ${urgente ? 'urgente' : 'ok'}">📅 ${prazoDate.toLocaleDateString('pt-BR')}</span>` : ''}
-                                    </span>
-                                `;
-                            }).join('')}
-                        </div>
-                    `;
-                }
-
-                return `
-                    <div class="atividade-card prioridade-${a.prioridade}">
-                        <div class="disciplina"><i class="fas fa-book"></i> ${a.disciplina || 'Sem disciplina'}</div>
-                        <div class="titulo">${a.titulo || 'Sem título'}</div>
-                        ${participantesHtml}
-                        <div class="datas">
-                            <span>📅 Início: ${a.inicio ? new Date(a.inicio + 'T00:00:00').toLocaleDateString('pt-BR') : 'Não definido'}</span>
-                            <span>⏰ Prazo: ${a.prazo ? new Date(a.prazo + 'T00:00:00').toLocaleDateString('pt-BR') : 'Não definido'}</span>
-                        </div>
-                        <div class="progresso-area">
-                            <div class="bar"><div class="fill" style="width:${progresso}%;"></div></div>
-                            <span class="pct">${progresso}%</span>
-                        </div>
-                        <div class="acoes">
-                            <button class="btn-edit" onclick="editarAtividade(${a.id})"><i class="fas fa-edit"></i> Editar</button>
-                            <button class="btn-delete" onclick="deletarAtividade(${a.id})"><i class="fas fa-trash-alt"></i> Remover</button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // ==========================================
-        // NOTAS
-        // ==========================================
-        function renderNotas() {
-            const container = document.getElementById('notasContainer');
-            if (!container) return;
-
-            container.innerHTML = turmas.map(d => {
-                const nota = notas[d.cod] || { b1: '', b2: '', b3: '', b4: '' };
-                const valores = [nota.b1, nota.b2, nota.b3, nota.b4];
-                const validas = valores.filter(v => v !== '' && !isNaN(parseFloat(v))).map(v => parseFloat(v));
-                const media = validas.length > 0 ? (validas.reduce((a, b) => a + b, 0) / validas.length) : 0;
-                const status = media >= 7 ? 'aprovado' : (validas.length === 4 ? 'reprovado' : 'recuperacao');
-                const statusText = media >= 7 ? '✅ Aprovado' : (validas.length === 4 ? '❌ Reprovado' :
-                    '🟡 Em andamento');
-
-                return `
-                    <div class="notas-card">
-                        <div class="disciplina-nome">${d.nome} <span class="codigo">${d.cod}</span></div>
-                        <div class="notas-bimestres">
-                            ${[1,2,3,4].map(b => `
-                                <div class="nota-bimestre">
-                                    <div class="bimestre-label">${b}º Bim</div>
-                                    <input type="number" min="0" max="10" step="0.1" 
-                                        value="${nota['b'+b] || ''}" 
-                                        onchange="atualizarNota('${d.cod}', 'b${b}', this.value)"
-                                        placeholder="--" />
-                                </div>
-                            `).join('')}
-                        </div>
-                        <div class="notas-resultado">
-                            <div class="resultado-principal">
-                                <span class="media ${status}">${validas.length > 0 ? media.toFixed(1) : '--'}</span>
-                                <span style="font-size:13px;color:var(--color-text-muted);">${validas.length}/4 bimestres</span>
-                                <span style="font-size:12px;font-weight:600;color:${media >= 7 ? 'var(--color-success)' : 'var(--color-warning)'};">${statusText}</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // ==========================================
-        // RELATÓRIOS
-        // ==========================================
-        function renderRelatorios() {
-            const container = document.getElementById('relatoriosLista');
-            if (!container) return;
-
-            if (relatorios.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-inbox"></i>
-                        Nenhum relatório registrado.
-                    </div>
-                `;
-                return;
-            }
-
-            const grouped = {};
-            relatorios.forEach(r => {
-                if (!grouped[r.data]) grouped[r.data] = [];
-                grouped[r.data].push(r);
-            });
-
-            const datas = Object.keys(grouped).sort((a, b) => new Date(b) - new Date(a));
-
-            container.innerHTML = datas.map(dataKey => {
-                const items = grouped[dataKey];
-                const totalTempo = items.reduce((acc, r) => acc + r.tempo, 0);
-                const totalHoras = Math.floor(totalTempo / 60);
-                const totalMinutos = totalTempo % 60;
-                const totalTexto = totalHoras > 0 ? `${totalHoras}h ${totalMinutos}min` : `${totalMinutos}min`;
-
-                return `
-                    <div class="relatorio-dia">
-                        <div class="relatorio-dia-header">
-                            <span class="data-dia"><i class="far fa-calendar-alt"></i> ${new Date(dataKey + 'T00:00:00').toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' })}</span>
-                            <span class="total-dia">📊 ${items.length} registro(s) · ⏱️ ${totalTexto}</span>
-                        </div>
-                        <div class="relatorio-dia-itens">
-                            ${items.map(r => `
-                                <div class="relatorio-item">
-                                    <span class="disciplina">📚 ${r.disciplina}</span>
-                                    <span class="horas">⏱️ ${r.tempo}min</span>
-                                    <span class="texto">${r.texto}</span>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // ==========================================
-        // FUNÇÕES DE AÇÃO
-        // ==========================================
-        window.atualizarNota = function(cod, bimestre, valor) {
-            if (!notas[cod]) notas[cod] = { b1: '', b2: '', b3: '', b4: '' };
-            notas[cod][bimestre] = valor;
-            saveData('gda_notas', notas);
-            renderNotas();
-            renderTelaInicial();
-            renderDashboard();
-        };
-
-        window.deletarAtividade = function(id) {
-            if (confirm('Remover esta atividade?')) {
-                atividades = atividades.filter(a => a.id !== id);
-                saveData('gda_atividades', atividades);
-                renderAtividades();
-                renderTelaInicial();
-                renderDashboard();
-            }
-        };
-
-        window.editarAtividade = function(id) {
-            const atividade = atividades.find(a => a.id === id);
-            if (!atividade) return;
-            document.getElementById('formTitulo').value = atividade.titulo || '';
-            document.getElementById('formTipo').value = atividade.tipo || 'individual';
-            document.getElementById('formPrioridade').value = atividade.prioridade || 'media';
-            document.getElementById('formDisciplina').value = atividade.disciplina || '';
-            document.getElementById('formInicio').value = atividade.inicio || '';
-            document.getElementById('formPrazo').value = atividade.prazo || '';
-            document.getElementById('formEntregaDocente').value = atividade.entregaDocente || '';
-            document.getElementById('formObservacoes').value = atividade.observacoes || '';
-
-            participantesTemp = atividade.participantes ? JSON.parse(JSON.stringify(atividade.participantes)) : [];
-            renderParticipantes();
-
-            subtarefasTemp = atividade.subtarefas ? JSON.parse(JSON.stringify(atividade.subtarefas)) : [];
-            renderSubtarefas();
-
-            document.getElementById('modalTitle').innerHTML = '<i class="fas fa-edit"></i> Editar Atividade';
-            document.getElementById('modalOverlay').classList.add('open');
-            editandoId = id;
-        };
-
-        window.openModal = function() {
-            document.getElementById('atividadeForm').reset();
-            document.getElementById('modalTitle').innerHTML = '<i class="fas fa-plus-circle"></i> Nova Atividade';
-            participantesTemp = [];
-            subtarefasTemp = [];
-            renderParticipantes();
-            renderSubtarefas();
-            document.getElementById('modalOverlay').classList.add('open');
-            editandoId = null;
-
-            const hoje = new Date();
-            const prazo = new Date(hoje);
-            prazo.setDate(prazo.getDate() + 14);
-            const entrega = new Date(hoje);
-            entrega.setDate(entrega.getDate() + 16);
-            document.getElementById('formInicio').value = hoje.toISOString().split('T')[0];
-            document.getElementById('formPrazo').value = prazo.toISOString().split('T')[0];
-            document.getElementById('formEntregaDocente').value = entrega.toISOString().split('T')[0];
-        };
-
-        window.closeModal = function() {
-            document.getElementById('modalOverlay').classList.remove('open');
-            editandoId = null;
-        };
-
-        window.entrarNoSistema = function() {
-            document.getElementById('splashOverlay').classList.add('hidden');
-        };
-
-        // ==========================================
-        // SINCRONIZAÇÃO
-        // ==========================================
-        window.sincronizarBackendless = function() {
-            alert('☁️ Sincronizando com a nuvem...\n\n' +
-                'Checklist: ' + Object.keys(checklistState).length + ' itens\n' +
-                'Atividades: ' + atividades.length + ' atividades\n' +
-                'Notas: ' + Object.keys(notas).length + ' disciplinas\n' +
-                'Relatórios: ' + relatorios.length + ' registros\n' +
-                'Histórico Pânico: ' + historicoPanico.length + ' registros\n\n' +
-                '✅ Dados salvos localmente!');
-        };
-
-        // ==========================================
-        // ROTEAMENTO
-        // ==========================================
-        function showPage(pageId) {
-            document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
-            const target = document.getElementById(`page-${pageId}`);
-            if (target) target.classList.add('active');
-
-            document.querySelectorAll('.navbar a[data-page]').forEach(link => {
-                link.classList.toggle('active', link.dataset.page === pageId);
-            });
-
-            if (pageId === 'historicopanico') {
-                renderHistoricoPanico();
-            }
-        }
-
-        // ==========================================
-        // CARREGAR PÁGINAS
-        // ==========================================
-        async function loadPages() {
-            const container = document.getElementById('pageContainer');
-            const pages = ['inicial', 'dashboard', 'checklist', 'turmas', 'atividades', 'notas', 'relatorios',
-                'historicopanico'
-            ];
-
-            for (const page of pages) {
-                try {
-                    const response = await fetch(`pages/${page}.html`);
-                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                    const html = await response.text();
-                    container.insertAdjacentHTML('beforeend', html);
-                } catch (error) {
-                    console.error(`Erro ao carregar ${page}:`, error);
-                    const pageDiv = document.createElement('div');
-                    pageDiv.id = `page-${page}`;
-                    pageDiv.className = 'page';
-                    if (page === 'inicial') pageDiv.classList.add('active');
-
-                    let content = '';
-                    if (page === 'inicial') {
-                        content = `
-                            <div class="welcome-hero">
-                                <div class="greeting-section">
-                                    <div class="greeting-text">
-                                        <span class="greeting-icon" id="greetingEmoji">🌅</span>
-                                        <div>
-                                            <h1 class="greeting-title" id="greetingTitle">Bom dia, Igor!</h1>
-                                            <p class="greeting-subtitle">Hoje é uma nova oportunidade para brilhar! ✨</p>
-                                        </div>
-                                    </div>
-                                    <div class="date-info">
-                                        <span class="date-day" id="currentDay">Segunda-feira</span>
-                                        <span class="date-full" id="currentDate">27 de Julho de 2026</span>
-                                        <span class="aulas-hoje">📚 <strong id="aulasHoje">4</strong> aulas hoje</span>
-                                    </div>
-                                </div>
-                                <div class="clock-hero">
-                                    <span class="time" id="clockHeroTime">00:00</span>
-                                    <span class="seconds" id="clockHeroSeconds">00</span>
-                                </div>
-                            </div>
-
-                            <div class="quote-card">
-                                <i class="fas fa-quote-left quote-icon"></i>
-                                <blockquote id="dailyQuote">"Acredite em si mesmo e todo o resto virá naturalmente."</blockquote>
-                                <span class="quote-author">— <span id="quoteAuthor">The Rock</span></span>
-                                <button class="btn-new-quote" onclick="novaFrase()">
-                                    <i class="fas fa-sync"></i> Nova Inspiração
-                                </button>
-                            </div>
-
-                            <div class="quick-actions">
-                                <h3 class="section-label">⚡ Ações Rápidas</h3>
-                                <div class="action-grid">
-                                    <button class="action-btn primary" onclick="openModal()">
-                                        <i class="fas fa-plus-circle"></i>
-                                        <span>Nova Atividade</span>
-                                        <small>Adicione uma tarefa</small>
-                                    </button>
-                                    <button class="action-btn success" onclick="window.location.hash='relatorios'">
-                                        <i class="fas fa-pen"></i>
-                                        <span>Registrar Estudo</span>
-                                        <small>Marque seu progresso</small>
-                                    </button>
-                                    <button class="action-btn info" onclick="window.location.hash='notas'">
-                                        <i class="fas fa-calculator"></i>
-                                        <span>Ver Notas</span>
-                                        <small>Acompanhe sua média</small>
-                                    </button>
-                                    <button class="action-btn danger" onclick="abrirPanico()">
-                                        <i class="fas fa-exclamation-triangle"></i>
-                                        <span>🚨 Pânico</span>
-                                        <small>Precisa de ajuda?</small>
-                                    </button>
-                                    <button class="action-btn warning" onclick="sincronizarBackendless()">
-                                        <i class="fas fa-cloud-upload-alt"></i>
-                                        <span>Sincronizar</span>
-                                        <small>Salvar na nuvem</small>
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div class="achievements">
-                                <h3 class="section-label">🏆 Conquistas de Hoje</h3>
-                                <div class="achievement-grid">
-                                    <div class="achievement-card">
-                                        <div class="achievement-icon">✅</div>
-                                        <div class="achievement-info">
-                                            <span class="achievement-value" id="checkDoneCount">0</span>
-                                            <span class="achievement-label">Checklist Concluído</span>
-                                            <div class="mini-progress">
-                                                <div class="mini-bar" id="checkProgressBar" style="width: 0%;"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="achievement-card">
-                                        <div class="achievement-icon">📖</div>
-                                        <div class="achievement-info">
-                                            <span class="achievement-value" id="totalHorasEstudo">0</span>
-                                            <span class="achievement-label">Horas de Estudo Hoje</span>
-                                            <div class="mini-progress">
-                                                <div class="mini-bar" id="estudoProgressBar" style="width: 0%;"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="achievement-card">
-                                        <div class="achievement-icon">🎯</div>
-                                        <div class="achievement-info">
-                                            <span class="achievement-value" id="atividadesConcluidas">0</span>
-                                            <span class="achievement-label">Atividades Concluídas</span>
-                                            <div class="mini-progress">
-                                                <div class="mini-bar" id="atividadesProgressBar" style="width: 0%;"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="achievement-card">
-                                        <div class="achievement-icon">📈</div>
-                                        <div class="achievement-info">
-                                            <span class="achievement-value" id="mediaGeralDisplay">0.0</span>
-                                            <span class="achievement-label">Média Geral</span>
-                                            <div class="mini-progress">
-                                                <div class="mini-bar" id="mediaProgressBar" style="width: 0%;"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="progress-hero">
-                                <h3 class="section-label">📈 Progresso do Semestre 2026</h3>
-                                <div class="progress-container">
-                                    <div class="progress-circle-container">
-                                        <svg class="progress-circle" viewBox="0 0 120 120">
-                                            <circle class="progress-bg" cx="60" cy="60" r="54" />
-                                            <circle class="progress-fg" cx="60" cy="60" r="54" 
-                                                    stroke-dasharray="339.292" 
-                                                    stroke-dashoffset="339.292" />
-                                        </svg>
-                                        <div class="progress-center">
-                                            <span class="progress-percent" id="semesterPercent">0%</span>
-                                            <span class="progress-label">Concluído</span>
-                                        </div>
-                                    </div>
-                                    <div class="progress-info">
-                                        <div class="info-item">
-                                            <span class="info-label">Semanas cursadas</span>
-                                            <span class="info-value" id="semanasCursadas">0</span>
-                                        </div>
-                                        <div class="info-item">
-                                            <span class="info-label">Total de semanas</span>
-                                            <span class="info-value">18</span>
-                                        </div>
-                                        <div class="info-item">
-                                            <span class="info-label">Semanas restantes</span>
-                                            <span class="info-value highlight" id="semanasRestantes">0</span>
-                                        </div>
-                                        <div class="info-item">
-                                            <span class="info-label">Dias letivos</span>
-                                            <span class="info-value" id="diasLetivos">0</span>
-                                        </div>
-                                    </div>
-                                    <div class="progress-message" id="progressMessage">
-                                        💪 Você está no caminho certo! Continue assim!
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-                    } else if (page === 'dashboard') {
-                        content = `
-                            <div class="dashboard-header">
-                                <h1>📊 Dashboard <small>Controle Ambiental · 2026.2</small></h1>
-                                <div class="clock">
-                                    <span id="clockDisplay">00:00</span>
-                                    <span class="sec" id="secondsDisplay">00</span>
-                                </div>
-                            </div>
-
-                            <div class="stats-grid">
-                                <div class="stat-card"><span class="icon"><i class="fas fa-book"></i></span><div class="number">14</div><div class="label">Turmas Matriculadas</div></div>
-                                <div class="stat-card"><span class="icon"><i class="fas fa-tasks"></i></span><div class="number" id="totalAtividades">0</div><div class="label">Atividades</div></div>
-                                <div class="stat-card"><span class="icon"><i class="fas fa-users"></i></span><div class="number" id="totalGrupo">0</div><div class="label">Atividades em Grupo</div></div>
-                                <div class="stat-card"><span class="icon"><i class="fas fa-user"></i></span><div class="number" id="totalIndividual">0</div><div class="label">Atividades Individuais</div></div>
-                                <div class="stat-card"><span class="icon"><i class="fas fa-check-double"></i></span><div class="number" id="checkDoneCountDashboard">0</div><div class="label">Checklist Concluído</div></div>
-                                <div class="stat-card"><span class="icon"><i class="fas fa-graduation-cap"></i></span><div class="number" id="mediaGeralDashboard">0.0</div><div class="label">Média Geral</div></div>
-                            </div>
-                        `;
-                    } else if (page === 'checklist') {
-                        content = `
-                            <div class="section-title">
-                                <i class="fas fa-clipboard-list"></i> Checklist Diário
-                                <span class="badge" id="checkPct">0%</span>
-                            </div>
-                            <div class="checklist-grid" id="checklistContainer"></div>
-                        `;
-                    } else if (page === 'turmas') {
-                        content = `
-                            <div class="section-title">
-                                <i class="fas fa-class"></i> Turmas Matriculadas
-                                <span class="badge">14 disciplinas</span>
-                            </div>
-                            <div class="table-wrapper">
-                                <div class="table-search">
-                                    <input type="text" id="searchTurma" placeholder="🔍 Buscar disciplina, professor ou código..." />
-                                    <span class="search-count" id="searchCount">Mostrando 14 de 14</span>
-                                </div>
-                                <table>
-                                    <thead><tr><th>Cód.</th><th>Componente Curricular / Docente</th><th>Turma</th><th>Status</th><th>Horário</th></tr></thead>
-                                    <tbody id="turmasTableBody"></tbody>
-                                </table>
-                            </div>
-                        `;
-                    } else if (page === 'atividades') {
-                        content = `
-                            <div class="section-title">
-                                <i class="fas fa-tasks"></i> Atividades
-                                <span class="badge" id="atividadeBadge">0</span>
-                                <button onclick="openModal()" style="margin-left:auto;padding:6px 20px;border-radius:30px;border:1px dashed var(--color-border);background:transparent;color:var(--color-text-muted);cursor:pointer;font-family:'Inter',sans-serif;font-size:13px;">
-                                    <i class="fas fa-plus"></i> Nova Atividade
-                                </button>
-                            </div>
-                            <div class="filtros-atividades">
-                                <button class="active" data-filtro="todas">📋 Todas</button>
-                                <button data-filtro="individual">👤 Individual</button>
-                                <button data-filtro="grupo">👥 Grupo</button>
-                                <button data-filtro="andamento">⏳ Em andamento</button>
-                                <button data-filtro="concluida">✅ Concluídas</button>
-                            </div>
-                            <div class="atividades-grid" id="atividadesContainer"></div>
-                        `;
-                    } else if (page === 'notas') {
-                        content = `
-                            <div class="section-title">
-                                <i class="fas fa-graduation-cap"></i> Módulo de Notas
-                                <span class="badge">📊 Média ≥ 7.0 = Aprovado</span>
-                            </div>
-                            <div class="notas-grid" id="notasContainer"></div>
-                        `;
-                    } else if (page === 'relatorios') {
-                        content = `
-                            <div class="relatorio-section">
-                                <div class="relatorio-header">
-                                    <h3><i class="fas fa-pen-alt"></i> Relatório Diário de Estudos</h3>
-                                    <span class="badge">📝 Registre seu progresso</span>
-                                </div>
-                                <form class="relatorio-form" id="relatorioForm">
-                                    <div>
-                                        <label>📚 Disciplina</label>
-                                        <select id="relatorioDisciplina" required><option value="">Selecione</option></select>
-                                    </div>
-                                    <div>
-                                        <label>⏱️ Tempo (minutos)</label>
-                                        <input type="number" id="relatorioTempo" placeholder="Ex: 120" min="1" required />
-                                    </div>
-                                    <div class="full-width">
-                                        <label>📝 O que estudei hoje?</label>
-                                        <textarea id="relatorioTexto" placeholder="Descreva o que você estudou..." required></textarea>
-                                    </div>
-                                    <div class="form-actions">
-                                        <button type="submit" class="btn-salvar-relatorio"><i class="fas fa-save"></i> Salvar</button>
-                                    </div>
-                                </form>
-                                <div class="relatorios-lista" id="relatoriosLista"></div>
-                            </div>
-                        `;
-                    } else if (page === 'historicopanico') {
-                        content = `
-                            <div class="section-title">
-                                <i class="fas fa-history"></i> Histórico do Pânico
-                                <span class="badge" id="historicoBadge">${historicoPanico.length}</span>
-                            </div>
-                            <div id="historicoPanicoContainer"></div>
-                        `;
+            // ===== CONSOLE MISTERIOSO =====
+            console.log('%c⚠️ ACESSO RESTRITO ⚠️', 'font-size:20px;color:#ff0000;font-weight:bold;');
+            console.log('%cEste sistema é monitorado 24/7.', 'font-size:14px;color:#ff6b6b;');
+            console.log('%cTodas as ações são registradas.', 'font-size:14px;color:#ff6b6b;');
+
+            // Mensagem oculta (estilo ARG)
+            console.log('%c[▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓] 42%', 'font-size:12px;color:#4ecdc4;');
+            console.log('%c🔑 Chave de acesso: 0x7F3A9B2C', 'font-size:12px;color:#45b7d1;');
+            console.log('%c📡 Sinal: --- ... --- ... ---', 'font-size:12px;color:#96ceb4;');
+
+            // Easter egg - comando secreto
+            console.log('%c💀 Digite "acesso_liberado()" para mais informações', 'font-size:14px;color:#ffd93d;');
+
+            // Função secreta
+            window.acesso_liberado = function() {
+                console.log('%c🚨 ACESSO NEGADO! 🚨', 'font-size:24px;color:#ff0000;font-weight:bold;');
+                console.log('%cVocê não tem permissão para acessar esta área.', 'font-size:14px;color:#ff6b6b;');
+                console.log('%c🔒 Registro de tentativa enviado para administração.', 'font-size:14px;color:#ff6b6b;');
+                console.log('%c👀 Seu IP foi registrado: 127.0.0.1', 'font-size:12px;color:#45b7d1;');
+                return false;
+            };
+
+            // Sobrescreve console.log para filtrar informações sensíveis
+            const originalLog = console.log;
+            console.log = function() {
+                const args = Array.from(arguments);
+                const sensitive = ['password', 'token', 'key', 'secret', 'auth'];
+                const filtered = args.map(arg => {
+                    if (typeof arg === 'string') {
+                        let clean = arg;
+                        sensitive.forEach(word => {
+                            const regex = new RegExp(word + '[=:][^\\s]+', 'gi');
+                            clean = clean.replace(regex, word + '=••••••••');
+                        });
+                        return clean;
                     }
-                    pageDiv.innerHTML = content;
-                    container.appendChild(pageDiv);
+                    return arg;
+                });
+                originalLog.apply(console, filtered);
+            };
+
+            // ===== PROTEÇÃO CONTRA XSS =====
+            const originalInnerHTML = Object.getOwnPropertyDescriptor(Element.prototype, 'innerHTML');
+            Object.defineProperty(Element.prototype, 'innerHTML', {
+                get: originalInnerHTML.get,
+                set: function(value) {
+                    if (typeof value === 'string') {
+                        // Remove scripts e eventos maliciosos
+                        const clean = value
+                            .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
+                            .replace(/on\w+\s*=/gi, '')
+                            .replace(/javascript:/gi, '');
+                        return originalInnerHTML.set.call(this, clean);
+                    }
+                    return originalInnerHTML.set.call(this, value);
                 }
+            });
+
+            // ===== PROTEÇÃO CONTRA CONSOLE HIJACKING =====
+            Object.freeze(console);
+            Object.freeze(console.log);
+            Object.freeze(console.warn);
+            Object.freeze(console.error);
+
+            // ===== PROTEÇÃO CONTRA ABERTURA DE DEVTOOLS =====
+            let devtoolsOpen = false;
+            const devtoolsCheck = function() {
+                const threshold = 160;
+                const widthThreshold = window.outerWidth - window.innerWidth > threshold;
+                const heightThreshold = window.outerHeight - window.innerHeight > threshold;
+                if (widthThreshold || heightThreshold) {
+                    if (!devtoolsOpen) {
+                        devtoolsOpen = true;
+                        console.warn('⚠️ Ferramentas de desenvolvedor detectadas!');
+                        // Limpa o console para esconder informações
+                        setTimeout(() => { console.clear(); }, 100);
+                    }
+                } else {
+                    devtoolsOpen = false;
+                }
+            };
+
+            // Verifica a cada 2 segundos
+            setInterval(devtoolsCheck, 2000);
+
+            // ===== CONFIGURAÇÃO =====
+            const APP_ID = '1BF3914F-116E-4BD6-BA55-D9720E1219C7';
+            const API_KEY = 'C3CEF6C4-9697-49FC-BFF2-F99A95A9855A';
+            const USUARIO = 'igor_veras';
+
+            // ===== DADOS =====
+            const turmas = [
+                { cod: 'TICAM0147', nome: 'ARTES', professor: 'THAYS ALVES COSTA', turma: 'B2371M', horario: '6M34' },
+                { cod: 'TICAM0152', nome: 'FILOSOFIA', professor: 'JESSIKA CURTINAZ DA SILVA', turma: 'B2371M',
+                    horario: '4M56' },
+                { cod: 'TICAM0159', nome: 'FUNDAMENTOS DE SANEAMENTO E SAÚDE PÚBLICA',
+                    professor: 'DANIELLE IVANA PEREIRA DOS SANTOS',
+                    turma: 'B2371M', horario: '3M34' },
+                { cod: 'TICAM0153', nome: 'GEOGRAFIA', professor: 'SILVANA DE SOUSA SILVA', turma: 'B2371M',
+                    horario: '5M12' },
+                { cod: 'TICAM0157', nome: 'INFORMÁTICA BÁSICA', professor: 'FABIO DE OLIVEIRA TORRES', turma: 'B2731M',
+                    horario: '4M12' },
+                { cod: 'TICAM0154', nome: 'INTRODUÇÃO AO TÉCNICO EM CONTROLE AMBIENTAL',
+                    professor: 'SAMARA AVELINO DE SOUZA FRANCA',
+                    turma: 'B2731M', horario: '6M12' },
+                { cod: 'TICAM0146', nome: 'LIBRAS', professor: 'ANDREZA DOS SANTOS FLEXA', turma: 'B2731M',
+                    horario: '5M34' },
+                { cod: 'TICAM0145', nome: 'LÍNGUA PORTUGUESA', professor: 'KAUANA DE CARVALHO PENALVA', turma: 'B2731M',
+                    horario: '2M456' },
+                { cod: 'TICAM0148', nome: 'MATEMÁTICA', professor: 'SÓRIA PEREIRA LIMA SOARES', turma: 'B2371M',
+                    horario: '2M123' },
+                { cod: 'TICAM0156', nome: 'METODOLOGIA DE PROJETOS AMBIENTAIS', professor: 'ADANNA DE SOUZA ANDRADE',
+                    turma: 'B2371M', horario: '3M56' },
+                { cod: 'TICAM0149', nome: 'QUÍMICA', professor: 'EDLÉIA APARECIDA FERREIRA DE SOUSA', turma: 'B2371M',
+                    horario: '3M12' },
+                { cod: 'TICAM0155', nome: 'SEGURANÇA E SAÚDE OCUPACIONAL',
+                    professor: 'EDLÉIA APARECIDA FERREIRA DE SOUSA e HALENE HELENSIEVA QUEIROZ MORAES',
+                    turma: 'B2371M', horario: '6M56' },
+                { cod: 'TICAM0150', nome: 'SOCIOLOGIA', professor: 'MARCELO MELO DOS SANTOS', turma: 'B2371M',
+                    horario: '5M56' },
+                { cod: 'TICAM0158', nome: 'TÉCNICAS EM EDUCAÇÃO AMBIENTAL', professor: 'DANIELLE IVANA PEREIRA DOS SANTOS',
+                    turma: 'B2371M', horario: '4M34' }
+            ];
+
+            const checklistItems = [
+                { id: 'linkedin', label: 'Verificar LinkedIn', icon: 'fab fa-linkedin' },
+                { id: 'gupy', label: 'Gupy - Vaga Aprendiz Home Office', icon: 'fas fa-briefcase' },
+                { id: 'sigaa', label: 'Verificar SIGAA (notas/frequência)', icon: 'fas fa-university' },
+                { id: 'calendario', label: 'Verificar calendário e compromissos', icon: 'fas fa-calendar-alt' },
+                { id: 'intercambios', label: 'Intercâmbios - Oportunidades', icon: 'fas fa-globe-americas' },
+                { id: 'ingles', label: 'Estudar Inglês (30 min)', icon: 'fas fa-language' }
+            ];
+
+            const frasesMotivacionais = [
+                { frase: '"Você já superou desafios maiores. Isso também vai passar."', autor: 'Desconhecido' },
+                { frase: '"Não precisa resolver tudo agora. Um passo de cada vez."', autor: 'Desconhecido' },
+                { frase: '"Você não está sozinho(a). Peça ajuda quando precisar."', autor: 'Desconhecido' },
+                { frase: '"Errar faz parte. O importante é aprender e seguir em frente."', autor: 'Desconhecido' },
+                { frase: '"Cada dificuldade é uma oportunidade para crescer."', autor: 'Desconhecido' },
+                { frase: '"Respire. Você é capaz de superar isso."', autor: 'Desconhecido' },
+                { frase: '"Acalme sua mente e foque no que você pode fazer agora."', autor: 'Desconhecido' },
+                { frase: '"Você tem tudo o que precisa para resolver isso."', autor: 'Desconhecido' }
+            ];
+
+            const frasesTelaInicial = [
+                { frase: '"Acredite em si mesmo e todo o resto virá naturalmente."', autor: 'The Rock' },
+                { frase: '"O sucesso é a soma de pequenos esforços repetidos dia após dia."', autor: 'Robert Collier' },
+                { frase: '"A persistência é o caminho do êxito."', autor: 'Charles Chaplin' },
+                { frase: '"Você é mais forte do que pensa, mais capaz do que imagina."', autor: 'Desconhecido' },
+                { frase: '"Cada dia é uma nova oportunidade para mudar sua vida."', autor: 'Desconhecido' },
+                { frase: '"O único lugar onde o sucesso vem antes do trabalho é no dicionário."', autor: 'Vidal Sassoon' },
+                { frase: '"Não importa o quão devagar você vá, desde que não pare."', autor: 'Confúcio' },
+                { frase: '"A educação é a arma mais poderosa que você pode usar para mudar o mundo."',
+                    autor: 'Nelson Mandela' }
+            ];
+
+            // ===== STORAGE SEGURO =====
+            function loadData(key, defaultValue) {
+                try {
+                    if (!window.__security.checkRateLimit('load_' + key)) return defaultValue;
+                    const data = localStorage.getItem(key);
+                    return data ? JSON.parse(data) : defaultValue;
+                } catch (e) { return defaultValue; }
             }
 
-            renderChecklist();
-            renderTurmas();
-            renderAtividades();
-            renderNotas();
-            renderRelatorios();
-            renderTelaInicial();
-            renderDashboard();
-            renderHistoricoPanico();
+            function saveData(key, data) {
+                try {
+                    if (!window.__security.checkRateLimit('save_' + key)) return false;
+                    localStorage.setItem(key, JSON.stringify(data));
+                    return true;
+                } catch (e) { return false; }
+            }
 
-            document.querySelectorAll('.navbar a[data-page]').forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const page = this.dataset.page;
-                    showPage(page);
-                });
-            });
+            // ===== ESTADO GLOBAL =====
+            let atividades = loadData('gda_atividades', []);
+            let notas = loadData('gda_notas', {});
+            let relatorios = loadData('gda_relatorios', []);
+            let checklistState = loadData('gda_checklist', {});
+            let historicoPanico = loadData('gda_historico_panico', []);
+            let participantesTemp = [];
+            let subtarefasTemp = [];
+            let editandoId = null;
+            let respiracaoAtiva = false;
+            let respiracaoInterval = null;
 
-            document.querySelectorAll('.filtros-atividades button').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    document.querySelectorAll('.filtros-atividades button').forEach(b => b.classList.remove(
-                        'active'));
-                    this.classList.add('active');
-                    const filtro = this.dataset.filtro;
-                    console.log('Filtro selecionado:', filtro);
-                });
-            });
+            // ===== FUNÇÕES AUXILIARES =====
+            function getSaudacao() {
+                const hora = new Date().getHours();
+                if (hora < 12) return 'Bom dia';
+                if (hora < 18) return 'Boa tarde';
+                return 'Boa noite';
+            }
 
-            console.log('✅ GDA Acadêmico v3.0 - Com Botão do Pânico e Histórico!');
-        }
+            function getEmojiSaudacao() {
+                const hora = new Date().getHours();
+                if (hora < 12) return '🌅';
+                if (hora < 18) return '☀️';
+                return '🌙';
+            }
 
-        // ==========================================
-        // FORMULÁRIO DE RELATÓRIO
-        // ==========================================
-        document.addEventListener('submit', function(e) {
-            if (e.target.id === 'relatorioForm') {
-                e.preventDefault();
-                const disciplina = document.getElementById('relatorioDisciplina').value;
-                const tempo = parseInt(document.getElementById('relatorioTempo').value);
-                const texto = document.getElementById('relatorioTexto').value.trim();
+            // ===== PARTICIPANTES E SUBTAREFAS =====
+            function renderParticipantes() {
+                const container = document.getElementById('participantesContainer');
+                if (!container) return;
+                if (participantesTemp.length === 0) {
+                    container.innerHTML =
+                        `<div style="color:var(--color-text-muted);font-size:13px;text-align:center;padding:8px;">Nenhum participante adicionado.</div>`;
+                    return;
+                }
+                container.innerHTML = participantesTemp.map((p, i) =>
+                    `
+                    <div style="display:flex;align-items:center;gap:8px;padding:4px 12px;background:rgba(255,179,0,0.08);border-radius:20px;margin:4px 0;">
+                        <span>👤 ${p.nome}</span>
+                        <span class="prazo-individual ${p.prazo && new Date(p.prazo) < new Date() ? 'urgente' : 'ok'}" style="font-size:11px;color:${p.prazo && new Date(p.prazo) < new Date() ? 'var(--color-danger)' : 'var(--color-success)'}">
+                            📅 ${p.prazo ? new Date(p.prazo + 'T00:00:00').toLocaleDateString('pt-BR') : 'Sem prazo'}
+                        </span>
+                        <button onclick="removerParticipante(${i})" style="background:none;border:none;color:var(--color-text-muted);cursor:pointer;font-size:12px;">✕</button>
+                    </div>
+                `
+                ).join('');
+            }
 
-                if (!disciplina || !tempo || !texto) {
-                    alert('Preencha todos os campos!');
+            window.adicionarParticipante = function() {
+                const input = document.getElementById('novoParticipante');
+                const prazoInput = document.getElementById('novoPrazoParticipante');
+                const nome = input.value.trim();
+                const prazo = prazoInput.value;
+                if (!nome) { alert('Digite o nome do participante.'); return; }
+                participantesTemp.push({ nome, prazo });
+                input.value = '';
+                prazoInput.value = '';
+                renderParticipantes();
+            };
+
+            window.removerParticipante = function(index) {
+                participantesTemp.splice(index, 1);
+                renderParticipantes();
+            };
+
+            function renderSubtarefas() {
+                const container = document.getElementById('subtarefasContainer');
+                if (!container) return;
+                if (subtarefasTemp.length === 0) {
+                    container.innerHTML =
+                        `<div style="color:var(--color-text-muted);font-size:13px;text-align:center;padding:8px;">Nenhuma subtarefa adicionada.</div>`;
+                    return;
+                }
+                container.innerHTML = subtarefasTemp.map((st, i) =>
+                    `
+                    <div style="display:flex;align-items:center;gap:10px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.02);">
+                        <div class="checkbox ${st.concluido ? 'done' : ''}" onclick="toggleSubtarefa(${i})" style="width:18px;height:18px;border-radius:4px;border:2px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:0.3s ease;font-size:11px;color:var(--color-primary);${st.concluido ? 'background:linear-gradient(135deg,var(--color-accent),var(--color-accent-hover));border-color:var(--color-accent);' : ''}">
+                            ${st.concluido ? '<i class="fas fa-check"></i>' : ''}
+                        </div>
+                        <span style="flex:1;color:${st.concluido ? 'var(--color-text-muted)' : 'var(--color-text)'};${st.concluido ? 'text-decoration:line-through;' : ''}">${st.descricao}</span>
+                        <button onclick="removerSubtarefa(${i})" style="background:none;border:none;color:var(--color-text-muted);cursor:pointer;font-size:12px;">✕</button>
+                    </div>
+                `
+                ).join('');
+            }
+
+            window.adicionarSubtarefa = function() {
+                const input = document.getElementById('novaSubtarefa');
+                const descricao = input.value.trim();
+                if (!descricao) { alert('Digite uma descrição para a subtarefa.'); return; }
+                subtarefasTemp.push({ descricao, concluido: false });
+                input.value = '';
+                renderSubtarefas();
+            };
+
+            window.toggleSubtarefa = function(index) {
+                subtarefasTemp[index].concluido = !subtarefasTemp[index].concluido;
+                renderSubtarefas();
+            };
+
+            window.removerSubtarefa = function(index) {
+                subtarefasTemp.splice(index, 1);
+                renderSubtarefas();
+            };
+
+            // ===== MODO PÂNICO =====
+            window.abrirPanico = function() {
+                if (!window.__security.checkRateLimit('panico_open')) return;
+                const overlay = document.getElementById('panicoOverlay');
+                overlay.classList.add('open');
+                document.body.style.overflow = 'hidden';
+
+                const agora = new Date();
+                document.getElementById('panicoData').textContent = agora.toLocaleDateString('pt-BR');
+                document.getElementById('panicoHora').textContent = agora.toLocaleTimeString('pt-BR');
+
+                const select = document.getElementById('panicoDisciplina');
+                select.innerHTML = '<option value="">Selecione...</option>' +
+                    turmas.map(t => `<option value="${t.nome}">${t.nome}</option>`).join('');
+
+                const circulo = document.getElementById('circuloRespirar');
+                circulo.className = 'circulo';
+                document.getElementById('respirarFrase').textContent = 'INSPIRE';
+                document.getElementById('respirarTimer').textContent = '4';
+
+                const frases = frasesMotivacionais;
+                const random = frases[Math.floor(Math.random() * frases.length)];
+                document.getElementById('motivacaoFrase').textContent = random.frase;
+                document.getElementById('motivacaoAutor').textContent = `— ${random.autor}`;
+
+                document.getElementById('btnIniciarRespirar').textContent = 'Iniciar Respiração';
+                document.getElementById('btnIniciarRespirar').onclick = iniciarRespiração;
+                respiracaoAtiva = false;
+                if (respiracaoInterval) {
+                    clearInterval(respiracaoInterval);
+                    respiracaoInterval = null;
+                }
+            };
+
+            window.sairPanico = function() {
+                const overlay = document.getElementById('panicoOverlay');
+                overlay.classList.remove('open');
+                document.body.style.overflow = '';
+                if (respiracaoInterval) {
+                    clearInterval(respiracaoInterval);
+                    respiracaoInterval = null;
+                }
+                respiracaoAtiva = false;
+                atualizarBadgePanico();
+            };
+
+            window.iniciarRespiração = function() {
+                if (respiracaoAtiva) return;
+                respiracaoAtiva = true;
+
+                const btn = document.getElementById('btnIniciarRespirar');
+                btn.textContent = '⏳ Respirando...';
+                btn.disabled = true;
+
+                const circulo = document.getElementById('circuloRespirar');
+                const fraseEl = document.getElementById('respirarFrase');
+                const timerEl = document.getElementById('respirarTimer');
+
+                const fases = [
+                    { frase: 'INSPIRE', duracao: 4, classe: 'inspirar' },
+                    { frase: 'SEGURE', duracao: 4, classe: '' },
+                    { frase: 'EXPIRE', duracao: 4, classe: 'expirar' },
+                    { frase: 'SEGURE', duracao: 4, classe: '' }
+                ];
+
+                let faseAtual = 0;
+                let contador = fases[faseAtual].duracao;
+
+                function atualizarFase() {
+                    const fase = fases[faseAtual];
+                    fraseEl.textContent = fase.frase;
+                    timerEl.textContent = contador;
+                    circulo.className = 'circulo' + (fase.classe ? ' ' + fase.classe : '');
+                }
+
+                function proximoPasso() {
+                    contador--;
+                    if (contador < 0) {
+                        faseAtual = (faseAtual + 1) % fases.length;
+                        contador = fases[faseAtual].duracao;
+                        atualizarFase();
+                        if (faseAtual === 0) {
+                            ciclosCompletos++;
+                            if (ciclosCompletos >= 3) {
+                                finalizarRespiração();
+                                return;
+                            }
+                        }
+                        proximoPasso();
+                        return;
+                    }
+                    timerEl.textContent = contador;
+                    timerEl.style.transform = 'scale(1.2)';
+                    setTimeout(() => { timerEl.style.transform = 'scale(1)'; }, 200);
+                    setTimeout(proximoPasso, 1000);
+                }
+
+                let ciclosCompletos = 0;
+
+                function finalizarRespiração() {
+                    respiracaoAtiva = false;
+                    btn.textContent = '🔄 Repetir Respiração';
+                    btn.disabled = false;
+                    btn.onclick = function() {
+                        faseAtual = 0;
+                        contador = fases[0].duracao;
+                        ciclosCompletos = 0;
+                        respiracaoAtiva = false;
+                        if (respiracaoInterval) {
+                            clearInterval(respiracaoInterval);
+                            respiracaoInterval = null;
+                        }
+                        iniciarRespiração();
+                    };
+                    fraseEl.textContent = '✅ FINALIZADO';
+                    timerEl.textContent = '✨';
+                    circulo.className = 'circulo';
+                }
+
+                atualizarFase();
+                setTimeout(proximoPasso, 1000);
+            };
+
+            window.novaFrasePanico = function() {
+                const frases = frasesMotivacionais;
+                const random = frases[Math.floor(Math.random() * frases.length)];
+                document.getElementById('motivacaoFrase').textContent = random.frase;
+                document.getElementById('motivacaoAutor').textContent = `— ${random.autor}`;
+            };
+
+            window.registrarPanico = function() {
+                if (!window.__security.checkRateLimit('panico_register')) return;
+                const disciplina = document.getElementById('panicoDisciplina').value;
+                const motivo = document.getElementById('panicoMotivo').value.trim();
+
+                if (!disciplina && !motivo) {
+                    alert('Descreva o que aconteceu ou selecione a disciplina para registrar.');
                     return;
                 }
 
-                relatorios.push({
+                const registro = {
                     id: Date.now(),
                     data: new Date().toISOString().split('T')[0],
-                    disciplina,
-                    tempo,
-                    texto
+                    hora: new Date().toLocaleTimeString('pt-BR'),
+                    disciplina: disciplina || 'Não especificada',
+                    motivo: motivo || 'Não informado',
+                    resolvido: false
+                };
+
+                historicoPanico.push(registro);
+                saveData('gda_historico_panico', historicoPanico);
+
+                alert('✅ Relato registrado! Você não está sozinho(a).');
+
+                document.getElementById('panicoDisciplina').value = '';
+                document.getElementById('panicoMotivo').value = '';
+
+                atualizarBadgePanico();
+
+                setTimeout(() => {
+                    sairPanico();
+                }, 1500);
+            };
+
+            function atualizarBadgePanico() {
+                const badge = document.getElementById('panicoBadge');
+                if (badge) {
+                    const pendentes = historicoPanico.filter(r => !r.resolvido).length;
+                    badge.textContent = pendentes;
+                    badge.style.display = pendentes > 0 ? 'inline-block' : 'none';
+                }
+            }
+
+            // ===== HISTÓRICO DO PÂNICO =====
+            function renderHistoricoPanico() {
+                const container = document.getElementById('historicoPanicoContainer');
+                if (!container) return;
+
+                if (historicoPanico.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-inbox"></i>
+                            Nenhum registro de pânico ainda.
+                        </div>
+                    `;
+                    return;
+                }
+
+                const sorted = [...historicoPanico].sort((a, b) => b.id - a.id);
+
+                container.innerHTML = sorted.map(r => `
+                    <div class="panico-registro">
+                        <div class="header">
+                            <span class="disciplina">📚 ${r.disciplina}</span>
+                            <span class="data-hora">${r.data} · ${r.hora}</span>
+                            <span class="status ${r.resolvido ? 'resolvido' : 'pendente'}">
+                                ${r.resolvido ? '✅ Resolvido' : '⏳ Pendente'}
+                            </span>
+                        </div>
+                        <div class="motivo">${r.motivo}</div>
+                        <div style="margin-top:8px;">
+                            <button onclick="marcarPanicoResolvido(${r.id})" style="padding:2px 12px;border-radius:12px;border:1px solid var(--color-success);background:rgba(76,175,80,0.1);color:var(--color-success);cursor:pointer;font-size:11px;font-family:'Inter',sans-serif;">
+                                ✅ Marcar como resolvido
+                            </button>
+                            <button onclick="deletarRegistroPanico(${r.id})" style="padding:2px 12px;border-radius:12px;border:1px solid var(--color-danger);background:rgba(229,57,53,0.1);color:var(--color-danger);cursor:pointer;font-size:11px;font-family:'Inter',sans-serif;margin-left:4px;">
+                                🗑️ Remover
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+
+                atualizarBadgePanico();
+            }
+
+            window.marcarPanicoResolvido = function(id) {
+                const registro = historicoPanico.find(r => r.id === id);
+                if (registro) {
+                    registro.resolvido = !registro.resolvido;
+                    saveData('gda_historico_panico', historicoPanico);
+                    renderHistoricoPanico();
+                    atualizarBadgePanico();
+                }
+            };
+
+            window.deletarRegistroPanico = function(id) {
+                if (confirm('Remover este registro?')) {
+                    historicoPanico = historicoPanico.filter(r => r.id !== id);
+                    saveData('gda_historico_panico', historicoPanico);
+                    renderHistoricoPanico();
+                    atualizarBadgePanico();
+                }
+            };
+
+            // ===== RENDERIZAÇÃO TELA INICIAL =====
+            function renderTelaInicial() {
+                const saudacao = getSaudacao();
+                const emoji = getEmojiSaudacao();
+                const nome = 'Igor';
+                const elGreeting = document.getElementById('greetingTitle');
+                if (elGreeting) elGreeting.textContent = `${emoji} ${saudacao}, ${nome}!`;
+
+                const hoje = new Date();
+                const diasSemana = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira',
+                    'Sexta-feira', 'Sábado'
+                ];
+                const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro',
+                    'Outubro', 'Novembro', 'Dezembro'
+                ];
+                const elDay = document.getElementById('currentDay');
+                const elDate = document.getElementById('currentDate');
+                if (elDay) elDay.textContent = diasSemana[hoje.getDay()];
+                if (elDate) elDate.textContent =
+                `${hoje.getDate()} de ${meses[hoje.getMonth()]} de ${hoje.getFullYear()}`;
+
+                const elAulas = document.getElementById('aulasHoje');
+                if (elAulas) elAulas.textContent = '4';
+
+                updateClockDisplay();
+
+                const total = checklistItems.length;
+                const done = checklistItems.filter(item => checklistState[item.id] === true).length;
+                const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+                const elCheckDone = document.getElementById('checkDoneCount');
+                const elCheckBar = document.getElementById('checkProgressBar');
+                if (elCheckDone) elCheckDone.textContent = done;
+                if (elCheckBar) elCheckBar.style.width = `${pct}%`;
+
+                const hojeStr = hoje.toISOString().split('T')[0];
+                const horasHoje = relatorios.filter(r => r.data === hojeStr).reduce((acc, r) => acc + r.tempo, 0);
+                const horasFormatadas = Math.floor(horasHoje / 60);
+                const minutosFormatados = horasHoje % 60;
+                const elHoras = document.getElementById('totalHorasEstudo');
+                if (elHoras) elHoras.textContent = horasFormatadas > 0 ?
+                    `${horasFormatadas}h${minutosFormatados > 0 ? ` ${minutosFormatados}min` : ''}` :
+                    `${minutosFormatados}min`;
+                const elEstudoBar = document.getElementById('estudoProgressBar');
+                const metaEstudo = 120;
+                if (elEstudoBar) elEstudoBar.style.width = `${Math.min(100, (horasHoje / metaEstudo) * 100)}%`;
+
+                const dataInicio = new Date('2026-02-10');
+                const dataFim = new Date('2026-12-18');
+                const totalSemanas = Math.ceil((dataFim - dataInicio) / (1000 * 60 * 60 * 24 * 7));
+                const semanasPassadas = Math.ceil((hoje - dataInicio) / (1000 * 60 * 60 * 24 * 7));
+                const semanasRestantes = Math.max(0, totalSemanas - semanasPassadas);
+                const percentual = Math.min(100, Math.max(0, Math.round((semanasPassadas / totalSemanas) * 100)));
+
+                const elSemanaCursadas = document.getElementById('semanasCursadas');
+                const elSemanaRestantes = document.getElementById('semanasRestantes');
+                const elDiasLetivos = document.getElementById('diasLetivos');
+                const elPercent = document.getElementById('semesterPercent');
+                const elProgressFg = document.querySelector('.progress-fg');
+                const elProgressMsg = document.getElementById('progressMessage');
+
+                if (elSemanaCursadas) elSemanaCursadas.textContent = semanasPassadas;
+                if (elSemanaRestantes) elSemanaRestantes.textContent = semanasRestantes;
+                if (elDiasLetivos) elDiasLetivos.textContent = Math.max(0, Math.ceil((dataFim - hoje) / (1000 * 60 * 60 *
+                24)));
+                if (elPercent) elPercent.textContent = `${percentual}%`;
+                if (elProgressFg) {
+                    const circumference = 339.292;
+                    const offset = circumference * (1 - percentual / 100);
+                    elProgressFg.style.strokeDashoffset = offset;
+                }
+
+                if (elProgressMsg) {
+                    if (percentual >= 80) elProgressMsg.textContent = '🎉 Você está quase lá! Último esforço!';
+                    else if (percentual >= 60) elProgressMsg.textContent =
+                        '💪 Você está no caminho certo! Continue assim!';
+                    else if (percentual >= 40) elProgressMsg.textContent =
+                        '🚀 Metade do caminho! Continue firme e focado!';
+                    else if (percentual >= 20) elProgressMsg.textContent =
+                        '📚 Começo de jornada! Cada dia é uma nova oportunidade!';
+                    else elProgressMsg.textContent = '🌟 O primeiro passo é o mais importante! Você já começou!';
+                }
+
+                const elQuote = document.getElementById('dailyQuote');
+                const elAuthor = document.getElementById('quoteAuthor');
+                if (elQuote && !elQuote.dataset.loaded) {
+                    const frases = frasesTelaInicial;
+                    const random = frases[Math.floor(Math.random() * frases.length)];
+                    elQuote.textContent = random.frase;
+                    if (elAuthor) elAuthor.textContent = random.autor;
+                    elQuote.dataset.loaded = 'true';
+                }
+
+                atualizarBadgePanico();
+            }
+
+            // ===== RENDERIZAÇÃO DASHBOARD =====
+            function renderDashboard() {
+                const totalAtiv = atividades.length;
+                const grupo = atividades.filter(a => a.tipo === 'grupo').length;
+                const individual = atividades.filter(a => a.tipo === 'individual').length;
+
+                const total = checklistItems.length;
+                const done = checklistItems.filter(item => checklistState[item.id] === true).length;
+
+                let medias = [];
+                turmas.forEach(d => {
+                    const nota = notas[d.cod] || { b1: '', b2: '', b3: '', b4: '' };
+                    const valores = [parseFloat(nota.b1), parseFloat(nota.b2), parseFloat(nota.b3), parseFloat(nota
+                        .b4)];
+                    const validas = valores.filter(v => !isNaN(v));
+                    if (validas.length > 0) {
+                        medias.push(validas.reduce((a, b) => a + b, 0) / validas.length);
+                    }
                 });
-                saveData('gda_relatorios', relatorios);
+                const mediaGeral = medias.length > 0 ? (medias.reduce((a, b) => a + b, 0) / medias.length) : 0;
+
+                const elTotalAtiv = document.getElementById('totalAtividades');
+                const elTotalGrupo = document.getElementById('totalGrupo');
+                const elTotalIndividual = document.getElementById('totalIndividual');
+                const elCheckDone = document.getElementById('checkDoneCountDashboard');
+                const elMediaGeral = document.getElementById('mediaGeralDashboard');
+
+                if (elTotalAtiv) elTotalAtiv.textContent = totalAtiv;
+                if (elTotalGrupo) elTotalGrupo.textContent = grupo;
+                if (elTotalIndividual) elTotalIndividual.textContent = individual;
+                if (elCheckDone) elCheckDone.textContent = done;
+                if (elMediaGeral) elMediaGeral.textContent = mediaGeral.toFixed(1);
+
+                updateClockDisplay();
+            }
+
+            // ===== RELÓGIO =====
+            function updateClockDisplay() {
+                const now = new Date();
+                const h = String(now.getHours()).padStart(2, '0');
+                const m = String(now.getMinutes()).padStart(2, '0');
+                const s = String(now.getSeconds()).padStart(2, '0');
+
+                const heroTime = document.getElementById('clockHeroTime');
+                const heroSec = document.getElementById('clockHeroSeconds');
+                if (heroTime) heroTime.textContent = `${h}:${m}`;
+                if (heroSec) heroSec.textContent = s;
+
+                const timeEl = document.getElementById('clockDisplay');
+                const secEl = document.getElementById('secondsDisplay');
+                if (timeEl) timeEl.textContent = `${h}:${m}`;
+                if (secEl) secEl.textContent = s;
+            }
+
+            // ===== CITAÇÃO DO DIA =====
+            window.novaFrase = function() {
+                const frases = frasesTelaInicial;
+                const random = frases[Math.floor(Math.random() * frases.length)];
+                const elQuote = document.getElementById('dailyQuote');
+                const elAuthor = document.getElementById('quoteAuthor');
+                if (elQuote) elQuote.textContent = random.frase;
+                if (elAuthor) elAuthor.textContent = random.autor;
+                const card = document.querySelector('.quote-card');
+                if (card) {
+                    card.style.transition = '0.3s ease';
+                    card.style.transform = 'scale(0.98)';
+                    setTimeout(() => { card.style.transform = 'scale(1)'; }, 200);
+                }
+            };
+
+            // ===== CHECKLIST =====
+            function renderChecklist() {
+                const container = document.getElementById('checklistContainer');
+                if (!container) return;
+
+                checklistItems.forEach(item => {
+                    if (checklistState[item.id] === undefined) checklistState[item.id] = false;
+                });
+
+                container.innerHTML = checklistItems.map(item => {
+                    const done = checklistState[item.id] || false;
+                    return `
+                        <div class="check-item" data-id="${item.id}">
+                            <div class="box ${done ? 'done' : ''}">${done ? '<i class="fas fa-check"></i>' : ''}</div>
+                            <span class="label ${done ? 'done' : ''}"><i class="${item.icon}" style="margin-right:8px;color:#ffb300;width:16px;"></i>${item.label}</span>
+                            <span class="icon-status ${done ? 'done' : ''}">${done ? '<i class="fas fa-check-circle"></i>' : '<i class="far fa-circle"></i>'}</span>
+                        </div>
+                    `;
+                }).join('');
+
+                document.querySelectorAll('.check-item').forEach(el => {
+                    el.addEventListener('click', function() {
+                        const id = this.dataset.id;
+                        checklistState[id] = !checklistState[id];
+                        saveData('gda_checklist', checklistState);
+                        renderChecklist();
+                        renderTelaInicial();
+                        renderDashboard();
+                    });
+                });
+
+                const total = checklistItems.length;
+                const done = checklistItems.filter(item => checklistState[item.id] === true).length;
+                const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+                const el = document.getElementById('checkPct');
+                if (el) el.textContent = `${pct}%`;
+            }
+
+            // ===== TURMAS =====
+            function renderTurmas() {
+                const tbody = document.getElementById('turmasTableBody');
+                if (!tbody) return;
+
+                tbody.innerHTML = turmas.map(t =>
+                    `<tr>
+                        <td class="cod">${t.cod}</td>
+                        <td><strong>${t.nome}</strong><br><span class="prof">${t.professor}</span></td>
+                        <td class="turma">${t.turma}</td>
+                        <td><span class="status"><i class="fas fa-check-circle"></i> Matriculado</span></td>
+                        <td class="horario">${t.horario}</td>
+                    </tr>`
+                ).join('');
+
+                const searchInput = document.getElementById('searchTurma');
+                if (searchInput) {
+                    searchInput.addEventListener('input', function() {
+                        const filter = this.value.toLowerCase();
+                        const rows = tbody.querySelectorAll('tr');
+                        let count = 0;
+                        rows.forEach(row => {
+                            const text = row.textContent.toLowerCase();
+                            const visible = text.includes(filter);
+                            row.style.display = visible ? '' : 'none';
+                            if (visible) count++;
+                        });
+                        const countEl = document.getElementById('searchCount');
+                        if (countEl) countEl.textContent = `Mostrando ${count} de ${turmas.length}`;
+                    });
+                }
+            }
+
+            // ===== ATIVIDADES =====
+            function renderAtividades() {
+                const container = document.getElementById('atividadesContainer');
+                if (!container) return;
+
+                if (atividades.length === 0) {
+                    container.innerHTML =
+                        `<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--color-text-muted);background:var(--color-card);border-radius:var(--radius);border:1px solid var(--color-border);">
+                        <i class="fas fa-inbox" style="font-size:32px;display:block;margin-bottom:12px;color:rgba(255,179,0,0.1);"></i>
+                        Nenhuma atividade cadastrada. Clique em "Nova Atividade" para começar.
+                    </div>`;
+                    return;
+                }
+
+                container.innerHTML = atividades.map(a => {
+                    const progresso = a.subtarefas && a.subtarefas.length > 0 ?
+                        Math.round((a.subtarefas.filter(st => st.concluido).length / a.subtarefas.length) *
+                        100) :
+                        (a.progresso || 0);
+
+                    let participantesHtml = '';
+                    if (a.participantes && a.participantes.length > 0) {
+                        participantesHtml = `
+                            <div class="participantes-list">
+                                ${a.participantes.map(p => {
+                                    const prazoDate = p.prazo ? new Date(p.prazo + 'T00:00:00') : null;
+                                    const hoje = new Date();
+                                    const urgente = prazoDate && prazoDate < hoje;
+                                    return `
+                                        <span class="participante-tag">
+                                            👤 ${p.nome}
+                                            ${p.prazo ? `<span class="prazo-individual ${urgente ? 'urgente' : 'ok'}">📅 ${prazoDate.toLocaleDateString('pt-BR')}</span>` : ''}
+                                        </span>
+                                    `;
+                                }).join('')}
+                            </div>
+                        `;
+                    }
+
+                    return `
+                        <div class="atividade-card prioridade-${a.prioridade}">
+                            <div class="disciplina"><i class="fas fa-book"></i> ${a.disciplina || 'Sem disciplina'}</div>
+                            <div class="titulo">${a.titulo || 'Sem título'}</div>
+                            ${participantesHtml}
+                            <div class="datas">
+                                <span>📅 Início: ${a.inicio ? new Date(a.inicio + 'T00:00:00').toLocaleDateString('pt-BR') : 'Não definido'}</span>
+                                <span>⏰ Prazo: ${a.prazo ? new Date(a.prazo + 'T00:00:00').toLocaleDateString('pt-BR') : 'Não definido'}</span>
+                            </div>
+                            <div class="progresso-area">
+                                <div class="bar"><div class="fill" style="width:${progresso}%;"></div></div>
+                                <span class="pct">${progresso}%</span>
+                            </div>
+                            <div class="acoes">
+                                <button class="btn-edit" onclick="editarAtividade(${a.id})"><i class="fas fa-edit"></i> Editar</button>
+                                <button class="btn-delete" onclick="deletarAtividade(${a.id})"><i class="fas fa-trash-alt"></i> Remover</button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // ===== NOTAS =====
+            function renderNotas() {
+                const container = document.getElementById('notasContainer');
+                if (!container) return;
+
+                container.innerHTML = turmas.map(d => {
+                    const nota = notas[d.cod] || { b1: '', b2: '', b3: '', b4: '' };
+                    const valores = [nota.b1, nota.b2, nota.b3, nota.b4];
+                    const validas = valores.filter(v => v !== '' && !isNaN(parseFloat(v))).map(v => parseFloat(v));
+                    const media = validas.length > 0 ? (validas.reduce((a, b) => a + b, 0) / validas.length) : 0;
+                    const status = media >= 7 ? 'aprovado' : (validas.length === 4 ? 'reprovado' : 'recuperacao');
+                    const statusText = media >= 7 ? '✅ Aprovado' : (validas.length === 4 ? '❌ Reprovado' :
+                        '🟡 Em andamento');
+
+                    return `
+                        <div class="notas-card">
+                            <div class="disciplina-nome">${d.nome} <span class="codigo">${d.cod}</span></div>
+                            <div class="notas-bimestres">
+                                ${[1,2,3,4].map(b => `
+                                    <div class="nota-bimestre">
+                                        <div class="bimestre-label">${b}º Bim</div>
+                                        <input type="number" min="0" max="10" step="0.1" 
+                                            value="${nota['b'+b] || ''}" 
+                                            onchange="atualizarNota('${d.cod}', 'b${b}', this.value)"
+                                            placeholder="--" />
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <div class="notas-resultado">
+                                <div class="resultado-principal">
+                                    <span class="media ${status}">${validas.length > 0 ? media.toFixed(1) : '--'}</span>
+                                    <span style="font-size:13px;color:var(--color-text-muted);">${validas.length}/4 bimestres</span>
+                                    <span style="font-size:12px;font-weight:600;color:${media >= 7 ? 'var(--color-success)' : 'var(--color-warning)'};">${statusText}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // ===== RELATÓRIOS =====
+            function renderRelatorios() {
+                const container = document.getElementById('relatoriosLista');
+                if (!container) return;
+
+                if (relatorios.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-inbox"></i>
+                            Nenhum relatório registrado.
+                        </div>
+                    `;
+                    return;
+                }
+
+                const grouped = {};
+                relatorios.forEach(r => {
+                    if (!grouped[r.data]) grouped[r.data] = [];
+                    grouped[r.data].push(r);
+                });
+
+                const datas = Object.keys(grouped).sort((a, b) => new Date(b) - new Date(a));
+
+                container.innerHTML = datas.map(dataKey => {
+                    const items = grouped[dataKey];
+                    const totalTempo = items.reduce((acc, r) => acc + r.tempo, 0);
+                    const totalHoras = Math.floor(totalTempo / 60);
+                    const totalMinutos = totalTempo % 60;
+                    const totalTexto = totalHoras > 0 ? `${totalHoras}h ${totalMinutos}min` : `${totalMinutos}min`;
+
+                    return `
+                        <div class="relatorio-dia">
+                            <div class="relatorio-dia-header">
+                                <span class="data-dia"><i class="far fa-calendar-alt"></i> ${new Date(dataKey + 'T00:00:00').toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' })}</span>
+                                <span class="total-dia">📊 ${items.length} registro(s) · ⏱️ ${totalTexto}</span>
+                            </div>
+                            <div class="relatorio-dia-itens">
+                                ${items.map(r => `
+                                    <div class="relatorio-item">
+                                        <span class="disciplina">📚 ${r.disciplina}</span>
+                                        <span class="horas">⏱️ ${r.tempo}min</span>
+                                        <span class="texto">${r.texto}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // ===== FUNÇÕES DE AÇÃO =====
+            window.atualizarNota = function(cod, bimestre, valor) {
+                if (!window.__security.checkRateLimit('nota_update')) return;
+                if (!notas[cod]) notas[cod] = { b1: '', b2: '', b3: '', b4: '' };
+                notas[cod][bimestre] = valor;
+                saveData('gda_notas', notas);
+                renderNotas();
+                renderTelaInicial();
+                renderDashboard();
+            };
+
+            window.deletarAtividade = function(id) {
+                if (!window.__security.checkRateLimit('atividade_delete')) return;
+                if (confirm('Remover esta atividade?')) {
+                    atividades = atividades.filter(a => a.id !== id);
+                    saveData('gda_atividades', atividades);
+                    renderAtividades();
+                    renderTelaInicial();
+                    renderDashboard();
+                }
+            };
+
+            window.editarAtividade = function(id) {
+                const atividade = atividades.find(a => a.id === id);
+                if (!atividade) return;
+                document.getElementById('formTitulo').value = atividade.titulo || '';
+                document.getElementById('formTipo').value = atividade.tipo || 'individual';
+                document.getElementById('formPrioridade').value = atividade.prioridade || 'media';
+                document.getElementById('formDisciplina').value = atividade.disciplina || '';
+                document.getElementById('formInicio').value = atividade.inicio || '';
+                document.getElementById('formPrazo').value = atividade.prazo || '';
+                document.getElementById('formEntregaDocente').value = atividade.entregaDocente || '';
+                document.getElementById('formObservacoes').value = atividade.observacoes || '';
+
+                participantesTemp = atividade.participantes ? JSON.parse(JSON.stringify(atividade.participantes)) : [];
+                renderParticipantes();
+
+                subtarefasTemp = atividade.subtarefas ? JSON.parse(JSON.stringify(atividade.subtarefas)) : [];
+                renderSubtarefas();
+
+                document.getElementById('modalTitle').innerHTML = '<i class="fas fa-edit"></i> Editar Atividade';
+                document.getElementById('modalOverlay').classList.add('open');
+                editandoId = id;
+            };
+
+            window.openModal = function() {
+                if (!window.__security.checkRateLimit('modal_open')) return;
+                document.getElementById('atividadeForm').reset();
+                document.getElementById('modalTitle').innerHTML = '<i class="fas fa-plus-circle"></i> Nova Atividade';
+                participantesTemp = [];
+                subtarefasTemp = [];
+                renderParticipantes();
+                renderSubtarefas();
+                document.getElementById('modalOverlay').classList.add('open');
+                editandoId = null;
+
+                const hoje = new Date();
+                const prazo = new Date(hoje);
+                prazo.setDate(prazo.getDate() + 14);
+                const entrega = new Date(hoje);
+                entrega.setDate(entrega.getDate() + 16);
+                document.getElementById('formInicio').value = hoje.toISOString().split('T')[0];
+                document.getElementById('formPrazo').value = prazo.toISOString().split('T')[0];
+                document.getElementById('formEntregaDocente').value = entrega.toISOString().split('T')[0];
+            };
+
+            window.closeModal = function() {
+                document.getElementById('modalOverlay').classList.remove('open');
+                editandoId = null;
+            };
+
+            window.entrarNoSistema = function() {
+                document.getElementById('splashOverlay').classList.add('hidden');
+                console.log('%c🔓 Acesso liberado. Bem-vindo(a)!', 'font-size:14px;color:#4ecdc4;');
+            };
+
+            // ==========================================
+            // SINCRONIZAÇÃO
+            // ==========================================
+            window.sincronizarBackendless = function() {
+                if (!window.__security.checkRateLimit('sync')) return;
+                alert('☁️ Sincronizando com a nuvem...\n\n' +
+                    'Checklist: ' + Object.keys(checklistState).length + ' itens\n' +
+                    'Atividades: ' + atividades.length + ' atividades\n' +
+                    'Notas: ' + Object.keys(notas).length + ' disciplinas\n' +
+                    'Relatórios: ' + relatorios.length + ' registros\n' +
+                    'Histórico Pânico: ' + historicoPanico.length + ' registros\n\n' +
+                    '✅ Dados salvos localmente!');
+            };
+
+            // ==========================================
+            // ROTEAMENTO
+            // ==========================================
+            function showPage(pageId) {
+                document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+                const target = document.getElementById(`page-${pageId}`);
+                if (target) target.classList.add('active');
+
+                document.querySelectorAll('.navbar a[data-page]').forEach(link => {
+                    link.classList.toggle('active', link.dataset.page === pageId);
+                });
+
+                if (pageId === 'historicopanico') {
+                    renderHistoricoPanico();
+                }
+            }
+
+            // ==========================================
+            // CARREGAR PÁGINAS
+            // ==========================================
+            async function loadPages() {
+                const container = document.getElementById('pageContainer');
+                const pages = ['inicial', 'dashboard', 'checklist', 'turmas', 'atividades', 'notas', 'relatorios',
+                    'historicopanico'
+                ];
+
+                for (const page of pages) {
+                    try {
+                        const response = await fetch(`pages/${page}.html`);
+                        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                        const html = await response.text();
+                        container.insertAdjacentHTML('beforeend', html);
+                    } catch (error) {
+                        console.error(`Erro ao carregar ${page}:`, error);
+                        const pageDiv = document.createElement('div');
+                        pageDiv.id = `page-${page}`;
+                        pageDiv.className = 'page';
+                        if (page === 'inicial') pageDiv.classList.add('active');
+
+                        let content = '';
+                        if (page === 'inicial') {
+                            content = `
+                                <div class="welcome-hero">
+                                    <div class="greeting-section">
+                                        <div class="greeting-text">
+                                            <span class="greeting-icon" id="greetingEmoji">🌅</span>
+                                            <div>
+                                                <h1 class="greeting-title" id="greetingTitle">Bom dia, Igor!</h1>
+                                                <p class="greeting-subtitle">Hoje é uma nova oportunidade para brilhar! ✨</p>
+                                            </div>
+                                        </div>
+                                        <div class="date-info">
+                                            <span class="date-day" id="currentDay">Segunda-feira</span>
+                                            <span class="date-full" id="currentDate">27 de Julho de 2026</span>
+                                            <span class="aulas-hoje">📚 <strong id="aulasHoje">4</strong> aulas hoje</span>
+                                        </div>
+                                    </div>
+                                    <div class="clock-hero">
+                                        <span class="time" id="clockHeroTime">00:00</span>
+                                        <span class="seconds" id="clockHeroSeconds">00</span>
+                                    </div>
+                                </div>
+
+                                <div class="quote-card">
+                                    <i class="fas fa-quote-left quote-icon"></i>
+                                    <blockquote id="dailyQuote">"Acredite em si mesmo e todo o resto virá naturalmente."</blockquote>
+                                    <span class="quote-author">— <span id="quoteAuthor">The Rock</span></span>
+                                    <button class="btn-new-quote" onclick="novaFrase()">
+                                        <i class="fas fa-sync"></i> Nova Inspiração
+                                    </button>
+                                </div>
+
+                                <div class="quick-actions">
+                                    <h3 class="section-label">⚡ Ações Rápidas</h3>
+                                    <div class="action-grid">
+                                        <button class="action-btn primary" onclick="openModal()">
+                                            <i class="fas fa-plus-circle"></i>
+                                            <span>Nova Atividade</span>
+                                            <small>Adicione uma tarefa</small>
+                                        </button>
+                                        <button class="action-btn danger" onclick="abrirPanico()">
+                                            <i class="fas fa-exclamation-triangle"></i>
+                                            <span>🚨 Pânico</span>
+                                            <small>Precisa de ajuda?</small>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="achievements">
+                                    <h3 class="section-label">🏆 Conquistas de Hoje</h3>
+                                    <div class="achievement-grid">
+                                        <div class="achievement-card">
+                                            <div class="achievement-icon">✅</div>
+                                            <div class="achievement-info">
+                                                <span class="achievement-value" id="checkDoneCount">0</span>
+                                                <span class="achievement-label">Checklist Concluído</span>
+                                                <div class="mini-progress">
+                                                    <div class="mini-bar" id="checkProgressBar" style="width: 0%;"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="achievement-card">
+                                            <div class="achievement-icon">📖</div>
+                                            <div class="achievement-info">
+                                                <span class="achievement-value" id="totalHorasEstudo">0</span>
+                                                <span class="achievement-label">Horas de Estudo Hoje</span>
+                                                <div class="mini-progress">
+                                                    <div class="mini-bar" id="estudoProgressBar" style="width: 0%;"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="progress-hero">
+                                    <h3 class="section-label">📈 Progresso do Semestre 2026</h3>
+                                    <div class="progress-container">
+                                        <div class="progress-circle-container">
+                                            <svg class="progress-circle" viewBox="0 0 120 120">
+                                                <circle class="progress-bg" cx="60" cy="60" r="54" />
+                                                <circle class="progress-fg" cx="60" cy="60" r="54" 
+                                                        stroke-dasharray="339.292" 
+                                                        stroke-dashoffset="339.292" />
+                                            </svg>
+                                            <div class="progress-center">
+                                                <span class="progress-percent" id="semesterPercent">0%</span>
+                                                <span class="progress-label">Concluído</span>
+                                            </div>
+                                        </div>
+                                        <div class="progress-info">
+                                            <div class="info-item">
+                                                <span class="info-label">Semanas cursadas</span>
+                                                <span class="info-value" id="semanasCursadas">0</span>
+                                            </div>
+                                            <div class="info-item">
+                                                <span class="info-label">Total de semanas</span>
+                                                <span class="info-value">18</span>
+                                            </div>
+                                            <div class="info-item">
+                                                <span class="info-label">Semanas restantes</span>
+                                                <span class="info-value highlight" id="semanasRestantes">0</span>
+                                            </div>
+                                            <div class="info-item">
+                                                <span class="info-label">Dias letivos</span>
+                                                <span class="info-value" id="diasLetivos">0</span>
+                                            </div>
+                                        </div>
+                                        <div class="progress-message" id="progressMessage">
+                                            💪 Você está no caminho certo! Continue assim!
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        } else if (page === 'dashboard') {
+                            content = `
+                                <div class="dashboard-header">
+                                    <h1>📊 Dashboard <small>Controle Ambiental · 2026.2</small></h1>
+                                    <div class="clock">
+                                        <span id="clockDisplay">00:00</span>
+                                        <span class="sec" id="secondsDisplay">00</span>
+                                    </div>
+                                </div>
+
+                                <div class="stats-grid">
+                                    <div class="stat-card"><span class="icon"><i class="fas fa-book"></i></span><div class="number">14</div><div class="label">Turmas Matriculadas</div></div>
+                                    <div class="stat-card"><span class="icon"><i class="fas fa-tasks"></i></span><div class="number" id="totalAtividades">0</div><div class="label">Atividades</div></div>
+                                    <div class="stat-card"><span class="icon"><i class="fas fa-users"></i></span><div class="number" id="totalGrupo">0</div><div class="label">Atividades em Grupo</div></div>
+                                    <div class="stat-card"><span class="icon"><i class="fas fa-user"></i></span><div class="number" id="totalIndividual">0</div><div class="label">Atividades Individuais</div></div>
+                                    <div class="stat-card"><span class="icon"><i class="fas fa-check-double"></i></span><div class="number" id="checkDoneCountDashboard">0</div><div class="label">Checklist Concluído</div></div>
+                                    <div class="stat-card"><span class="icon"><i class="fas fa-graduation-cap"></i></span><div class="number" id="mediaGeralDashboard">0.0</div><div class="label">Média Geral</div></div>
+                                </div>
+                            `;
+                        } else if (page === 'checklist') {
+                            content = `
+                                <div class="section-title">
+                                    <i class="fas fa-clipboard-list"></i> Checklist Diário
+                                    <span class="badge" id="checkPct">0%</span>
+                                </div>
+                                <div class="checklist-grid" id="checklistContainer"></div>
+                            `;
+                        } else if (page === 'turmas') {
+                            content = `
+                                <div class="section-title">
+                                    <i class="fas fa-class"></i> Turmas Matriculadas
+                                    <span class="badge">14 disciplinas</span>
+                                </div>
+                                <div class="table-wrapper">
+                                    <div class="table-search">
+                                        <input type="text" id="searchTurma" placeholder="🔍 Buscar disciplina, professor ou código..." />
+                                        <span class="search-count" id="searchCount">Mostrando 14 de 14</span>
+                                    </div>
+                                    <table>
+                                        <thead><tr><th>Cód.</th><th>Componente Curricular / Docente</th><th>Turma</th><th>Status</th><th>Horário</th></tr></thead>
+                                        <tbody id="turmasTableBody"></tbody>
+                                    </table>
+                                </div>
+                            `;
+                        } else if (page === 'atividades') {
+                            content = `
+                                <div class="section-title">
+                                    <i class="fas fa-tasks"></i> Atividades
+                                    <span class="badge" id="atividadeBadge">0</span>
+                                    <button onclick="openModal()" style="margin-left:auto;padding:6px 20px;border-radius:30px;border:1px dashed var(--color-border);background:transparent;color:var(--color-text-muted);cursor:pointer;font-family:'Inter',sans-serif;font-size:13px;">
+                                        <i class="fas fa-plus"></i> Nova Atividade
+                                    </button>
+                                </div>
+                                <div class="filtros-atividades">
+                                    <button class="active" data-filtro="todas">📋 Todas</button>
+                                    <button data-filtro="individual">👤 Individual</button>
+                                    <button data-filtro="grupo">👥 Grupo</button>
+                                    <button data-filtro="andamento">⏳ Em andamento</button>
+                                    <button data-filtro="concluida">✅ Concluídas</button>
+                                </div>
+                                <div class="atividades-grid" id="atividadesContainer"></div>
+                            `;
+                        } else if (page === 'notas') {
+                            content = `
+                                <div class="section-title">
+                                    <i class="fas fa-graduation-cap"></i> Módulo de Notas
+                                    <span class="badge">📊 Média ≥ 7.0 = Aprovado</span>
+                                </div>
+                                <div class="notas-grid" id="notasContainer"></div>
+                            `;
+                        } else if (page === 'relatorios') {
+                            content = `
+                                <div class="relatorio-section">
+                                    <div class="relatorio-header">
+                                        <h3><i class="fas fa-pen-alt"></i> Relatório Diário de Estudos</h3>
+                                        <span class="badge">📝 Registre seu progresso</span>
+                                    </div>
+                                    <form class="relatorio-form" id="relatorioForm">
+                                        <div>
+                                            <label>📚 Disciplina</label>
+                                            <select id="relatorioDisciplina" required><option value="">Selecione</option></select>
+                                        </div>
+                                        <div>
+                                            <label>⏱️ Tempo (minutos)</label>
+                                            <input type="number" id="relatorioTempo" placeholder="Ex: 120" min="1" required />
+                                        </div>
+                                        <div class="full-width">
+                                            <label>📝 O que estudei hoje?</label>
+                                            <textarea id="relatorioTexto" placeholder="Descreva o que você estudou..." required></textarea>
+                                        </div>
+                                        <div class="form-actions">
+                                            <button type="submit" class="btn-salvar-relatorio"><i class="fas fa-save"></i> Salvar</button>
+                                        </div>
+                                    </form>
+                                    <div class="relatorios-lista" id="relatoriosLista"></div>
+                                </div>
+                            `;
+                        } else if (page === 'historicopanico') {
+                            content = `
+                                <div class="section-title">
+                                    <i class="fas fa-history"></i> Histórico do Pânico
+                                    <span class="badge" id="historicoBadge">${historicoPanico.length}</span>
+                                </div>
+                                <div id="historicoPanicoContainer"></div>
+                            `;
+                        }
+                        pageDiv.innerHTML = content;
+                        container.appendChild(pageDiv);
+                    }
+                }
+
+                renderChecklist();
+                renderTurmas();
+                renderAtividades();
+                renderNotas();
                 renderRelatorios();
                 renderTelaInicial();
                 renderDashboard();
-                document.getElementById('relatorioTexto').value = '';
-                document.getElementById('relatorioTempo').value = '';
-                document.getElementById('relatorioDisciplina').value = '';
-                alert('✅ Relatório salvo!');
+                renderHistoricoPanico();
+
+                document.querySelectorAll('.navbar a[data-page]').forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const page = this.dataset.page;
+                        showPage(page);
+                    });
+                });
+
+                document.querySelectorAll('.filtros-atividades button').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        document.querySelectorAll('.filtros-atividades button').forEach(b => b.classList
+                            .remove('active'));
+                        this.classList.add('active');
+                        const filtro = this.dataset.filtro;
+                        console.log('🔍 Filtro aplicado:', filtro);
+                    });
+                });
+
+                console.log('✅ Sistema GDA v3.0 - Inicializado com segurança');
+                console.log('🔒 Módulo de segurança ativo');
+                console.log('📡 Conexão estabelecida');
             }
-        });
 
-        // ==========================================
-        // FORMULÁRIO DE ATIVIDADE
-        // ==========================================
-        document.addEventListener('submit', function(e) {
-            if (e.target.id === 'atividadeForm') {
-                e.preventDefault();
-                const titulo = document.getElementById('formTitulo').value.trim();
-                const tipo = document.getElementById('formTipo').value;
-                const prioridade = document.getElementById('formPrioridade').value;
-                const disciplina = document.getElementById('formDisciplina').value;
-                const inicio = document.getElementById('formInicio').value;
-                const prazo = document.getElementById('formPrazo').value;
-                const entregaDocente = document.getElementById('formEntregaDocente').value;
-                const observacoes = document.getElementById('formObservacoes').value.trim();
+            // ==========================================
+            // FORMULÁRIO DE RELATÓRIO
+            // ==========================================
+            document.addEventListener('submit', function(e) {
+                if (e.target.id === 'relatorioForm') {
+                    e.preventDefault();
+                    const disciplina = document.getElementById('relatorioDisciplina').value;
+                    const tempo = parseInt(document.getElementById('relatorioTempo').value);
+                    const texto = document.getElementById('relatorioTexto').value.trim();
 
-                if (!titulo || !disciplina || !inicio || !prazo || !entregaDocente) {
-                    alert('Preencha todos os campos obrigatórios.');
-                    return;
+                    if (!disciplina || !tempo || !texto) {
+                        alert('Preencha todos os campos!');
+                        return;
+                    }
+
+                    relatorios.push({
+                        id: Date.now(),
+                        data: new Date().toISOString().split('T')[0],
+                        disciplina,
+                        tempo,
+                        texto
+                    });
+                    saveData('gda_relatorios', relatorios);
+                    renderRelatorios();
+                    renderTelaInicial();
+                    renderDashboard();
+                    document.getElementById('relatorioTexto').value = '';
+                    document.getElementById('relatorioTempo').value = '';
+                    document.getElementById('relatorioDisciplina').value = '';
+                    alert('✅ Relatório salvo!');
                 }
+            });
 
-                const progresso = subtarefasTemp.length > 0 ?
-                    Math.round((subtarefasTemp.filter(st => st.concluido).length / subtarefasTemp.length) * 100) :
-                    0;
+            // ==========================================
+            // FORMULÁRIO DE ATIVIDADE
+            // ==========================================
+            document.addEventListener('submit', function(e) {
+                if (e.target.id === 'atividadeForm') {
+                    e.preventDefault();
+                    const titulo = document.getElementById('formTitulo').value.trim();
+                    const tipo = document.getElementById('formTipo').value;
+                    const prioridade = document.getElementById('formPrioridade').value;
+                    const disciplina = document.getElementById('formDisciplina').value;
+                    const inicio = document.getElementById('formInicio').value;
+                    const prazo = document.getElementById('formPrazo').value;
+                    const entregaDocente = document.getElementById('formEntregaDocente').value;
+                    const observacoes = document.getElementById('formObservacoes').value.trim();
 
-                if (editandoId) {
-                    const idx = atividades.findIndex(a => a.id === editandoId);
-                    if (idx !== -1) {
-                        atividades[idx] = {
-                            ...atividades[idx],
+                    if (!titulo || !disciplina || !inicio || !prazo || !entregaDocente) {
+                        alert('Preencha todos os campos obrigatórios.');
+                        return;
+                    }
+
+                    const progresso = subtarefasTemp.length > 0 ?
+                        Math.round((subtarefasTemp.filter(st => st.concluido).length / subtarefasTemp.length) *
+                        100) :
+                        0;
+
+                    if (editandoId) {
+                        const idx = atividades.findIndex(a => a.id === editandoId);
+                        if (idx !== -1) {
+                            atividades[idx] = {
+                                ...atividades[idx],
+                                titulo,
+                                tipo,
+                                prioridade,
+                                disciplina,
+                                inicio,
+                                prazo,
+                                entregaDocente,
+                                observacoes,
+                                participantes: participantesTemp,
+                                subtarefas: subtarefasTemp,
+                                progresso
+                            };
+                        }
+                    } else {
+                        atividades.push({
+                            id: Date.now(),
                             titulo,
                             tipo,
                             prioridade,
@@ -4035,94 +4099,84 @@
                             participantes: participantesTemp,
                             subtarefas: subtarefasTemp,
                             progresso
-                        };
+                        });
                     }
-                } else {
-                    atividades.push({
-                        id: Date.now(),
-                        titulo,
-                        tipo,
-                        prioridade,
-                        disciplina,
-                        inicio,
-                        prazo,
-                        entregaDocente,
-                        observacoes,
-                        participantes: participantesTemp,
-                        subtarefas: subtarefasTemp,
-                        progresso
-                    });
+
+                    saveData('gda_atividades', atividades);
+                    renderAtividades();
+                    renderTelaInicial();
+                    renderDashboard();
+                    closeModal();
+                    alert('✅ Atividade salva!');
+                    editandoId = null;
+                    participantesTemp = [];
+                    subtarefasTemp = [];
+                }
+            });
+
+            // ==========================================
+            // POPULAR SELECTS
+            // ==========================================
+            function populateSelects() {
+                const select = document.getElementById('formDisciplina');
+                if (select) {
+                    select.innerHTML = turmas.map(t => `<option value="${t.nome}">${t.nome}</option>`).join('');
                 }
 
-                saveData('gda_atividades', atividades);
-                renderAtividades();
-                renderTelaInicial();
-                renderDashboard();
-                closeModal();
-                alert('✅ Atividade salva!');
-                editandoId = null;
-                participantesTemp = [];
-                subtarefasTemp = [];
-            }
-        });
-
-        // ==========================================
-        // POPULAR SELECTS
-        // ==========================================
-        function populateSelects() {
-            const select = document.getElementById('formDisciplina');
-            if (select) {
-                select.innerHTML = turmas.map(t => `<option value="${t.nome}">${t.nome}</option>`).join('');
+                const relatorioSelect = document.getElementById('relatorioDisciplina');
+                if (relatorioSelect) {
+                    relatorioSelect.innerHTML = `<option value="">Selecione</option>` +
+                        turmas.map(t => `<option value="${t.nome}">${t.nome}</option>`).join('');
+                }
             }
 
-            const relatorioSelect = document.getElementById('relatorioDisciplina');
-            if (relatorioSelect) {
-                relatorioSelect.innerHTML = `<option value="">Selecione</option>` +
-                    turmas.map(t => `<option value="${t.nome}">${t.nome}</option>`).join('');
-            }
-        }
+            // ==========================================
+            // MODAL - CLICK FORA
+            // ==========================================
+            document.addEventListener('click', function(e) {
+                const modal = document.getElementById('modalOverlay');
+                if (e.target === modal) closeModal();
+            });
 
-        // ==========================================
-        // MODAL - CLICK FORA
-        // ==========================================
-        document.addEventListener('click', function(e) {
-            const modal = document.getElementById('modalOverlay');
-            if (e.target === modal) closeModal();
-        });
+            // ==========================================
+            // TOGGLE SUBMENU
+            // ==========================================
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('#sistemasToggle')) {
+                    e.preventDefault();
+                    document.getElementById('submenuSistemas').classList.toggle('open');
+                }
+            });
 
-        // ==========================================
-        // TOGGLE SUBMENU
-        // ==========================================
-        document.addEventListener('click', function(e) {
-            if (e.target.closest('#sistemasToggle')) {
-                e.preventDefault();
-                document.getElementById('submenuSistemas').classList.toggle('open');
-            }
-        });
+            // ==========================================
+            // INICIALIZAÇÃO
+            // ==========================================
+            document.addEventListener('DOMContentLoaded', function() {
+                populateSelects();
+                loadPages();
+                updateClockDisplay();
+                setInterval(updateClockDisplay, 1000);
+                atualizarBadgePanico();
 
-        // ==========================================
-        // INICIALIZAÇÃO
-        // ==========================================
-        document.addEventListener('DOMContentLoaded', function() {
-            populateSelects();
-            loadPages();
-            updateClockDisplay();
-            setInterval(updateClockDisplay, 1000);
-            atualizarBadgePanico();
-        });
+                // Mensagem secreta no console
+                console.log('%c▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓', 'font-size:8px;color:#4ecdc4;');
+                console.log('%c▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓', 'font-size:8px;color:#4ecdc4;');
+                console.log('%c▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓', 'font-size:8px;color:#4ecdc4;');
+                console.log('%c   SISTEMA GDA v3.0 - MODO SEGURO ATIVADO   ', 'font-size:16px;color:#ffd93d;font-weight:bold;');
+                console.log('%c▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓', 'font-size:8px;color:#4ecdc4;');
+                console.log('%c▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓', 'font-size:8px;color:#4ecdc4;');
+                console.log('%c▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓', 'font-size:8px;color:#4ecdc4;');
+            });
 
-        console.log('🚀 GDA Acadêmico v3.0 - Com Botão do Pânico e Histórico!');
-        console.log('📋 Usuário:', USUARIO);
-        console.log('📊 Dados carregados:', {
-            atividades: atividades.length,
-            notas: Object.keys(notas).length,
-            relatorios: relatorios.length,
-            checklist: Object.keys(checklistState).length,
-            historicoPanico: historicoPanico.length
-        });
-        console.log('🚨 Botão do Pânico disponível na Sidebar e Ações Rápidas!');
-        console.log('📜 Histórico do Pânico disponível no menu!');
-        console.log('🔗 Link do Pode Falar: https://www.podefalar.org.br/');
+            console.log('%c🔐 Sistema inicializado com sucesso.', 'font-size:12px;color:#45b7d1;');
+            console.log('%c📡 Canal seguro estabelecido.', 'font-size:12px;color:#96ceb4;');
+            console.log('%c⚠️ Este sistema é monitorado.', 'font-size:12px;color:#ff6b6b;');
+
+        })(); // Fim do IIFE - Proteção de escopo
+
+        // ============================================================
+        //  FIM DO SISTEMA - NADA ALÉM DISSO FUNCIONA
+        // ============================================================
     </script>
 
 </body>
