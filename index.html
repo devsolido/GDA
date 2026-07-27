@@ -516,7 +516,7 @@
         }
         .action-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 12px;
         }
         .action-btn {
@@ -540,12 +540,12 @@
             margin-bottom: 4px;
         }
         .action-btn span {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             display: block;
         }
         .action-btn small {
-            font-size: 11px;
+            font-size: 10px;
             color: var(--color-text-muted);
         }
         .action-btn.primary i {
@@ -776,6 +776,76 @@
             float: right;
             font-size: 24px;
             color: rgba(255, 179, 0, 0.1);
+        }
+
+        /* ===== HISTÓRICO DO PÂNICO ===== */
+        .historico-panico-section {
+            margin-top: 16px;
+        }
+        .historico-panico-section .empty-state {
+            text-align: center;
+            padding: 30px 20px;
+            color: var(--color-text-muted);
+            font-size: 14px;
+            border: 1px dashed var(--color-border);
+            border-radius: 12px;
+        }
+        .historico-panico-section .empty-state i {
+            display: block;
+            font-size: 32px;
+            margin-bottom: 8px;
+            opacity: 0.3;
+        }
+        .panico-registro {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            border: 1px solid var(--color-border);
+            padding: 12px 18px;
+            margin-bottom: 10px;
+            transition: var(--transition);
+        }
+        .panico-registro:hover {
+            border-color: rgba(255, 179, 0, 0.1);
+        }
+        .panico-registro .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .panico-registro .data-hora {
+            font-size: 12px;
+            color: var(--color-text-muted);
+        }
+        .panico-registro .disciplina {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--color-accent);
+        }
+        .panico-registro .motivo {
+            font-size: 13px;
+            color: var(--color-text);
+            margin-top: 4px;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 6px;
+            border-left: 3px solid var(--color-danger);
+        }
+        .panico-registro .status {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 12px;
+            border-radius: 30px;
+            display: inline-block;
+        }
+        .panico-registro .status.resolvido {
+            background: rgba(76, 175, 80, 0.12);
+            color: var(--color-success);
+        }
+        .panico-registro .status.pendente {
+            background: rgba(255, 179, 0, 0.12);
+            color: var(--color-warning);
         }
 
         /* ===== ATIVIDADES COM PARTICIPANTES ===== */
@@ -1633,13 +1703,25 @@
         }
 
         @keyframes panicoFlash {
-            0%, 100% { background: rgba(183, 28, 28, 0.92); }
-            50% { background: rgba(211, 47, 47, 0.96); }
+            0%,
+            100% {
+                background: rgba(183, 28, 28, 0.92);
+            }
+            50% {
+                background: rgba(211, 47, 47, 0.96);
+            }
         }
 
         @keyframes panicoPulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.02); opacity: 0.9; }
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.02);
+                opacity: 0.9;
+            }
         }
 
         .panico-container {
@@ -1995,10 +2077,10 @@
             color: #ffffff;
         }
 
-        /* Recursos */
+        /* Recursos - APENAS PODE FALAR */
         .panico-recursos {
             display: flex;
-            gap: 8px;
+            gap: 12px;
             flex-wrap: wrap;
             justify-content: center;
             padding: 12px 0;
@@ -2010,9 +2092,9 @@
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.08);
             color: rgba(255, 255, 255, 0.6);
-            padding: 6px 16px;
+            padding: 8px 24px;
             border-radius: 20px;
-            font-size: 12px;
+            font-size: 13px;
             cursor: pointer;
             transition: var(--transition);
             font-family: 'Inter', sans-serif;
@@ -2036,92 +2118,288 @@
 
         /* ===== RESPONSIVIDADE ===== */
         @media (max-width: 1024px) {
-            header { width: 72px; padding: 16px 10px; }
-            header .logo h2, header .navbar a h3, header .navbar .nav-label,
-            header .user-info .name, header .user-info .role,
-            header .navbar a .badge-link, .submenu-sistemas { display: none !important; }
-            header .logo .logo-icon { width: 36px; height: 36px; font-size: 14px; }
-            header .navbar a { justify-content: center; padding: 12px 8px; }
-            header .navbar a .material-icons-sharp { display: block; font-size: 26px; }
-            header .user-info { justify-content: center; }
-            header .user-info .avatar { width: 32px; height: 32px; }
-            .container { margin-left: 72px; }
-            .greeting-title { font-size: 22px; }
-            .progress-container { flex-direction: column; align-items: center; }
-            .progress-info { width: 100%; }
-            .quote-card blockquote { padding-right: 20px; }
-            .btn-new-quote { position: relative; top: auto; right: auto; margin-top: 12px; }
+            header {
+                width: 72px;
+                padding: 16px 10px;
+            }
+            header .logo h2,
+            header .navbar a h3,
+            header .navbar .nav-label,
+            header .user-info .name,
+            header .user-info .role,
+            header .navbar a .badge-link,
+            .submenu-sistemas {
+                display: none !important;
+            }
+            header .logo .logo-icon {
+                width: 36px;
+                height: 36px;
+                font-size: 14px;
+            }
+            header .navbar a {
+                justify-content: center;
+                padding: 12px 8px;
+            }
+            header .navbar a .material-icons-sharp {
+                display: block;
+                font-size: 26px;
+            }
+            header .user-info {
+                justify-content: center;
+            }
+            header .user-info .avatar {
+                width: 32px;
+                height: 32px;
+            }
+            .container {
+                margin-left: 72px;
+            }
+            .greeting-title {
+                font-size: 22px;
+            }
+            .progress-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            .progress-info {
+                width: 100%;
+            }
+            .quote-card blockquote {
+                padding-right: 20px;
+            }
+            .btn-new-quote {
+                position: relative;
+                top: auto;
+                right: auto;
+                margin-top: 12px;
+            }
         }
 
         @media (max-width: 768px) {
-            .modal { padding: 20px; }
-            .notas-bimestres { grid-template-columns: repeat(2, 1fr); }
-            .notas-grid { grid-template-columns: 1fr; }
-            .relatorio-form { grid-template-columns: 1fr; }
-            .relatorio-form .full-width { grid-column: span 1; }
-            .relatorio-form .form-actions { grid-column: span 1; flex-direction: column; }
-            .greeting-section { flex-direction: column; align-items: flex-start; }
-            .date-info { text-align: left; width: 100%; }
-            .achievement-grid { grid-template-columns: 1fr 1fr; }
-            .action-grid { grid-template-columns: 1fr 1fr; }
-            .clock-hero .time { font-size: 20px; }
-            .clock-hero { justify-content: flex-start; }
-            .dashboard-header { flex-direction: column; align-items: flex-start; }
-            .panico-container { padding: 20px; margin: 10px; }
-            .panico-frase-principal { font-size: 22px; }
-            .respiracao-circulo { width: 120px; height: 120px; }
-            .respiracao-circulo .circulo { width: 120px; height: 120px; }
-            .respiracao-texto .timer { font-size: 32px; }
-            .relato-acoes { flex-direction: column; }
+            .modal {
+                padding: 20px;
+            }
+            .notas-bimestres {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .notas-grid {
+                grid-template-columns: 1fr;
+            }
+            .relatorio-form {
+                grid-template-columns: 1fr;
+            }
+            .relatorio-form .full-width {
+                grid-column: span 1;
+            }
+            .relatorio-form .form-actions {
+                grid-column: span 1;
+                flex-direction: column;
+            }
+            .greeting-section {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .date-info {
+                text-align: left;
+                width: 100%;
+            }
+            .achievement-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .action-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .clock-hero .time {
+                font-size: 20px;
+            }
+            .clock-hero {
+                justify-content: flex-start;
+            }
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .panico-container {
+                padding: 20px;
+                margin: 10px;
+            }
+            .panico-frase-principal {
+                font-size: 22px;
+            }
+            .respiracao-circulo {
+                width: 120px;
+                height: 120px;
+            }
+            .respiracao-circulo .circulo {
+                width: 120px;
+                height: 120px;
+            }
+            .respiracao-texto .timer {
+                font-size: 32px;
+            }
+            .relato-acoes {
+                flex-direction: column;
+            }
         }
 
         @media (max-width: 600px) {
-            .container { padding: 16px; margin-left: 0; }
-            header { width: 100%; height: auto; position: relative; flex-direction: row; padding: 10px 14px; flex-wrap: wrap; border-right: none; border-bottom: 1px solid var(--color-border); }
-            header .logo { padding-bottom: 0; border-bottom: none; margin-bottom: 0; flex: 1; }
-            header .navbar { flex-direction: row; flex-wrap: wrap; gap: 2px; }
-            header .navbar a { padding: 6px 10px; font-size: 12px; }
-            header .navbar a h3 { display: none; }
-            header .navbar .nav-label { display: none; }
-            header .user-info { display: none; }
-            .submenu-sistemas { display: none !important; }
-            .container { margin-left: 0; }
-            .stats-grid { grid-template-columns: 1fr 1fr; }
-            .achievement-grid { grid-template-columns: 1fr; }
-            .action-grid { grid-template-columns: 1fr; }
-            .atividades-grid { grid-template-columns: 1fr; }
-            .checklist-grid { grid-template-columns: 1fr; }
-            .splash-content { padding: 20px 16px; }
-            .splash-content .logo-icon { width: 48px; height: 48px; font-size: 20px; }
-            .splash-content h1 { font-size: 20px; }
-            .splash-content .splash-message { font-size: 13px; }
-            .relatorio-section { padding: 16px; }
-            .welcome-hero { padding: 20px; }
-            .greeting-title { font-size: 20px; }
-            .clock-hero .time { font-size: 18px; }
-            .clock-hero .seconds { font-size: 14px; }
-            .progress-info { grid-template-columns: 1fr; }
-            .progress-circle-container { width: 100px; height: 100px; }
-            .progress-circle { width: 100px; height: 100px; }
-            .quote-card blockquote { font-size: 14px; padding-right: 0; }
-            .panico-container { padding: 16px; }
-            .panico-frase-principal { font-size: 18px; }
-            .panico-recursos { gap: 4px; }
-            .panico-recursos button { font-size: 10px; padding: 4px 10px; }
+            .container {
+                padding: 16px;
+                margin-left: 0;
+            }
+            header {
+                width: 100%;
+                height: auto;
+                position: relative;
+                flex-direction: row;
+                padding: 10px 14px;
+                flex-wrap: wrap;
+                border-right: none;
+                border-bottom: 1px solid var(--color-border);
+            }
+            header .logo {
+                padding-bottom: 0;
+                border-bottom: none;
+                margin-bottom: 0;
+                flex: 1;
+            }
+            header .navbar {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 2px;
+            }
+            header .navbar a {
+                padding: 6px 10px;
+                font-size: 12px;
+            }
+            header .navbar a h3 {
+                display: none;
+            }
+            header .navbar .nav-label {
+                display: none;
+            }
+            header .user-info {
+                display: none;
+            }
+            .submenu-sistemas {
+                display: none !important;
+            }
+            .container {
+                margin-left: 0;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .achievement-grid {
+                grid-template-columns: 1fr;
+            }
+            .action-grid {
+                grid-template-columns: 1fr;
+            }
+            .atividades-grid {
+                grid-template-columns: 1fr;
+            }
+            .checklist-grid {
+                grid-template-columns: 1fr;
+            }
+            .splash-content {
+                padding: 20px 16px;
+            }
+            .splash-content .logo-icon {
+                width: 48px;
+                height: 48px;
+                font-size: 20px;
+            }
+            .splash-content h1 {
+                font-size: 20px;
+            }
+            .splash-content .splash-message {
+                font-size: 13px;
+            }
+            .relatorio-section {
+                padding: 16px;
+            }
+            .welcome-hero {
+                padding: 20px;
+            }
+            .greeting-title {
+                font-size: 20px;
+            }
+            .clock-hero .time {
+                font-size: 18px;
+            }
+            .clock-hero .seconds {
+                font-size: 14px;
+            }
+            .progress-info {
+                grid-template-columns: 1fr;
+            }
+            .progress-circle-container {
+                width: 100px;
+                height: 100px;
+            }
+            .progress-circle {
+                width: 100px;
+                height: 100px;
+            }
+            .quote-card blockquote {
+                font-size: 14px;
+                padding-right: 0;
+            }
+            .panico-container {
+                padding: 16px;
+            }
+            .panico-frase-principal {
+                font-size: 18px;
+            }
+            .panico-recursos {
+                gap: 4px;
+            }
+            .panico-recursos button {
+                font-size: 12px;
+                padding: 6px 16px;
+            }
         }
 
         @media (max-width: 480px) {
-            .stats-grid { grid-template-columns: 1fr 1fr; }
-            .filtros-atividades { gap: 4px; }
-            .filtros-atividades button { font-size: 11px; padding: 3px 12px; }
-            .notas-bimestres { grid-template-columns: 1fr 1fr; }
-            .welcome-hero::before { display: none; }
-            .dashboard-header h1 { font-size: 18px; }
-            .dashboard-header h1 small { font-size: 11px; display: block; margin-left: 0; }
-            .respiracao-circulo { width: 100px; height: 100px; }
-            .respiracao-circulo .circulo { width: 100px; height: 100px; }
-            .respiracao-texto .timer { font-size: 28px; }
-            .respiracao-texto .frase { font-size: 14px; }
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .filtros-atividades {
+                gap: 4px;
+            }
+            .filtros-atividades button {
+                font-size: 11px;
+                padding: 3px 12px;
+            }
+            .notas-bimestres {
+                grid-template-columns: 1fr 1fr;
+            }
+            .welcome-hero::before {
+                display: none;
+            }
+            .dashboard-header h1 {
+                font-size: 18px;
+            }
+            .dashboard-header h1 small {
+                font-size: 11px;
+                display: block;
+                margin-left: 0;
+            }
+            .respiracao-circulo {
+                width: 100px;
+                height: 100px;
+            }
+            .respiracao-circulo .circulo {
+                width: 100px;
+                height: 100px;
+            }
+            .respiracao-texto .timer {
+                font-size: 28px;
+            }
+            .respiracao-texto .frase {
+                font-size: 14px;
+            }
         }
     </style>
 </head>
@@ -2139,7 +2417,7 @@
             <button class="btn-entrar" onclick="entrarNoSistema()">
                 <i class="fas fa-sign-in-alt"></i> Entrar no Sistema
             </button>
-            <div class="versao">v3.0 · Multi Páginas</div>
+            <div class="versao">v3.0 · Com Botão do Pânico</div>
         </div>
     </div>
 
@@ -2190,6 +2468,13 @@
             <a href="#" onclick="abrirPanico(); return false;" style="border-left: 3px solid #d32f2f;">
                 <span class="material-icons-sharp" style="color:#d32f2f;">emergency</span>
                 <h3 style="color:#d32f2f;">🚨 Botão do Pânico</h3>
+            </a>
+
+            <!-- ===== HISTÓRICO DO PÂNICO ===== -->
+            <a href="#" data-page="historicopanico">
+                <span class="material-icons-sharp" style="color:#7a8ea8;">history</span>
+                <h3>Histórico do Pânico</h3>
+                <span class="badge-link" id="panicoBadge">0</span>
             </a>
 
             <div class="nav-label" style="margin-top:4px;">Sistemas</div>
@@ -2387,10 +2672,11 @@
 
             <hr class="panico-divider" />
 
-            <!-- RECURSOS DISPONÍVEIS -->
+            <!-- RECURSOS DISPONÍVEIS - APENAS PODE FALAR -->
             <div class="panico-recursos">
-                <button class="primary-rec" onclick="window.open('https://www.gov.br/participamaisbrasil/pode-falar', '_blank')">💬 Iniciativa Pode Falar</button>
-                <button onclick="window.open('https://www.ifpa.edu.br/', '_blank')">📚 Materiais de Apoio</button>
+                <button class="primary-rec" onclick="window.open('https://www.podefalar.org.br/', '_blank')">
+                    💬 Iniciativa Pode Falar
+                </button>
             </div>
 
         </div>
@@ -2410,19 +2696,32 @@
         // ==========================================
         const turmas = [
             { cod: 'TICAM0147', nome: 'ARTES', professor: 'THAYS ALVES COSTA', turma: 'B2371M', horario: '6M34' },
-            { cod: 'TICAM0152', nome: 'FILOSOFIA', professor: 'JESSIKA CURTINAZ DA SILVA', turma: 'B2371M', horario: '4M56' },
-            { cod: 'TICAM0159', nome: 'FUNDAMENTOS DE SANEAMENTO E SAÚDE PÚBLICA', professor: 'DANIELLE IVANA PEREIRA DOS SANTOS', turma: 'B2371M', horario: '3M34' },
-            { cod: 'TICAM0153', nome: 'GEOGRAFIA', professor: 'SILVANA DE SOUSA SILVA', turma: 'B2371M', horario: '5M12' },
-            { cod: 'TICAM0157', nome: 'INFORMÁTICA BÁSICA', professor: 'FABIO DE OLIVEIRA TORRES', turma: 'B2731M', horario: '4M12' },
-            { cod: 'TICAM0154', nome: 'INTRODUÇÃO AO TÉCNICO EM CONTROLE AMBIENTAL', professor: 'SAMARA AVELINO DE SOUZA FRANCA', turma: 'B2731M', horario: '6M12' },
-            { cod: 'TICAM0146', nome: 'LIBRAS', professor: 'ANDREZA DOS SANTOS FLEXA', turma: 'B2731M', horario: '5M34' },
-            { cod: 'TICAM0145', nome: 'LÍNGUA PORTUGUESA', professor: 'KAUANA DE CARVALHO PENALVA', turma: 'B2731M', horario: '2M456' },
-            { cod: 'TICAM0148', nome: 'MATEMÁTICA', professor: 'SÓRIA PEREIRA LIMA SOARES', turma: 'B2371M', horario: '2M123' },
-            { cod: 'TICAM0156', nome: 'METODOLOGIA DE PROJETOS AMBIENTAIS', professor: 'ADANNA DE SOUZA ANDRADE', turma: 'B2371M', horario: '3M56' },
-            { cod: 'TICAM0149', nome: 'QUÍMICA', professor: 'EDLÉIA APARECIDA FERREIRA DE SOUSA', turma: 'B2371M', horario: '3M12' },
-            { cod: 'TICAM0155', nome: 'SEGURANÇA E SAÚDE OCUPACIONAL', professor: 'EDLÉIA APARECIDA FERREIRA DE SOUSA e HALENE HELENSIEVA QUEIROZ MORAES', turma: 'B2371M', horario: '6M56' },
-            { cod: 'TICAM0150', nome: 'SOCIOLOGIA', professor: 'MARCELO MELO DOS SANTOS', turma: 'B2371M', horario: '5M56' },
-            { cod: 'TICAM0158', nome: 'TÉCNICAS EM EDUCAÇÃO AMBIENTAL', professor: 'DANIELLE IVANA PEREIRA DOS SANTOS', turma: 'B2371M', horario: '4M34' }
+            { cod: 'TICAM0152', nome: 'FILOSOFIA', professor: 'JESSIKA CURTINAZ DA SILVA', turma: 'B2371M',
+            horario: '4M56' },
+            { cod: 'TICAM0159', nome: 'FUNDAMENTOS DE SANEAMENTO E SAÚDE PÚBLICA', professor: 'DANIELLE IVANA PEREIRA DOS SANTOS',
+                turma: 'B2371M', horario: '3M34' },
+            { cod: 'TICAM0153', nome: 'GEOGRAFIA', professor: 'SILVANA DE SOUSA SILVA', turma: 'B2371M',
+            horario: '5M12' },
+            { cod: 'TICAM0157', nome: 'INFORMÁTICA BÁSICA', professor: 'FABIO DE OLIVEIRA TORRES', turma: 'B2731M',
+                horario: '4M12' },
+            { cod: 'TICAM0154', nome: 'INTRODUÇÃO AO TÉCNICO EM CONTROLE AMBIENTAL', professor: 'SAMARA AVELINO DE SOUZA FRANCA',
+                turma: 'B2731M', horario: '6M12' },
+            { cod: 'TICAM0146', nome: 'LIBRAS', professor: 'ANDREZA DOS SANTOS FLEXA', turma: 'B2731M',
+            horario: '5M34' },
+            { cod: 'TICAM0145', nome: 'LÍNGUA PORTUGUESA', professor: 'KAUANA DE CARVALHO PENALVA', turma: 'B2731M',
+                horario: '2M456' },
+            { cod: 'TICAM0148', nome: 'MATEMÁTICA', professor: 'SÓRIA PEREIRA LIMA SOARES', turma: 'B2371M',
+            horario: '2M123' },
+            { cod: 'TICAM0156', nome: 'METODOLOGIA DE PROJETOS AMBIENTAIS', professor: 'ADANNA DE SOUZA ANDRADE',
+                turma: 'B2371M', horario: '3M56' },
+            { cod: 'TICAM0149', nome: 'QUÍMICA', professor: 'EDLÉIA APARECIDA FERREIRA DE SOUSA', turma: 'B2371M',
+                horario: '3M12' },
+            { cod: 'TICAM0155', nome: 'SEGURANÇA E SAÚDE OCUPACIONAL', professor: 'EDLÉIA APARECIDA FERREIRA DE SOUSA e HALENE HELENSIEVA QUEIROZ MORAES',
+                turma: 'B2371M', horario: '6M56' },
+            { cod: 'TICAM0150', nome: 'SOCIOLOGIA', professor: 'MARCELO MELO DOS SANTOS', turma: 'B2371M',
+            horario: '5M56' },
+            { cod: 'TICAM0158', nome: 'TÉCNICAS EM EDUCAÇÃO AMBIENTAL', professor: 'DANIELLE IVANA PEREIRA DOS SANTOS',
+                turma: 'B2371M', horario: '4M34' }
         ];
 
         const checklistItems = [
@@ -2445,6 +2744,17 @@
             { frase: '"Você tem tudo o que precisa para resolver isso."', autor: 'Desconhecido' }
         ];
 
+        const frasesTelaInicial = [
+            { frase: '"Acredite em si mesmo e todo o resto virá naturalmente."', autor: 'The Rock' },
+            { frase: '"O sucesso é a soma de pequenos esforços repetidos dia após dia."', autor: 'Robert Collier' },
+            { frase: '"A persistência é o caminho do êxito."', autor: 'Charles Chaplin' },
+            { frase: '"Você é mais forte do que pensa, mais capaz do que imagina."', autor: 'Desconhecido' },
+            { frase: '"Cada dia é uma nova oportunidade para mudar sua vida."', autor: 'Desconhecido' },
+            { frase: '"O único lugar onde o sucesso vem antes do trabalho é no dicionário."', autor: 'Vidal Sassoon' },
+            { frase: '"Não importa o quão devagar você vá, desde que não pare."', autor: 'Confúcio' },
+            { frase: '"A educação é a arma mais poderosa que você pode usar para mudar o mundo."', autor: 'Nelson Mandela' }
+        ];
+
         // ==========================================
         // STORAGE
         // ==========================================
@@ -2452,14 +2762,14 @@
             try {
                 const data = localStorage.getItem(key);
                 return data ? JSON.parse(data) : defaultValue;
-            } catch { return defaultValue; }
+            } catch (e) { return defaultValue; }
         }
 
         function saveData(key, data) {
             try {
                 localStorage.setItem(key, JSON.stringify(data));
                 return true;
-            } catch { return false; }
+            } catch (e) { return false; }
         }
 
         // ==========================================
@@ -2491,19 +2801,6 @@
             if (hora < 12) return '🌅';
             if (hora < 18) return '☀️';
             return '🌙';
-        }
-
-        function getFrasesMotivacionais() {
-            return [
-                { frase: '"Acredite em si mesmo e todo o resto virá naturalmente."', autor: 'The Rock' },
-                { frase: '"O sucesso é a soma de pequenos esforços repetidos dia após dia."', autor: 'Robert Collier' },
-                { frase: '"A persistência é o caminho do êxito."', autor: 'Charles Chaplin' },
-                { frase: '"Você é mais forte do que pensa, mais capaz do que imagina."', autor: 'Desconhecido' },
-                { frase: '"Cada dia é uma nova oportunidade para mudar sua vida."', autor: 'Desconhecido' },
-                { frase: '"O único lugar onde o sucesso vem antes do trabalho é no dicionário."', autor: 'Vidal Sassoon' },
-                { frase: '"Não importa o quão devagar você vá, desde que não pare."', autor: 'Confúcio' },
-                { frase: '"A educação é a arma mais poderosa que você pode usar para mudar o mundo."', autor: 'Nelson Mandela' }
-            ];
         }
 
         // ==========================================
@@ -2595,29 +2892,24 @@
             overlay.classList.add('open');
             document.body.style.overflow = 'hidden';
 
-            // Preencher data e hora
             const agora = new Date();
             document.getElementById('panicoData').textContent = agora.toLocaleDateString('pt-BR');
             document.getElementById('panicoHora').textContent = agora.toLocaleTimeString('pt-BR');
 
-            // Popular disciplinas
             const select = document.getElementById('panicoDisciplina');
             select.innerHTML = '<option value="">Selecione...</option>' +
                 turmas.map(t => `<option value="${t.nome}">${t.nome}</option>`).join('');
 
-            // Resetar respiração
             const circulo = document.getElementById('circuloRespirar');
             circulo.className = 'circulo';
             document.getElementById('respirarFrase').textContent = 'INSPIRE';
             document.getElementById('respirarTimer').textContent = '4';
 
-            // Frase motivacional inicial
             const frases = frasesMotivacionais;
             const random = frases[Math.floor(Math.random() * frases.length)];
             document.getElementById('motivacaoFrase').textContent = random.frase;
             document.getElementById('motivacaoAutor').textContent = `— ${random.autor}`;
 
-            // Resetar botão
             document.getElementById('btnIniciarRespirar').textContent = 'Iniciar Respiração';
             document.getElementById('btnIniciarRespirar').onclick = iniciarRespiração;
             respiracaoAtiva = false;
@@ -2636,6 +2928,8 @@
                 respiracaoInterval = null;
             }
             respiracaoAtiva = false;
+            // Atualiza badge do histórico
+            atualizarBadgePanico();
         };
 
         window.iniciarRespiração = function() {
@@ -2674,7 +2968,6 @@
                     contador = fases[faseAtual].duracao;
                     atualizarFase();
                     if (faseAtual === 0) {
-                        // Ciclo completo
                         ciclosCompletos++;
                         if (ciclosCompletos >= 3) {
                             finalizarRespiração();
@@ -2685,11 +2978,8 @@
                     return;
                 }
                 timerEl.textContent = contador;
-
-                // Animação sutil do timer
                 timerEl.style.transform = 'scale(1.2)';
                 setTimeout(() => { timerEl.style.transform = 'scale(1)'; }, 200);
-
                 setTimeout(proximoPasso, 1000);
             }
 
@@ -2700,7 +2990,14 @@
                 btn.textContent = '🔄 Repetir Respiração';
                 btn.disabled = false;
                 btn.onclick = function() {
-                    resetarRespiração();
+                    faseAtual = 0;
+                    contador = fases[0].duracao;
+                    ciclosCompletos = 0;
+                    respiracaoAtiva = false;
+                    if (respiracaoInterval) {
+                        clearInterval(respiracaoInterval);
+                        respiracaoInterval = null;
+                    }
                     iniciarRespiração();
                 };
                 fraseEl.textContent = '✅ FINALIZADO';
@@ -2708,18 +3005,6 @@
                 circulo.className = 'circulo';
             }
 
-            function resetarRespiração() {
-                faseAtual = 0;
-                contador = fases[0].duracao;
-                ciclosCompletos = 0;
-                respiracaoAtiva = false;
-                if (respiracaoInterval) {
-                    clearInterval(respiracaoInterval);
-                    respiracaoInterval = null;
-                }
-            }
-
-            // Iniciar
             atualizarFase();
             setTimeout(proximoPasso, 1000);
         };
@@ -2754,14 +3039,85 @@
 
             alert('✅ Relato registrado! Você não está sozinho(a).');
 
-            // Limpar campos
             document.getElementById('panicoDisciplina').value = '';
             document.getElementById('panicoMotivo').value = '';
 
-            // Sair após 2 segundos
+            atualizarBadgePanico();
+
             setTimeout(() => {
                 sairPanico();
             }, 1500);
+        };
+
+        function atualizarBadgePanico() {
+            const badge = document.getElementById('panicoBadge');
+            if (badge) {
+                const pendentes = historicoPanico.filter(r => !r.resolvido).length;
+                badge.textContent = pendentes;
+                badge.style.display = pendentes > 0 ? 'inline-block' : 'none';
+            }
+        }
+
+        // ==========================================
+        // HISTÓRICO DO PÂNICO
+        // ==========================================
+        function renderHistoricoPanico() {
+            const container = document.getElementById('historicoPanicoContainer');
+            if (!container) return;
+
+            if (historicoPanico.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        Nenhum registro de pânico ainda.
+                    </div>
+                `;
+                return;
+            }
+
+            const sorted = [...historicoPanico].sort((a, b) => b.id - a.id);
+
+            container.innerHTML = sorted.map(r => `
+                <div class="panico-registro">
+                    <div class="header">
+                        <span class="disciplina">📚 ${r.disciplina}</span>
+                        <span class="data-hora">${r.data} · ${r.hora}</span>
+                        <span class="status ${r.resolvido ? 'resolvido' : 'pendente'}">
+                            ${r.resolvido ? '✅ Resolvido' : '⏳ Pendente'}
+                        </span>
+                    </div>
+                    <div class="motivo">${r.motivo}</div>
+                    <div style="margin-top:8px;">
+                        <button onclick="marcarPanicoResolvido(${r.id})" style="padding:2px 12px;border-radius:12px;border:1px solid var(--color-success);background:rgba(76,175,80,0.1);color:var(--color-success);cursor:pointer;font-size:11px;font-family:'Inter',sans-serif;">
+                            ✅ Marcar como resolvido
+                        </button>
+                        <button onclick="deletarRegistroPanico(${r.id})" style="padding:2px 12px;border-radius:12px;border:1px solid var(--color-danger);background:rgba(229,57,53,0.1);color:var(--color-danger);cursor:pointer;font-size:11px;font-family:'Inter',sans-serif;margin-left:4px;">
+                            🗑️ Remover
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            atualizarBadgePanico();
+        }
+
+        window.marcarPanicoResolvido = function(id) {
+            const registro = historicoPanico.find(r => r.id === id);
+            if (registro) {
+                registro.resolvido = !registro.resolvido;
+                saveData('gda_historico_panico', historicoPanico);
+                renderHistoricoPanico();
+                atualizarBadgePanico();
+            }
+        };
+
+        window.deletarRegistroPanico = function(id) {
+            if (confirm('Remover este registro?')) {
+                historicoPanico = historicoPanico.filter(r => r.id !== id);
+                saveData('gda_historico_panico', historicoPanico);
+                renderHistoricoPanico();
+                atualizarBadgePanico();
+            }
         };
 
         // ==========================================
@@ -2874,12 +3230,14 @@
             const elQuote = document.getElementById('dailyQuote');
             const elAuthor = document.getElementById('quoteAuthor');
             if (elQuote && !elQuote.dataset.loaded) {
-                const frases = getFrasesMotivacionais();
+                const frases = frasesTelaInicial;
                 const random = frases[Math.floor(Math.random() * frases.length)];
                 elQuote.textContent = random.frase;
                 if (elAuthor) elAuthor.textContent = random.autor;
                 elQuote.dataset.loaded = 'true';
             }
+
+            atualizarBadgePanico();
         }
 
         // ==========================================
@@ -2943,7 +3301,7 @@
         // CITAÇÃO DO DIA
         // ==========================================
         window.novaFrase = function() {
-            const frases = getFrasesMotivacionais();
+            const frases = frasesTelaInicial;
             const random = frases[Math.floor(Math.random() * frases.length)];
             const elQuote = document.getElementById('dailyQuote');
             const elAuthor = document.getElementById('quoteAuthor');
@@ -3263,6 +3621,19 @@
         };
 
         // ==========================================
+        // SINCRONIZAÇÃO
+        // ==========================================
+        window.sincronizarBackendless = function() {
+            alert('☁️ Sincronizando com a nuvem...\n\n' +
+                'Checklist: ' + Object.keys(checklistState).length + ' itens\n' +
+                'Atividades: ' + atividades.length + ' atividades\n' +
+                'Notas: ' + Object.keys(notas).length + ' disciplinas\n' +
+                'Relatórios: ' + relatorios.length + ' registros\n' +
+                'Histórico Pânico: ' + historicoPanico.length + ' registros\n\n' +
+                '✅ Dados salvos localmente!');
+        };
+
+        // ==========================================
         // ROTEAMENTO
         // ==========================================
         function showPage(pageId) {
@@ -3273,6 +3644,10 @@
             document.querySelectorAll('.navbar a[data-page]').forEach(link => {
                 link.classList.toggle('active', link.dataset.page === pageId);
             });
+
+            if (pageId === 'historicopanico') {
+                renderHistoricoPanico();
+            }
         }
 
         // ==========================================
@@ -3280,7 +3655,9 @@
         // ==========================================
         async function loadPages() {
             const container = document.getElementById('pageContainer');
-            const pages = ['inicial', 'dashboard', 'checklist', 'turmas', 'atividades', 'notas', 'relatorios'];
+            const pages = ['inicial', 'dashboard', 'checklist', 'turmas', 'atividades', 'notas', 'relatorios',
+                'historicopanico'
+            ];
 
             for (const page of pages) {
                 try {
@@ -3346,7 +3723,6 @@
                                         <span>Ver Notas</span>
                                         <small>Acompanhe sua média</small>
                                     </button>
-                                    <!-- ===== BOTÃO DO PÂNICO NAS AÇÕES RÁPIDAS ===== -->
                                     <button class="action-btn danger" onclick="abrirPanico()">
                                         <i class="fas fa-exclamation-triangle"></i>
                                         <span>🚨 Pânico</span>
@@ -3542,6 +3918,14 @@
                                 <div class="relatorios-lista" id="relatoriosLista"></div>
                             </div>
                         `;
+                    } else if (page === 'historicopanico') {
+                        content = `
+                            <div class="section-title">
+                                <i class="fas fa-history"></i> Histórico do Pânico
+                                <span class="badge" id="historicoBadge">${historicoPanico.length}</span>
+                            </div>
+                            <div id="historicoPanicoContainer"></div>
+                        `;
                     }
                     pageDiv.innerHTML = content;
                     container.appendChild(pageDiv);
@@ -3555,6 +3939,7 @@
             renderRelatorios();
             renderTelaInicial();
             renderDashboard();
+            renderHistoricoPanico();
 
             document.querySelectorAll('.navbar a[data-page]').forEach(link => {
                 link.addEventListener('click', function(e) {
@@ -3574,7 +3959,7 @@
                 });
             });
 
-            console.log('✅ GDA Acadêmico v3.0 - Com Botão do Pânico!');
+            console.log('✅ GDA Acadêmico v3.0 - Com Botão do Pânico e Histórico!');
         }
 
         // ==========================================
@@ -3698,18 +4083,6 @@
         }
 
         // ==========================================
-        // SINCRONIZAÇÃO
-        // ==========================================
-        window.sincronizarBackendless = function() {
-            alert('☁️ Sincronizando com a nuvem...\n\n' +
-                'Checklist: ' + Object.keys(checklistState).length + ' itens\n' +
-                'Atividades: ' + atividades.length + ' atividades\n' +
-                'Notas: ' + Object.keys(notas).length + ' disciplinas\n' +
-                'Relatórios: ' + relatorios.length + ' registros\n\n' +
-                '✅ Dados salvos localmente!');
-        };
-
-        // ==========================================
         // MODAL - CLICK FORA
         // ==========================================
         document.addEventListener('click', function(e) {
@@ -3735,9 +4108,10 @@
             loadPages();
             updateClockDisplay();
             setInterval(updateClockDisplay, 1000);
+            atualizarBadgePanico();
         });
 
-        console.log('🚀 GDA Acadêmico v3.0 - Com Botão do Pânico!');
+        console.log('🚀 GDA Acadêmico v3.0 - Com Botão do Pânico e Histórico!');
         console.log('📋 Usuário:', USUARIO);
         console.log('📊 Dados carregados:', {
             atividades: atividades.length,
@@ -3747,6 +4121,8 @@
             historicoPanico: historicoPanico.length
         });
         console.log('🚨 Botão do Pânico disponível na Sidebar e Ações Rápidas!');
+        console.log('📜 Histórico do Pânico disponível no menu!');
+        console.log('🔗 Link do Pode Falar: https://www.podefalar.org.br/');
     </script>
 
 </body>
