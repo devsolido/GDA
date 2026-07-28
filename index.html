@@ -4144,6 +4144,534 @@
         // ============================================================
         //  FIM DO SISTEMA
         // ============================================================
+    
+    
+    // ============================================================
+//  SISTEMA DE PONTO ELETRÔNICO COMPLETO
+// ============================================================
+
+// ===== CONFIGURAÇÕES DO USUÁRIO =====
+const MATRICULA = '202623700357';
+const NOME = 'IGOR VERAS MORAIS';
+const CURSO = 'Controle Ambiental (CA)';
+
+// ===== DATAS DO SEMESTRE =====
+const DATA_INICIO_SEMESTRE = new Date('2026-08-03');
+const DATA_FIM_SEMESTRE = new Date('2026-12-18');
+
+// ===== CARREGAR REGISTROS =====
+let registrosPonto = loadData('gda_ponto_registros', []);
+let faltas = loadData('gda_faltas', []);
+
+// ===== FUNÇÕES DE SALVAMENTO =====
+function salvarRegistrosPonto() {
+    saveData('gda_ponto_registros', registrosPonto);
+}
+
+function salvarFaltas() {
+    saveData('gda_faltas', faltas);
+}
+
+// ===== RELÓGIO EM TEMPO REAL =====
+function atualizarRelogioPonto() {
+    const agora = new Date();
+    const h = String(agora.getHours()).padStart(2, '0');
+    const m = String(agora.getMinutes()).padStart(2, '0');
+    const s = String(agora.getSeconds()).padStart(2, '0');
+    const el = document.getElementById('pontoRelogio');
+    if (el) el.textContent = `${h}:${m}:${s}`;
+}
+
+// ===== VERIFICAR HORÁRIO PERMITIDO (MODO PRODUÇÃO) =====
+function verificarHorarioPermitido(tipo) {
+    const agora = new Date();
+    const hora = agora.getHours();
+    const minutos = agora.getMinutes();
+    const horaMinuto = hora + minutos / 60;
+
+    // Bloqueia após as 18:00
+    if (hora >= 18) {
+        return { permitido: false, mensagem: '⛔ Registro de ponto não permitido após as 18:00.' };
+    }
+
+    if (tipo === 'entrada') {
+        if (horaMinuto >= 7.5 && horaMinuto <= 8.0) {
+            return { permitido: true, mensagem: '✅ Entrada permitida.' };
+        } else {
+            return { permitido: false, mensagem: '⛔ Entrada permitida apenas das 7:30 às 8:00.' };
+        }
+    } else if (tipo === 'saida') {
+        if (horaMinuto <= 12.833) {
+            return { permitido: true, mensagem: '✅ Saída permitida.' };
+        } else {
+            return { permitido: false, mensagem: '⛔ Saída permitida apenas até as 12:50.' };
+        }
+    } else if (tipo === 'extra') {
+        if (horaMinuto > 12.833 && hora < 18) {
+            return { permitido: true, mensagem: '✅ Saída extra permitida.' };
+        } else if (horaMinuto <= 12.833) {
+            return { permitido: false, mensagem: '⛔ Saída extra permitida apenas após as 12:50.' };
+        } else {
+            return { permitido: false, mensagem: '⛔ Saída extra permitida apenas antes das 18:00.' };
+        }
+    }
+    return { permitido: false, mensagem: '⛔ Tipo de registro inválido.' };
+}
+
+// ===== REGISTRAR PONTO =====
+window.registrarPonto = function(tipo) {
+    const agora = new Date();
+    const hoje = agora.toISOString().split('T')[0];
+    const horaAtual = agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const dataHora = agora.toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+    // Verifica se já existe registro de entrada hoje
+    const entradaHoje = registrosPonto.find(r => r.data === hoje && r.tipo === 'entrada');
+    const saidaHoje = registrosPonto.find(r => r.data === hoje && r.tipo === 'saida');
+    const extraHoje = registrosPonto.find(r => r.data === hoje && r.tipo === 'extra');
+
+    // Validações específicas
+    if (tipo === 'entrada' && entradaHoje) {
+        alert('⛔ Você já registrou entrada hoje!');
+        return;
+    }
+    if (tipo === 'saida' && !entradaHoje) {
+        alert('⛔ Você precisa registrar a entrada antes da saída!');
+        return;
+    }
+    if (tipo === 'saida' && saidaHoje) {
+        alert('⛔ Você já registrou saída hoje!');
+        return;
+    }
+    if (tipo === 'extra' && !entradaHoje) {
+        alert('⛔ Você precisa registrar a entrada antes da saída extra!');
+        return;
+    }
+    if (tipo === 'extra' && extraHoje) {
+        alert('⛔ Você já registrou saída extra hoje!');
+        return;
+    }
+
+    // Verifica horário
+    const verificacao = verificarHorarioPermitido(tipo);
+    if (!verificacao.permitido) {
+        alert(verificacao.mensagem);
+        return;
+    }
+
+    // Nomes dos tipos
+    const tiposNomes = {
+        'entrada': 'Entrada',
+        'saida': 'Saída',
+        'extra': 'Saída Extra'
+    };
+
+    // Pop-up de confirmação
+    const confirmar = confirm(
+        `🕐 CONFIRMAÇÃO DE PONTO\n\n` +
+        `📋 Matrícula: ${MATRICULA}\n` +
+        `👤 Nome: ${NOME}\n` +
+        `📚 Curso: ${CURSO}\n` +
+        `📌 Tipo: ${tiposNomes[tipo]}\n` +
+        `📅 Data: ${agora.toLocaleDateString('pt-BR')}\n` +
+        `⏰ Hora: ${horaAtual}\n\n` +
+        `✅ Confirmar registro?`
+    );
+
+    if (!confirmar) {
+        alert('❌ Registro cancelado.');
+        return;
+    }
+
+    // Registra
+    const registro = {
+        id: Date.now(),
+        data: hoje,
+        hora: horaAtual,
+        dataHora: dataHora,
+        tipo: tipo,
+        matricula: MATRICULA,
+        nome: NOME,
+        curso: CURSO,
+        timestamp: agora.getTime()
+    };
+
+    registrosPonto.push(registro);
+    salvarRegistrosPonto();
+
+    alert(`✅ ${tiposNomes[tipo]} registrada com sucesso!\n\n📅 ${dataHora}\n👤 ${NOME}`);
+
+    atualizarInterfacePonto();
+    atualizarInterfaceFaltas();
+
+    if (tipo === 'entrada') {
+        mostrarNotificacao('✅ Entrada registrada!', 'Bom dia, ' + NOME + '!');
+    } else if (tipo === 'saida') {
+        mostrarNotificacao('✅ Saída registrada!', 'Bom trabalho, ' + NOME + '!');
+    } else if (tipo === 'extra') {
+        mostrarNotificacao('✅ Saída Extra registrada!', 'Atendimento extra concluído, ' + NOME + '!');
+    }
+};
+
+// ===== VERIFICAR FALTAS =====
+function verificarFaltaDiaria() {
+    const hoje = new Date();
+    const hojeStr = hoje.toISOString().split('T')[0];
+    const diaSemana = hoje.getDay();
+
+    // Não verifica nos fins de semana
+    if (diaSemana === 0 || diaSemana === 6) {
+        return;
+    }
+
+    // Verifica se está dentro do período letivo
+    if (hoje < DATA_INICIO_SEMESTRE || hoje > DATA_FIM_SEMESTRE) {
+        return;
+    }
+
+    const entradaHoje = registrosPonto.find(r => r.data === hojeStr && r.tipo === 'entrada');
+    const faltaHoje = faltas.find(f => f.data === hojeStr);
+
+    if (!entradaHoje && !faltaHoje) {
+        const falta = {
+            id: Date.now(),
+            data: hojeStr,
+            hora: '07:30:00',
+            dataHora: new Date(hojeStr + 'T07:30:00').toLocaleString('pt-BR'),
+            tipo: 'falta',
+            matricula: MATRICULA,
+            nome: NOME,
+            curso: CURSO,
+            timestamp: new Date(hojeStr + 'T07:30:00').getTime(),
+            justificativa: 'Falta por não registrar entrada',
+            resolvido: false
+        };
+        faltas.push(falta);
+        salvarFaltas();
+
+        mostrarNotificacao('⚠️ FALTA REGISTRADA!', `${NOME}, você não registrou entrada hoje (${hojeStr}).`);
+        atualizarInterfaceFaltas();
+        atualizarInterfacePonto();
+
+        console.log(`⚠️ Falta registrada para ${NOME} em ${hojeStr}`);
+        return true;
+    }
+    return false;
+}
+
+function verificarFaltaAutomatica() {
+    const agora = new Date();
+    const hora = agora.getHours();
+    const minutos = agora.getMinutes();
+
+    if (hora === 7 && (minutos === 30 || minutos === 31)) {
+        verificarFaltaDiaria();
+    }
+}
+
+// ===== ATUALIZAR INTERFACE =====
+function atualizarInterfacePonto() {
+    const hoje = new Date().toISOString().split('T')[0];
+    const registrosHoje = registrosPonto.filter(r => r.data === hoje);
+
+    const statusEl = document.getElementById('pontoStatusBadge');
+    const mensagemEl = document.getElementById('pontoMensagem');
+
+    if (registrosHoje.length === 0) {
+        if (statusEl) { statusEl.textContent = '⏳ Nenhum registro hoje';
+            statusEl.style.background = 'rgba(255,255,255,0.03)';
+            statusEl.style.color = 'var(--color-text-muted)'; }
+        if (mensagemEl) mensagemEl.textContent = '⏳ Aguardando primeiro registro do dia...';
+    } else {
+        const entrada = registrosHoje.find(r => r.tipo === 'entrada');
+        const saida = registrosHoje.find(r => r.tipo === 'saida');
+        const extra = registrosHoje.find(r => r.tipo === 'extra');
+
+        let statusText = '';
+        let statusColor = '';
+        let statusBg = '';
+
+        if (entrada && saida) {
+            statusText = '✅ Dia finalizado';
+            statusColor = '#4caf50';
+            statusBg = 'rgba(76,175,80,0.12)';
+        } else if (entrada && extra) {
+            statusText = '✅ Com saída extra';
+            statusColor = '#ff8f00';
+            statusBg = 'rgba(255,143,0,0.12)';
+        } else if (entrada) {
+            statusText = '🟡 Em andamento';
+            statusColor = '#ffb300';
+            statusBg = 'rgba(255,179,0,0.12)';
+        } else {
+            statusText = `📌 ${registrosHoje.length} registro(s)`;
+            statusColor = 'var(--color-text-muted)';
+            statusBg = 'rgba(255,255,255,0.03)';
+        }
+
+        if (statusEl) {
+            statusEl.textContent = statusText;
+            statusEl.style.background = statusBg;
+            statusEl.style.color = statusColor;
+        }
+
+        if (mensagemEl) {
+            const ultimo = registrosHoje[registrosHoje.length - 1];
+            const tiposNomes = { 'entrada': 'Entrada', 'saida': 'Saída', 'extra': 'Saída Extra' };
+            mensagemEl.textContent = `📌 Último registro: ${tiposNomes[ultimo.tipo]} às ${ultimo.hora}`;
+        }
+    }
+
+    // Últimos registros
+    const container = document.getElementById('ultimosRegistros');
+    if (!container) return;
+
+    if (registrosHoje.length === 0) {
+        container.innerHTML = `
+            <div style="text-align: center; padding: 16px; color: var(--color-text-muted); font-size: 13px; border: 1px dashed var(--color-border); border-radius: 8px;">
+                Nenhum registro hoje.
+            </div>
+        `;
+        return;
+    }
+
+    const tiposNomes = { 'entrada': 'Entrada', 'saida': 'Saída', 'extra': 'Saída Extra' };
+    const tiposCores = { 'entrada': '#4caf50', 'saida': '#e53935', 'extra': '#ff8f00' };
+
+    const ultimos = [...registrosHoje].sort((a, b) => b.timestamp - a.timestamp).slice(0, 5);
+
+    container.innerHTML = ultimos.map(r => `
+        <div class="ponto-registro">
+            <span class="tipo ${r.tipo}" style="color: ${tiposCores[r.tipo]};">
+                ${r.tipo === 'entrada' ? '📥' : r.tipo === 'saida' ? '📤' : '⭐'} ${tiposNomes[r.tipo]}
+            </span>
+            <span style="font-weight: 500; color: var(--color-text);">${r.hora}</span>
+            <span style="color: var(--color-text-muted); font-size: 12px;">${r.data}</span>
+            <span class="status ativo" style="background: rgba(76,175,80,0.08); color: #4caf50; font-size: 10px;">✅</span>
+        </div>
+    `).join('');
+}
+
+// ===== ATUALIZAR INTERFACE DE FALTAS =====
+function atualizarInterfaceFaltas() {
+    const totalFaltas = faltas.length;
+
+    const faltasPeriodo = faltas.filter(f => {
+        const data = new Date(f.data + 'T00:00:00');
+        return data >= DATA_INICIO_SEMESTRE && data <= DATA_FIM_SEMESTRE;
+    });
+
+    // Atualiza badge na sidebar (se existir)
+    const badge = document.getElementById('faltasBadge');
+    if (badge) {
+        badge.textContent = totalFaltas;
+        badge.style.display = totalFaltas > 0 ? 'inline-block' : 'none';
+    }
+
+    // Atualiza elemento na tela inicial
+    const elFaltas = document.getElementById('totalFaltas');
+    if (elFaltas) {
+        elFaltas.textContent = totalFaltas;
+    }
+
+    const elFaltasPeriodo = document.getElementById('faltasPeriodo');
+    if (elFaltasPeriodo) {
+        elFaltasPeriodo.textContent = faltasPeriodo.length;
+    }
+
+    saveData('gda_faltas', faltas);
+}
+
+// ===== RENDERIZAR HISTÓRICO DE FALTAS =====
+function renderHistoricoFaltas() {
+    const container = document.getElementById('historicoFaltasContainer');
+    if (!container) return;
+
+    if (faltas.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-check-circle" style="color:var(--color-success);"></i>
+                Nenhuma falta registrada. Parabéns!
+            </div>
+        `;
+        return;
+    }
+
+    const sorted = [...faltas].sort((a, b) => b.timestamp - a.timestamp);
+
+    container.innerHTML = sorted.map(f => `
+        <div class="panico-registro" style="border-left: 3px solid var(--color-danger);">
+            <div class="header">
+                <span class="disciplina" style="color:var(--color-danger);">⚠️ FALTA</span>
+                <span class="data-hora">${f.data}</span>
+                <span class="status" style="background:${f.resolvido ? 'rgba(76,175,80,0.12)' : 'rgba(229,57,53,0.12)'};color:${f.resolvido ? 'var(--color-success)' : 'var(--color-danger)'};">
+                    ${f.resolvido ? '✅ Justificada' : '⏳ Pendente'}
+                </span>
+            </div>
+            <div class="motivo" style="border-left-color:var(--color-danger);">
+                <strong>Justificativa:</strong> ${f.justificativa || 'Não registrou entrada'}
+                <br>
+                <span style="font-size:11px;color:var(--color-text-muted);">Matrícula: ${f.matricula}</span>
+            </div>
+        </div>
+    `).join('');
+}
+
+// ===== JUSTIFICAR FALTA =====
+window.justificarFalta = function() {
+    const hojeStr = new Date().toISOString().split('T')[0];
+    const faltaHoje = faltas.find(f => f.data === hojeStr);
+
+    if (!faltaHoje) {
+        alert('✅ Você não tem falta hoje!');
+        return;
+    }
+
+    const justificativa = prompt('📝 Digite a justificativa para a falta de hoje:', 'Atestado médico / Motivo pessoal');
+    if (justificativa === null) return;
+    if (!justificativa.trim()) {
+        alert('❌ Justificativa não pode estar vazia.');
+        return;
+    }
+
+    faltaHoje.justificativa = justificativa.trim();
+    faltaHoje.resolvido = true;
+    salvarFaltas();
+    atualizarInterfaceFaltas();
+    renderHistoricoFaltas();
+    alert('✅ Falta justificada com sucesso!');
+};
+
+// ===== VER FALTAS =====
+window.verFaltas = function() {
+    const modal = document.createElement('div');
+    modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;';
+    modal.innerHTML = `
+        <div style="background:var(--color-secondary);border-radius:24px;padding:32px;max-width:700px;width:100%;max-height:90vh;overflow-y:auto;border:1px solid var(--color-border);">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+                <h2 style="color:var(--color-text);"><i class="fas fa-history" style="color:var(--color-danger);"></i> Histórico de Faltas</h2>
+                <button onclick="this.closest('div[style]').remove()" style="background:none;border:none;color:var(--color-text-muted);font-size:24px;cursor:pointer;">✕</button>
+            </div>
+            <div id="historicoFaltasContainer"></div>
+            <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--color-border);display:flex;gap:8px;flex-wrap:wrap;">
+                <span style="font-size:13px;color:var(--color-text-muted);">
+                    <strong>Total de faltas:</strong> <span id="totalFaltasDisplay">${faltas.length}</span>
+                </span>
+                <span style="font-size:13px;color:var(--color-text-muted);margin-left:16px;">
+                    <strong>No período:</strong> <span id="faltasPeriodoDisplay">${faltas.filter(f => {
+                        const d = new Date(f.data + 'T00:00:00');
+                        return d >= DATA_INICIO_SEMESTRE && d <= DATA_FIM_SEMESTRE;
+                    }).length}</span>
+                </span>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+    renderHistoricoFaltas();
+};
+
+// ===== MOSTRAR NOTIFICAÇÃO =====
+function mostrarNotificacao(titulo, corpo) {
+    const el = document.getElementById('notification');
+    if (!el) return;
+    document.getElementById('notifTitle').textContent = titulo;
+    document.getElementById('notifBody').textContent = corpo;
+    el.classList.add('show');
+    if (window.notifTimeout) clearTimeout(window.notifTimeout);
+    window.notifTimeout = setTimeout(() => { el.classList.remove('show'); }, 5000);
+}
+
+// ===== ADICIONAR BOTÃO DE JUSTIFICAR NA INTERFACE =====
+function adicionarBotoesPonto() {
+    const container = document.getElementById('ultimosRegistros');
+    if (!container) return;
+
+    // Verifica se os botões já existem
+    if (document.getElementById('btnJustificarFalta')) return;
+
+    const div = document.createElement('div');
+    div.style.cssText = 'margin-top:12px;padding-top:12px;border-top:1px solid var(--color-border);display:flex;gap:8px;flex-wrap:wrap;';
+    div.innerHTML = `
+        <button onclick="justificarFalta()" id="btnJustificarFalta" style="padding:6px 16px;border-radius:20px;border:1px solid var(--color-warning);background:rgba(255,143,0,0.08);color:var(--color-warning);cursor:pointer;font-size:12px;font-family:'Inter',sans-serif;">
+            📝 Justificar Falta
+        </button>
+        <button onclick="verFaltas()" style="padding:6px 16px;border-radius:20px;border:1px solid var(--color-border);background:rgba(255,255,255,0.02);color:var(--color-text-muted);cursor:pointer;font-size:12px;font-family:'Inter',sans-serif;">
+            📋 Ver Histórico de Faltas
+        </button>
+        <button onclick="verRegistrosPonto()" style="padding:6px 16px;border-radius:20px;border:1px solid var(--color-border);background:rgba(255,255,255,0.02);color:var(--color-text-muted);cursor:pointer;font-size:12px;font-family:'Inter',sans-serif;">
+            📋 Todos os Registros
+        </button>
+    `;
+    container.parentNode.appendChild(div);
+}
+
+// ===== VER TODOS OS REGISTROS DE PONTO =====
+window.verRegistrosPonto = function() {
+    if (registrosPonto.length === 0) {
+        alert('📋 Nenhum registro de ponto encontrado.');
+        return;
+    }
+
+    const modal = document.createElement('div');
+    modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;';
+    modal.innerHTML = `
+        <div style="background:var(--color-secondary);border-radius:24px;padding:32px;max-width:700px;width:100%;max-height:90vh;overflow-y:auto;border:1px solid var(--color-border);">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+                <h2 style="color:var(--color-text);"><i class="fas fa-clock" style="color:var(--color-accent);"></i> Todos os Registros</h2>
+                <button onclick="this.closest('div[style]').remove()" style="background:none;border:none;color:var(--color-text-muted);font-size:24px;cursor:pointer;">✕</button>
+            </div>
+            <div style="max-height:500px;overflow-y:auto;">
+                ${registrosPonto.sort((a,b) => b.timestamp - a.timestamp).map(r => `
+                    <div class="ponto-registro" style="border-bottom:1px solid var(--color-border);padding:8px 0;">
+                        <span style="font-weight:600;color:${r.tipo === 'entrada' ? '#4caf50' : r.tipo === 'saida' ? '#e53935' : '#ff8f00'};">${r.tipo === 'entrada' ? '📥 Entrada' : r.tipo === 'saida' ? '📤 Saída' : '⭐ Saída Extra'}</span>
+                        <span style="margin-left:12px;">${r.data}</span>
+                        <span style="margin-left:12px;color:var(--color-text-muted);">${r.hora}</span>
+                    </div>
+                `).join('')}
+            </div>
+            <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--color-border);">
+                <span style="font-size:13px;color:var(--color-text-muted);">
+                    <strong>Total de registros:</strong> ${registrosPonto.length}
+                </span>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+};
+
+// ===== INICIALIZAR SISTEMA DE PONTO =====
+function initPontoCompleto() {
+    atualizarRelogioPonto();
+    setInterval(atualizarRelogioPonto, 1000);
+    atualizarInterfacePonto();
+    atualizarInterfaceFaltas();
+    adicionarBotoesPonto();
+
+    // Verifica faltas a cada minuto
+    setInterval(verificarFaltaAutomatica, 60000);
+
+    // Verifica imediatamente se hoje já passou das 7:30
+    const agora = new Date();
+    const hora = agora.getHours();
+    const minutos = agora.getMinutes();
+    if (hora > 7 || (hora === 7 && minutos >= 30)) {
+        setTimeout(verificarFaltaDiaria, 5000);
+    }
+
+    console.log('🕐 Sistema de Ponto Eletrônico carregado!');
+    console.log(`📋 Matrícula: ${MATRICULA}`);
+    console.log(`👤 Usuário: ${NOME}`);
+    console.log(`📚 Curso: ${CURSO}`);
+    console.log(`⚠️ Total de faltas: ${faltas.length}`);
+    console.log(`📊 Total de registros: ${registrosPonto.length}`);
+}
+
+// ===== INICIALIZAR =====
+document.addEventListener('DOMContentLoaded', function() {
+    // Espera um pouco para garantir que o DOM da página inicial foi carregado
+    setTimeout(initPontoCompleto, 1500);
+});
+    
     </script>
 
 </body>
