@@ -8,7 +8,6 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/backendless/dist/backendless.min.js"></script>
 
     <link rel="stylesheet" href="styles/style.css" />
     <link rel="icon" href="favicon.ico" />
@@ -191,7 +190,12 @@
             color: var(--color-accent);
         }
         header .navbar a .material-icons-sharp { font-size: 22px; }
-        header .navbar a h3 { font-weight: 500; font-size: 14px; }
+        header .navbar a h3 { 
+            font-weight: 500; 
+            font-size: 14px;
+            margin: 0;
+            display: inline-block;
+        }
         header .navbar a .badge-link {
             margin-left: auto;
             font-size: 11px;
@@ -239,11 +243,11 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
         header .user-info .avatar {
-            width: 48px;
-            height: 48px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             overflow: hidden;
             flex-shrink: 0;
@@ -256,51 +260,38 @@
             display: block;
         }
         header .user-info .name {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 700;
             color: var(--color-text);
             text-align: center;
         }
         header .user-info .role {
-            font-size: 11px;
+            font-size: 10px;
             color: var(--color-text-muted);
             text-align: center;
-        }
-        header .user-info .clock-presenca {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--color-accent);
-            font-variant-numeric: tabular-nums;
-            text-align: center;
-            margin-top: 4px;
-            letter-spacing: 2px;
-        }
-        header .user-info .clock-presenca .sec {
-            font-size: 14px;
-            color: var(--color-text-muted);
-            font-weight: 400;
         }
         header .user-info .presenca-label {
-            font-size: 11px;
+            font-size: 9px;
             color: var(--color-text-muted);
             text-transform: uppercase;
-            letter-spacing: 2px;
-            opacity: 0.7;
+            letter-spacing: 1.5px;
+            opacity: 0.6;
+            margin-top: 2px;
         }
         .presenca-buttons {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             width: 100%;
             margin-top: 4px;
         }
         .presenca-buttons button {
             flex: 1;
-            padding: 8px 12px;
+            padding: 6px 10px;
             border-radius: 8px;
             border: 1px solid var(--color-border);
             background: rgba(255, 255, 255, 0.02);
             color: var(--color-text-muted);
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
             cursor: pointer;
             transition: var(--transition);
@@ -315,6 +306,34 @@
             background: rgba(229, 57, 53, 0.1);
             border-color: var(--color-danger);
             color: var(--color-danger);
+        }
+        #statusPresencaDisplay {
+            font-size: 10px;
+            color: var(--color-text-muted);
+            text-align: center;
+            margin-top: 2px;
+            width: 100%;
+        }
+        .status-presenca {
+            display: inline-block;
+            padding: 1px 8px;
+            border-radius: 10px;
+            font-size: 9px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .status-presenca.presente {
+            background: rgba(76, 175, 80, 0.15);
+            color: var(--color-success);
+        }
+        .status-presenca.falta {
+            background: rgba(229, 57, 53, 0.15);
+            color: var(--color-danger);
+        }
+        .status-presenca.aguardando {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--color-text-muted);
         }
 
         /* ===== CONTAINER ===== */
@@ -1243,6 +1262,79 @@
             padding-top: 8px;
         }
 
+        /* ===== PRESENÇA ===== */
+        .presenca-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 16px;
+        }
+        @media (max-width: 768px) { .presenca-grid { grid-template-columns: 1fr; } }
+        .presenca-card {
+            background: var(--color-card);
+            border-radius: var(--radius);
+            padding: 16px 18px;
+            border: 1px solid var(--color-border);
+            transition: var(--transition);
+            border-left: 4px solid var(--color-info);
+        }
+        .presenca-card:hover {
+            border-color: rgba(255, 179, 0, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        .presenca-card .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+        .presenca-card .data { font-size: 14px; font-weight: 600; color: var(--color-accent); }
+        .presenca-card .hora { font-size: 12px; color: var(--color-text-muted); }
+        .presenca-card .tipo {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 2px 14px;
+            border-radius: 20px;
+        }
+        .presenca-card .tipo.presente {
+            background: rgba(76, 175, 80, 0.12);
+            color: var(--color-success);
+        }
+        .presenca-card .tipo.falta {
+            background: rgba(229, 57, 53, 0.12);
+            color: var(--color-danger);
+        }
+        .presenca-card .justificativa {
+            font-size: 12px;
+            color: var(--color-text-muted);
+            margin-top: 6px;
+            padding: 6px 10px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 6px;
+            border-left: 2px solid var(--color-border);
+        }
+        .presenca-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .presenca-stat {
+            background: var(--color-card);
+            border-radius: var(--radius);
+            padding: 14px 18px;
+            border: 1px solid var(--color-border);
+            text-align: center;
+        }
+        .presenca-stat .number { font-size: 24px; font-weight: 700; }
+        .presenca-stat .number.presente { color: var(--color-success); }
+        .presenca-stat .number.falta { color: var(--color-danger); }
+        .presenca-stat .number.total { color: var(--color-accent); }
+        .presenca-stat .label { font-size: 12px; color: var(--color-text-muted); margin-top: 2px; }
+
         /* ===== MODAL ===== */
         .modal-overlay {
             display: none;
@@ -1394,6 +1486,20 @@
         .modal-presenca .info-row .label { color: var(--color-text-muted); }
         .modal-presenca .info-row .value { color: var(--color-text); font-weight: 600; }
         .modal-presenca .info-row .value.highlight { color: var(--color-accent); }
+        .modal-presenca .clock-registro {
+            text-align: center;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--color-accent);
+            font-variant-numeric: tabular-nums;
+            padding: 8px 0;
+            letter-spacing: 3px;
+        }
+        .modal-presenca .clock-registro .sec-reg {
+            font-size: 20px;
+            color: var(--color-text-muted);
+            font-weight: 400;
+        }
 
         .modal-presenca .justificativa-area {
             margin: 16px 0 20px;
@@ -1816,16 +1922,15 @@
         @media (max-width: 1024px) {
             header { width: 72px; padding: 16px 10px; }
             header .logo h2, header .navbar a h3, header .navbar .nav-label,
-            header .user-info .name, header .user-info .role,
+            header .user-info .name, header .user-info .role, header .user-info .presenca-label,
             header .navbar a .badge-link, .submenu-sistemas { display: none !important; }
             header .logo .logo-icon { width: 36px; height: 36px; font-size: 14px; }
             header .navbar a { justify-content: center; padding: 12px 8px; }
             header .navbar a .material-icons-sharp { display: block; font-size: 26px; }
             header .user-info { justify-content: center; }
             header .user-info .avatar { width: 32px; height: 32px; }
-            header .user-info .clock-presenca { font-size: 16px; }
-            header .user-info .presenca-label { font-size: 9px; }
-            .presenca-buttons button { font-size: 10px; padding: 4px 8px; }
+            .presenca-buttons button { font-size: 9px; padding: 4px 6px; }
+            #statusPresencaDisplay { font-size: 8px; }
             .container { margin-left: 72px; }
             .greeting-title { font-size: 22px; }
             .progress-container { flex-direction: column; align-items: center; }
@@ -1856,6 +1961,8 @@
             .relato-acoes { flex-direction: column; }
             .atendimentos-grid { grid-template-columns: 1fr; }
             .modal-presenca { padding: 24px; }
+            .presenca-grid { grid-template-columns: 1fr; }
+            .presenca-stats { grid-template-columns: 1fr 1fr; }
         }
 
         @media (max-width: 600px) {
@@ -1897,6 +2004,7 @@
             .panico-recursos button { font-size: 12px; padding: 6px 16px; }
             .modal-presenca .modal-actions { flex-direction: column; }
             .modal-presenca .modal-actions .btn-cancelar { flex: 1; }
+            .presenca-stats { grid-template-columns: 1fr; }
         }
 
         @media (max-width: 480px) {
@@ -1955,54 +2063,6 @@
         select::-ms-expand {
             display: none;
         }
-
-        /* ===== TOOLTIP ===== */
-        .tooltip {
-            position: relative;
-            display: inline-block;
-        }
-        .tooltip .tooltip-text {
-            visibility: hidden;
-            width: 200px;
-            background: var(--color-card);
-            color: var(--color-text);
-            text-align: center;
-            padding: 8px 12px;
-            border-radius: 8px;
-            border: 1px solid var(--color-border);
-            position: absolute;
-            z-index: 1;
-            bottom: 125%;
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 0;
-            transition: opacity 0.3s;
-            font-size: 12px;
-            font-weight: 400;
-        }
-        .tooltip:hover .tooltip-text {
-            visibility: visible;
-            opacity: 1;
-        }
-
-        /* Status indicators */
-        .status-presenca {
-            display: inline-block;
-            padding: 2px 10px;
-            border-radius: 12px;
-            font-size: 10px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .status-presenca.presente {
-            background: rgba(76, 175, 80, 0.15);
-            color: var(--color-success);
-        }
-        .status-presenca.falta {
-            background: rgba(229, 57, 53, 0.15);
-            color: var(--color-danger);
-        }
     </style>
 </head>
 <body>
@@ -2019,7 +2079,7 @@
             <button class="btn-entrar" onclick="entrarNoSistema()">
                 <i class="fas fa-sign-in-alt"></i> Entrar no Sistema
             </button>
-            <div class="versao">v3.2 · Com Presença e Correções</div>
+            <div class="versao">v3.2 · Com Presença e Histórico</div>
         </div>
     </div>
 
@@ -2066,6 +2126,11 @@
                 <h3>Atendimentos</h3>
                 <span class="badge-link">Novo</span>
             </a>
+            <a href="#" data-page="presenca">
+                <span class="material-icons-sharp">event_note</span>
+                <h3>Presença</h3>
+                <span class="badge-link" id="presencaBadge">0</span>
+            </a>
 
             <div class="nav-label" style="margin-top:8px;">Panico</div>
 
@@ -2111,14 +2176,8 @@
                 <img src="https://images.iimg.live/images/prime-memory-4768.webp" alt="Igor Veras Morais"
                 onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'150\' height=\'150\'%3E%3Crect width=\'150\' height=\'150\' fill=\'%231a232e\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' text-anchor=\'middle\' dy=\'.3em\' font-size=\'60\' font-family=\'Arial\' fill=\'%23ffb300\'%3EIV%3C/text%3E%3C/svg%3E'" />
             </div>
-            <div>
-                <div class="name">Igor Veras Morais</div>
-                <div class="role">2º Sem · Controle Ambiental</div>
-            </div>
-            <div class="clock-presenca" id="presencaClock">
-                <span id="presencaTime">00:00</span>
-                <span class="sec" id="presencaSeconds">00</span>
-            </div>
+            <div class="name">Igor Veras Morais</div>
+            <div class="role">2º Sem · Controle Ambiental</div>
             <div class="presenca-label">📋 Registro de Presença</div>
             <div class="presenca-buttons">
                 <button class="btn-presenca" onclick="abrirModalPresenca('presente')">
@@ -2128,8 +2187,8 @@
                     <i class="fas fa-times-circle"></i> Falta
                 </button>
             </div>
-            <div id="statusPresencaDisplay" style="margin-top:4px;font-size:11px;color:var(--color-text-muted);text-align:center;">
-                <span id="ultimaPresenca">Nenhum registro hoje</span>
+            <div id="statusPresencaDisplay">
+                <span class="status-presenca aguardando">⏳ Aguardando registro</span>
             </div>
         </div>
     </header>
@@ -2260,13 +2319,14 @@
             <h2 id="presencaModalTitle">Confirmar Presença</h2>
             <p class="subtitle" id="presencaModalSubtitle">Igor Veras Morais</p>
 
+            <div class="clock-registro" id="presencaModalClock">
+                <span id="presencaModalTime">00:00</span>
+                <span class="sec-reg" id="presencaModalSeconds">00</span>
+            </div>
+
             <div class="info-row">
                 <span class="label">📅 Data</span>
                 <span class="value highlight" id="presencaModalData">--</span>
-            </div>
-            <div class="info-row">
-                <span class="label">⏰ Hora</span>
-                <span class="value" id="presencaModalHora">--</span>
             </div>
             <div class="info-row">
                 <span class="label">👤 Aluno</span>
@@ -2376,7 +2436,7 @@
         // ██    ██ ██      ██   ██ ██      ██
         //  ██████  ███████ ██   ██ ███████ ███████
         // ============================================================
-        // GDA v3.2 - MÓDULO NOTAS + PRESENÇA + DETECÇÃO SEMESTRE
+        // GDA v3.2 - MÓDULO PRESENÇA + HISTÓRICO + DETECÇÃO SEMESTRE
         // ============================================================
 
         (function() {
@@ -2625,7 +2685,6 @@
 
                 const hoje = new Date();
                 const dataStr = hoje.toISOString().split('T')[0];
-                const horaStr = hoje.toLocaleTimeString('pt-BR');
 
                 // Verifica se já registrou hoje
                 const registroHoje = presencas.find(p => p.data === dataStr);
@@ -2663,16 +2722,36 @@
                     month: 'long',
                     year: 'numeric'
                 });
-                document.getElementById('presencaModalHora').textContent = horaStr;
                 document.getElementById('justificativaFalta').value = '';
 
                 modal.classList.add('open');
                 document.body.style.overflow = 'hidden';
+
+                // Inicia o relógio no modal
+                atualizarRelogioModal();
+                if (window.relogioModalInterval) clearInterval(window.relogioModalInterval);
+                window.relogioModalInterval = setInterval(atualizarRelogioModal, 1000);
             };
+
+            function atualizarRelogioModal() {
+                const agora = new Date();
+                const h = String(agora.getHours()).padStart(2, '0');
+                const m = String(agora.getMinutes()).padStart(2, '0');
+                const s = String(agora.getSeconds()).padStart(2, '0');
+
+                const timeEl = document.getElementById('presencaModalTime');
+                const secEl = document.getElementById('presencaModalSeconds');
+                if (timeEl) timeEl.textContent = `${h}:${m}`;
+                if (secEl) secEl.textContent = s;
+            }
 
             window.fecharModalPresenca = function() {
                 document.getElementById('modalPresencaOverlay').classList.remove('open');
                 document.body.style.overflow = '';
+                if (window.relogioModalInterval) {
+                    clearInterval(window.relogioModalInterval);
+                    window.relogioModalInterval = null;
+                }
             };
 
             window.confirmarPresenca = function() {
@@ -2682,7 +2761,6 @@
                 const dataStr = hoje.toISOString().split('T')[0];
                 const horaStr = hoje.toLocaleTimeString('pt-BR');
 
-                // Verifica novamente se já registrou hoje
                 const registroHoje = presencas.find(p => p.data === dataStr);
                 if (registroHoje) {
                     alert(`⚠️ Você já registrou ${registroHoje.tipo === 'presente' ? 'PRESENÇA' : 'FALTA'} hoje às ${registroHoje.hora}.`);
@@ -2720,13 +2798,15 @@
 
                 alert(mensagem);
                 atualizarStatusPresenca();
+                atualizarBadgePresenca();
+                renderPresenca();
             };
 
             function atualizarStatusPresenca() {
                 const hoje = new Date().toISOString().split('T')[0];
                 const registroHoje = presencas.find(p => p.data === hoje);
 
-                const display = document.getElementById('ultimaPresenca');
+                const display = document.getElementById('statusPresencaDisplay');
                 if (registroHoje) {
                     const emoji = registroHoje.tipo === 'presente' ? '✅' : '❌';
                     const texto = registroHoje.tipo === 'presente' ? 'Presente' : 'Falta';
@@ -2734,11 +2814,90 @@
                         <span class="status-presenca ${registroHoje.tipo === 'presente' ? 'presente' : 'falta'}">
                             ${emoji} ${texto} às ${registroHoje.hora}
                         </span>
-                        ${registroHoje.justificativa ? `<br><span style="font-size:10px;color:var(--color-text-muted);opacity:0.6;">📝 ${registroHoje.justificativa}</span>` : ''}
+                        ${registroHoje.justificativa ? `<br><span style="font-size:9px;color:var(--color-text-muted);opacity:0.6;">📝 ${registroHoje.justificativa}</span>` : ''}
                     `;
                 } else {
-                    display.innerHTML = `<span style="color:var(--color-text-muted);opacity:0.6;">Nenhum registro hoje</span>`;
+                    display.innerHTML = `<span class="status-presenca aguardando">⏳ Aguardando registro</span>`;
                 }
+            }
+
+            function atualizarBadgePresenca() {
+                const badge = document.getElementById('presencaBadge');
+                if (badge) {
+                    badge.textContent = presencas.length;
+                    badge.style.display = presencas.length > 0 ? 'inline-block' : 'none';
+                }
+            }
+
+            // ===== RENDER PRESENÇA =====
+            function renderPresenca() {
+                const container = document.getElementById('presencaContainer');
+                if (!container) return;
+
+                // Stats
+                const total = presencas.length;
+                const presentes = presencas.filter(p => p.tipo === 'presente').length;
+                const faltas = presencas.filter(p => p.tipo === 'falta').length;
+
+                const statsContainer = document.getElementById('presencaStats');
+                if (statsContainer) {
+                    statsContainer.innerHTML = `
+                        <div class="presenca-stat">
+                            <div class="number total">${total}</div>
+                            <div class="label">Total de Registros</div>
+                        </div>
+                        <div class="presenca-stat">
+                            <div class="number presente">${presentes}</div>
+                            <div class="label">✅ Presentes</div>
+                        </div>
+                        <div class="presenca-stat">
+                            <div class="number falta">${faltas}</div>
+                            <div class="label">❌ Faltas</div>
+                        </div>
+                    `;
+                }
+
+                if (presencas.length === 0) {
+                    container.innerHTML = `
+                        <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--color-text-muted);background:var(--color-card);border-radius:var(--radius);border:1px solid var(--color-border);">
+                            <i class="fas fa-calendar-check" style="font-size:32px;display:block;margin-bottom:12px;color:rgba(255,179,0,0.1);"></i>
+                            Nenhum registro de presença encontrado.
+                        </div>
+                    `;
+                    return;
+                }
+
+                const sorted = [...presencas].sort((a, b) => new Date(b.data) - new Date(a.data));
+
+                container.innerHTML = sorted.map(p => {
+                    const tipoClass = p.tipo === 'presente' ? 'presente' : 'falta';
+                    const tipoEmoji = p.tipo === 'presente' ? '✅' : '❌';
+                    const tipoText = p.tipo === 'presente' ? 'Presente' : 'Falta';
+                    const dataFormatada = new Date(p.data + 'T00:00:00').toLocaleDateString('pt-BR', {
+                        weekday: 'long',
+                        day: '2-digit',
+                        month: 'long',
+                        year: 'numeric'
+                    });
+
+                    return `
+                        <div class="presenca-card">
+                            <div class="header">
+                                <span class="data">📅 ${dataFormatada}</span>
+                                <span class="hora">⏰ ${p.hora}</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px;">
+                                <span class="tipo ${tipoClass}">${tipoEmoji} ${tipoText}</span>
+                                <span style="font-size:11px;color:var(--color-text-muted);">👤 ${p.nome}</span>
+                            </div>
+                            ${p.justificativa ? `
+                                <div class="justificativa">
+                                    📝 ${p.justificativa}
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                }).join('');
             }
 
             // ===== MODO PÂNICO =====
@@ -3062,12 +3221,9 @@
                 let diasRestantesFinal = 0;
                 let semestreAtual = '2026.1';
 
-                // DETECÇÃO AUTOMÁTICA DO SEMESTRE
-                // Verifica a cada carregamento se mudou de semestre
                 const agora = new Date();
 
                 if (agora < dataInicioSemestre2) {
-                    // Está no 1º semestre
                     semestreAtual = '2026.1';
                     const progresso1 = calcularProgressoPeriodo(dataInicioSemestre1, dataFimSemestre1, agora);
                     percentualFinal = progresso1.percentual;
@@ -3089,7 +3245,6 @@
                     semanasRestantesFinal = Math.max(0, totalSemanas1 - semanasPassadasFinal);
                     diasRestantesFinal = Math.max(0, totalDias1 - diasPassados1);
                 } else if (agora > dataFimSemestre2) {
-                    // Semestre concluído
                     semestreAtual = '2026.2 (Concluído)';
                     percentualFinal = 100;
                     mensagemFinal = '🎉 Semestre 2026.2 concluído! Parabéns!';
@@ -3097,7 +3252,6 @@
                     semanasRestantesFinal = 0;
                     diasRestantesFinal = 0;
                 } else {
-                    // Está no 2º semestre
                     semestreAtual = '2026.2';
                     const totalDias2 = Math.ceil((dataFimSemestre2 - dataInicioSemestre2) / (1000 * 60 * 60 * 24));
                     const diasPassados2 = Math.ceil((agora - dataInicioSemestre2) / (1000 * 60 * 60 * 24));
@@ -3134,6 +3288,7 @@
                 }
 
                 atualizarBadgePanico();
+                atualizarBadgePresenca();
             }
 
             function calcularProgressoPeriodo(inicio, fim, hoje) {
@@ -3155,9 +3310,7 @@
                 const dataInicioSemestre2 = new Date('2026-08-03');
                 const dataFimSemestre1 = new Date('2026-07-23');
 
-                // Verifica se é o dia do início do 2º semestre
                 if (hoje.toDateString() === dataInicioSemestre2.toDateString()) {
-                    // Mostra notificação
                     const notificacao = document.createElement('div');
                     notificacao.style.cssText = `
                         position: fixed;
@@ -3186,8 +3339,6 @@
                         </div>
                     `;
                     document.body.appendChild(notificacao);
-
-                    // Remove após 10 segundos
                     setTimeout(() => {
                         if (notificacao.parentElement) {
                             notificacao.style.opacity = '0';
@@ -3196,7 +3347,6 @@
                         }
                     }, 10000);
 
-                    // Adiciona o estilo da animação
                     const style = document.createElement('style');
                     style.textContent = `
                         @keyframes slideInRight {
@@ -3207,38 +3357,35 @@
                     document.head.appendChild(style);
                 }
 
-                // Verifica se passou do 1º semestre (atualização automática)
                 if (hoje > dataFimSemestre1 && hoje < dataInicioSemestre2) {
-                    // Entre semestres
-                    const msg = document.createElement('div');
-                    msg.style.cssText = `
-                        position: fixed;
-                        top: 20px;
-                        right: 20px;
-                        background: var(--color-card);
-                        border: 1px solid var(--color-border);
-                        color: var(--color-text);
-                        padding: 14px 20px;
-                        border-radius: 12px;
-                        font-size: 14px;
-                        z-index: 999;
-                        box-shadow: var(--shadow);
-                        animation: slideInRight 0.5s ease;
-                        font-family: 'Inter', sans-serif;
-                    `;
-                    msg.innerHTML = `
-                        <div style="display:flex;align-items:center;gap:10px;">
-                            <span>⏳</span>
-                            <div>
-                                <div style="font-weight:600;">Férias entre semestres</div>
-                                <div style="font-size:12px;color:var(--color-text-muted);">2026.2 começa em 3 de agosto</div>
-                            </div>
-                            <button onclick="this.parentElement.parentElement.remove()" style="background:none;border:none;color:var(--color-text-muted);cursor:pointer;">✕</button>
-                        </div>
-                    `;
-                    // Só mostra se não tiver notificação já
                     if (!document.querySelector('.entre-semestres-msg')) {
+                        const msg = document.createElement('div');
                         msg.className = 'entre-semestres-msg';
+                        msg.style.cssText = `
+                            position: fixed;
+                            top: 20px;
+                            right: 20px;
+                            background: var(--color-card);
+                            border: 1px solid var(--color-border);
+                            color: var(--color-text);
+                            padding: 14px 20px;
+                            border-radius: 12px;
+                            font-size: 14px;
+                            z-index: 999;
+                            box-shadow: var(--shadow);
+                            animation: slideInRight 0.5s ease;
+                            font-family: 'Inter', sans-serif;
+                        `;
+                        msg.innerHTML = `
+                            <div style="display:flex;align-items:center;gap:10px;">
+                                <span>⏳</span>
+                                <div>
+                                    <div style="font-weight:600;">Férias entre semestres</div>
+                                    <div style="font-size:12px;color:var(--color-text-muted);">2026.2 começa em 3 de agosto</div>
+                                </div>
+                                <button onclick="this.parentElement.parentElement.remove()" style="background:none;border:none;color:var(--color-text-muted);cursor:pointer;">✕</button>
+                            </div>
+                        `;
                         document.body.appendChild(msg);
                         setTimeout(() => {
                             if (msg.parentElement) msg.remove();
@@ -3300,11 +3447,10 @@
                 if (timeEl) timeEl.textContent = `${h}:${m}`;
                 if (secEl) secEl.textContent = s;
 
-                // Relógio da presença
-                const pTime = document.getElementById('presencaTime');
-                const pSec = document.getElementById('presencaSeconds');
-                if (pTime) pTime.textContent = `${h}:${m}`;
-                if (pSec) pSec.textContent = s;
+                // Atualiza o relógio do modal se estiver aberto
+                if (document.getElementById('modalPresencaOverlay').classList.contains('open')) {
+                    atualizarRelogioModal();
+                }
             }
 
             // ===== CITAÇÃO DO DIA =====
@@ -4049,13 +4195,16 @@
                 if (pageId === 'atendimentos') {
                     renderAtendimentos();
                 }
+                if (pageId === 'presenca') {
+                    renderPresenca();
+                }
             }
 
             // ===== CARREGAR PÁGINAS =====
             async function loadPages() {
                 const container = document.getElementById('pageContainer');
                 const pages = ['inicial', 'dashboard', 'checklist', 'turmas', 'atividades', 'notas', 'relatorios',
-                    'historicopanico', 'atendimentos'
+                    'historicopanico', 'atendimentos', 'presenca'
                 ];
 
                 for (const page of pages) {
@@ -4072,7 +4221,23 @@
                         if (page === 'inicial') pageDiv.classList.add('active');
 
                         let content = '';
-                        if (page === 'atendimentos') {
+                        if (page === 'presenca') {
+                            content = `
+                                <div class="section-title">
+                                    <i class="fas fa-calendar-check"></i> Registro de Presença
+                                    <span class="badge" id="presencaTotalBadge">${presencas.length} registros</span>
+                                    <button onclick="abrirModalPresenca('presente')" style="margin-left:auto;padding:6px 20px;border-radius:30px;border:1px solid var(--color-success);background:rgba(76,175,80,0.1);color:var(--color-success);cursor:pointer;font-family:'Inter',sans-serif;font-size:13px;">
+                                        <i class="fas fa-check"></i> Registrar Presença
+                                    </button>
+                                    <button onclick="abrirModalPresenca('falta')" style="padding:6px 20px;border-radius:30px;border:1px solid var(--color-danger);background:rgba(229,57,53,0.1);color:var(--color-danger);cursor:pointer;font-family:'Inter',sans-serif;font-size:13px;">
+                                        <i class="fas fa-times"></i> Registrar Falta
+                                    </button>
+                                </div>
+
+                                <div id="presencaStats" class="presenca-stats"></div>
+                                <div class="presenca-grid" id="presencaContainer"></div>
+                            `;
+                        } else if (page === 'atendimentos') {
                             content = `
                                 <div class="section-title">
                                     <i class="fas fa-handshake"></i> Participações em Atendimento Intraescolar
@@ -4307,6 +4472,7 @@
                 renderDashboard();
                 renderHistoricoPanico();
                 renderAtendimentos();
+                renderPresenca();
 
                 document.querySelectorAll('.navbar a[data-page]').forEach(link => {
                     link.addEventListener('click', function(e) {
@@ -4326,14 +4492,14 @@
                     });
                 });
 
-                // Verifica mudança de semestre ao carregar
                 verificarMudancaSemestre();
 
-                console.log('✅ GDA v3.2 - Módulo Presença + Detecção Semestre!');
+                console.log('✅ GDA v3.2 - Módulo Presença + Histórico!');
                 console.log('📊 MA = (1ºBI + 2ºBI + 3ºBI + 4ºBI) / 4');
                 console.log('📝 Nota_Rec = (7.0 × 10 - MA × 6) / 4');
                 console.log('✅ Detecção automática do início do 2º semestre (03/08/2026)');
                 console.log('✅ Módulo de Presença com confirmação e justificativa');
+                console.log('✅ Histórico completo de presenças e faltas');
             }
 
             // ===== CLICK FORA DO MODAL =====
@@ -4367,18 +4533,17 @@
                 updateClockDisplay();
                 setInterval(updateClockDisplay, 1000);
                 atualizarBadgePanico();
+                atualizarBadgePresenca();
 
-                // Verifica mudança de semestre a cada minuto
                 setInterval(verificarMudancaSemestre, 60000);
 
                 console.log('%c▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓', 'font-size:8px;color:#4ecdc4;');
-                console.log('%c   GDA v3.2 - MÓDULO PRESENÇA + DETECÇÃO   ', 'font-size:16px;color:#ffd93d;font-weight:bold;');
+                console.log('%c   GDA v3.2 - MÓDULO PRESENÇA + HISTÓRICO   ', 'font-size:16px;color:#ffd93d;font-weight:bold;');
                 console.log('%c▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓', 'font-size:8px;color:#4ecdc4;');
-                console.log('%c✅ Detecção automática do 2º semestre', 'font-size:12px;color:#4caf50;');
-                console.log('%c✅ Módulo de Presença com confirmação', 'font-size:12px;color:#4caf50;');
-                console.log('%c✅ Justificativa para faltas', 'font-size:12px;color:#4caf50;');
-                console.log('%c✅ Relógio com segundos na sidebar', 'font-size:12px;color:#4caf50;');
-                console.log('%c✅ Nome completo: Igor Veras Morais', 'font-size:12px;color:#4caf50;');
+                console.log('%c✅ Módulo Presença integrado ao menu lateral', 'font-size:12px;color:#4caf50;');
+                console.log('%c✅ Histórico completo de presenças e faltas', 'font-size:12px;color:#4caf50;');
+                console.log('%c✅ Relógio apenas no modal de registro', 'font-size:12px;color:#4caf50;');
+                console.log('%c✅ CSS corrigido para nomes dos módulos', 'font-size:12px;color:#4caf50;');
             });
 
         })();
