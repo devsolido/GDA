@@ -130,16 +130,13 @@ MIT © 2026 GDA Team
 
 ## 👩‍💻 Desenvolvido por
 
-**Andressa Silva Xavier**
+**Igor Veras Morais**
 
-[![LinkedIn](https://img.shields.io/badge/-LinkedIn-0077B5?style=flat&logo=linkedin)](https://www.linkedin.com/in/andressa-xavier-2b393a271/)
-[![GitHub](https://img.shields.io/badge/-GitHub-100000?style=flat&logo=github)](https://github.com/andressaxavier)
+[![LinkedIn](https://img.shields.io/badge/-LinkedIn-0077B5?style=flat&logo=linkedin)](https://www.linkedin.com/in/igorverasmorais-bbpso/))
+
 
 ---
 
-## 🙏 Agradecimentos
-
-- Font Awesome · Google Fonts · Backendless
 
 ---
 
