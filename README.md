@@ -1,4 +1,3 @@
-```markdown
 # 📊 GDA - Gestão Digital Agregada
 
 ![Version](https://img.shields.io/badge/version-3.1.0-blue)
