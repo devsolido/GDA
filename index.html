@@ -14,9 +14,7 @@
     <link rel="icon" href="favicon.ico" />
 
     <style>
-        /* ============================================================
-               CSS COMPLETO (mesmo estilo anterior, sem alterações significativas)
-               ============================================================ */
+        /* ===== VARIÁVEIS E RESET ===== */
         :root {
             --color-primary: #0b0f15;
             --color-secondary: #121820;
@@ -35,14 +33,8 @@
             --transition: 0.3s ease;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        html {
-            scroll-behavior: smooth;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
 
         body {
             font-family: 'Inter', sans-serif;
@@ -54,24 +46,14 @@
             overflow-x: hidden;
         }
 
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(255, 179, 0, 0.2);
-            border-radius: 10px;
-        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 179, 0, 0.2); border-radius: 10px; }
 
         /* ===== SPLASH ===== */
         .splash-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: 0; left: 0; right: 0; bottom: 0;
             background: var(--color-primary);
             z-index: 9999;
             display: flex;
@@ -95,37 +77,20 @@
             animation: fadeInUp 0.6s ease;
         }
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         .splash-content .logo-icon {
-            width: 72px;
-            height: 72px;
+            width: 72px; height: 72px;
             background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
             border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            font-weight: 800;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 32px; font-weight: 800;
             color: var(--color-primary);
             margin: 0 auto 16px;
         }
-        .splash-content h1 {
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 4px;
-            color: var(--color-text);
-        }
-        .splash-content h1 span {
-            color: var(--color-accent);
-        }
+        .splash-content h1 { font-size: 28px; font-weight: 700; margin-bottom: 4px; color: var(--color-text); }
+        .splash-content h1 span { color: var(--color-accent); }
         .splash-content .splash-message {
             font-size: 16px;
             color: var(--color-text-muted);
@@ -159,8 +124,7 @@
         /* ===== SIDEBAR ===== */
         header {
             position: fixed;
-            left: 0;
-            top: 0;
+            left: 0; top: 0;
             height: 100vh;
             width: 260px;
             background: var(--color-secondary);
@@ -172,7 +136,6 @@
             transition: var(--transition);
             overflow-y: auto;
         }
-
         header .logo {
             display: flex;
             align-items: center;
@@ -181,28 +144,16 @@
             border-bottom: 1px solid var(--color-border);
             margin-bottom: 16px;
         }
-
         header .logo .logo-icon {
-            width: 44px;
-            height: 44px;
+            width: 44px; height: 44px;
             background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
             border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 18px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; font-size: 18px;
             color: var(--color-primary);
         }
-
-        header .logo h2 {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--color-text);
-        }
-        header .logo h2 span {
-            color: var(--color-accent);
-        }
+        header .logo h2 { font-size: 20px; font-weight: 700; color: var(--color-text); }
+        header .logo h2 span { color: var(--color-accent); }
 
         header .navbar {
             display: flex;
@@ -210,7 +161,6 @@
             gap: 2px;
             flex: 1;
         }
-
         header .navbar .nav-label {
             font-size: 10px;
             text-transform: uppercase;
@@ -220,7 +170,6 @@
             opacity: 0.5;
             font-weight: 600;
         }
-
         header .navbar a {
             display: flex;
             align-items: center;
@@ -233,7 +182,6 @@
             font-size: 14px;
             cursor: pointer;
         }
-
         header .navbar a:hover {
             background: rgba(255, 255, 255, 0.03);
             color: var(--color-text);
@@ -242,13 +190,8 @@
             background: rgba(255, 179, 0, 0.08);
             color: var(--color-accent);
         }
-        header .navbar a .material-icons-sharp {
-            font-size: 22px;
-        }
-        header .navbar a h3 {
-            font-weight: 500;
-            font-size: 14px;
-        }
+        header .navbar a .material-icons-sharp { font-size: 22px; }
+        header .navbar a h3 { font-weight: 500; font-size: 14px; }
         header .navbar a .badge-link {
             margin-left: auto;
             font-size: 11px;
@@ -266,10 +209,7 @@
             padding-left: 16px;
             border-left: 1px solid var(--color-border);
         }
-        .submenu-sistemas.open {
-            display: flex;
-        }
-
+        .submenu-sistemas.open { display: flex; }
         .submenu-sistemas a {
             display: flex;
             align-items: center;
@@ -285,11 +225,7 @@
             background: rgba(255, 255, 255, 0.03);
             color: var(--color-text);
         }
-        .submenu-sistemas a i {
-            width: 18px;
-            color: var(--color-accent);
-            font-size: 14px;
-        }
+        .submenu-sistemas a i { width: 18px; color: var(--color-accent); font-size: 14px; }
         .submenu-sistemas a .status-dot {
             margin-left: auto;
             font-size: 8px;
@@ -304,31 +240,20 @@
             align-items: center;
             gap: 12px;
         }
-
         header .user-info .avatar {
-            width: 38px;
-            height: 38px;
+            width: 38px; height: 38px;
             border-radius: 50%;
             overflow: hidden;
             flex-shrink: 0;
             border: 2px solid var(--color-accent);
         }
-
         header .user-info .avatar img {
-            width: 100%;
-            height: 100%;
+            width: 100%; height: 100%;
             object-fit: cover;
             display: block;
         }
-
-        header .user-info .name {
-            font-size: 13px;
-            font-weight: 600;
-        }
-        header .user-info .role {
-            font-size: 11px;
-            color: var(--color-text-muted);
-        }
+        header .user-info .name { font-size: 13px; font-weight: 600; }
+        header .user-info .role { font-size: 11px; color: var(--color-text-muted); }
 
         /* ===== CONTAINER ===== */
         .container {
@@ -345,21 +270,13 @@
             display: none;
             animation: fadeIn 0.3s ease;
         }
-        .page.active {
-            display: block;
-        }
+        .page.active { display: block; }
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* ===== TELA INICIAL (SEM AÇÕES RÁPIDAS) ===== */
+        /* ===== TELA INICIAL ===== */
         .welcome-hero {
             background: linear-gradient(135deg, var(--color-card), var(--color-secondary));
             border-radius: var(--radius);
@@ -393,41 +310,14 @@
             align-items: center;
             gap: 12px;
         }
-        .greeting-icon {
-            font-size: 32px;
-        }
-        .greeting-title {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--color-text);
-        }
-        .greeting-subtitle {
-            font-size: 14px;
-            color: var(--color-text-muted);
-            margin-top: 4px;
-        }
-        .date-info {
-            text-align: right;
-        }
-        .date-day {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--color-accent);
-            display: block;
-        }
-        .date-full {
-            font-size: 14px;
-            color: var(--color-text-muted);
-        }
-        .aulas-hoje {
-            font-size: 13px;
-            color: var(--color-text-muted);
-            margin-top: 4px;
-            display: block;
-        }
-        .aulas-hoje strong {
-            color: var(--color-text);
-        }
+        .greeting-icon { font-size: 32px; }
+        .greeting-title { font-size: 28px; font-weight: 700; color: var(--color-text); }
+        .greeting-subtitle { font-size: 14px; color: var(--color-text-muted); margin-top: 4px; }
+        .date-info { text-align: right; }
+        .date-day { font-size: 18px; font-weight: 600; color: var(--color-accent); display: block; }
+        .date-full { font-size: 14px; color: var(--color-text-muted); }
+        .aulas-hoje { font-size: 13px; color: var(--color-text-muted); margin-top: 4px; display: block; }
+        .aulas-hoje strong { color: var(--color-text); }
 
         .clock-hero {
             display: flex;
@@ -463,15 +353,8 @@
             position: relative;
             transition: var(--transition);
         }
-        .quote-card:hover {
-            border-color: rgba(255, 179, 0, 0.1);
-        }
-        .quote-icon {
-            font-size: 20px;
-            color: var(--color-accent);
-            opacity: 0.5;
-            margin-right: 12px;
-        }
+        .quote-card:hover { border-color: rgba(255, 179, 0, 0.1); }
+        .quote-icon { font-size: 20px; color: var(--color-accent); opacity: 0.5; margin-right: 12px; }
         .quote-card blockquote {
             font-size: 16px;
             font-style: italic;
@@ -480,12 +363,7 @@
             line-height: 1.6;
             padding-right: 100px;
         }
-        .quote-author {
-            font-size: 13px;
-            color: var(--color-text-muted);
-            display: block;
-            margin-top: 4px;
-        }
+        .quote-author { font-size: 13px; color: var(--color-text-muted); display: block; margin-top: 4px; }
         .btn-new-quote {
             position: absolute;
             top: 16px;
@@ -506,16 +384,9 @@
             border-color: var(--color-accent);
         }
 
-        /* Achievements (mantidos) */
-        .achievements {
-            margin-bottom: 24px;
-        }
-        .section-label {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--color-text);
-            margin-bottom: 12px;
-        }
+        /* Achievements */
+        .achievements { margin-bottom: 24px; }
+        .section-label { font-size: 16px; font-weight: 600; color: var(--color-text); margin-bottom: 12px; }
         .achievement-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -532,25 +403,11 @@
             gap: 14px;
             transition: var(--transition);
         }
-        .achievement-card:hover {
-            border-color: rgba(255, 179, 0, 0.1);
-        }
-        .achievement-icon {
-            font-size: 28px;
-        }
-        .achievement-info {
-            flex: 1;
-        }
-        .achievement-value {
-            font-size: 22px;
-            font-weight: 700;
-            color: var(--color-accent);
-            display: block;
-        }
-        .achievement-label {
-            font-size: 12px;
-            color: var(--color-text-muted);
-        }
+        .achievement-card:hover { border-color: rgba(255, 179, 0, 0.1); }
+        .achievement-icon { font-size: 28px; }
+        .achievement-info { flex: 1; }
+        .achievement-value { font-size: 22px; font-weight: 700; color: var(--color-accent); display: block; }
+        .achievement-label { font-size: 12px; color: var(--color-text-muted); }
         .mini-progress {
             width: 100%;
             height: 4px;
@@ -611,18 +468,8 @@
             transform: translate(-50%, -50%);
             text-align: center;
         }
-        .progress-percent {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--color-accent);
-            display: block;
-        }
-        .progress-label {
-            font-size: 10px;
-            color: var(--color-text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
+        .progress-percent { font-size: 24px; font-weight: 700; color: var(--color-accent); display: block; }
+        .progress-label { font-size: 10px; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
 
         .progress-info {
             display: grid;
@@ -637,19 +484,9 @@
             padding: 4px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.03);
         }
-        .info-label {
-            font-size: 13px;
-            color: var(--color-text-muted);
-        }
-        .info-value {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--color-text);
-        }
-        .info-value.highlight {
-            color: var(--color-accent);
-            font-size: 18px;
-        }
+        .info-label { font-size: 13px; color: var(--color-text-muted); }
+        .info-value { font-size: 14px; font-weight: 600; color: var(--color-text); }
+        .info-value.highlight { color: var(--color-accent); font-size: 18px; }
 
         .progress-message {
             width: 100%;
@@ -671,16 +508,8 @@
             gap: 12px;
             margin-bottom: 24px;
         }
-        .dashboard-header h1 {
-            font-size: 24px;
-            font-weight: 700;
-        }
-        .dashboard-header h1 small {
-            font-size: 14px;
-            font-weight: 400;
-            color: var(--color-text-muted);
-            margin-left: 10px;
-        }
+        .dashboard-header h1 { font-size: 24px; font-weight: 700; }
+        .dashboard-header h1 small { font-size: 14px; font-weight: 400; color: var(--color-text-muted); margin-left: 10px; }
         .dashboard-header .clock {
             font-size: 18px;
             font-weight: 600;
@@ -689,11 +518,7 @@
             border-radius: 30px;
             border: 1px solid var(--color-border);
         }
-        .dashboard-header .clock .sec {
-            font-size: 13px;
-            color: var(--color-text-muted);
-            font-weight: 400;
-        }
+        .dashboard-header .clock .sec { font-size: 13px; color: var(--color-text-muted); font-weight: 400; }
 
         .stats-grid {
             display: grid;
@@ -708,29 +533,13 @@
             border: 1px solid var(--color-border);
             transition: var(--transition);
         }
-        .stat-card:hover {
-            border-color: rgba(255, 179, 0, 0.1);
-        }
-        .stat-card .number {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--color-accent);
-        }
-        .stat-card .label {
-            font-size: 13px;
-            color: var(--color-text-muted);
-            margin-top: 4px;
-        }
-        .stat-card .icon {
-            float: right;
-            font-size: 24px;
-            color: rgba(255, 179, 0, 0.1);
-        }
+        .stat-card:hover { border-color: rgba(255, 179, 0, 0.1); }
+        .stat-card .number { font-size: 28px; font-weight: 700; color: var(--color-accent); }
+        .stat-card .label { font-size: 13px; color: var(--color-text-muted); margin-top: 4px; }
+        .stat-card .icon { float: right; font-size: 24px; color: rgba(255, 179, 0, 0.1); }
 
         /* ===== HISTÓRICO DO PÂNICO ===== */
-        .historico-panico-section {
-            margin-top: 16px;
-        }
+        .historico-panico-section { margin-top: 16px; }
         .historico-panico-section .empty-state {
             text-align: center;
             padding: 30px 20px;
@@ -739,12 +548,7 @@
             border: 1px dashed var(--color-border);
             border-radius: 12px;
         }
-        .historico-panico-section .empty-state i {
-            display: block;
-            font-size: 32px;
-            margin-bottom: 8px;
-            opacity: 0.3;
-        }
+        .historico-panico-section .empty-state i { display: block; font-size: 32px; margin-bottom: 8px; opacity: 0.3; }
         .panico-registro {
             background: rgba(255, 255, 255, 0.02);
             border-radius: 12px;
@@ -753,9 +557,7 @@
             margin-bottom: 10px;
             transition: var(--transition);
         }
-        .panico-registro:hover {
-            border-color: rgba(255, 179, 0, 0.1);
-        }
+        .panico-registro:hover { border-color: rgba(255, 179, 0, 0.1); }
         .panico-registro .header {
             display: flex;
             justify-content: space-between;
@@ -763,15 +565,8 @@
             flex-wrap: wrap;
             gap: 8px;
         }
-        .panico-registro .data-hora {
-            font-size: 12px;
-            color: var(--color-text-muted);
-        }
-        .panico-registro .disciplina {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--color-accent);
-        }
+        .panico-registro .data-hora { font-size: 12px; color: var(--color-text-muted); }
+        .panico-registro .disciplina { font-size: 14px; font-weight: 600; color: var(--color-accent); }
         .panico-registro .motivo {
             font-size: 13px;
             color: var(--color-text);
@@ -788,16 +583,10 @@
             border-radius: 30px;
             display: inline-block;
         }
-        .panico-registro .status.resolvido {
-            background: rgba(76, 175, 80, 0.12);
-            color: var(--color-success);
-        }
-        .panico-registro .status.pendente {
-            background: rgba(255, 179, 0, 0.12);
-            color: var(--color-warning);
-        }
+        .panico-registro .status.resolvido { background: rgba(76, 175, 80, 0.12); color: var(--color-success); }
+        .panico-registro .status.pendente { background: rgba(255, 179, 0, 0.12); color: var(--color-warning); }
 
-        /* ===== ATIVIDADES COM PARTICIPANTES ===== */
+        /* ===== ATIVIDADES ===== */
         .participantes-list {
             display: flex;
             flex-wrap: wrap;
@@ -821,18 +610,10 @@
             padding: 0 6px;
             border-radius: 10px;
         }
-        .participante-tag .prazo-individual.urgente {
-            color: var(--color-danger);
-        }
-        .participante-tag .prazo-individual.ok {
-            color: var(--color-success);
-        }
+        .participante-tag .prazo-individual.urgente { color: var(--color-danger); }
+        .participante-tag .prazo-individual.ok { color: var(--color-success); }
 
-        /* ===== ESTILOS EXISTENTES (checklist, turmas, relatórios, etc.) ===== */
-        .section {
-            margin-bottom: 32px;
-            scroll-margin-top: 20px;
-        }
+        .section { margin-bottom: 32px; scroll-margin-top: 20px; }
         .section-title {
             font-size: 18px;
             font-weight: 700;
@@ -842,9 +623,7 @@
             gap: 12px;
             flex-wrap: wrap;
         }
-        .section-title i {
-            color: var(--color-accent);
-        }
+        .section-title i { color: var(--color-accent); }
         .section-title .badge {
             font-size: 12px;
             font-weight: 600;
@@ -863,11 +642,7 @@
             padding: 20px 24px;
             border: 1px solid var(--color-border);
         }
-        @media (max-width: 700px) {
-            .checklist-grid {
-                grid-template-columns: 1fr;
-            }
-        }
+        @media (max-width: 700px) { .checklist-grid { grid-template-columns: 1fr; } }
         .check-item {
             display: flex;
             align-items: center;
@@ -877,17 +652,12 @@
             cursor: pointer;
             transition: var(--transition);
         }
-        .check-item:hover {
-            background: rgba(255, 255, 255, 0.02);
-        }
+        .check-item:hover { background: rgba(255, 255, 255, 0.02); }
         .check-item .box {
-            width: 20px;
-            height: 20px;
+            width: 20px; height: 20px;
             border-radius: 6px;
             border: 2px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             flex-shrink: 0;
             transition: var(--transition);
             font-size: 11px;
@@ -897,22 +667,10 @@
             background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
             border-color: var(--color-accent);
         }
-        .check-item .label {
-            font-size: 13px;
-            flex: 1;
-            color: var(--color-text);
-        }
-        .check-item .label.done {
-            color: var(--color-text-muted);
-            text-decoration: line-through;
-        }
-        .check-item .icon-status {
-            color: var(--color-text-muted);
-            font-size: 14px;
-        }
-        .check-item .icon-status.done {
-            color: var(--color-success);
-        }
+        .check-item .label { font-size: 13px; flex: 1; color: var(--color-text); }
+        .check-item .label.done { color: var(--color-text-muted); text-decoration: line-through; }
+        .check-item .icon-status { color: var(--color-text-muted); font-size: 14px; }
+        .check-item .icon-status.done { color: var(--color-success); }
 
         .table-wrapper {
             background: var(--color-card);
@@ -943,25 +701,17 @@
             outline: none;
             transition: var(--transition);
         }
-        .table-search input:focus {
-            border-color: var(--color-accent);
-        }
-        .table-search input::placeholder {
-            color: var(--color-text-muted);
-        }
-        .table-search .search-count {
-            font-size: 12px;
-            color: var(--color-text-muted);
-        }
+        .table-search input:focus { border-color: var(--color-accent); }
+        .table-search input::placeholder { color: var(--color-text-muted); }
+        .table-search .search-count { font-size: 12px; color: var(--color-text-muted); }
+
         table {
             width: 100%;
             border-collapse: collapse;
             font-size: 13px;
             min-width: 700px;
         }
-        table thead {
-            background: rgba(255, 255, 255, 0.02);
-        }
+        table thead { background: rgba(255, 255, 255, 0.02); }
         table th {
             text-align: left;
             padding: 14px 18px;
@@ -977,30 +727,12 @@
             border-bottom: 1px solid var(--color-border);
             color: var(--color-text);
         }
-        table tr:last-child td {
-            border-bottom: none;
-        }
-        table tr:hover td {
-            background: rgba(255, 255, 255, 0.01);
-        }
-        table .cod {
-            font-weight: 600;
-            color: var(--color-accent);
-            font-size: 12px;
-        }
-        table .prof {
-            font-size: 12px;
-            color: var(--color-text-muted);
-        }
-        table .turma {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--color-info);
-        }
-        table .horario {
-            font-size: 12px;
-            color: var(--color-text-muted);
-        }
+        table tr:last-child td { border-bottom: none; }
+        table tr:hover td { background: rgba(255, 255, 255, 0.01); }
+        table .cod { font-weight: 600; color: var(--color-accent); font-size: 12px; }
+        table .prof { font-size: 12px; color: var(--color-text-muted); }
+        table .turma { font-size: 12px; font-weight: 600; color: var(--color-info); }
+        table .horario { font-size: 12px; color: var(--color-text-muted); }
         table .status {
             font-size: 11px;
             font-weight: 600;
@@ -1011,6 +743,7 @@
             display: inline-block;
         }
 
+        /* ===== RELATÓRIOS ===== */
         .relatorio-section {
             background: var(--color-card);
             border-radius: var(--radius);
@@ -1019,9 +752,7 @@
             margin-bottom: 32px;
             transition: var(--transition);
         }
-        .relatorio-section:hover {
-            border-color: rgba(255, 179, 0, 0.08);
-        }
+        .relatorio-section:hover { border-color: rgba(255, 179, 0, 0.08); }
         .relatorio-header {
             display: flex;
             justify-content: space-between;
@@ -1038,10 +769,7 @@
             gap: 10px;
             color: var(--color-text);
         }
-        .relatorio-header h3 i {
-            color: var(--color-accent);
-            font-size: 20px;
-        }
+        .relatorio-header h3 i { color: var(--color-accent); font-size: 20px; }
         .relatorio-header .badge {
             font-size: 12px;
             background: rgba(255, 179, 0, 0.08);
@@ -1055,9 +783,7 @@
             grid-template-columns: 1fr 1fr;
             gap: 14px;
         }
-        .relatorio-form .full-width {
-            grid-column: span 2;
-        }
+        .relatorio-form .full-width { grid-column: span 2; }
         .relatorio-form label {
             font-size: 13px;
             font-weight: 600;
@@ -1085,10 +811,7 @@
             border-color: var(--color-accent);
             box-shadow: 0 0 0 3px rgba(255, 179, 0, 0.08);
         }
-        .relatorio-form textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
+        .relatorio-form textarea { resize: vertical; min-height: 80px; }
         .relatorio-form .btn-salvar-relatorio {
             background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
             color: var(--color-primary);
@@ -1121,16 +844,9 @@
             overflow-y: auto;
             padding-right: 4px;
         }
-        .relatorios-lista::-webkit-scrollbar {
-            width: 4px;
-        }
-        .relatorios-lista::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .relatorios-lista::-webkit-scrollbar-thumb {
-            background: rgba(255, 179, 0, 0.2);
-            border-radius: 10px;
-        }
+        .relatorios-lista::-webkit-scrollbar { width: 4px; }
+        .relatorios-lista::-webkit-scrollbar-track { background: transparent; }
+        .relatorios-lista::-webkit-scrollbar-thumb { background: rgba(255, 179, 0, 0.2); border-radius: 10px; }
         .relatorios-lista .empty-state {
             text-align: center;
             padding: 30px 20px;
@@ -1139,12 +855,7 @@
             border: 1px dashed var(--color-border);
             border-radius: 12px;
         }
-        .relatorios-lista .empty-state i {
-            display: block;
-            font-size: 32px;
-            margin-bottom: 8px;
-            opacity: 0.3;
-        }
+        .relatorios-lista .empty-state i { display: block; font-size: 32px; margin-bottom: 8px; opacity: 0.3; }
         .relatorio-dia {
             margin-bottom: 16px;
             background: rgba(255, 255, 255, 0.02);
@@ -1153,9 +864,7 @@
             overflow: hidden;
             transition: var(--transition);
         }
-        .relatorio-dia:hover {
-            border-color: rgba(255, 179, 0, 0.1);
-        }
+        .relatorio-dia:hover { border-color: rgba(255, 179, 0, 0.1); }
         .relatorio-dia-header {
             display: flex;
             justify-content: space-between;
@@ -1166,14 +875,8 @@
             flex-wrap: wrap;
             gap: 8px;
         }
-        .relatorio-dia-header .data-dia {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--color-accent);
-        }
-        .relatorio-dia-header .data-dia i {
-            margin-right: 8px;
-        }
+        .relatorio-dia-header .data-dia { font-size: 14px; font-weight: 600; color: var(--color-accent); }
+        .relatorio-dia-header .data-dia i { margin-right: 8px; }
         .relatorio-dia-header .total-dia {
             font-size: 13px;
             color: var(--color-text-muted);
@@ -1181,9 +884,7 @@
             padding: 4px 14px;
             border-radius: 30px;
         }
-        .relatorio-dia-itens {
-            padding: 4px 0;
-        }
+        .relatorio-dia-itens { padding: 4px 0; }
         .relatorio-dia-itens .relatorio-item {
             border: none;
             border-radius: 0;
@@ -1195,12 +896,8 @@
             align-items: center;
             transition: var(--transition);
         }
-        .relatorio-dia-itens .relatorio-item:last-child {
-            border-bottom: none;
-        }
-        .relatorio-dia-itens .relatorio-item:hover {
-            background: rgba(255, 255, 255, 0.02);
-        }
+        .relatorio-dia-itens .relatorio-item:last-child { border-bottom: none; }
+        .relatorio-dia-itens .relatorio-item:hover { background: rgba(255, 255, 255, 0.02); }
         .relatorio-dia-itens .relatorio-item .disciplina {
             font-size: 13px;
             font-weight: 600;
@@ -1222,16 +919,13 @@
             min-width: 150px;
         }
 
+        /* ===== ATIVIDADES GRID ===== */
         .atividades-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 20px;
         }
-        @media (max-width: 900px) {
-            .atividades-grid {
-                grid-template-columns: 1fr;
-            }
-        }
+        @media (max-width: 900px) { .atividades-grid { grid-template-columns: 1fr; } }
         .atividade-card {
             background: var(--color-card);
             border-radius: var(--radius);
@@ -1240,18 +934,10 @@
             position: relative;
             transition: var(--transition);
         }
-        .atividade-card:hover {
-            border-color: rgba(255, 179, 0, 0.1);
-        }
-        .atividade-card.prioridade-alta {
-            border-left: 4px solid var(--color-danger);
-        }
-        .atividade-card.prioridade-media {
-            border-left: 4px solid var(--color-warning);
-        }
-        .atividade-card.prioridade-baixa {
-            border-left: 4px solid var(--color-success);
-        }
+        .atividade-card:hover { border-color: rgba(255, 179, 0, 0.1); }
+        .atividade-card.prioridade-alta { border-left: 4px solid var(--color-danger); }
+        .atividade-card.prioridade-media { border-left: 4px solid var(--color-warning); }
+        .atividade-card.prioridade-baixa { border-left: 4px solid var(--color-success); }
         .atividade-card .titulo {
             font-size: 17px;
             font-weight: 700;
@@ -1270,10 +956,7 @@
             align-items: center;
             gap: 6px;
         }
-        .atividade-card .disciplina i {
-            color: var(--color-accent);
-            font-size: 14px;
-        }
+        .atividade-card .disciplina i { color: var(--color-accent); font-size: 14px; }
         .atividade-card .datas {
             display: flex;
             gap: 16px;
@@ -1286,14 +969,8 @@
             border-radius: 8px;
             border: 1px solid rgba(255, 255, 255, 0.03);
         }
-        .atividade-card .datas span {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .atividade-card .datas span strong {
-            color: var(--color-text);
-        }
+        .atividade-card .datas span { display: flex; align-items: center; gap: 6px; }
+        .atividade-card .datas span strong { color: var(--color-text); }
         .atividade-card .progresso-area {
             display: flex;
             align-items: center;
@@ -1342,9 +1019,7 @@
             background: rgba(255, 255, 255, 0.02);
             color: var(--color-text-muted);
         }
-        .atividade-card .acoes button:hover {
-            background: rgba(255, 255, 255, 0.05);
-        }
+        .atividade-card .acoes button:hover { background: rgba(255, 255, 255, 0.05); }
         .atividade-card .acoes .btn-edit:hover {
             border-color: var(--color-accent);
             color: var(--color-accent);
@@ -1393,15 +1068,14 @@
             cursor: pointer;
             transition: var(--transition);
         }
-        .filtros-atividades button:hover {
-            background: rgba(255, 255, 255, 0.03);
-        }
+        .filtros-atividades button:hover { background: rgba(255, 255, 255, 0.03); }
         .filtros-atividades button.active {
             background: rgba(255, 179, 0, 0.08);
             color: var(--color-accent);
             border-color: rgba(255, 179, 0, 0.1);
         }
 
+        /* ===== NOTAS ===== */
         .notas-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -1474,9 +1148,7 @@
             outline: none;
             transition: var(--transition);
         }
-        .nota-bimestre input:focus {
-            border-bottom: 2px solid var(--color-accent);
-        }
+        .nota-bimestre input:focus { border-bottom: 2px solid var(--color-accent); }
         .nota-bimestre input::placeholder {
             color: var(--color-text-muted);
             font-weight: 400;
@@ -1496,30 +1168,17 @@
             flex-wrap: wrap;
             gap: 8px;
         }
-        .notas-resultado .media {
-            font-size: 20px;
-            font-weight: 700;
-        }
-        .notas-resultado .media.aprovado {
-            color: var(--color-success);
-        }
-        .notas-resultado .media.reprovado {
-            color: var(--color-danger);
-        }
-        .notas-resultado .media.recuperacao {
-            color: var(--color-warning);
-        }
-        .notas-resultado .media.aguardando {
-            color: var(--color-text-muted);
-        }
+        .notas-resultado .media { font-size: 20px; font-weight: 700; }
+        .notas-resultado .media.aprovado { color: var(--color-success); }
+        .notas-resultado .media.reprovado { color: var(--color-danger); }
+        .notas-resultado .media.recuperacao { color: var(--color-warning); }
+        .notas-resultado .media.aguardando { color: var(--color-text-muted); }
 
+        /* ===== MODAL ===== */
         .modal-overlay {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(8px);
             z-index: 200;
@@ -1527,9 +1186,7 @@
             justify-content: center;
             padding: 20px;
         }
-        .modal-overlay.open {
-            display: flex;
-        }
+        .modal-overlay.open { display: flex; }
         .modal {
             background: var(--color-secondary);
             border-radius: 24px;
@@ -1542,13 +1199,8 @@
             overflow-y: auto;
             position: relative;
         }
-        .modal::-webkit-scrollbar {
-            width: 4px;
-        }
-        .modal::-webkit-scrollbar-thumb {
-            background: rgba(255, 179, 0, 0.2);
-            border-radius: 10px;
-        }
+        .modal::-webkit-scrollbar { width: 4px; }
+        .modal::-webkit-scrollbar-thumb { background: rgba(255, 179, 0, 0.2); border-radius: 10px; }
         .modal h2 {
             font-size: 22px;
             margin-bottom: 24px;
@@ -1557,9 +1209,7 @@
             gap: 12px;
             color: var(--color-text);
         }
-        .modal h2 i {
-            color: var(--color-accent);
-        }
+        .modal h2 i { color: var(--color-accent); }
         .modal label {
             display: block;
             font-size: 13px;
@@ -1588,18 +1238,9 @@
             border-color: var(--color-accent);
             box-shadow: 0 0 0 3px rgba(255, 179, 0, 0.08);
         }
-        .modal select option {
-            background: #121820;
-            color: #e8edf4;
-        }
-        .modal input[type="date"]::-webkit-calendar-picker-indicator {
-            filter: invert(1);
-            cursor: pointer;
-        }
-        .modal textarea {
-            resize: vertical;
-            min-height: 60px;
-        }
+        .modal select option { background: #121820; color: #e8edf4; }
+        .modal input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
+        .modal textarea { resize: vertical; min-height: 60px; }
         .modal .modal-actions {
             display: flex;
             gap: 12px;
@@ -1621,25 +1262,18 @@
             background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
             color: var(--color-primary);
         }
-        .modal .modal-actions .btn-primary:hover {
-            transform: scale(1.02);
-        }
+        .modal .modal-actions .btn-primary:hover { transform: scale(1.02); }
         .modal .modal-actions .btn-secondary {
             background: rgba(255, 255, 255, 0.05);
             color: var(--color-text-muted);
         }
-        .modal .modal-actions .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.08);
-        }
+        .modal .modal-actions .btn-secondary:hover { background: rgba(255, 255, 255, 0.08); }
 
         /* ===== MODO PÂNICO ===== */
         .panico-overlay {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(183, 28, 28, 0.92);
             z-index: 9998;
             align-items: center;
@@ -1647,32 +1281,15 @@
             padding: 20px;
             animation: panicoFlash 2s infinite;
         }
-        .panico-overlay.open {
-            display: flex;
-        }
-
+        .panico-overlay.open { display: flex; }
         @keyframes panicoFlash {
-            0%,
-            100% {
-                background: rgba(183, 28, 28, 0.92);
-            }
-            50% {
-                background: rgba(211, 47, 47, 0.96);
-            }
+            0%, 100% { background: rgba(183, 28, 28, 0.92); }
+            50% { background: rgba(211, 47, 47, 0.96); }
         }
-
         @keyframes panicoPulse {
-            0%,
-            100% {
-                transform: scale(1);
-                opacity: 1;
-            }
-            50% {
-                transform: scale(1.02);
-                opacity: 0.9;
-            }
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.02); opacity: 0.9; }
         }
-
         .panico-container {
             background: rgba(0, 0, 0, 0.85);
             border-radius: 24px;
@@ -1686,28 +1303,15 @@
             animation: panicoPulse 2s infinite;
             position: relative;
         }
-
-        .panico-container::-webkit-scrollbar {
-            width: 4px;
-        }
-        .panico-container::-webkit-scrollbar-thumb {
-            background: rgba(211, 47, 47, 0.5);
-            border-radius: 10px;
-        }
-
+        .panico-container::-webkit-scrollbar { width: 4px; }
+        .panico-container::-webkit-scrollbar-thumb { background: rgba(211, 47, 47, 0.5); border-radius: 10px; }
         .panico-header {
             text-align: center;
             border-bottom: 2px solid rgba(211, 47, 47, 0.3);
             padding-bottom: 16px;
             margin-bottom: 20px;
         }
-
-        .panico-icone {
-            font-size: 14px;
-            color: #d32f2f;
-            letter-spacing: 4px;
-        }
-
+        .panico-icone { font-size: 14px; color: #d32f2f; letter-spacing: 4px; }
         .panico-titulo {
             font-size: 18px;
             font-weight: 700;
@@ -1716,7 +1320,6 @@
             letter-spacing: 3px;
             margin: 4px 0;
         }
-
         .panico-status {
             display: inline-block;
             background: #d32f2f;
@@ -1728,37 +1331,12 @@
             letter-spacing: 2px;
             animation: panicoPulse 1.5s infinite;
         }
+        .panico-calma { text-align: center; padding: 16px 0; }
+        .panico-frase-principal { font-size: 28px; font-weight: 700; color: #ffffff; letter-spacing: 1px; }
+        .panico-subfrase { font-size: 14px; color: rgba(255, 255, 255, 0.6); margin-top: 4px; }
+        .panico-divider { border: none; border-top: 1px solid rgba(211, 47, 47, 0.3); margin: 16px 0; }
 
-        .panico-calma {
-            text-align: center;
-            padding: 16px 0;
-        }
-
-        .panico-frase-principal {
-            font-size: 28px;
-            font-weight: 700;
-            color: #ffffff;
-            letter-spacing: 1px;
-        }
-
-        .panico-subfrase {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.6);
-            margin-top: 4px;
-        }
-
-        .panico-divider {
-            border: none;
-            border-top: 1px solid rgba(211, 47, 47, 0.3);
-            margin: 16px 0;
-        }
-
-        /* Respiração */
-        .panico-respiracao {
-            text-align: center;
-            padding: 16px 0;
-        }
-
+        .panico-respiracao { text-align: center; padding: 16px 0; }
         .panico-respiracao h2 {
             font-size: 14px;
             font-weight: 600;
@@ -1767,40 +1345,34 @@
             letter-spacing: 3px;
             margin-bottom: 16px;
         }
-
         .respiracao-circulo {
             position: relative;
             width: 140px;
             height: 140px;
             margin: 0 auto 16px;
         }
-
         .respiracao-circulo .circulo {
             width: 140px;
             height: 140px;
             border-radius: 50%;
             border: 3px solid rgba(211, 47, 47, 0.3);
             position: absolute;
-            top: 0;
-            left: 0;
+            top: 0; left: 0;
             transition: all 1.5s ease;
             background: radial-gradient(circle, rgba(211, 47, 47, 0.1), transparent 70%);
         }
-
         .respiracao-circulo .circulo.inspirar {
             transform: scale(1.3);
             border-color: rgba(255, 255, 255, 0.6);
             background: radial-gradient(circle, rgba(211, 47, 47, 0.3), transparent 70%);
             box-shadow: 0 0 40px rgba(211, 47, 47, 0.3);
         }
-
         .respiracao-circulo .circulo.expirar {
             transform: scale(0.7);
             border-color: rgba(211, 47, 47, 0.5);
             background: radial-gradient(circle, rgba(211, 47, 47, 0.05), transparent 70%);
             box-shadow: none;
         }
-
         .respiracao-texto {
             position: absolute;
             top: 50%;
@@ -1808,23 +1380,8 @@
             transform: translate(-50%, -50%);
             text-align: center;
         }
-
-        .respiracao-texto .frase {
-            font-size: 18px;
-            font-weight: 700;
-            color: #ffffff;
-            display: block;
-            letter-spacing: 2px;
-        }
-
-        .respiracao-texto .timer {
-            font-size: 42px;
-            font-weight: 700;
-            color: #d32f2f;
-            display: block;
-            line-height: 1;
-        }
-
+        .respiracao-texto .frase { font-size: 18px; font-weight: 700; color: #ffffff; display: block; letter-spacing: 2px; }
+        .respiracao-texto .timer { font-size: 42px; font-weight: 700; color: #d32f2f; display: block; line-height: 1; }
         .btn-respirar {
             background: rgba(211, 47, 47, 0.3);
             border: 1px solid rgba(211, 47, 47, 0.5);
@@ -1838,13 +1395,8 @@
             font-family: 'Inter', sans-serif;
             letter-spacing: 1px;
         }
+        .btn-respirar:hover { background: rgba(211, 47, 47, 0.5); border-color: #d32f2f; }
 
-        .btn-respirar:hover {
-            background: rgba(211, 47, 47, 0.5);
-            border-color: #d32f2f;
-        }
-
-        /* Motivação */
         .panico-motivacao {
             text-align: center;
             padding: 12px 0;
@@ -1852,21 +1404,8 @@
             border-radius: 12px;
             margin: 8px 0;
         }
-
-        .panico-motivacao .frase {
-            font-size: 18px;
-            font-style: italic;
-            color: #ffffff;
-            line-height: 1.6;
-        }
-
-        .panico-motivacao .autor {
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.4);
-            display: block;
-            margin-top: 4px;
-        }
-
+        .panico-motivacao .frase { font-size: 18px; font-style: italic; color: #ffffff; line-height: 1.6; }
+        .panico-motivacao .autor { font-size: 13px; color: rgba(255, 255, 255, 0.4); display: block; margin-top: 4px; }
         .btn-nova-frase {
             background: transparent;
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -1879,17 +1418,9 @@
             font-family: 'Inter', sans-serif;
             margin-top: 8px;
         }
+        .btn-nova-frase:hover { border-color: rgba(255, 255, 255, 0.3); color: #ffffff; }
 
-        .btn-nova-frase:hover {
-            border-color: rgba(255, 255, 255, 0.3);
-            color: #ffffff;
-        }
-
-        /* Relato */
-        .panico-relato {
-            padding: 12px 0;
-        }
-
+        .panico-relato { padding: 12px 0; }
         .panico-relato h2 {
             font-size: 14px;
             font-weight: 600;
@@ -1898,11 +1429,7 @@
             letter-spacing: 3px;
             margin-bottom: 12px;
         }
-
-        .relato-disciplina {
-            margin-bottom: 12px;
-        }
-
+        .relato-disciplina { margin-bottom: 12px; }
         .relato-disciplina label {
             font-size: 12px;
             font-weight: 600;
@@ -1910,7 +1437,6 @@
             display: block;
             margin-bottom: 4px;
         }
-
         .relato-disciplina select {
             width: 100%;
             padding: 10px 16px;
@@ -1923,20 +1449,9 @@
             outline: none;
             transition: var(--transition);
         }
-
-        .relato-disciplina select:focus {
-            border-color: #d32f2f;
-        }
-
-        .relato-disciplina select option {
-            background: #1a1a1a;
-            color: #ffffff;
-        }
-
-        .relato-motivo {
-            margin-bottom: 12px;
-        }
-
+        .relato-disciplina select:focus { border-color: #d32f2f; }
+        .relato-disciplina select option { background: #1a1a1a; color: #ffffff; }
+        .relato-motivo { margin-bottom: 12px; }
         .relato-motivo label {
             font-size: 12px;
             font-weight: 600;
@@ -1944,7 +1459,6 @@
             display: block;
             margin-bottom: 4px;
         }
-
         .relato-motivo textarea {
             width: 100%;
             padding: 10px 16px;
@@ -1959,15 +1473,8 @@
             resize: vertical;
             min-height: 60px;
         }
-
-        .relato-motivo textarea:focus {
-            border-color: #d32f2f;
-        }
-
-        .relato-motivo textarea::placeholder {
-            color: rgba(255, 255, 255, 0.3);
-        }
-
+        .relato-motivo textarea:focus { border-color: #d32f2f; }
+        .relato-motivo textarea::placeholder { color: rgba(255, 255, 255, 0.3); }
         .relato-data {
             display: flex;
             gap: 16px;
@@ -1975,19 +1482,12 @@
             color: rgba(255, 255, 255, 0.4);
             margin-bottom: 12px;
         }
-
-        .relato-data span {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
+        .relato-data span { display: flex; align-items: center; gap: 6px; }
         .relato-acoes {
             display: flex;
             gap: 12px;
             flex-wrap: wrap;
         }
-
         .btn-registrar {
             background: #d32f2f;
             border: none;
@@ -2002,12 +1502,7 @@
             flex: 1;
             letter-spacing: 1px;
         }
-
-        .btn-registrar:hover {
-            background: #b71c1c;
-            transform: scale(1.02);
-        }
-
+        .btn-registrar:hover { background: #b71c1c; transform: scale(1.02); }
         .btn-sair-panico {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -2020,13 +1515,8 @@
             transition: var(--transition);
             font-family: 'Inter', sans-serif;
         }
+        .btn-sair-panico:hover { background: rgba(255, 255, 255, 0.1); color: #ffffff; }
 
-        .btn-sair-panico:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-        }
-
-        /* Recursos - APENAS PODE FALAR */
         .panico-recursos {
             display: flex;
             gap: 12px;
@@ -2036,7 +1526,6 @@
             border-top: 1px solid rgba(211, 47, 47, 0.2);
             margin-top: 8px;
         }
-
         .panico-recursos button {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -2048,304 +1537,222 @@
             transition: var(--transition);
             font-family: 'Inter', sans-serif;
         }
-
         .panico-recursos button:hover {
             background: rgba(255, 255, 255, 0.1);
             color: #ffffff;
             border-color: rgba(255, 255, 255, 0.2);
         }
-
         .panico-recursos button.primary-rec {
             background: rgba(211, 47, 47, 0.2);
             border-color: rgba(211, 47, 47, 0.3);
             color: #ffffff;
         }
+        .panico-recursos button.primary-rec:hover { background: rgba(211, 47, 47, 0.4); }
 
-        .panico-recursos button.primary-rec:hover {
-            background: rgba(211, 47, 47, 0.4);
+        /* ===== ATENDIMENTO INTRAESCOLAR (NOVO MÓDULO) ===== */
+        .atendimentos-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 16px;
+        }
+        @media (max-width: 768px) { .atendimentos-grid { grid-template-columns: 1fr; } }
+        .atendimento-card {
+            background: var(--color-card);
+            border-radius: var(--radius);
+            padding: 18px 20px;
+            border: 1px solid var(--color-border);
+            transition: var(--transition);
+            border-left: 4px solid var(--color-info);
+        }
+        .atendimento-card:hover {
+            border-color: rgba(255, 179, 0, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        .atendimento-card .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .atendimento-card .disciplina { font-size: 15px; font-weight: 700; color: var(--color-accent); }
+        .atendimento-card .data-hora { font-size: 12px; color: var(--color-text-muted); }
+        .atendimento-card .descricao {
+            font-size: 13px;
+            color: var(--color-text);
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 6px;
+            margin-top: 4px;
+        }
+        .atendimento-card .acoes {
+            margin-top: 12px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            padding-top: 10px;
+            border-top: 1px solid var(--color-border);
+        }
+        .atendimento-card .acoes button {
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: var(--transition);
+            border: 1px solid var(--color-border);
+            background: rgba(255, 255, 255, 0.02);
+            color: var(--color-text-muted);
+        }
+        .atendimento-card .acoes .btn-edit:hover {
+            border-color: var(--color-accent);
+            color: var(--color-accent);
+        }
+        .atendimento-card .acoes .btn-delete:hover {
+            border-color: var(--color-danger);
+            color: var(--color-danger);
+            background: rgba(229, 57, 53, 0.05);
         }
 
-        /* ===== RESPONSIVIDADE (mantida) ===== */
+        /* ===== RESPONSIVIDADE ===== */
         @media (max-width: 1024px) {
-            header {
-                width: 72px;
-                padding: 16px 10px;
-            }
-            header .logo h2,
-            header .navbar a h3,
-            header .navbar .nav-label,
-            header .user-info .name,
-            header .user-info .role,
-            header .navbar a .badge-link,
-            .submenu-sistemas {
-                display: none !important;
-            }
-            header .logo .logo-icon {
-                width: 36px;
-                height: 36px;
-                font-size: 14px;
-            }
-            header .navbar a {
-                justify-content: center;
-                padding: 12px 8px;
-            }
-            header .navbar a .material-icons-sharp {
-                display: block;
-                font-size: 26px;
-            }
-            header .user-info {
-                justify-content: center;
-            }
-            header .user-info .avatar {
-                width: 32px;
-                height: 32px;
-            }
-            .container {
-                margin-left: 72px;
-            }
-            .greeting-title {
-                font-size: 22px;
-            }
-            .progress-container {
-                flex-direction: column;
-                align-items: center;
-            }
-            .progress-info {
-                width: 100%;
-            }
-            .quote-card blockquote {
-                padding-right: 20px;
-            }
-            .btn-new-quote {
-                position: relative;
-                top: auto;
-                right: auto;
-                margin-top: 12px;
-            }
-            .achievement-grid {
-                max-width: 100%;
-            }
+            header { width: 72px; padding: 16px 10px; }
+            header .logo h2, header .navbar a h3, header .navbar .nav-label,
+            header .user-info .name, header .user-info .role,
+            header .navbar a .badge-link, .submenu-sistemas { display: none !important; }
+            header .logo .logo-icon { width: 36px; height: 36px; font-size: 14px; }
+            header .navbar a { justify-content: center; padding: 12px 8px; }
+            header .navbar a .material-icons-sharp { display: block; font-size: 26px; }
+            header .user-info { justify-content: center; }
+            header .user-info .avatar { width: 32px; height: 32px; }
+            .container { margin-left: 72px; }
+            .greeting-title { font-size: 22px; }
+            .progress-container { flex-direction: column; align-items: center; }
+            .progress-info { width: 100%; }
+            .quote-card blockquote { padding-right: 20px; }
+            .btn-new-quote { position: relative; top: auto; right: auto; margin-top: 12px; }
+            .achievement-grid { max-width: 100%; }
         }
 
         @media (max-width: 768px) {
-            .modal {
-                padding: 20px;
-            }
-            .notas-bimestres {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .notas-grid {
-                grid-template-columns: 1fr;
-            }
-            .relatorio-form {
-                grid-template-columns: 1fr;
-            }
-            .relatorio-form .full-width {
-                grid-column: span 1;
-            }
-            .relatorio-form .form-actions {
-                grid-column: span 1;
-                flex-direction: column;
-            }
-            .greeting-section {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .date-info {
-                text-align: left;
-                width: 100%;
-            }
-            .achievement-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            .clock-hero .time {
-                font-size: 20px;
-            }
-            .clock-hero {
-                justify-content: flex-start;
-            }
-            .dashboard-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .panico-container {
-                padding: 20px;
-                margin: 10px;
-            }
-            .panico-frase-principal {
-                font-size: 22px;
-            }
-            .respiracao-circulo {
-                width: 120px;
-                height: 120px;
-            }
-            .respiracao-circulo .circulo {
-                width: 120px;
-                height: 120px;
-            }
-            .respiracao-texto .timer {
-                font-size: 32px;
-            }
-            .relato-acoes {
-                flex-direction: column;
-            }
+            .modal { padding: 20px; }
+            .notas-bimestres { grid-template-columns: repeat(2, 1fr); }
+            .notas-grid { grid-template-columns: 1fr; }
+            .relatorio-form { grid-template-columns: 1fr; }
+            .relatorio-form .full-width { grid-column: span 1; }
+            .relatorio-form .form-actions { grid-column: span 1; flex-direction: column; }
+            .greeting-section { flex-direction: column; align-items: flex-start; }
+            .date-info { text-align: left; width: 100%; }
+            .achievement-grid { grid-template-columns: 1fr 1fr; }
+            .clock-hero .time { font-size: 20px; }
+            .clock-hero { justify-content: flex-start; }
+            .dashboard-header { flex-direction: column; align-items: flex-start; }
+            .panico-container { padding: 20px; margin: 10px; }
+            .panico-frase-principal { font-size: 22px; }
+            .respiracao-circulo { width: 120px; height: 120px; }
+            .respiracao-circulo .circulo { width: 120px; height: 120px; }
+            .respiracao-texto .timer { font-size: 32px; }
+            .relato-acoes { flex-direction: column; }
+            .atendimentos-grid { grid-template-columns: 1fr; }
         }
 
         @media (max-width: 600px) {
-            .container {
-                padding: 16px;
-                margin-left: 0;
-            }
+            .container { padding: 16px; margin-left: 0; }
             header {
-                width: 100%;
-                height: auto;
-                position: relative;
-                flex-direction: row;
-                padding: 10px 14px;
-                flex-wrap: wrap;
-                border-right: none;
+                width: 100%; height: auto; position: relative;
+                flex-direction: row; padding: 10px 14px;
+                flex-wrap: wrap; border-right: none;
                 border-bottom: 1px solid var(--color-border);
             }
-            header .logo {
-                padding-bottom: 0;
-                border-bottom: none;
-                margin-bottom: 0;
-                flex: 1;
-            }
-            header .navbar {
-                flex-direction: row;
-                flex-wrap: wrap;
-                gap: 2px;
-            }
-            header .navbar a {
-                padding: 6px 10px;
-                font-size: 12px;
-            }
-            header .navbar a h3 {
-                display: none;
-            }
-            header .navbar .nav-label {
-                display: none;
-            }
-            header .user-info {
-                display: none;
-            }
-            .submenu-sistemas {
-                display: none !important;
-            }
-            .container {
-                margin-left: 0;
-            }
-            .stats-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            .achievement-grid {
-                grid-template-columns: 1fr;
-            }
-            .atividades-grid {
-                grid-template-columns: 1fr;
-            }
-            .checklist-grid {
-                grid-template-columns: 1fr;
-            }
-            .splash-content {
-                padding: 20px 16px;
-            }
-            .splash-content .logo-icon {
-                width: 48px;
-                height: 48px;
-                font-size: 20px;
-            }
-            .splash-content h1 {
-                font-size: 20px;
-            }
-            .splash-content .splash-message {
-                font-size: 13px;
-            }
-            .relatorio-section {
-                padding: 16px;
-            }
-            .welcome-hero {
-                padding: 20px;
-            }
-            .greeting-title {
-                font-size: 20px;
-            }
-            .clock-hero .time {
-                font-size: 18px;
-            }
-            .clock-hero .seconds {
-                font-size: 14px;
-            }
-            .progress-info {
-                grid-template-columns: 1fr;
-            }
-            .progress-circle-container {
-                width: 100px;
-                height: 100px;
-            }
-            .progress-circle {
-                width: 100px;
-                height: 100px;
-            }
-            .quote-card blockquote {
-                font-size: 14px;
-                padding-right: 0;
-            }
-            .panico-container {
-                padding: 16px;
-            }
-            .panico-frase-principal {
-                font-size: 18px;
-            }
-            .panico-recursos {
-                gap: 4px;
-            }
-            .panico-recursos button {
-                font-size: 12px;
-                padding: 6px 16px;
-            }
+            header .logo { padding-bottom: 0; border-bottom: none; margin-bottom: 0; flex: 1; }
+            header .navbar { flex-direction: row; flex-wrap: wrap; gap: 2px; }
+            header .navbar a { padding: 6px 10px; font-size: 12px; }
+            header .navbar a h3 { display: none; }
+            header .navbar .nav-label { display: none; }
+            header .user-info { display: none; }
+            .submenu-sistemas { display: none !important; }
+            .container { margin-left: 0; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .achievement-grid { grid-template-columns: 1fr; }
+            .atividades-grid { grid-template-columns: 1fr; }
+            .checklist-grid { grid-template-columns: 1fr; }
+            .splash-content { padding: 20px 16px; }
+            .splash-content .logo-icon { width: 48px; height: 48px; font-size: 20px; }
+            .splash-content h1 { font-size: 20px; }
+            .splash-content .splash-message { font-size: 13px; }
+            .relatorio-section { padding: 16px; }
+            .welcome-hero { padding: 20px; }
+            .greeting-title { font-size: 20px; }
+            .clock-hero .time { font-size: 18px; }
+            .clock-hero .seconds { font-size: 14px; }
+            .progress-info { grid-template-columns: 1fr; }
+            .progress-circle-container { width: 100px; height: 100px; }
+            .progress-circle { width: 100px; height: 100px; }
+            .quote-card blockquote { font-size: 14px; padding-right: 0; }
+            .panico-container { padding: 16px; }
+            .panico-frase-principal { font-size: 18px; }
+            .panico-recursos { gap: 4px; }
+            .panico-recursos button { font-size: 12px; padding: 6px 16px; }
         }
 
         @media (max-width: 480px) {
-            .stats-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            .filtros-atividades {
-                gap: 4px;
-            }
-            .filtros-atividades button {
-                font-size: 11px;
-                padding: 3px 12px;
-            }
-            .notas-bimestres {
-                grid-template-columns: 1fr 1fr;
-            }
-            .welcome-hero::before {
-                display: none;
-            }
-            .dashboard-header h1 {
-                font-size: 18px;
-            }
-            .dashboard-header h1 small {
-                font-size: 11px;
-                display: block;
-                margin-left: 0;
-            }
-            .respiracao-circulo {
-                width: 100px;
-                height: 100px;
-            }
-            .respiracao-circulo .circulo {
-                width: 100px;
-                height: 100px;
-            }
-            .respiracao-texto .timer {
-                font-size: 28px;
-            }
-            .respiracao-texto .frase {
-                font-size: 14px;
-            }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .filtros-atividades { gap: 4px; }
+            .filtros-atividades button { font-size: 11px; padding: 3px 12px; }
+            .notas-bimestres { grid-template-columns: 1fr 1fr; }
+            .welcome-hero::before { display: none; }
+            .dashboard-header h1 { font-size: 18px; }
+            .dashboard-header h1 small { font-size: 11px; display: block; margin-left: 0; }
+            .respiracao-circulo { width: 100px; height: 100px; }
+            .respiracao-circulo .circulo { width: 100px; height: 100px; }
+            .respiracao-texto .timer { font-size: 28px; }
+            .respiracao-texto .frase { font-size: 14px; }
+        }
+
+        /* ===== BOTÕES DE SELEÇÃO ===== */
+        select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237a8ea8' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 36px !important;
+            cursor: pointer;
+        }
+        select:hover { border-color: rgba(255, 179, 0, 0.3); }
+        select:focus { border-color: var(--color-accent) !important; }
+
+        /* ===== TOOLTIP ===== */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+        .tooltip .tooltip-text {
+            visibility: hidden;
+            width: 200px;
+            background: var(--color-card);
+            color: var(--color-text);
+            text-align: center;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--color-border);
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 12px;
+            font-weight: 400;
+        }
+        .tooltip:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
         }
     </style>
 </head>
@@ -2363,7 +1770,7 @@
             <button class="btn-entrar" onclick="entrarNoSistema()">
                 <i class="fas fa-sign-in-alt"></i> Entrar no Sistema
             </button>
-            <div class="versao">v3.0 · Com Botão do Pânico</div>
+            <div class="versao">v3.1 · Com Correções e Atendimentos</div>
         </div>
     </div>
 
@@ -2404,6 +1811,11 @@
             <a href="#" data-page="relatorios">
                 <span class="material-icons-sharp">description</span>
                 <h3>Relatórios</h3>
+            </a>
+            <a href="#" data-page="atendimentos">
+                <span class="material-icons-sharp">handshake</span>
+                <h3>Atendimentos</h3>
+                <span class="badge-link">Novo</span>
             </a>
 
             <div class="nav-label" style="margin-top:8px;">Panico</div>
@@ -2542,6 +1954,40 @@
         </div>
     </div>
 
+    <!-- ===== MODAL ATENDIMENTO ===== -->
+    <div class="modal-overlay" id="modalAtendimentoOverlay">
+        <div class="modal">
+            <h2 id="modalAtendimentoTitle"><i class="fas fa-handshake"></i> Nova Participação em Atendimento</h2>
+            <form id="atendimentoForm">
+
+                <label>Disciplina *</label>
+                <select id="formAtendimentoDisciplina" required>
+                    <option value="">Selecione uma disciplina</option>
+                </select>
+
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;">
+                    <div>
+                        <label>Data *</label>
+                        <input type="date" id="formAtendimentoData" required />
+                    </div>
+                    <div>
+                        <label>Hora *</label>
+                        <input type="time" id="formAtendimentoHora" required />
+                    </div>
+                </div>
+
+                <label style="margin-top:12px;">📝 Descrição *</label>
+                <textarea id="formAtendimentoDescricao" placeholder="Descreva o atendimento realizado..." required minlength="10"></textarea>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" onclick="closeModalAtendimento()">Cancelar</button>
+                    <button type="submit" class="btn-primary">Salvar Atendimento</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
     <!-- ===== MODO PÂNICO ===== -->
     <div class="panico-overlay" id="panicoOverlay">
         <div class="panico-container">
@@ -2618,7 +2064,7 @@
         </div>
     </div>
 
-    <!-- ===== SCRIPTS - SUPER MISTERIOSO E PROTEGIDO ===== -->
+    <!-- ===== SCRIPTS COMPLETOS CORRIGIDOS ===== -->
     <script>
         // ============================================================
         //  ██████  ███████  █████  ██      ███████
@@ -2627,15 +2073,19 @@
         // ██    ██ ██      ██   ██ ██      ██
         //  ██████  ███████ ██   ██ ███████ ███████
         // ============================================================
-
-        // [REDACTED] - Sistema de proteção ativado
-        // Nível de acesso: ALPHA-7
-        // Protocolo: SIGMA-9
+        // GDA v3.1 - CORREÇÕES COMPLETAS
+        // - Botões Editar/Excluir funcionando
+        // - Notas com cálculo correto
+        // - Limitação 0-10 com vírgula
+        // - Relatório com disciplinas
+        // - Atendimentos Intraescolares
+        // - CSS em selects
+        // ============================================================
 
         (function() {
             'use strict';
 
-            // ===== PROTEÇÃO CONTRA DDoS E ATAQUES =====
+            // ===== PROTEÇÃO =====
             const requestLog = {};
             const MAX_REQUESTS = 50;
             const TIME_WINDOW = 60000;
@@ -2661,56 +2111,6 @@
                         .slice(0, 2000);
                 }
             };
-
-            // ===== CONSOLE MISTERIOSO =====
-            console.log('%c⚠️ ACESSO RESTRITO ⚠️', 'font-size:20px;color:#ff0000;font-weight:bold;');
-            console.log('%cEste sistema é monitorado 24/7.', 'font-size:14px;color:#ff6b6b;');
-            console.log('%cTodas as ações são registradas.', 'font-size:14px;color:#ff6b6b;');
-            console.log('%c[▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓] 42%', 'font-size:12px;color:#4ecdc4;');
-            console.log('%c🔑 Chave de acesso: 0x7F3A9B2C', 'font-size:12px;color:#45b7d1;');
-            console.log('%c📡 Sinal: --- ... --- ... ---', 'font-size:12px;color:#96ceb4;');
-            console.log('%c💀 Digite "acesso_liberado()" para mais informações', 'font-size:14px;color:#ffd93d;');
-
-            window.acesso_liberado = function() {
-                console.log('%c🚨 ACESSO NEGADO! 🚨', 'font-size:24px;color:#ff0000;font-weight:bold;');
-                console.log('%cVocê não tem permissão para acessar esta área.', 'font-size:14px;color:#ff6b6b;');
-                console.log('%c🔒 Registro de tentativa enviado para administração.', 'font-size:14px;color:#ff6b6b;');
-                console.log('%c👀 Seu IP foi registrado: 127.0.0.1', 'font-size:12px;color:#45b7d1;');
-                return false;
-            };
-
-            // ===== PROTEÇÃO XSS =====
-            const originalInnerHTML = Object.getOwnPropertyDescriptor(Element.prototype, 'innerHTML');
-            Object.defineProperty(Element.prototype, 'innerHTML', {
-                get: originalInnerHTML.get,
-                set: function(value) {
-                    if (typeof value === 'string') {
-                        const clean = value
-                            .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
-                            .replace(/on\w+\s*=/gi, '')
-                            .replace(/javascript:/gi, '');
-                        return originalInnerHTML.set.call(this, clean);
-                    }
-                    return originalInnerHTML.set.call(this, value);
-                }
-            });
-
-            // ===== DETECÇÃO DE DEVTOOLS =====
-            let devtoolsOpen = false;
-            setInterval(function() {
-                const threshold = 160;
-                const widthThreshold = window.outerWidth - window.innerWidth > threshold;
-                const heightThreshold = window.outerHeight - window.innerHeight > threshold;
-                if (widthThreshold || heightThreshold) {
-                    if (!devtoolsOpen) {
-                        devtoolsOpen = true;
-                        console.warn('⚠️ Ferramentas de desenvolvedor detectadas!');
-                        setTimeout(() => { console.clear(); }, 100);
-                    }
-                } else {
-                    devtoolsOpen = false;
-                }
-            }, 2000);
 
             // ===== CONFIGURAÇÃO =====
             const APP_ID = '1BF3914F-116E-4BD6-BA55-D9720E1219C7';
@@ -2783,7 +2183,7 @@
                     autor: 'Nelson Mandela' }
             ];
 
-            // ===== STORAGE SEGURO =====
+            // ===== STORAGE =====
             function loadData(key, defaultValue) {
                 try {
                     if (!window.__security.checkRateLimit('load_' + key)) return defaultValue;
@@ -2806,9 +2206,11 @@
             let relatorios = loadData('gda_relatorios', []);
             let checklistState = loadData('gda_checklist', {});
             let historicoPanico = loadData('gda_historico_panico', []);
+            let atendimentos = loadData('gda_atendimentos', []);
             let participantesTemp = [];
             let subtarefasTemp = [];
             let editandoId = null;
+            let editandoAtendimentoId = null;
             let respiracaoAtiva = false;
             let respiracaoInterval = null;
 
@@ -3119,7 +2521,6 @@
                     `;
                 }).join('');
 
-                // Event listeners para os botões (evita problemas com onclick)
                 document.querySelectorAll('.btn-resolver-panico').forEach(btn => {
                     btn.addEventListener('click', function(e) {
                         const id = parseInt(this.dataset.id);
@@ -3156,11 +2557,10 @@
                 }
             }
 
-            // Tornar funções acessíveis globalmente (para os event listeners)
             window.marcarPanicoResolvido = marcarPanicoResolvido;
             window.deletarRegistroPanico = deletarRegistroPanico;
 
-            // ===== RENDERIZAÇÃO TELA INICIAL (ATUALIZADA COM DATAS CORRETAS) =====
+            // ===== RENDERIZAÇÃO TELA INICIAL =====
             function renderTelaInicial() {
                 const saudacao = getSaudacao();
                 const emoji = getEmojiSaudacao();
@@ -3186,7 +2586,7 @@
 
                 updateClockDisplay();
 
-                // ===== CHECKLIST =====
+                // CHECKLIST
                 const total = checklistItems.length;
                 const done = checklistItems.filter(item => checklistState[item.id] === true).length;
                 const pct = total > 0 ? Math.round((done / total) * 100) : 0;
@@ -3195,7 +2595,7 @@
                 if (elCheckDone) elCheckDone.textContent = done;
                 if (elCheckBar) elCheckBar.style.width = `${pct}%`;
 
-                // ===== HORAS DE ESTUDO =====
+                // HORAS DE ESTUDO
                 const hojeStr = hoje.toISOString().split('T')[0];
                 const horasHoje = relatorios.filter(r => r.data === hojeStr).reduce((acc, r) => acc + r.tempo, 0);
                 const horasFormatadas = Math.floor(horasHoje / 60);
@@ -3208,10 +2608,7 @@
                 const metaEstudo = 120;
                 if (elEstudoBar) elEstudoBar.style.width = `${Math.min(100, (horasHoje / metaEstudo) * 100)}%`;
 
-                // ===== PROGRESSO DO SEMESTRE 2026 (COM DATAS CORRETAS) =====
-                // DATAS CORRETAS:
-                // 2026.1: 21/01 a 23/07
-                // 2026.2: 03/08 a 18/12
+                // PROGRESSO DO SEMESTRE
                 const dataInicioSemestre1 = new Date('2026-01-21');
                 const dataFimSemestre1 = new Date('2026-07-23');
                 const dataInicioSemestre2 = new Date('2026-08-03');
@@ -3224,63 +2621,39 @@
                 const elProgressFg = document.querySelector('.progress-fg');
                 const elProgressMsg = document.getElementById('progressMessage');
 
-                // Função para calcular progresso de um período
-                function calcularProgressoPeriodo(inicio, fim, hoje) {
-                    if (hoje < inicio) {
-                        return { percentual: 0, status: 'nao_iniciado', mensagem: '⏳ Aguardando início' };
-                    }
-                    if (hoje > fim) {
-                        return { percentual: 100, status: 'concluido', mensagem: '✅ Período concluído!' };
-                    }
-                    const totalDias = Math.ceil((fim - inicio) / (1000 * 60 * 60 * 24));
-                    const diasPassados = Math.ceil((hoje - inicio) / (1000 * 60 * 60 * 24));
-                    const percentual = Math.min(100, Math.max(0, Math.round((diasPassados / totalDias) * 100)));
-                    return { percentual, status: 'em_andamento', mensagem: `📈 ${percentual}% concluído` };
-                }
-
-                // Verifica qual período está em foco
-                let periodoAtual = '2026.2';
                 let percentualFinal = 0;
                 let mensagemFinal = '';
                 let semanasPassadasFinal = 0;
                 let semanasRestantesFinal = 0;
                 let diasRestantesFinal = 0;
-                let totalSemanasFinal = 18;
 
                 if (hoje < dataInicioSemestre2) {
-                    // Antes do 2026.2 - mostra 2026.1
                     const progresso1 = calcularProgressoPeriodo(dataInicioSemestre1, dataFimSemestre1, hoje);
                     percentualFinal = progresso1.percentual;
                     mensagemFinal = progresso1.status === 'concluido' ?
                         '✅ Semestre 2026.1 concluído! Aguardando 2026.2 (início em 3 de agosto)' :
                         `📈 ${progresso1.percentual}% do 2026.1 concluído`;
-                    // Se ainda não começou o 2026.1
                     if (hoje < dataInicioSemestre1) {
                         mensagemFinal = '📅 O semestre 2026.1 começa em 21 de janeiro!';
                         percentualFinal = 0;
                     }
-                    // Se está entre o fim do 2026.1 e início do 2026.2
                     if (hoje > dataFimSemestre1) {
                         percentualFinal = 100;
                         mensagemFinal = '✅ Semestre 2026.1 concluído! Aguardando 2026.2 (início em 3 de agosto)';
                     }
-                    // Calcula semanas para 2026.1
                     const totalDias1 = Math.ceil((dataFimSemestre1 - dataInicioSemestre1) / (1000 * 60 * 60 * 24));
                     const diasPassados1 = Math.max(0, Math.ceil((hoje - dataInicioSemestre1) / (1000 * 60 * 60 * 24)));
                     const totalSemanas1 = Math.ceil(totalDias1 / 7);
                     semanasPassadasFinal = Math.min(totalSemanas1, Math.ceil(diasPassados1 / 7));
                     semanasRestantesFinal = Math.max(0, totalSemanas1 - semanasPassadasFinal);
                     diasRestantesFinal = Math.max(0, totalDias1 - diasPassados1);
-                    totalSemanasFinal = totalSemanas1;
                 } else if (hoje > dataFimSemestre2) {
-                    // Depois do 2026.2
                     percentualFinal = 100;
                     mensagemFinal = '🎉 Semestre 2026.2 concluído! Parabéns!';
                     semanasPassadasFinal = 18;
                     semanasRestantesFinal = 0;
                     diasRestantesFinal = 0;
                 } else {
-                    // Durante o 2026.2
                     const totalDias2 = Math.ceil((dataFimSemestre2 - dataInicioSemestre2) / (1000 * 60 * 60 * 24));
                     const diasPassados2 = Math.ceil((hoje - dataInicioSemestre2) / (1000 * 60 * 60 * 24));
                     const totalSemanas2 = Math.ceil(totalDias2 / 7);
@@ -3290,10 +2663,8 @@
                     semanasPassadasFinal = semanasPassadas2;
                     semanasRestantesFinal = Math.max(0, totalSemanas2 - semanasPassadas2);
                     diasRestantesFinal = Math.max(0, totalDias2 - diasPassados2);
-                    totalSemanasFinal = totalSemanas2;
                 }
 
-                // Atualiza os elementos HTML
                 if (elSemanaCursadas) elSemanaCursadas.textContent = semanasPassadasFinal;
                 if (elSemanaRestantes) elSemanaRestantes.textContent = semanasRestantesFinal;
                 if (elDiasLetivos) elDiasLetivos.textContent = diasRestantesFinal;
@@ -3306,7 +2677,7 @@
                     elProgressFg.style.strokeDashoffset = offset;
                 }
 
-                // ===== FRASE DO DIA =====
+                // FRASE DO DIA
                 const elQuote = document.getElementById('dailyQuote');
                 const elAuthor = document.getElementById('quoteAuthor');
                 if (elQuote && !elQuote.dataset.loaded) {
@@ -3318,6 +2689,19 @@
                 }
 
                 atualizarBadgePanico();
+            }
+
+            function calcularProgressoPeriodo(inicio, fim, hoje) {
+                if (hoje < inicio) {
+                    return { percentual: 0, status: 'nao_iniciado', mensagem: '⏳ Aguardando início' };
+                }
+                if (hoje > fim) {
+                    return { percentual: 100, status: 'concluido', mensagem: '✅ Período concluído!' };
+                }
+                const totalDias = Math.ceil((fim - inicio) / (1000 * 60 * 60 * 24));
+                const diasPassados = Math.ceil((hoje - inicio) / (1000 * 60 * 60 * 24));
+                const percentual = Math.min(100, Math.max(0, Math.round((diasPassados / totalDias) * 100)));
+                return { percentual, status: 'em_andamento', mensagem: `📈 ${percentual}% concluído` };
             }
 
             // ===== RENDERIZAÇÃO DASHBOARD =====
@@ -3334,7 +2718,7 @@
                     const nota = notas[d.cod] || { b1: '', b2: '', b3: '', b4: '' };
                     const valores = [parseFloat(nota.b1), parseFloat(nota.b2), parseFloat(nota.b3), parseFloat(nota
                         .b4)];
-                    const validas = valores.filter(v => !isNaN(v));
+                    const validas = valores.filter(v => !isNaN(v) && v > 0);
                     if (validas.length > 0) {
                         medias.push(validas.reduce((a, b) => a + b, 0) / validas.length);
                     }
@@ -3461,7 +2845,7 @@
                 }
             }
 
-            // ===== ATIVIDADES =====
+            // ===== ATIVIDADES - CORRIGIDO (BOTÕES EDITAR/EXCLUIR) =====
             function renderAtividades() {
                 const container = document.getElementById('atividadesContainer');
                 if (!container) return;
@@ -3501,7 +2885,7 @@
                     }
 
                     return `
-                        <div class="atividade-card prioridade-${a.prioridade}">
+                        <div class="atividade-card prioridade-${a.prioridade}" data-id="${a.id}">
                             <div class="disciplina"><i class="fas fa-book"></i> ${a.disciplina || 'Sem disciplina'}</div>
                             <div class="titulo">${a.titulo || 'Sem título'}</div>
                             ${participantesHtml}
@@ -3514,124 +2898,40 @@
                                 <span class="pct">${progresso}%</span>
                             </div>
                             <div class="acoes">
-                                <button class="btn-edit" onclick="editarAtividade(${a.id})"><i class="fas fa-edit"></i> Editar</button>
-                                <button class="btn-delete" onclick="deletarAtividade(${a.id})"><i class="fas fa-trash-alt"></i> Remover</button>
+                                <button class="btn-edit" data-id="${a.id}"><i class="fas fa-edit"></i> Editar</button>
+                                <button class="btn-delete" data-id="${a.id}"><i class="fas fa-trash-alt"></i> Remover</button>
                             </div>
                         </div>
                     `;
                 }).join('');
-            }
 
-            // ===== NOTAS =====
-            function renderNotas() {
-                const container = document.getElementById('notasContainer');
-                if (!container) return;
-
-                container.innerHTML = turmas.map(d => {
-                    const nota = notas[d.cod] || { b1: '', b2: '', b3: '', b4: '' };
-                    const valores = [nota.b1, nota.b2, nota.b3, nota.b4];
-                    const validas = valores.filter(v => v !== '' && !isNaN(parseFloat(v))).map(v => parseFloat(v));
-                    const media = validas.length > 0 ? (validas.reduce((a, b) => a + b, 0) / validas.length) : 0;
-                    const status = media >= 7 ? 'aprovado' : (validas.length === 4 ? 'reprovado' : 'recuperacao');
-                    const statusText = media >= 7 ? '✅ Aprovado' : (validas.length === 4 ? '❌ Reprovado' :
-                        '🟡 Em andamento');
-
-                    return `
-                        <div class="notas-card">
-                            <div class="disciplina-nome">${d.nome} <span class="codigo">${d.cod}</span></div>
-                            <div class="notas-bimestres">
-                                ${[1,2,3,4].map(b => `
-                                    <div class="nota-bimestre">
-                                        <div class="bimestre-label">${b}º Bim</div>
-                                        <input type="number" min="0" max="10" step="0.1" 
-                                            value="${nota['b'+b] || ''}" 
-                                            onchange="atualizarNota('${d.cod}', 'b${b}', this.value)"
-                                            placeholder="--" />
-                                    </div>
-                                `).join('')}
-                            </div>
-                            <div class="notas-resultado">
-                                <div class="resultado-principal">
-                                    <span class="media ${status}">${validas.length > 0 ? media.toFixed(1) : '--'}</span>
-                                    <span style="font-size:13px;color:var(--color-text-muted);">${validas.length}/4 bimestres</span>
-                                    <span style="font-size:12px;font-weight:600;color:${media >= 7 ? 'var(--color-success)' : 'var(--color-warning)'};">${statusText}</span>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-            }
-
-            // ===== RELATÓRIOS =====
-            function renderRelatorios() {
-                const container = document.getElementById('relatoriosLista');
-                if (!container) return;
-
-                if (relatorios.length === 0) {
-                    container.innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-inbox"></i>
-                            Nenhum relatório registrado.
-                        </div>
-                    `;
-                    return;
-                }
-
-                const grouped = {};
-                relatorios.forEach(r => {
-                    if (!grouped[r.data]) grouped[r.data] = [];
-                    grouped[r.data].push(r);
+                // ===== EVENT LISTENERS PARA BOTÕES =====
+                container.querySelectorAll('.btn-edit').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const id = parseInt(this.dataset.id);
+                        editarAtividade(id);
+                    });
                 });
 
-                const datas = Object.keys(grouped).sort((a, b) => new Date(b) - new Date(a));
-
-                container.innerHTML = datas.map(dataKey => {
-                    const items = grouped[dataKey];
-                    const totalTempo = items.reduce((acc, r) => acc + r.tempo, 0);
-                    const totalHoras = Math.floor(totalTempo / 60);
-                    const totalMinutos = totalTempo % 60;
-                    const totalTexto = totalHoras > 0 ? `${totalHoras}h ${totalMinutos}min` : `${totalMinutos}min`;
-
-                    return `
-                        <div class="relatorio-dia">
-                            <div class="relatorio-dia-header">
-                                <span class="data-dia"><i class="far fa-calendar-alt"></i> ${new Date(dataKey + 'T00:00:00').toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' })}</span>
-                                <span class="total-dia">📊 ${items.length} registro(s) · ⏱️ ${totalTexto}</span>
-                            </div>
-                            <div class="relatorio-dia-itens">
-                                ${items.map(r => `
-                                    <div class="relatorio-item">
-                                        <span class="disciplina">📚 ${r.disciplina}</span>
-                                        <span class="horas">⏱️ ${r.tempo}min</span>
-                                        <span class="texto">${r.texto}</span>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
-                    `;
-                }).join('');
+                container.querySelectorAll('.btn-delete').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const id = parseInt(this.dataset.id);
+                        if (confirm('Remover esta atividade?')) {
+                            deletarAtividade(id);
+                        }
+                    });
+                });
             }
-
-            // ===== FUNÇÕES DE AÇÃO =====
-            window.atualizarNota = function(cod, bimestre, valor) {
-                if (!window.__security.checkRateLimit('nota_update')) return;
-                if (!notas[cod]) notas[cod] = { b1: '', b2: '', b3: '', b4: '' };
-                notas[cod][bimestre] = valor;
-                saveData('gda_notas', notas);
-                renderNotas();
-                renderTelaInicial();
-                renderDashboard();
-            };
 
             window.deletarAtividade = function(id) {
                 if (!window.__security.checkRateLimit('atividade_delete')) return;
-                if (confirm('Remover esta atividade?')) {
-                    atividades = atividades.filter(a => a.id !== id);
-                    saveData('gda_atividades', atividades);
-                    renderAtividades();
-                    renderTelaInicial();
-                    renderDashboard();
-                }
+                atividades = atividades.filter(a => a.id !== id);
+                saveData('gda_atividades', atividades);
+                renderAtividades();
+                renderTelaInicial();
+                renderDashboard();
             };
 
             window.editarAtividade = function(id) {
@@ -3683,28 +2983,459 @@
                 editandoId = null;
             };
 
-            window.entrarNoSistema = function() {
-                document.getElementById('splashOverlay').classList.add('hidden');
-                console.log('%c🔓 Acesso liberado. Bem-vindo(a)!', 'font-size:14px;color:#4ecdc4;');
+            // ===== NOTAS - CORRIGIDO (CÁLCULO COM VALIDAÇÃO) =====
+            function renderNotas() {
+                const container = document.getElementById('notasContainer');
+                if (!container) return;
+
+                container.innerHTML = turmas.map(d => {
+                    const nota = notas[d.cod] || { b1: '', b2: '', b3: '', b4: '' };
+                    
+                    // VALIDAÇÃO: Considera apenas notas válidas (>0 e <=10)
+                    const valores = [nota.b1, nota.b2, nota.b3, nota.b4];
+                    const validas = valores
+                        .filter(v => v !== '' && v !== null && v !== undefined)
+                        .map(v => {
+                            const num = parseFloat(v.toString().replace(',', '.'));
+                            return !isNaN(num) && num > 0 && num <= 10 ? num : null;
+                        })
+                        .filter(v => v !== null);
+                    
+                    const totalValidas = validas.length;
+                    const media = totalValidas > 0 ? (validas.reduce((a, b) => a + b, 0) / totalValidas) : 0;
+                    
+                    // STATUS: Só reprova se tiver 4 notas válidas E média < 7
+                    let status, statusText;
+                    if (totalValidas === 0) {
+                        status = 'aguardando';
+                        statusText = '⏳ Aguardando notas';
+                    } else if (totalValidas < 4) {
+                        status = 'recuperacao';
+                        statusText = `🟡 ${totalValidas}/4 bimestres`;
+                    } else if (media >= 7) {
+                        status = 'aprovado';
+                        statusText = '✅ Aprovado';
+                    } else {
+                        status = 'reprovado';
+                        statusText = '❌ Reprovado';
+                    }
+
+                    return `
+                        <div class="notas-card">
+                            <div class="disciplina-nome">${d.nome} <span class="codigo">${d.cod}</span></div>
+                            <div class="notas-bimestres">
+                                ${[1,2,3,4].map(b => `
+                                    <div class="nota-bimestre">
+                                        <div class="bimestre-label">${b}º Bim</div>
+                                        <input type="text" 
+                                            inputmode="decimal"
+                                            pattern="[0-9,.]*"
+                                            value="${nota['b'+b] || ''}" 
+                                            onchange="atualizarNota('${d.cod}', 'b${b}', this.value)"
+                                            oninput="validarNota(this)"
+                                            placeholder="--" />
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <div class="notas-resultado">
+                                <div class="resultado-principal">
+                                    <span class="media ${status}">${totalValidas > 0 ? media.toFixed(1) : '--'}</span>
+                                    <span style="font-size:13px;color:var(--color-text-muted);">${totalValidas}/4 bimestres</span>
+                                    <span style="font-size:12px;font-weight:600;color:${media >= 7 ? 'var(--color-success)' : totalValidas < 4 ? 'var(--color-warning)' : 'var(--color-danger)'};">${statusText}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // ===== VALIDAÇÃO DE NOTAS (0-10 com vírgula) =====
+            function validarNota(input) {
+                let valor = input.value.replace(',', '.');
+                // Remove caracteres não numéricos exceto ponto
+                valor = valor.replace(/[^0-9.]/g, '');
+                
+                // Limita a 2 casas decimais
+                const partes = valor.split('.');
+                if (partes.length > 2) {
+                    valor = partes[0] + '.' + partes[1].slice(0, 2);
+                }
+                
+                const num = parseFloat(valor);
+                if (num > 10) {
+                    valor = '10';
+                } else if (num < 0 && valor !== '') {
+                    valor = '0';
+                }
+                
+                input.value = valor;
+            }
+
+            window.atualizarNota = function(cod, bimestre, valor) {
+                if (!window.__security.checkRateLimit('nota_update')) return;
+                
+                // Limpa e valida
+                let valorLimpo = valor.replace(',', '.').replace(/[^0-9.]/g, '');
+                const num = parseFloat(valorLimpo);
+                
+                if (valorLimpo !== '' && (isNaN(num) || num < 0 || num > 10)) {
+                    alert('⚠️ A nota deve ser entre 0 e 10.');
+                    // Reverte para o valor anterior
+                    const nota = notas[cod] || { b1: '', b2: '', b3: '', b4: '' };
+                    const campo = document.querySelector(`input[value="${valor}"]`);
+                    if (campo) {
+                        campo.value = nota[bimestre] || '';
+                    }
+                    return;
+                }
+                
+                if (!notas[cod]) notas[cod] = { b1: '', b2: '', b3: '', b4: '' };
+                notas[cod][bimestre] = valorLimpo;
+                saveData('gda_notas', notas);
+                renderNotas();
+                renderTelaInicial();
+                renderDashboard();
             };
 
-            // ==========================================
-            // SINCRONIZAÇÃO
-            // ==========================================
-            window.sincronizarBackendless = function() {
-                if (!window.__security.checkRateLimit('sync')) return;
-                alert('☁️ Sincronizando com a nuvem...\n\n' +
-                    'Checklist: ' + Object.keys(checklistState).length + ' itens\n' +
-                    'Atividades: ' + atividades.length + ' atividades\n' +
-                    'Notas: ' + Object.keys(notas).length + ' disciplinas\n' +
-                    'Relatórios: ' + relatorios.length + ' registros\n' +
-                    'Histórico Pânico: ' + historicoPanico.length + ' registros\n\n' +
-                    '✅ Dados salvos localmente!');
+            // ===== RELATÓRIOS - CORRIGIDO (DISCIPLINAS POPULADAS) =====
+            function renderRelatorios() {
+                const container = document.getElementById('relatoriosLista');
+                if (!container) return;
+
+                // Popula o select de disciplinas
+                const select = document.getElementById('relatorioDisciplina');
+                if (select && select.options.length <= 1) {
+                    select.innerHTML = '<option value="">Selecione uma disciplina</option>' +
+                        turmas.map(t => `<option value="${t.nome}">${t.nome}</option>`).join('');
+                }
+
+                if (relatorios.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-inbox"></i>
+                            Nenhum relatório registrado.
+                        </div>
+                    `;
+                    return;
+                }
+
+                const grouped = {};
+                relatorios.forEach(r => {
+                    if (!grouped[r.data]) grouped[r.data] = [];
+                    grouped[r.data].push(r);
+                });
+
+                const datas = Object.keys(grouped).sort((a, b) => new Date(b) - new Date(a));
+
+                container.innerHTML = datas.map(dataKey => {
+                    const items = grouped[dataKey];
+                    const totalTempo = items.reduce((acc, r) => acc + r.tempo, 0);
+                    const totalHoras = Math.floor(totalTempo / 60);
+                    const totalMinutos = totalTempo % 60;
+                    const totalTexto = totalHoras > 0 ? `${totalHoras}h ${totalMinutos}min` : `${totalMinutos}min`;
+
+                    return `
+                        <div class="relatorio-dia">
+                            <div class="relatorio-dia-header">
+                                <span class="data-dia"><i class="far fa-calendar-alt"></i> ${new Date(dataKey + 'T00:00:00').toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' })}</span>
+                                <span class="total-dia">📊 ${items.length} registro(s) · ⏱️ ${totalTexto}</span>
+                            </div>
+                            <div class="relatorio-dia-itens">
+                                ${items.map(r => `
+                                    <div class="relatorio-item">
+                                        <span class="disciplina">📚 ${r.disciplina}</span>
+                                        <span class="horas">⏱️ ${r.tempo}min</span>
+                                        <span class="texto">${r.texto}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // ===== ATENDIMENTOS INTRAESCOLARES (NOVO MÓDULO) =====
+            function renderAtendimentos() {
+                const container = document.getElementById('atendimentosContainer');
+                if (!container) return;
+
+                // Popula o select do modal
+                const select = document.getElementById('formAtendimentoDisciplina');
+                if (select) {
+                    select.innerHTML = '<option value="">Selecione uma disciplina</option>' +
+                        turmas.map(t => `<option value="${t.nome}">${t.nome}</option>`).join('');
+                }
+
+                // Data atual no modal
+                const dataInput = document.getElementById('formAtendimentoData');
+                if (dataInput) {
+                    const hoje = new Date().toISOString().split('T')[0];
+                    dataInput.value = hoje;
+                }
+
+                const horaInput = document.getElementById('formAtendimentoHora');
+                if (horaInput) {
+                    const agora = new Date();
+                    const h = String(agora.getHours()).padStart(2, '0');
+                    const m = String(agora.getMinutes()).padStart(2, '0');
+                    horaInput.value = `${h}:${m}`;
+                }
+
+                if (atendimentos.length === 0) {
+                    container.innerHTML = `
+                        <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--color-text-muted);background:var(--color-card);border-radius:var(--radius);border:1px solid var(--color-border);">
+                            <i class="fas fa-handshake" style="font-size:32px;display:block;margin-bottom:12px;color:rgba(255,179,0,0.1);"></i>
+                            Nenhum atendimento registrado. Clique em "Novo Atendimento" para começar.
+                        </div>
+                    `;
+                    return;
+                }
+
+                const sorted = [...atendimentos].sort((a, b) => {
+                    if (a.data !== b.data) return new Date(b.data) - new Date(a.data);
+                    return b.id - a.id;
+                });
+
+                container.innerHTML = sorted.map(a => `
+                    <div class="atendimento-card" data-id="${a.id}">
+                        <div class="header">
+                            <span class="disciplina">📚 ${a.disciplina}</span>
+                            <span class="data-hora">${new Date(a.data + 'T00:00:00').toLocaleDateString('pt-BR')} · ${a.hora}</span>
+                        </div>
+                        <div class="descricao">${a.descricao}</div>
+                        <div class="acoes">
+                            <button class="btn-edit-atendimento" data-id="${a.id}"><i class="fas fa-edit"></i> Editar</button>
+                            <button class="btn-delete-atendimento" data-id="${a.id}"><i class="fas fa-trash-alt"></i> Remover</button>
+                        </div>
+                    </div>
+                `).join('');
+
+                // Event listeners para botões
+                container.querySelectorAll('.btn-edit-atendimento').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const id = parseInt(this.dataset.id);
+                        editarAtendimento(id);
+                    });
+                });
+
+                container.querySelectorAll('.btn-delete-atendimento').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const id = parseInt(this.dataset.id);
+                        if (confirm('Remover este atendimento?')) {
+                            deletarAtendimento(id);
+                        }
+                    });
+                });
+            }
+
+            window.deletarAtendimento = function(id) {
+                atendimentos = atendimentos.filter(a => a.id !== id);
+                saveData('gda_atendimentos', atendimentos);
+                renderAtendimentos();
+                renderTelaInicial();
+                renderDashboard();
             };
 
-            // ==========================================
-            // ROTEAMENTO
-            // ==========================================
+            window.editarAtendimento = function(id) {
+                const atendimento = atendimentos.find(a => a.id === id);
+                if (!atendimento) return;
+                
+                document.getElementById('formAtendimentoDisciplina').value = atendimento.disciplina || '';
+                document.getElementById('formAtendimentoData').value = atendimento.data || '';
+                document.getElementById('formAtendimentoHora').value = atendimento.hora || '';
+                document.getElementById('formAtendimentoDescricao').value = atendimento.descricao || '';
+                
+                document.getElementById('modalAtendimentoTitle').innerHTML = '<i class="fas fa-edit"></i> Editar Atendimento';
+                document.getElementById('modalAtendimentoOverlay').classList.add('open');
+                editandoAtendimentoId = id;
+            };
+
+            window.openModalAtendimento = function() {
+                if (!window.__security.checkRateLimit('atendimento_open')) return;
+                document.getElementById('atendimentoForm').reset();
+                document.getElementById('modalAtendimentoTitle').innerHTML = '<i class="fas fa-handshake"></i> Nova Participação em Atendimento';
+                document.getElementById('modalAtendimentoOverlay').classList.add('open');
+                editandoAtendimentoId = null;
+                
+                const hoje = new Date().toISOString().split('T')[0];
+                document.getElementById('formAtendimentoData').value = hoje;
+                
+                const agora = new Date();
+                const h = String(agora.getHours()).padStart(2, '0');
+                const m = String(agora.getMinutes()).padStart(2, '0');
+                document.getElementById('formAtendimentoHora').value = `${h}:${m}`;
+            };
+
+            window.closeModalAtendimento = function() {
+                document.getElementById('modalAtendimentoOverlay').classList.remove('open');
+                editandoAtendimentoId = null;
+            };
+
+            // ===== FORMULÁRIO ATENDIMENTO =====
+            document.addEventListener('submit', function(e) {
+                if (e.target.id === 'atendimentoForm') {
+                    e.preventDefault();
+                    
+                    const disciplina = document.getElementById('formAtendimentoDisciplina').value;
+                    const data = document.getElementById('formAtendimentoData').value;
+                    const hora = document.getElementById('formAtendimentoHora').value;
+                    const descricao = document.getElementById('formAtendimentoDescricao').value.trim();
+
+                    if (!disciplina || !data || !hora || !descricao || descricao.length < 10) {
+                        alert('Preencha todos os campos! (Descrição mínima de 10 caracteres)');
+                        return;
+                    }
+
+                    if (editandoAtendimentoId) {
+                        const idx = atendimentos.findIndex(a => a.id === editandoAtendimentoId);
+                        if (idx !== -1) {
+                            atendimentos[idx] = {
+                                ...atendimentos[idx],
+                                disciplina,
+                                data,
+                                hora,
+                                descricao
+                            };
+                        }
+                    } else {
+                        atendimentos.push({
+                            id: Date.now(),
+                            disciplina,
+                            data,
+                            hora,
+                            descricao,
+                            timestamp: new Date(data + 'T' + hora).getTime()
+                        });
+                    }
+
+                    saveData('gda_atendimentos', atendimentos);
+                    renderAtendimentos();
+                    renderTelaInicial();
+                    renderDashboard();
+                    closeModalAtendimento();
+                    alert('✅ Atendimento salvo!');
+                    editandoAtendimentoId = null;
+                }
+            });
+
+            // ===== FORMULÁRIO DE RELATÓRIO =====
+            document.addEventListener('submit', function(e) {
+                if (e.target.id === 'relatorioForm') {
+                    e.preventDefault();
+                    const disciplina = document.getElementById('relatorioDisciplina').value;
+                    const tempo = parseInt(document.getElementById('relatorioTempo').value);
+                    const texto = document.getElementById('relatorioTexto').value.trim();
+
+                    if (!disciplina || !tempo || !texto) {
+                        alert('Preencha todos os campos!');
+                        return;
+                    }
+
+                    relatorios.push({
+                        id: Date.now(),
+                        data: new Date().toISOString().split('T')[0],
+                        disciplina,
+                        tempo,
+                        texto
+                    });
+                    saveData('gda_relatorios', relatorios);
+                    renderRelatorios();
+                    renderTelaInicial();
+                    renderDashboard();
+                    document.getElementById('relatorioTexto').value = '';
+                    document.getElementById('relatorioTempo').value = '';
+                    document.getElementById('relatorioDisciplina').value = '';
+                    alert('✅ Relatório salvo!');
+                }
+            });
+
+            // ===== FORMULÁRIO DE ATIVIDADE =====
+            document.addEventListener('submit', function(e) {
+                if (e.target.id === 'atividadeForm') {
+                    e.preventDefault();
+                    const titulo = document.getElementById('formTitulo').value.trim();
+                    const tipo = document.getElementById('formTipo').value;
+                    const prioridade = document.getElementById('formPrioridade').value;
+                    const disciplina = document.getElementById('formDisciplina').value;
+                    const inicio = document.getElementById('formInicio').value;
+                    const prazo = document.getElementById('formPrazo').value;
+                    const entregaDocente = document.getElementById('formEntregaDocente').value;
+                    const observacoes = document.getElementById('formObservacoes').value.trim();
+
+                    if (!titulo || !disciplina || !inicio || !prazo || !entregaDocente) {
+                        alert('Preencha todos os campos obrigatórios.');
+                        return;
+                    }
+
+                    const progresso = subtarefasTemp.length > 0 ?
+                        Math.round((subtarefasTemp.filter(st => st.concluido).length / subtarefasTemp.length) *
+                        100) :
+                        0;
+
+                    if (editandoId) {
+                        const idx = atividades.findIndex(a => a.id === editandoId);
+                        if (idx !== -1) {
+                            atividades[idx] = {
+                                ...atividades[idx],
+                                titulo,
+                                tipo,
+                                prioridade,
+                                disciplina,
+                                inicio,
+                                prazo,
+                                entregaDocente,
+                                observacoes,
+                                participantes: participantesTemp,
+                                subtarefas: subtarefasTemp,
+                                progresso
+                            };
+                        }
+                    } else {
+                        atividades.push({
+                            id: Date.now(),
+                            titulo,
+                            tipo,
+                            prioridade,
+                            disciplina,
+                            inicio,
+                            prazo,
+                            entregaDocente,
+                            observacoes,
+                            participantes: participantesTemp,
+                            subtarefas: subtarefasTemp,
+                            progresso
+                        });
+                    }
+
+                    saveData('gda_atividades', atividades);
+                    renderAtividades();
+                    renderTelaInicial();
+                    renderDashboard();
+                    closeModal();
+                    alert('✅ Atividade salva!');
+                    editandoId = null;
+                    participantesTemp = [];
+                    subtarefasTemp = [];
+                }
+            });
+
+            // ===== POPULAR SELECTS =====
+            function populateSelects() {
+                const select = document.getElementById('formDisciplina');
+                if (select) {
+                    select.innerHTML = turmas.map(t => `<option value="${t.nome}">${t.nome}</option>`).join('');
+                }
+
+                const relatorioSelect = document.getElementById('relatorioDisciplina');
+                if (relatorioSelect) {
+                    relatorioSelect.innerHTML = '<option value="">Selecione uma disciplina</option>' +
+                        turmas.map(t => `<option value="${t.nome}">${t.nome}</option>`).join('');
+                }
+            }
+
+            // ===== ROTEAMENTO =====
             function showPage(pageId) {
                 document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
                 const target = document.getElementById(`page-${pageId}`);
@@ -3717,15 +3448,16 @@
                 if (pageId === 'historicopanico') {
                     renderHistoricoPanico();
                 }
+                if (pageId === 'atendimentos') {
+                    renderAtendimentos();
+                }
             }
 
-            // ==========================================
-            // CARREGAR PÁGINAS
-            // ==========================================
+            // ===== CARREGAR PÁGINAS =====
             async function loadPages() {
                 const container = document.getElementById('pageContainer');
                 const pages = ['inicial', 'dashboard', 'checklist', 'turmas', 'atividades', 'notas', 'relatorios',
-                    'historicopanico'
+                    'historicopanico', 'atendimentos'
                 ];
 
                 for (const page of pages) {
@@ -3742,7 +3474,23 @@
                         if (page === 'inicial') pageDiv.classList.add('active');
 
                         let content = '';
-                        if (page === 'inicial') {
+                        if (page === 'atendimentos') {
+                            content = `
+                                <div class="section-title">
+                                    <i class="fas fa-handshake"></i> Participações em Atendimento Intraescolar
+                                    <span class="badge">Novo</span>
+                                    <button onclick="openModalAtendimento()" style="margin-left:auto;padding:6px 20px;border-radius:30px;border:1px dashed var(--color-border);background:transparent;color:var(--color-text-muted);cursor:pointer;font-family:'Inter',sans-serif;font-size:13px;">
+                                        <i class="fas fa-plus"></i> Novo Atendimento
+                                    </button>
+                                </div>
+                                <div class="atendimentos-grid" id="atendimentosContainer">
+                                    <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--color-text-muted);background:var(--color-card);border-radius:var(--radius);border:1px solid var(--color-border);">
+                                        <i class="fas fa-handshake" style="font-size:32px;display:block;margin-bottom:12px;color:rgba(255,179,0,0.1);"></i>
+                                        Carregando atendimentos...
+                                    </div>
+                                </div>
+                            `;
+                        } else if (page === 'inicial') {
                             content = `
                                 <div class="welcome-hero">
                                     <div class="greeting-section">
@@ -3919,7 +3667,9 @@
                                     <form class="relatorio-form" id="relatorioForm">
                                         <div>
                                             <label>📚 Disciplina</label>
-                                            <select id="relatorioDisciplina" required><option value="">Selecione</option></select>
+                                            <select id="relatorioDisciplina" required>
+                                                <option value="">Selecione uma disciplina</option>
+                                            </select>
                                         </div>
                                         <div>
                                             <label>⏱️ Tempo (minutos)</label>
@@ -3958,7 +3708,9 @@
                 renderTelaInicial();
                 renderDashboard();
                 renderHistoricoPanico();
+                renderAtendimentos();
 
+                // ===== NAVEGAÇÃO =====
                 document.querySelectorAll('.navbar a[data-page]').forEach(link => {
                     link.addEventListener('click', function(e) {
                         e.preventDefault();
@@ -3967,6 +3719,7 @@
                     });
                 });
 
+                // ===== FILTROS ATIVIDADES =====
                 document.querySelectorAll('.filtros-atividades button').forEach(btn => {
                     btn.addEventListener('click', function() {
                         document.querySelectorAll('.filtros-atividades button').forEach(b => b.classList
@@ -3977,143 +3730,24 @@
                     });
                 });
 
-                console.log('✅ Sistema GDA v3.0 - Inicializado com segurança');
-                console.log('🔒 Módulo de segurança ativo');
-                console.log('📡 Conexão estabelecida');
+                console.log('✅ GDA v3.1 - Todas as correções aplicadas!');
+                console.log('📌 Botões Editar/Excluir funcionando');
+                console.log('📊 Notas com cálculo correto');
+                console.log('🔢 Limitação 0-10 com vírgula');
+                console.log('📚 Relatório com disciplinas');
+                console.log('🤝 Atendimentos Intraescolares');
+                console.log('🎨 CSS em selects');
             }
 
-            // ==========================================
-            // FORMULÁRIO DE RELATÓRIO
-            // ==========================================
-            document.addEventListener('submit', function(e) {
-                if (e.target.id === 'relatorioForm') {
-                    e.preventDefault();
-                    const disciplina = document.getElementById('relatorioDisciplina').value;
-                    const tempo = parseInt(document.getElementById('relatorioTempo').value);
-                    const texto = document.getElementById('relatorioTexto').value.trim();
-
-                    if (!disciplina || !tempo || !texto) {
-                        alert('Preencha todos os campos!');
-                        return;
-                    }
-
-                    relatorios.push({
-                        id: Date.now(),
-                        data: new Date().toISOString().split('T')[0],
-                        disciplina,
-                        tempo,
-                        texto
-                    });
-                    saveData('gda_relatorios', relatorios);
-                    renderRelatorios();
-                    renderTelaInicial();
-                    renderDashboard();
-                    document.getElementById('relatorioTexto').value = '';
-                    document.getElementById('relatorioTempo').value = '';
-                    document.getElementById('relatorioDisciplina').value = '';
-                    alert('✅ Relatório salvo!');
-                }
-            });
-
-            // ==========================================
-            // FORMULÁRIO DE ATIVIDADE
-            // ==========================================
-            document.addEventListener('submit', function(e) {
-                if (e.target.id === 'atividadeForm') {
-                    e.preventDefault();
-                    const titulo = document.getElementById('formTitulo').value.trim();
-                    const tipo = document.getElementById('formTipo').value;
-                    const prioridade = document.getElementById('formPrioridade').value;
-                    const disciplina = document.getElementById('formDisciplina').value;
-                    const inicio = document.getElementById('formInicio').value;
-                    const prazo = document.getElementById('formPrazo').value;
-                    const entregaDocente = document.getElementById('formEntregaDocente').value;
-                    const observacoes = document.getElementById('formObservacoes').value.trim();
-
-                    if (!titulo || !disciplina || !inicio || !prazo || !entregaDocente) {
-                        alert('Preencha todos os campos obrigatórios.');
-                        return;
-                    }
-
-                    const progresso = subtarefasTemp.length > 0 ?
-                        Math.round((subtarefasTemp.filter(st => st.concluido).length / subtarefasTemp.length) *
-                        100) :
-                        0;
-
-                    if (editandoId) {
-                        const idx = atividades.findIndex(a => a.id === editandoId);
-                        if (idx !== -1) {
-                            atividades[idx] = {
-                                ...atividades[idx],
-                                titulo,
-                                tipo,
-                                prioridade,
-                                disciplina,
-                                inicio,
-                                prazo,
-                                entregaDocente,
-                                observacoes,
-                                participantes: participantesTemp,
-                                subtarefas: subtarefasTemp,
-                                progresso
-                            };
-                        }
-                    } else {
-                        atividades.push({
-                            id: Date.now(),
-                            titulo,
-                            tipo,
-                            prioridade,
-                            disciplina,
-                            inicio,
-                            prazo,
-                            entregaDocente,
-                            observacoes,
-                            participantes: participantesTemp,
-                            subtarefas: subtarefasTemp,
-                            progresso
-                        });
-                    }
-
-                    saveData('gda_atividades', atividades);
-                    renderAtividades();
-                    renderTelaInicial();
-                    renderDashboard();
-                    closeModal();
-                    alert('✅ Atividade salva!');
-                    editandoId = null;
-                    participantesTemp = [];
-                    subtarefasTemp = [];
-                }
-            });
-
-            // ==========================================
-            // POPULAR SELECTS
-            // ==========================================
-            function populateSelects() {
-                const select = document.getElementById('formDisciplina');
-                if (select) {
-                    select.innerHTML = turmas.map(t => `<option value="${t.nome}">${t.nome}</option>`).join('');
-                }
-
-                const relatorioSelect = document.getElementById('relatorioDisciplina');
-                if (relatorioSelect) {
-                    relatorioSelect.innerHTML = `<option value="">Selecione</option>` +
-                        turmas.map(t => `<option value="${t.nome}">${t.nome}</option>`).join('');
-                }
-            }
-
-            // ==========================================
-            // MODAL - CLICK FORA
-            // ==========================================
+            // ===== CLICK FORA DO MODAL =====
             document.addEventListener('click', function(e) {
                 const modal = document.getElementById('modalOverlay');
                 if (e.target === modal) closeModal();
+                const modalAtendimento = document.getElementById('modalAtendimentoOverlay');
+                if (e.target === modalAtendimento) closeModalAtendimento();
             });
 
-            // ==========================================
-            // TOGGLE SUBMENU
-            // ==========================================
+            // ===== TOGGLE SUBMENU =====
             document.addEventListener('click', function(e) {
                 if (e.target.closest('#sistemasToggle')) {
                     e.preventDefault();
@@ -4121,9 +3755,13 @@
                 }
             });
 
-            // ==========================================
-            // INICIALIZAÇÃO
-            // ==========================================
+            // ===== ENTRAR NO SISTEMA =====
+            window.entrarNoSistema = function() {
+                document.getElementById('splashOverlay').classList.add('hidden');
+                console.log('%c🔓 Acesso liberado. Bem-vindo(a)!', 'font-size:14px;color:#4ecdc4;');
+            };
+
+            // ===== INICIALIZAÇÃO =====
             document.addEventListener('DOMContentLoaded', function() {
                 populateSelects();
                 loadPages();
@@ -4132,546 +3770,100 @@
                 atualizarBadgePanico();
 
                 console.log('%c▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓', 'font-size:8px;color:#4ecdc4;');
-                console.log('%c   SISTEMA GDA v3.0 - MODO SEGURO ATIVADO   ', 'font-size:16px;color:#ffd93d;font-weight:bold;');
+                console.log('%c   GDA v3.1 - CORREÇÕES COMPLETAS   ', 'font-size:16px;color:#ffd93d;font-weight:bold;');
                 console.log('%c▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓', 'font-size:8px;color:#4ecdc4;');
-                console.log('%c🔐 Sistema inicializado com sucesso.', 'font-size:12px;color:#45b7d1;');
-                console.log('%c📡 Canal seguro estabelecido.', 'font-size:12px;color:#96ceb4;');
-                console.log('%c⚠️ Este sistema é monitorado.', 'font-size:12px;color:#ff6b6b;');
+                console.log('%c✅ Botões Editar/Excluir fixos', 'font-size:12px;color:#4caf50;');
+                console.log('%c✅ Notas com cálculo correto', 'font-size:12px;color:#4caf50;');
+                console.log('%c✅ Limitação 0-10 com vírgula', 'font-size:12px;color:#4caf50;');
+                console.log('%c✅ Relatório com disciplinas', 'font-size:12px;color:#4caf50;');
+                console.log('%c✅ Atendimentos Intraescolares', 'font-size:12px;color:#4caf50;');
+                console.log('%c✅ CSS em selects', 'font-size:12px;color:#4caf50;');
             });
 
-        })(); // Fim do IIFE - Proteção de escopo
-
-        // ============================================================
-        //  FIM DO SISTEMA
-        // ============================================================
-    
-    
-    // ============================================================
-//  SISTEMA DE PONTO ELETRÔNICO COMPLETO
-// ============================================================
-
-// ===== CONFIGURAÇÕES DO USUÁRIO =====
-const MATRICULA = '202623700357';
-const NOME = 'IGOR VERAS MORAIS';
-const CURSO = 'Controle Ambiental (CA)';
-
-// ===== DATAS DO SEMESTRE =====
-const DATA_INICIO_SEMESTRE = new Date('2026-08-03');
-const DATA_FIM_SEMESTRE = new Date('2026-12-18');
-
-// ===== CARREGAR REGISTROS =====
-let registrosPonto = loadData('gda_ponto_registros', []);
-let faltas = loadData('gda_faltas', []);
-
-// ===== FUNÇÕES DE SALVAMENTO =====
-function salvarRegistrosPonto() {
-    saveData('gda_ponto_registros', registrosPonto);
-}
-
-function salvarFaltas() {
-    saveData('gda_faltas', faltas);
-}
-
-// ===== RELÓGIO EM TEMPO REAL =====
-function atualizarRelogioPonto() {
-    const agora = new Date();
-    const h = String(agora.getHours()).padStart(2, '0');
-    const m = String(agora.getMinutes()).padStart(2, '0');
-    const s = String(agora.getSeconds()).padStart(2, '0');
-    const el = document.getElementById('pontoRelogio');
-    if (el) el.textContent = `${h}:${m}:${s}`;
-}
-
-// ===== VERIFICAR HORÁRIO PERMITIDO (MODO PRODUÇÃO) =====
-function verificarHorarioPermitido(tipo) {
-    const agora = new Date();
-    const hora = agora.getHours();
-    const minutos = agora.getMinutes();
-    const horaMinuto = hora + minutos / 60;
-
-    // Bloqueia após as 18:00
-    if (hora >= 18) {
-        return { permitido: false, mensagem: '⛔ Registro de ponto não permitido após as 18:00.' };
-    }
-
-    if (tipo === 'entrada') {
-        if (horaMinuto >= 7.5 && horaMinuto <= 8.0) {
-            return { permitido: true, mensagem: '✅ Entrada permitida.' };
-        } else {
-            return { permitido: false, mensagem: '⛔ Entrada permitida apenas das 7:30 às 8:00.' };
-        }
-    } else if (tipo === 'saida') {
-        if (horaMinuto <= 12.833) {
-            return { permitido: true, mensagem: '✅ Saída permitida.' };
-        } else {
-            return { permitido: false, mensagem: '⛔ Saída permitida apenas até as 12:50.' };
-        }
-    } else if (tipo === 'extra') {
-        if (horaMinuto > 12.833 && hora < 18) {
-            return { permitido: true, mensagem: '✅ Saída extra permitida.' };
-        } else if (horaMinuto <= 12.833) {
-            return { permitido: false, mensagem: '⛔ Saída extra permitida apenas após as 12:50.' };
-        } else {
-            return { permitido: false, mensagem: '⛔ Saída extra permitida apenas antes das 18:00.' };
-        }
-    }
-    return { permitido: false, mensagem: '⛔ Tipo de registro inválido.' };
-}
-
-// ===== REGISTRAR PONTO =====
-window.registrarPonto = function(tipo) {
-    const agora = new Date();
-    const hoje = agora.toISOString().split('T')[0];
-    const horaAtual = agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-    const dataHora = agora.toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' });
-
-    // Verifica se já existe registro de entrada hoje
-    const entradaHoje = registrosPonto.find(r => r.data === hoje && r.tipo === 'entrada');
-    const saidaHoje = registrosPonto.find(r => r.data === hoje && r.tipo === 'saida');
-    const extraHoje = registrosPonto.find(r => r.data === hoje && r.tipo === 'extra');
-
-    // Validações específicas
-    if (tipo === 'entrada' && entradaHoje) {
-        alert('⛔ Você já registrou entrada hoje!');
-        return;
-    }
-    if (tipo === 'saida' && !entradaHoje) {
-        alert('⛔ Você precisa registrar a entrada antes da saída!');
-        return;
-    }
-    if (tipo === 'saida' && saidaHoje) {
-        alert('⛔ Você já registrou saída hoje!');
-        return;
-    }
-    if (tipo === 'extra' && !entradaHoje) {
-        alert('⛔ Você precisa registrar a entrada antes da saída extra!');
-        return;
-    }
-    if (tipo === 'extra' && extraHoje) {
-        alert('⛔ Você já registrou saída extra hoje!');
-        return;
-    }
-
-    // Verifica horário
-    const verificacao = verificarHorarioPermitido(tipo);
-    if (!verificacao.permitido) {
-        alert(verificacao.mensagem);
-        return;
-    }
-
-    // Nomes dos tipos
-    const tiposNomes = {
-        'entrada': 'Entrada',
-        'saida': 'Saída',
-        'extra': 'Saída Extra'
-    };
-
-    // Pop-up de confirmação
-    const confirmar = confirm(
-        `🕐 CONFIRMAÇÃO DE PONTO\n\n` +
-        `📋 Matrícula: ${MATRICULA}\n` +
-        `👤 Nome: ${NOME}\n` +
-        `📚 Curso: ${CURSO}\n` +
-        `📌 Tipo: ${tiposNomes[tipo]}\n` +
-        `📅 Data: ${agora.toLocaleDateString('pt-BR')}\n` +
-        `⏰ Hora: ${horaAtual}\n\n` +
-        `✅ Confirmar registro?`
-    );
-
-    if (!confirmar) {
-        alert('❌ Registro cancelado.');
-        return;
-    }
-
-    // Registra
-    const registro = {
-        id: Date.now(),
-        data: hoje,
-        hora: horaAtual,
-        dataHora: dataHora,
-        tipo: tipo,
-        matricula: MATRICULA,
-        nome: NOME,
-        curso: CURSO,
-        timestamp: agora.getTime()
-    };
-
-    registrosPonto.push(registro);
-    salvarRegistrosPonto();
-
-    alert(`✅ ${tiposNomes[tipo]} registrada com sucesso!\n\n📅 ${dataHora}\n👤 ${NOME}`);
-
-    atualizarInterfacePonto();
-    atualizarInterfaceFaltas();
-
-    if (tipo === 'entrada') {
-        mostrarNotificacao('✅ Entrada registrada!', 'Bom dia, ' + NOME + '!');
-    } else if (tipo === 'saida') {
-        mostrarNotificacao('✅ Saída registrada!', 'Bom trabalho, ' + NOME + '!');
-    } else if (tipo === 'extra') {
-        mostrarNotificacao('✅ Saída Extra registrada!', 'Atendimento extra concluído, ' + NOME + '!');
-    }
-};
-
-// ===== VERIFICAR FALTAS =====
-function verificarFaltaDiaria() {
-    const hoje = new Date();
-    const hojeStr = hoje.toISOString().split('T')[0];
-    const diaSemana = hoje.getDay();
-
-    // Não verifica nos fins de semana
-    if (diaSemana === 0 || diaSemana === 6) {
-        return;
-    }
-
-    // Verifica se está dentro do período letivo
-    if (hoje < DATA_INICIO_SEMESTRE || hoje > DATA_FIM_SEMESTRE) {
-        return;
-    }
-
-    const entradaHoje = registrosPonto.find(r => r.data === hojeStr && r.tipo === 'entrada');
-    const faltaHoje = faltas.find(f => f.data === hojeStr);
-
-    if (!entradaHoje && !faltaHoje) {
-        const falta = {
-            id: Date.now(),
-            data: hojeStr,
-            hora: '07:30:00',
-            dataHora: new Date(hojeStr + 'T07:30:00').toLocaleString('pt-BR'),
-            tipo: 'falta',
-            matricula: MATRICULA,
-            nome: NOME,
-            curso: CURSO,
-            timestamp: new Date(hojeStr + 'T07:30:00').getTime(),
-            justificativa: 'Falta por não registrar entrada',
-            resolvido: false
-        };
-        faltas.push(falta);
-        salvarFaltas();
-
-        mostrarNotificacao('⚠️ FALTA REGISTRADA!', `${NOME}, você não registrou entrada hoje (${hojeStr}).`);
-        atualizarInterfaceFaltas();
-        atualizarInterfacePonto();
-
-        console.log(`⚠️ Falta registrada para ${NOME} em ${hojeStr}`);
-        return true;
-    }
-    return false;
-}
-
-function verificarFaltaAutomatica() {
-    const agora = new Date();
-    const hora = agora.getHours();
-    const minutos = agora.getMinutes();
-
-    if (hora === 7 && (minutos === 30 || minutos === 31)) {
-        verificarFaltaDiaria();
-    }
-}
-
-// ===== ATUALIZAR INTERFACE =====
-function atualizarInterfacePonto() {
-    const hoje = new Date().toISOString().split('T')[0];
-    const registrosHoje = registrosPonto.filter(r => r.data === hoje);
-
-    const statusEl = document.getElementById('pontoStatusBadge');
-    const mensagemEl = document.getElementById('pontoMensagem');
-
-    if (registrosHoje.length === 0) {
-        if (statusEl) { statusEl.textContent = '⏳ Nenhum registro hoje';
-            statusEl.style.background = 'rgba(255,255,255,0.03)';
-            statusEl.style.color = 'var(--color-text-muted)'; }
-        if (mensagemEl) mensagemEl.textContent = '⏳ Aguardando primeiro registro do dia...';
-    } else {
-        const entrada = registrosHoje.find(r => r.tipo === 'entrada');
-        const saida = registrosHoje.find(r => r.tipo === 'saida');
-        const extra = registrosHoje.find(r => r.tipo === 'extra');
-
-        let statusText = '';
-        let statusColor = '';
-        let statusBg = '';
-
-        if (entrada && saida) {
-            statusText = '✅ Dia finalizado';
-            statusColor = '#4caf50';
-            statusBg = 'rgba(76,175,80,0.12)';
-        } else if (entrada && extra) {
-            statusText = '✅ Com saída extra';
-            statusColor = '#ff8f00';
-            statusBg = 'rgba(255,143,0,0.12)';
-        } else if (entrada) {
-            statusText = '🟡 Em andamento';
-            statusColor = '#ffb300';
-            statusBg = 'rgba(255,179,0,0.12)';
-        } else {
-            statusText = `📌 ${registrosHoje.length} registro(s)`;
-            statusColor = 'var(--color-text-muted)';
-            statusBg = 'rgba(255,255,255,0.03)';
-        }
-
-        if (statusEl) {
-            statusEl.textContent = statusText;
-            statusEl.style.background = statusBg;
-            statusEl.style.color = statusColor;
-        }
-
-        if (mensagemEl) {
-            const ultimo = registrosHoje[registrosHoje.length - 1];
-            const tiposNomes = { 'entrada': 'Entrada', 'saida': 'Saída', 'extra': 'Saída Extra' };
-            mensagemEl.textContent = `📌 Último registro: ${tiposNomes[ultimo.tipo]} às ${ultimo.hora}`;
-        }
-    }
-
-    // Últimos registros
-    const container = document.getElementById('ultimosRegistros');
-    if (!container) return;
-
-    if (registrosHoje.length === 0) {
-        container.innerHTML = `
-            <div style="text-align: center; padding: 16px; color: var(--color-text-muted); font-size: 13px; border: 1px dashed var(--color-border); border-radius: 8px;">
-                Nenhum registro hoje.
-            </div>
-        `;
-        return;
-    }
-
-    const tiposNomes = { 'entrada': 'Entrada', 'saida': 'Saída', 'extra': 'Saída Extra' };
-    const tiposCores = { 'entrada': '#4caf50', 'saida': '#e53935', 'extra': '#ff8f00' };
-
-    const ultimos = [...registrosHoje].sort((a, b) => b.timestamp - a.timestamp).slice(0, 5);
-
-    container.innerHTML = ultimos.map(r => `
-        <div class="ponto-registro">
-            <span class="tipo ${r.tipo}" style="color: ${tiposCores[r.tipo]};">
-                ${r.tipo === 'entrada' ? '📥' : r.tipo === 'saida' ? '📤' : '⭐'} ${tiposNomes[r.tipo]}
-            </span>
-            <span style="font-weight: 500; color: var(--color-text);">${r.hora}</span>
-            <span style="color: var(--color-text-muted); font-size: 12px;">${r.data}</span>
-            <span class="status ativo" style="background: rgba(76,175,80,0.08); color: #4caf50; font-size: 10px;">✅</span>
-        </div>
-    `).join('');
-}
-
-// ===== ATUALIZAR INTERFACE DE FALTAS =====
-function atualizarInterfaceFaltas() {
-    const totalFaltas = faltas.length;
-
-    const faltasPeriodo = faltas.filter(f => {
-        const data = new Date(f.data + 'T00:00:00');
-        return data >= DATA_INICIO_SEMESTRE && data <= DATA_FIM_SEMESTRE;
-    });
-
-    // Atualiza badge na sidebar (se existir)
-    const badge = document.getElementById('faltasBadge');
-    if (badge) {
-        badge.textContent = totalFaltas;
-        badge.style.display = totalFaltas > 0 ? 'inline-block' : 'none';
-    }
-
-    // Atualiza elemento na tela inicial
-    const elFaltas = document.getElementById('totalFaltas');
-    if (elFaltas) {
-        elFaltas.textContent = totalFaltas;
-    }
-
-    const elFaltasPeriodo = document.getElementById('faltasPeriodo');
-    if (elFaltasPeriodo) {
-        elFaltasPeriodo.textContent = faltasPeriodo.length;
-    }
-
-    saveData('gda_faltas', faltas);
-}
-
-// ===== RENDERIZAR HISTÓRICO DE FALTAS =====
-function renderHistoricoFaltas() {
-    const container = document.getElementById('historicoFaltasContainer');
-    if (!container) return;
-
-    if (faltas.length === 0) {
-        container.innerHTML = `
-            <div class="empty-state">
-                <i class="fas fa-check-circle" style="color:var(--color-success);"></i>
-                Nenhuma falta registrada. Parabéns!
-            </div>
-        `;
-        return;
-    }
-
-    const sorted = [...faltas].sort((a, b) => b.timestamp - a.timestamp);
-
-    container.innerHTML = sorted.map(f => `
-        <div class="panico-registro" style="border-left: 3px solid var(--color-danger);">
-            <div class="header">
-                <span class="disciplina" style="color:var(--color-danger);">⚠️ FALTA</span>
-                <span class="data-hora">${f.data}</span>
-                <span class="status" style="background:${f.resolvido ? 'rgba(76,175,80,0.12)' : 'rgba(229,57,53,0.12)'};color:${f.resolvido ? 'var(--color-success)' : 'var(--color-danger)'};">
-                    ${f.resolvido ? '✅ Justificada' : '⏳ Pendente'}
-                </span>
-            </div>
-            <div class="motivo" style="border-left-color:var(--color-danger);">
-                <strong>Justificativa:</strong> ${f.justificativa || 'Não registrou entrada'}
-                <br>
-                <span style="font-size:11px;color:var(--color-text-muted);">Matrícula: ${f.matricula}</span>
-            </div>
-        </div>
-    `).join('');
-}
-
-// ===== JUSTIFICAR FALTA =====
-window.justificarFalta = function() {
-    const hojeStr = new Date().toISOString().split('T')[0];
-    const faltaHoje = faltas.find(f => f.data === hojeStr);
-
-    if (!faltaHoje) {
-        alert('✅ Você não tem falta hoje!');
-        return;
-    }
-
-    const justificativa = prompt('📝 Digite a justificativa para a falta de hoje:', 'Atestado médico / Motivo pessoal');
-    if (justificativa === null) return;
-    if (!justificativa.trim()) {
-        alert('❌ Justificativa não pode estar vazia.');
-        return;
-    }
-
-    faltaHoje.justificativa = justificativa.trim();
-    faltaHoje.resolvido = true;
-    salvarFaltas();
-    atualizarInterfaceFaltas();
-    renderHistoricoFaltas();
-    alert('✅ Falta justificada com sucesso!');
-};
-
-// ===== VER FALTAS =====
-window.verFaltas = function() {
-    const modal = document.createElement('div');
-    modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;';
-    modal.innerHTML = `
-        <div style="background:var(--color-secondary);border-radius:24px;padding:32px;max-width:700px;width:100%;max-height:90vh;overflow-y:auto;border:1px solid var(--color-border);">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-                <h2 style="color:var(--color-text);"><i class="fas fa-history" style="color:var(--color-danger);"></i> Histórico de Faltas</h2>
-                <button onclick="this.closest('div[style]').remove()" style="background:none;border:none;color:var(--color-text-muted);font-size:24px;cursor:pointer;">✕</button>
-            </div>
-            <div id="historicoFaltasContainer"></div>
-            <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--color-border);display:flex;gap:8px;flex-wrap:wrap;">
-                <span style="font-size:13px;color:var(--color-text-muted);">
-                    <strong>Total de faltas:</strong> <span id="totalFaltasDisplay">${faltas.length}</span>
-                </span>
-                <span style="font-size:13px;color:var(--color-text-muted);margin-left:16px;">
-                    <strong>No período:</strong> <span id="faltasPeriodoDisplay">${faltas.filter(f => {
-                        const d = new Date(f.data + 'T00:00:00');
-                        return d >= DATA_INICIO_SEMESTRE && d <= DATA_FIM_SEMESTRE;
-                    }).length}</span>
-                </span>
-            </div>
-        </div>
-    `;
-    document.body.appendChild(modal);
-    renderHistoricoFaltas();
-};
-
-// ===== MOSTRAR NOTIFICAÇÃO =====
-function mostrarNotificacao(titulo, corpo) {
-    const el = document.getElementById('notification');
-    if (!el) return;
-    document.getElementById('notifTitle').textContent = titulo;
-    document.getElementById('notifBody').textContent = corpo;
-    el.classList.add('show');
-    if (window.notifTimeout) clearTimeout(window.notifTimeout);
-    window.notifTimeout = setTimeout(() => { el.classList.remove('show'); }, 5000);
-}
-
-// ===== ADICIONAR BOTÃO DE JUSTIFICAR NA INTERFACE =====
-function adicionarBotoesPonto() {
-    const container = document.getElementById('ultimosRegistros');
-    if (!container) return;
-
-    // Verifica se os botões já existem
-    if (document.getElementById('btnJustificarFalta')) return;
-
-    const div = document.createElement('div');
-    div.style.cssText = 'margin-top:12px;padding-top:12px;border-top:1px solid var(--color-border);display:flex;gap:8px;flex-wrap:wrap;';
-    div.innerHTML = `
-        <button onclick="justificarFalta()" id="btnJustificarFalta" style="padding:6px 16px;border-radius:20px;border:1px solid var(--color-warning);background:rgba(255,143,0,0.08);color:var(--color-warning);cursor:pointer;font-size:12px;font-family:'Inter',sans-serif;">
-            📝 Justificar Falta
-        </button>
-        <button onclick="verFaltas()" style="padding:6px 16px;border-radius:20px;border:1px solid var(--color-border);background:rgba(255,255,255,0.02);color:var(--color-text-muted);cursor:pointer;font-size:12px;font-family:'Inter',sans-serif;">
-            📋 Ver Histórico de Faltas
-        </button>
-        <button onclick="verRegistrosPonto()" style="padding:6px 16px;border-radius:20px;border:1px solid var(--color-border);background:rgba(255,255,255,0.02);color:var(--color-text-muted);cursor:pointer;font-size:12px;font-family:'Inter',sans-serif;">
-            📋 Todos os Registros
-        </button>
-    `;
-    container.parentNode.appendChild(div);
-}
-
-// ===== VER TODOS OS REGISTROS DE PONTO =====
-window.verRegistrosPonto = function() {
-    if (registrosPonto.length === 0) {
-        alert('📋 Nenhum registro de ponto encontrado.');
-        return;
-    }
-
-    const modal = document.createElement('div');
-    modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.8);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;';
-    modal.innerHTML = `
-        <div style="background:var(--color-secondary);border-radius:24px;padding:32px;max-width:700px;width:100%;max-height:90vh;overflow-y:auto;border:1px solid var(--color-border);">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-                <h2 style="color:var(--color-text);"><i class="fas fa-clock" style="color:var(--color-accent);"></i> Todos os Registros</h2>
-                <button onclick="this.closest('div[style]').remove()" style="background:none;border:none;color:var(--color-text-muted);font-size:24px;cursor:pointer;">✕</button>
-            </div>
-            <div style="max-height:500px;overflow-y:auto;">
-                ${registrosPonto.sort((a,b) => b.timestamp - a.timestamp).map(r => `
-                    <div class="ponto-registro" style="border-bottom:1px solid var(--color-border);padding:8px 0;">
-                        <span style="font-weight:600;color:${r.tipo === 'entrada' ? '#4caf50' : r.tipo === 'saida' ? '#e53935' : '#ff8f00'};">${r.tipo === 'entrada' ? '📥 Entrada' : r.tipo === 'saida' ? '📤 Saída' : '⭐ Saída Extra'}</span>
-                        <span style="margin-left:12px;">${r.data}</span>
-                        <span style="margin-left:12px;color:var(--color-text-muted);">${r.hora}</span>
-                    </div>
-                `).join('')}
-            </div>
-            <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--color-border);">
-                <span style="font-size:13px;color:var(--color-text-muted);">
-                    <strong>Total de registros:</strong> ${registrosPonto.length}
-                </span>
-            </div>
-        </div>
-    `;
-    document.body.appendChild(modal);
-};
-
-// ===== INICIALIZAR SISTEMA DE PONTO =====
-function initPontoCompleto() {
-    atualizarRelogioPonto();
-    setInterval(atualizarRelogioPonto, 1000);
-    atualizarInterfacePonto();
-    atualizarInterfaceFaltas();
-    adicionarBotoesPonto();
-
-    // Verifica faltas a cada minuto
-    setInterval(verificarFaltaAutomatica, 60000);
-
-    // Verifica imediatamente se hoje já passou das 7:30
-    const agora = new Date();
-    const hora = agora.getHours();
-    const minutos = agora.getMinutes();
-    if (hora > 7 || (hora === 7 && minutos >= 30)) {
-        setTimeout(verificarFaltaDiaria, 5000);
-    }
-
-    console.log('🕐 Sistema de Ponto Eletrônico carregado!');
-    console.log(`📋 Matrícula: ${MATRICULA}`);
-    console.log(`👤 Usuário: ${NOME}`);
-    console.log(`📚 Curso: ${CURSO}`);
-    console.log(`⚠️ Total de faltas: ${faltas.length}`);
-    console.log(`📊 Total de registros: ${registrosPonto.length}`);
-}
-
-// ===== INICIALIZAR =====
-document.addEventListener('DOMContentLoaded', function() {
-    // Espera um pouco para garantir que o DOM da página inicial foi carregado
-    setTimeout(initPontoCompleto, 1500);
-});
-    
+            // ===== SISTEMA DE PONTO =====
+            const MATRICULA = '202623700357';
+            const NOME = 'IGOR VERAS MORAIS';
+            const CURSO = 'Controle Ambiental (CA)';
+            const DATA_INICIO_SEMESTRE = new Date('2026-08-03');
+            const DATA_FIM_SEMESTRE = new Date('2026-12-18');
+            let registrosPonto = loadData('gda_ponto_registros', []);
+            let faltas = loadData('gda_faltas', []);
+
+            function salvarRegistrosPonto() { saveData('gda_ponto_registros', registrosPonto); }
+
+            function salvarFaltas() { saveData('gda_faltas', faltas); }
+
+            function atualizarInterfacePonto() {
+                const hoje = new Date().toISOString().split('T')[0];
+                const registrosHoje = registrosPonto.filter(r => r.data === hoje);
+                const statusEl = document.getElementById('pontoStatusBadge');
+                const mensagemEl = document.getElementById('pontoMensagem');
+
+                if (registrosHoje.length === 0) {
+                    if (statusEl) { statusEl.textContent = '⏳ Nenhum registro hoje';
+                        statusEl.style.background = 'rgba(255,255,255,0.03)';
+                        statusEl.style.color = 'var(--color-text-muted)'; }
+                    if (mensagemEl) mensagemEl.textContent = '⏳ Aguardando primeiro registro do dia...';
+                } else {
+                    const entrada = registrosHoje.find(r => r.tipo === 'entrada');
+                    const saida = registrosHoje.find(r => r.tipo === 'saida');
+                    const extra = registrosHoje.find(r => r.tipo === 'extra');
+
+                    let statusText = '';
+                    let statusColor = '';
+                    let statusBg = '';
+
+                    if (entrada && saida) {
+                        statusText = '✅ Dia finalizado';
+                        statusColor = '#4caf50';
+                        statusBg = 'rgba(76,175,80,0.12)';
+                    } else if (entrada && extra) {
+                        statusText = '✅ Com saída extra';
+                        statusColor = '#ff8f00';
+                        statusBg = 'rgba(255,143,0,0.12)';
+                    } else if (entrada) {
+                        statusText = '🟡 Em andamento';
+                        statusColor = '#ffb300';
+                        statusBg = 'rgba(255,179,0,0.12)';
+                    } else {
+                        statusText = `📌 ${registrosHoje.length} registro(s)`;
+                        statusColor = 'var(--color-text-muted)';
+                        statusBg = 'rgba(255,255,255,0.03)';
+                    }
+
+                    if (statusEl) {
+                        statusEl.textContent = statusText;
+                        statusEl.style.background = statusBg;
+                        statusEl.style.color = statusColor;
+                    }
+
+                    if (mensagemEl) {
+                        const ultimo = registrosHoje[registrosHoje.length - 1];
+                        const tiposNomes = { 'entrada': 'Entrada', 'saida': 'Saída', 'extra': 'Saída Extra' };
+                        mensagemEl.textContent = `📌 Último registro: ${tiposNomes[ultimo.tipo]} às ${ultimo.hora}`;
+                    }
+                }
+            }
+
+            function atualizarInterfaceFaltas() {
+                const totalFaltas = faltas.length;
+                const badge = document.getElementById('faltasBadge');
+                if (badge) {
+                    badge.textContent = totalFaltas;
+                    badge.style.display = totalFaltas > 0 ? 'inline-block' : 'none';
+                }
+                const elFaltas = document.getElementById('totalFaltas');
+                if (elFaltas) elFaltas.textContent = totalFaltas;
+                saveData('gda_faltas', faltas);
+            }
+
+            // Inicializar ponto
+            setTimeout(() => {
+                atualizarInterfacePonto();
+                atualizarInterfaceFaltas();
+            }, 2000);
+
+        })(); // Fim do IIFE
     </script>
 
 </body>
