@@ -1556,7 +1556,7 @@
         }
         .panico-recursos button.primary-rec:hover { background: rgba(211, 47, 47, 0.4); }
 
-        /* ===== ATENDIMENTO INTRAESCOLAR (NOVO MÓDULO) ===== */
+        /* ===== ATENDIMENTO INTRAESCOLAR ===== */
         .atendimentos-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -2100,7 +2100,7 @@
         </div>
     </div>
 
-    <!-- ===== SCRIPTS COMPLETOS CORRIGIDOS ===== -->
+    <!-- ===== SCRIPTS ===== -->
     <script>
         // ============================================================
         //  ██████  ███████  █████  ██      ███████
@@ -2109,13 +2109,7 @@
         // ██    ██ ██      ██   ██ ██      ██
         //  ██████  ███████ ██   ██ ███████ ███████
         // ============================================================
-        // GDA v3.1 - CORREÇÕES COMPLETAS
-        // - Botões Editar/Excluir funcionando
-        // - Notas com cálculo correto
-        // - Limitação 0-10 com vírgula
-        // - Relatório com disciplinas
-        // - Atendimentos Intraescolares
-        // - CSS em selects
+        // GDA v3.1 - MÓDULO NOTAS ATUALIZADO
         // ============================================================
 
         (function() {
@@ -2149,11 +2143,6 @@
             };
 
             // ===== CONFIGURAÇÃO =====
-            const APP_ID = '1BF3914F-116E-4BD6-BA55-D9720E1219C7';
-            const API_KEY = 'C3CEF6C4-9697-49FC-BFF2-F99A95A9855A';
-            const USUARIO = 'igor_veras';
-
-            // ===== DADOS =====
             const turmas = [
                 { cod: 'TICAM0147', nome: 'ARTES', professor: 'THAYS ALVES COSTA', turma: 'B2371M', horario: '6M34' },
                 { cod: 'TICAM0152', nome: 'FILOSOFIA', professor: 'JESSIKA CURTINAZ DA SILVA', turma: 'B2371M',
