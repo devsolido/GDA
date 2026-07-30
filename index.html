@@ -2984,175 +2984,154 @@
             };
 
             // ===== NOTAS - CORRIGIDO (CÁLCULO COM VALIDAÇÃO) =====
-            function renderNotas() {
-                const container = document.getElementById('notasContainer');
-                if (!container) return;
+          function renderNotas() {
+    const container = document.getElementById('notasContainer');
+    if (!container) return;
 
-                container.innerHTML = turmas.map(d => {
-                    const nota = notas[d.cod] || { b1: '', b2: '', b3: '', b4: '' };
-                    
-                    // VALIDAÇÃO: Considera apenas notas válidas (>0 e <=10)
-                    const valores = [nota.b1, nota.b2, nota.b3, nota.b4];
-                    const validas = valores
-                        .filter(v => v !== '' && v !== null && v !== undefined)
-                        .map(v => {
-                            const num = parseFloat(v.toString().replace(',', '.'));
-                            return !isNaN(num) && num > 0 && num <= 10 ? num : null;
-                        })
-                        .filter(v => v !== null);
-                    
-                    const totalValidas = validas.length;
-                    const media = totalValidas > 0 ? (validas.reduce((a, b) => a + b, 0) / totalValidas) : 0;
-                    
-                    // STATUS: Só reprova se tiver 4 notas válidas E média < 7
-                    let status, statusText;
-                    if (totalValidas === 0) {
-                        status = 'aguardando';
-                        statusText = '⏳ Aguardando notas';
-                    } else if (totalValidas < 4) {
-                        status = 'recuperacao';
-                        statusText = `🟡 ${totalValidas}/4 bimestres`;
-                    } else if (media >= 7) {
-                        status = 'aprovado';
-                        statusText = '✅ Aprovado';
-                    } else {
-                        status = 'reprovado';
-                        statusText = '❌ Reprovado';
-                    }
+    container.innerHTML = turmas.map(d => {
+        const nota = notas[d.cod] || { b1: '', b2: '', b3: '', b4: '' };
+        
+        // Pega as 4 notas dos bimestres
+        const bimestres = [1, 2, 3, 4];
+        const notasValidas = bimestres.map(b => {
+            const valor = nota['b'+b];
+            if (valor === '' || valor === null || valor === undefined) return null;
+            const num = parseFloat(valor.toString().replace(',', '.'));
+            return !isNaN(num) && num >= 0 && num <= 10 ? num : null;
+        });
+        
+        // Conta quantas notas válidas tem
+        const notasFiltradas = notasValidas.filter(n => n !== null);
+        const totalValidas = notasFiltradas.length;
+        
+        // Calcula a Média Anual (MA)
+        let mediaAnual = 0;
+        let status = 'aguardando';
+        let statusText = '⏳ Aguardando notas';
+        let notaRecuperacao = null;
+        let mensagemRecuperacao = '';
+        
+        if (totalValidas === 0) {
+            // Sem notas ainda
+            status = 'aguardando';
+            statusText = '⏳ Aguardando notas';
+        } else if (totalValidas < 4) {
+            // Tem algumas notas, mas não todas
+            const soma = notasFiltradas.reduce((a, b) => a + b, 0);
+            mediaAnual = soma / totalValidas;
+            status = 'parcial';
+            statusText = `🟡 ${totalValidas}/4 bimestres · MA parcial: ${mediaAnual.toFixed(1)}`;
+            
+            // Calcula o que precisa nos bimestres restantes para atingir 7.0
+            const bimestresFaltando = 4 - totalValidas;
+            if (bimestresFaltando > 0 && mediaAnual < 7) {
+                // Pontos necessários para MA = 7.0
+                const pontosNecessarios = 7.0 * 4; // 28 pontos no total
+                const pontosAtuais = notasFiltradas.reduce((a, b) => a + b, 0);
+                const pontosFaltando = pontosNecessarios - pontosAtuais;
+                const notaPorBimestre = pontosFaltando / bimestresFaltando;
+                notaRecuperacao = Math.max(0, Math.min(10, notaPorBimestre));
+                
+                if (notaRecuperacao <= 10) {
+                    mensagemRecuperacao = `🎯 Precisa tirar ${notaRecuperacao.toFixed(1)} em cada um dos ${bimestresFaltando} bimestre(s) restante(s) para alcançar MA ≥ 7.0`;
+                } else {
+                    mensagemRecuperacao = `⚠️ Mesmo tirando 10 nos ${bimestresFaltando} bimestre(s) restante(s), a MA não alcançará 7.0.`;
+                }
+            }
+        } else {
+            // Tem todas as 4 notas - calcula MA
+            const soma = notasFiltradas.reduce((a, b) => a + b, 0);
+            mediaAnual = soma / 4;
+            
+            if (mediaAnual >= 7.0) {
+                status = 'aprovado';
+                statusText = '✅ Aprovado!';
+            } else {
+                // Vai para recuperação
+                status = 'recuperacao';
+                statusText = `🔴 Recuperação (MA: ${mediaAnual.toFixed(1)})`;
+                
+                // Calcula a nota necessária na recuperação
+                // Fórmula: (MA × 6 + Nota_Rec × 4) / 10 ≥ 7.0
+                // Nota_Rec = (7.0 × 10 - MA × 6) / 4
+                const notaNecessaria = (7.0 * 10 - mediaAnual * 6) / 4;
+                notaRecuperacao = Math.max(0, Math.min(10, notaNecessaria));
+                
+                if (notaRecuperacao <= 10) {
+                    mensagemRecuperacao = `📝 Para ser aprovado na recuperação, você precisa tirar ${notaRecuperacao.toFixed(1)} (ou mais) na prova de recuperação`;
+                } else {
+                    mensagemRecuperacao = `⚠️ Infelizmente, mesmo com nota máxima (10) na recuperação, você não seria aprovado. É necessário refazer a disciplina.`;
+                }
+            }
+        }
 
-                    return `
-                        <div class="notas-card">
-                            <div class="disciplina-nome">${d.nome} <span class="codigo">${d.cod}</span></div>
-                            <div class="notas-bimestres">
-                                ${[1,2,3,4].map(b => `
-                                    <div class="nota-bimestre">
-                                        <div class="bimestre-label">${b}º Bim</div>
-                                        <input type="text" 
-                                            inputmode="decimal"
-                                            pattern="[0-9,.]*"
-                                            value="${nota['b'+b] || ''}" 
-                                            onchange="atualizarNota('${d.cod}', 'b${b}', this.value)"
-                                            oninput="validarNota(this)"
-                                            placeholder="--" />
-                                    </div>
-                                `).join('')}
+        return `
+            <div class="notas-card">
+                <div class="disciplina-nome">${d.nome} <span class="codigo">${d.cod}</span></div>
+                <div class="notas-bimestres">
+                    ${[1,2,3,4].map(b => `
+                        <div class="nota-bimestre">
+                            <div class="bimestre-label">${b}º Bim</div>
+                            <input type="text" 
+                                inputmode="decimal"
+                                pattern="[0-9,.]*"
+                                value="${nota['b'+b] || ''}" 
+                                onchange="atualizarNota('${d.cod}', 'b${b}', this.value)"
+                                oninput="validarNota(this)"
+                                placeholder="--" />
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="notas-resultado">
+                    <div class="resultado-principal">
+                        <span class="media ${status}">${totalValidas > 0 ? mediaAnual.toFixed(1) : '--'}</span>
+                        <span style="font-size:13px;color:var(--color-text-muted);">${totalValidas}/4 bimestres</span>
+                        <span style="font-size:12px;font-weight:600;color:${mediaAnual >= 7 ? 'var(--color-success)' : totalValidas < 4 ? 'var(--color-warning)' : 'var(--color-danger)'};">${statusText}</span>
+                    </div>
+                    
+                    <!-- Mensagem de recuperação ou orientação -->
+                    ${mensagemRecuperacao ? `
+                        <div style="margin-top: 10px; padding: 10px 14px; background: ${notaRecuperacao !== null && notaRecuperacao <= 10 ? 'rgba(255, 179, 0, 0.08)' : 'rgba(229, 57, 53, 0.08)'}; border-radius: 8px; border-left: 4px solid ${notaRecuperacao !== null && notaRecuperacao <= 10 ? 'var(--color-warning)' : 'var(--color-danger)'};">
+                            <div style="font-size: 14px; font-weight: 600; color: ${notaRecuperacao !== null && notaRecuperacao <= 10 ? 'var(--color-warning)' : 'var(--color-danger)'};">
+                                ${notaRecuperacao !== null && notaRecuperacao <= 10 ? '💪 Ainda dá para recuperar!' : '🚨 Atenção!'}
                             </div>
-                            <div class="notas-resultado">
-                                <div class="resultado-principal">
-                                    <span class="media ${status}">${totalValidas > 0 ? media.toFixed(1) : '--'}</span>
-                                    <span style="font-size:13px;color:var(--color-text-muted);">${totalValidas}/4 bimestres</span>
-                                    <span style="font-size:12px;font-weight:600;color:${media >= 7 ? 'var(--color-success)' : totalValidas < 4 ? 'var(--color-warning)' : 'var(--color-danger)'};">${statusText}</span>
+                            <div style="font-size: 13px; color: var(--color-text); line-height: 1.5; margin-top: 4px;">
+                                ${mensagemRecuperacao}
+                            </div>
+                            ${notaRecuperacao !== null && notaRecuperacao <= 10 ? `
+                                <div style="margin-top: 8px; display: flex; gap: 8px; flex-wrap: wrap;">
+                                    <span style="font-size: 12px; background: rgba(255, 179, 0, 0.12); color: var(--color-accent); padding: 2px 12px; border-radius: 20px;">
+                                        🎯 Meta: ${notaRecuperacao.toFixed(1)}
+                                    </span>
+                                    <span style="font-size: 12px; background: rgba(255, 179, 0, 0.08); color: var(--color-text-muted); padding: 2px 12px; border-radius: 20px;">
+                                        ${totalValidas < 4 ? '📊 Foco nos próximos bimestres' : '📝 Prova de Recuperação'}
+                                    </span>
                                 </div>
-                            </div>
+                            ` : `
+                                <div style="margin-top: 8px; font-size: 12px; color: var(--color-text-muted);">
+                                    ⚠️ Recomenda-se buscar orientação com o professor e planejar uma nova estratégia de estudos.
+                                </div>
+                            `}
                         </div>
-                    `;
-                }).join('');
-            }
-
-            // ===== VALIDAÇÃO DE NOTAS (0-10 com vírgula) =====
-            function validarNota(input) {
-                let valor = input.value.replace(',', '.');
-                // Remove caracteres não numéricos exceto ponto
-                valor = valor.replace(/[^0-9.]/g, '');
-                
-                // Limita a 2 casas decimais
-                const partes = valor.split('.');
-                if (partes.length > 2) {
-                    valor = partes[0] + '.' + partes[1].slice(0, 2);
-                }
-                
-                const num = parseFloat(valor);
-                if (num > 10) {
-                    valor = '10';
-                } else if (num < 0 && valor !== '') {
-                    valor = '0';
-                }
-                
-                input.value = valor;
-            }
-
-            window.atualizarNota = function(cod, bimestre, valor) {
-                if (!window.__security.checkRateLimit('nota_update')) return;
-                
-                // Limpa e valida
-                let valorLimpo = valor.replace(',', '.').replace(/[^0-9.]/g, '');
-                const num = parseFloat(valorLimpo);
-                
-                if (valorLimpo !== '' && (isNaN(num) || num < 0 || num > 10)) {
-                    alert('⚠️ A nota deve ser entre 0 e 10.');
-                    // Reverte para o valor anterior
-                    const nota = notas[cod] || { b1: '', b2: '', b3: '', b4: '' };
-                    const campo = document.querySelector(`input[value="${valor}"]`);
-                    if (campo) {
-                        campo.value = nota[bimestre] || '';
-                    }
-                    return;
-                }
-                
-                if (!notas[cod]) notas[cod] = { b1: '', b2: '', b3: '', b4: '' };
-                notas[cod][bimestre] = valorLimpo;
-                saveData('gda_notas', notas);
-                renderNotas();
-                renderTelaInicial();
-                renderDashboard();
-            };
-
-            // ===== RELATÓRIOS - CORRIGIDO (DISCIPLINAS POPULADAS) =====
-            function renderRelatorios() {
-                const container = document.getElementById('relatoriosLista');
-                if (!container) return;
-
-                // Popula o select de disciplinas
-                const select = document.getElementById('relatorioDisciplina');
-                if (select && select.options.length <= 1) {
-                    select.innerHTML = '<option value="">Selecione uma disciplina</option>' +
-                        turmas.map(t => `<option value="${t.nome}">${t.nome}</option>`).join('');
-                }
-
-                if (relatorios.length === 0) {
-                    container.innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-inbox"></i>
-                            Nenhum relatório registrado.
+                    ` : ''}
+                    
+                    <!-- Detalhes do cálculo -->
+                    ${totalValidas === 4 ? `
+                        <div style="margin-top: 8px; font-size: 11px; color: var(--color-text-muted); border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px;">
+                            MA = (${notasFiltradas.map(n => n.toFixed(1)).join(' + ')}) / 4 = ${mediaAnual.toFixed(1)}
+                            ${mediaAnual < 7 ? ` | Nota necessária na recuperação: ${notaRecuperacao !== null ? notaRecuperacao.toFixed(1) : '--'}` : ''}
                         </div>
-                    `;
-                    return;
-                }
-
-                const grouped = {};
-                relatorios.forEach(r => {
-                    if (!grouped[r.data]) grouped[r.data] = [];
-                    grouped[r.data].push(r);
-                });
-
-                const datas = Object.keys(grouped).sort((a, b) => new Date(b) - new Date(a));
-
-                container.innerHTML = datas.map(dataKey => {
-                    const items = grouped[dataKey];
-                    const totalTempo = items.reduce((acc, r) => acc + r.tempo, 0);
-                    const totalHoras = Math.floor(totalTempo / 60);
-                    const totalMinutos = totalTempo % 60;
-                    const totalTexto = totalHoras > 0 ? `${totalHoras}h ${totalMinutos}min` : `${totalMinutos}min`;
-
-                    return `
-                        <div class="relatorio-dia">
-                            <div class="relatorio-dia-header">
-                                <span class="data-dia"><i class="far fa-calendar-alt"></i> ${new Date(dataKey + 'T00:00:00').toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' })}</span>
-                                <span class="total-dia">📊 ${items.length} registro(s) · ⏱️ ${totalTexto}</span>
-                            </div>
-                            <div class="relatorio-dia-itens">
-                                ${items.map(r => `
-                                    <div class="relatorio-item">
-                                        <span class="disciplina">📚 ${r.disciplina}</span>
-                                        <span class="horas">⏱️ ${r.tempo}min</span>
-                                        <span class="texto">${r.texto}</span>
-                                    </div>
-                                `).join('')}
-                            </div>
+                    ` : totalValidas > 0 ? `
+                        <div style="margin-top: 8px; font-size: 11px; color: var(--color-text-muted); border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px;">
+                            MA parcial = (${notasFiltradas.map(n => n.toFixed(1)).join(' + ')}) / ${totalValidas} = ${mediaAnual.toFixed(1)}
+                            ${mediaAnual < 7 && totalValidas < 4 ? ` | Precisa de ${notaRecuperacao !== null ? notaRecuperacao.toFixed(1) : '--'} em cada bimestre restante` : ''}
                         </div>
-                    `;
-                }).join('');
-            }
+                    ` : ''}
+                </div>
+            </div>
+        `;
+    }).join('');
+}
 
             // ===== ATENDIMENTOS INTRAESCOLARES (NOVO MÓDULO) =====
             function renderAtendimentos() {
