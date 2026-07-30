@@ -237,23 +237,85 @@
             border-top: 1px solid var(--color-border);
             margin-top: auto;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 12px;
+            gap: 8px;
         }
         header .user-info .avatar {
-            width: 38px; height: 38px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             overflow: hidden;
             flex-shrink: 0;
             border: 2px solid var(--color-accent);
         }
         header .user-info .avatar img {
-            width: 100%; height: 100%;
+            width: 100%;
+            height: 100%;
             object-fit: cover;
             display: block;
         }
-        header .user-info .name { font-size: 13px; font-weight: 600; }
-        header .user-info .role { font-size: 11px; color: var(--color-text-muted); }
+        header .user-info .name {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--color-text);
+            text-align: center;
+        }
+        header .user-info .role {
+            font-size: 11px;
+            color: var(--color-text-muted);
+            text-align: center;
+        }
+        header .user-info .clock-presenca {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--color-accent);
+            font-variant-numeric: tabular-nums;
+            text-align: center;
+            margin-top: 4px;
+            letter-spacing: 2px;
+        }
+        header .user-info .clock-presenca .sec {
+            font-size: 14px;
+            color: var(--color-text-muted);
+            font-weight: 400;
+        }
+        header .user-info .presenca-label {
+            font-size: 11px;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.7;
+        }
+        .presenca-buttons {
+            display: flex;
+            gap: 8px;
+            width: 100%;
+            margin-top: 4px;
+        }
+        .presenca-buttons button {
+            flex: 1;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--color-border);
+            background: rgba(255, 255, 255, 0.02);
+            color: var(--color-text-muted);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
+        }
+        .presenca-buttons .btn-presenca:hover {
+            background: rgba(76, 175, 80, 0.1);
+            border-color: var(--color-success);
+            color: var(--color-success);
+        }
+        .presenca-buttons .btn-falta:hover {
+            background: rgba(229, 57, 53, 0.1);
+            border-color: var(--color-danger);
+            color: var(--color-danger);
+        }
 
         /* ===== CONTAINER ===== */
         .container {
@@ -1276,6 +1338,132 @@
         }
         .modal .modal-actions .btn-secondary:hover { background: rgba(255, 255, 255, 0.08); }
 
+        /* ===== MODAL PRESENÇA ===== */
+        .modal-presenca-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(12px);
+            z-index: 300;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-presenca-overlay.open { display: flex; }
+        .modal-presenca {
+            background: var(--color-secondary);
+            border-radius: 24px;
+            padding: 36px 40px;
+            max-width: 480px;
+            width: 100%;
+            border: 1px solid var(--color-border);
+            box-shadow: var(--shadow);
+            position: relative;
+            animation: modalSlideIn 0.3s ease;
+        }
+        @keyframes modalSlideIn {
+            from { opacity: 0; transform: scale(0.95) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .modal-presenca .modal-icon {
+            font-size: 48px;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        .modal-presenca h2 {
+            font-size: 22px;
+            font-weight: 700;
+            text-align: center;
+            color: var(--color-text);
+            margin-bottom: 8px;
+        }
+        .modal-presenca .subtitle {
+            text-align: center;
+            color: var(--color-text-muted);
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        .modal-presenca .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            font-size: 14px;
+        }
+        .modal-presenca .info-row .label { color: var(--color-text-muted); }
+        .modal-presenca .info-row .value { color: var(--color-text); font-weight: 600; }
+        .modal-presenca .info-row .value.highlight { color: var(--color-accent); }
+
+        .modal-presenca .justificativa-area {
+            margin: 16px 0 20px;
+        }
+        .modal-presenca .justificativa-area label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--color-text-muted);
+            margin-bottom: 6px;
+        }
+        .modal-presenca .justificativa-area textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid var(--color-border);
+            background: rgba(255, 255, 255, 0.02);
+            color: var(--color-text);
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 60px;
+            outline: none;
+            transition: var(--transition);
+        }
+        .modal-presenca .justificativa-area textarea:focus {
+            border-color: var(--color-accent);
+            box-shadow: 0 0 0 3px rgba(255, 179, 0, 0.08);
+        }
+
+        .modal-presenca .modal-actions {
+            display: flex;
+            gap: 12px;
+        }
+        .modal-presenca .modal-actions button {
+            flex: 1;
+            padding: 12px 20px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
+        }
+        .modal-presenca .modal-actions .btn-confirmar-presenca {
+            background: linear-gradient(135deg, var(--color-success), #388e3c);
+            color: #fff;
+        }
+        .modal-presenca .modal-actions .btn-confirmar-presenca:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 20px rgba(76, 175, 80, 0.3);
+        }
+        .modal-presenca .modal-actions .btn-confirmar-falta {
+            background: linear-gradient(135deg, var(--color-danger), #b71c1c);
+            color: #fff;
+        }
+        .modal-presenca .modal-actions .btn-confirmar-falta:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 20px rgba(229, 57, 53, 0.3);
+        }
+        .modal-presenca .modal-actions .btn-cancelar {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--color-text-muted);
+            flex: 0.5;
+        }
+        .modal-presenca .modal-actions .btn-cancelar:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
         /* ===== MODO PÂNICO ===== */
         .panico-overlay {
             display: none;
@@ -1635,6 +1823,9 @@
             header .navbar a .material-icons-sharp { display: block; font-size: 26px; }
             header .user-info { justify-content: center; }
             header .user-info .avatar { width: 32px; height: 32px; }
+            header .user-info .clock-presenca { font-size: 16px; }
+            header .user-info .presenca-label { font-size: 9px; }
+            .presenca-buttons button { font-size: 10px; padding: 4px 8px; }
             .container { margin-left: 72px; }
             .greeting-title { font-size: 22px; }
             .progress-container { flex-direction: column; align-items: center; }
@@ -1664,6 +1855,7 @@
             .respiracao-texto .timer { font-size: 32px; }
             .relato-acoes { flex-direction: column; }
             .atendimentos-grid { grid-template-columns: 1fr; }
+            .modal-presenca { padding: 24px; }
         }
 
         @media (max-width: 600px) {
@@ -1703,6 +1895,8 @@
             .panico-frase-principal { font-size: 18px; }
             .panico-recursos { gap: 4px; }
             .panico-recursos button { font-size: 12px; padding: 6px 16px; }
+            .modal-presenca .modal-actions { flex-direction: column; }
+            .modal-presenca .modal-actions .btn-cancelar { flex: 1; }
         }
 
         @media (max-width: 480px) {
@@ -1790,6 +1984,25 @@
             visibility: visible;
             opacity: 1;
         }
+
+        /* Status indicators */
+        .status-presenca {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .status-presenca.presente {
+            background: rgba(76, 175, 80, 0.15);
+            color: var(--color-success);
+        }
+        .status-presenca.falta {
+            background: rgba(229, 57, 53, 0.15);
+            color: var(--color-danger);
+        }
     </style>
 </head>
 <body>
@@ -1806,7 +2019,7 @@
             <button class="btn-entrar" onclick="entrarNoSistema()">
                 <i class="fas fa-sign-in-alt"></i> Entrar no Sistema
             </button>
-            <div class="versao">v3.1 · Com Correções e Atendimentos</div>
+            <div class="versao">v3.2 · Com Presença e Correções</div>
         </div>
     </div>
 
@@ -1895,12 +2108,28 @@
 
         <div class="user-info">
             <div class="avatar">
-                <img src="https://images.iimg.live/images/prime-memory-4768.webp" alt="Igor Veras"
+                <img src="https://images.iimg.live/images/prime-memory-4768.webp" alt="Igor Veras Morais"
                 onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'150\' height=\'150\'%3E%3Crect width=\'150\' height=\'150\' fill=\'%231a232e\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' text-anchor=\'middle\' dy=\'.3em\' font-size=\'60\' font-family=\'Arial\' fill=\'%23ffb300\'%3EIV%3C/text%3E%3C/svg%3E'" />
             </div>
             <div>
-                <div class="name">Igor Veras</div>
+                <div class="name">Igor Veras Morais</div>
                 <div class="role">2º Sem · Controle Ambiental</div>
+            </div>
+            <div class="clock-presenca" id="presencaClock">
+                <span id="presencaTime">00:00</span>
+                <span class="sec" id="presencaSeconds">00</span>
+            </div>
+            <div class="presenca-label">📋 Registro de Presença</div>
+            <div class="presenca-buttons">
+                <button class="btn-presenca" onclick="abrirModalPresenca('presente')">
+                    <i class="fas fa-check-circle"></i> Presente
+                </button>
+                <button class="btn-falta" onclick="abrirModalPresenca('falta')">
+                    <i class="fas fa-times-circle"></i> Falta
+                </button>
+            </div>
+            <div id="statusPresencaDisplay" style="margin-top:4px;font-size:11px;color:var(--color-text-muted);text-align:center;">
+                <span id="ultimaPresenca">Nenhum registro hoje</span>
             </div>
         </div>
     </header>
@@ -1912,7 +2141,7 @@
         </div>
     </div>
 
-    <!-- ===== MODAL ===== -->
+    <!-- ===== MODAL ATIVIDADES ===== -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal">
             <h2 id="modalTitle"><i class="fas fa-plus-circle"></i> Nova Atividade</h2>
@@ -2024,6 +2253,44 @@
         </div>
     </div>
 
+    <!-- ===== MODAL PRESENÇA ===== -->
+    <div class="modal-presenca-overlay" id="modalPresencaOverlay">
+        <div class="modal-presenca">
+            <div class="modal-icon" id="presencaModalIcon">✅</div>
+            <h2 id="presencaModalTitle">Confirmar Presença</h2>
+            <p class="subtitle" id="presencaModalSubtitle">Igor Veras Morais</p>
+
+            <div class="info-row">
+                <span class="label">📅 Data</span>
+                <span class="value highlight" id="presencaModalData">--</span>
+            </div>
+            <div class="info-row">
+                <span class="label">⏰ Hora</span>
+                <span class="value" id="presencaModalHora">--</span>
+            </div>
+            <div class="info-row">
+                <span class="label">👤 Aluno</span>
+                <span class="value">Igor Veras Morais</span>
+            </div>
+            <div class="info-row">
+                <span class="label">📚 Curso</span>
+                <span class="value">Controle Ambiental - 2º Sem</span>
+            </div>
+
+            <div class="justificativa-area" id="justificativaArea" style="display:none;">
+                <label>📝 Justificativa da Falta *</label>
+                <textarea id="justificativaFalta" placeholder="Descreva o motivo da sua falta..." rows="3"></textarea>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-cancelar" onclick="fecharModalPresenca()">Cancelar</button>
+                <button class="btn-confirmar-presenca" id="btnConfirmarPresenca" onclick="confirmarPresenca()">
+                    <i class="fas fa-check"></i> Confirmar
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- ===== MODO PÂNICO ===== -->
     <div class="panico-overlay" id="panicoOverlay">
         <div class="panico-container">
@@ -2109,7 +2376,7 @@
         // ██    ██ ██      ██   ██ ██      ██
         //  ██████  ███████ ██   ██ ███████ ███████
         // ============================================================
-        // GDA v3.1 - MÓDULO NOTAS ATUALIZADO
+        // GDA v3.2 - MÓDULO NOTAS + PRESENÇA + DETECÇÃO SEMESTRE
         // ============================================================
 
         (function() {
@@ -2232,12 +2499,14 @@
             let checklistState = loadData('gda_checklist', {});
             let historicoPanico = loadData('gda_historico_panico', []);
             let atendimentos = loadData('gda_atendimentos', []);
+            let presencas = loadData('gda_presencas', []);
             let participantesTemp = [];
             let subtarefasTemp = [];
             let editandoId = null;
             let editandoAtendimentoId = null;
             let respiracaoAtiva = false;
             let respiracaoInterval = null;
+            let tipoPresencaAtual = 'presente';
 
             // ===== FUNÇÕES AUXILIARES =====
             function getSaudacao() {
@@ -2252,6 +2521,22 @@
                 if (hora < 12) return '🌅';
                 if (hora < 18) return '☀️';
                 return '🌙';
+            }
+
+            function getSemestreAtual() {
+                const hoje = new Date();
+                const dataInicioSemestre1 = new Date('2026-01-21');
+                const dataFimSemestre1 = new Date('2026-07-23');
+                const dataInicioSemestre2 = new Date('2026-08-03');
+                const dataFimSemestre2 = new Date('2026-12-18');
+
+                if (hoje < dataInicioSemestre2) {
+                    return { semestre: '2026.1', inicio: dataInicioSemestre1, fim: dataFimSemestre1 };
+                } else if (hoje > dataFimSemestre2) {
+                    return { semestre: '2026.2 (Concluído)', inicio: dataInicioSemestre2, fim: dataFimSemestre2 };
+                } else {
+                    return { semestre: '2026.2', inicio: dataInicioSemestre2, fim: dataFimSemestre2 };
+                }
             }
 
             // ===== PARTICIPANTES E SUBTAREFAS =====
@@ -2332,6 +2617,129 @@
                 subtarefasTemp.splice(index, 1);
                 renderSubtarefas();
             };
+
+            // ===== PRESENÇA =====
+            window.abrirModalPresenca = function(tipo) {
+                if (!window.__security.checkRateLimit('presenca_open')) return;
+                tipoPresencaAtual = tipo;
+
+                const hoje = new Date();
+                const dataStr = hoje.toISOString().split('T')[0];
+                const horaStr = hoje.toLocaleTimeString('pt-BR');
+
+                // Verifica se já registrou hoje
+                const registroHoje = presencas.find(p => p.data === dataStr);
+                if (registroHoje) {
+                    alert(`⚠️ Você já registrou ${registroHoje.tipo === 'presente' ? 'PRESENÇA' : 'FALTA'} hoje às ${registroHoje.hora}.`);
+                    return;
+                }
+
+                const modal = document.getElementById('modalPresencaOverlay');
+                const icon = document.getElementById('presencaModalIcon');
+                const title = document.getElementById('presencaModalTitle');
+                const subtitle = document.getElementById('presencaModalSubtitle');
+                const justificativaArea = document.getElementById('justificativaArea');
+                const btnConfirmar = document.getElementById('btnConfirmarPresenca');
+
+                if (tipo === 'presente') {
+                    icon.textContent = '✅';
+                    title.textContent = 'Confirmar Presença';
+                    subtitle.textContent = 'Igor Veras Morais · Controle Ambiental';
+                    justificativaArea.style.display = 'none';
+                    btnConfirmar.className = 'btn-confirmar-presenca';
+                    btnConfirmar.innerHTML = '<i class="fas fa-check"></i> Confirmar Presença';
+                } else {
+                    icon.textContent = '❌';
+                    title.textContent = 'Registrar Falta';
+                    subtitle.textContent = 'Igor Veras Morais · Controle Ambiental';
+                    justificativaArea.style.display = 'block';
+                    btnConfirmar.className = 'btn-confirmar-falta';
+                    btnConfirmar.innerHTML = '<i class="fas fa-times"></i> Confirmar Falta';
+                }
+
+                document.getElementById('presencaModalData').textContent = hoje.toLocaleDateString('pt-BR', {
+                    weekday: 'long',
+                    day: '2-digit',
+                    month: 'long',
+                    year: 'numeric'
+                });
+                document.getElementById('presencaModalHora').textContent = horaStr;
+                document.getElementById('justificativaFalta').value = '';
+
+                modal.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            };
+
+            window.fecharModalPresenca = function() {
+                document.getElementById('modalPresencaOverlay').classList.remove('open');
+                document.body.style.overflow = '';
+            };
+
+            window.confirmarPresenca = function() {
+                if (!window.__security.checkRateLimit('presenca_confirm')) return;
+
+                const hoje = new Date();
+                const dataStr = hoje.toISOString().split('T')[0];
+                const horaStr = hoje.toLocaleTimeString('pt-BR');
+
+                // Verifica novamente se já registrou hoje
+                const registroHoje = presencas.find(p => p.data === dataStr);
+                if (registroHoje) {
+                    alert(`⚠️ Você já registrou ${registroHoje.tipo === 'presente' ? 'PRESENÇA' : 'FALTA'} hoje às ${registroHoje.hora}.`);
+                    fecharModalPresenca();
+                    return;
+                }
+
+                let justificativa = '';
+                if (tipoPresencaAtual === 'falta') {
+                    justificativa = document.getElementById('justificativaFalta').value.trim();
+                    if (!justificativa) {
+                        alert('⚠️ Por favor, informe a justificativa para a falta.');
+                        return;
+                    }
+                }
+
+                const registro = {
+                    id: Date.now(),
+                    data: dataStr,
+                    hora: horaStr,
+                    tipo: tipoPresencaAtual,
+                    justificativa: justificativa,
+                    nome: 'Igor Veras Morais',
+                    curso: 'Controle Ambiental - 2º Sem'
+                };
+
+                presencas.push(registro);
+                saveData('gda_presencas', presencas);
+
+                fecharModalPresenca();
+
+                const mensagem = tipoPresencaAtual === 'presente' ?
+                    '✅ Presença registrada com sucesso!' :
+                    '❌ Falta registrada com sucesso!';
+
+                alert(mensagem);
+                atualizarStatusPresenca();
+            };
+
+            function atualizarStatusPresenca() {
+                const hoje = new Date().toISOString().split('T')[0];
+                const registroHoje = presencas.find(p => p.data === hoje);
+
+                const display = document.getElementById('ultimaPresenca');
+                if (registroHoje) {
+                    const emoji = registroHoje.tipo === 'presente' ? '✅' : '❌';
+                    const texto = registroHoje.tipo === 'presente' ? 'Presente' : 'Falta';
+                    display.innerHTML = `
+                        <span class="status-presenca ${registroHoje.tipo === 'presente' ? 'presente' : 'falta'}">
+                            ${emoji} ${texto} às ${registroHoje.hora}
+                        </span>
+                        ${registroHoje.justificativa ? `<br><span style="font-size:10px;color:var(--color-text-muted);opacity:0.6;">📝 ${registroHoje.justificativa}</span>` : ''}
+                    `;
+                } else {
+                    display.innerHTML = `<span style="color:var(--color-text-muted);opacity:0.6;">Nenhum registro hoje</span>`;
+                }
+            }
 
             // ===== MODO PÂNICO =====
             window.abrirPanico = function() {
@@ -2610,6 +3018,7 @@
                 if (elAulas) elAulas.textContent = '4';
 
                 updateClockDisplay();
+                atualizarStatusPresenca();
 
                 // CHECKLIST
                 const total = checklistItems.length;
@@ -2651,36 +3060,47 @@
                 let semanasPassadasFinal = 0;
                 let semanasRestantesFinal = 0;
                 let diasRestantesFinal = 0;
+                let semestreAtual = '2026.1';
 
-                if (hoje < dataInicioSemestre2) {
-                    const progresso1 = calcularProgressoPeriodo(dataInicioSemestre1, dataFimSemestre1, hoje);
+                // DETECÇÃO AUTOMÁTICA DO SEMESTRE
+                // Verifica a cada carregamento se mudou de semestre
+                const agora = new Date();
+
+                if (agora < dataInicioSemestre2) {
+                    // Está no 1º semestre
+                    semestreAtual = '2026.1';
+                    const progresso1 = calcularProgressoPeriodo(dataInicioSemestre1, dataFimSemestre1, agora);
                     percentualFinal = progresso1.percentual;
                     mensagemFinal = progresso1.status === 'concluido' ?
                         '✅ Semestre 2026.1 concluído! Aguardando 2026.2 (início em 3 de agosto)' :
                         `📈 ${progresso1.percentual}% do 2026.1 concluído`;
-                    if (hoje < dataInicioSemestre1) {
+                    if (agora < dataInicioSemestre1) {
                         mensagemFinal = '📅 O semestre 2026.1 começa em 21 de janeiro!';
                         percentualFinal = 0;
                     }
-                    if (hoje > dataFimSemestre1) {
+                    if (agora > dataFimSemestre1) {
                         percentualFinal = 100;
                         mensagemFinal = '✅ Semestre 2026.1 concluído! Aguardando 2026.2 (início em 3 de agosto)';
                     }
                     const totalDias1 = Math.ceil((dataFimSemestre1 - dataInicioSemestre1) / (1000 * 60 * 60 * 24));
-                    const diasPassados1 = Math.max(0, Math.ceil((hoje - dataInicioSemestre1) / (1000 * 60 * 60 * 24)));
+                    const diasPassados1 = Math.max(0, Math.ceil((agora - dataInicioSemestre1) / (1000 * 60 * 60 * 24)));
                     const totalSemanas1 = Math.ceil(totalDias1 / 7);
                     semanasPassadasFinal = Math.min(totalSemanas1, Math.ceil(diasPassados1 / 7));
                     semanasRestantesFinal = Math.max(0, totalSemanas1 - semanasPassadasFinal);
                     diasRestantesFinal = Math.max(0, totalDias1 - diasPassados1);
-                } else if (hoje > dataFimSemestre2) {
+                } else if (agora > dataFimSemestre2) {
+                    // Semestre concluído
+                    semestreAtual = '2026.2 (Concluído)';
                     percentualFinal = 100;
                     mensagemFinal = '🎉 Semestre 2026.2 concluído! Parabéns!';
                     semanasPassadasFinal = 18;
                     semanasRestantesFinal = 0;
                     diasRestantesFinal = 0;
                 } else {
+                    // Está no 2º semestre
+                    semestreAtual = '2026.2';
                     const totalDias2 = Math.ceil((dataFimSemestre2 - dataInicioSemestre2) / (1000 * 60 * 60 * 24));
-                    const diasPassados2 = Math.ceil((hoje - dataInicioSemestre2) / (1000 * 60 * 60 * 24));
+                    const diasPassados2 = Math.ceil((agora - dataInicioSemestre2) / (1000 * 60 * 60 * 24));
                     const totalSemanas2 = Math.ceil(totalDias2 / 7);
                     const semanasPassadas2 = Math.ceil(diasPassados2 / 7);
                     percentualFinal = Math.min(100, Math.max(0, Math.round((diasPassados2 / totalDias2) * 100)));
@@ -2727,6 +3147,104 @@
                 const diasPassados = Math.ceil((hoje - inicio) / (1000 * 60 * 60 * 24));
                 const percentual = Math.min(100, Math.max(0, Math.round((diasPassados / totalDias) * 100)));
                 return { percentual, status: 'em_andamento', mensagem: `📈 ${percentual}% concluído` };
+            }
+
+            // ===== VERIFICADOR AUTOMÁTICO DE SEMESTRE =====
+            function verificarMudancaSemestre() {
+                const hoje = new Date();
+                const dataInicioSemestre2 = new Date('2026-08-03');
+                const dataFimSemestre1 = new Date('2026-07-23');
+
+                // Verifica se é o dia do início do 2º semestre
+                if (hoje.toDateString() === dataInicioSemestre2.toDateString()) {
+                    // Mostra notificação
+                    const notificacao = document.createElement('div');
+                    notificacao.style.cssText = `
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
+                        color: var(--color-primary);
+                        padding: 16px 24px;
+                        border-radius: 12px;
+                        font-weight: 700;
+                        font-size: 16px;
+                        z-index: 999;
+                        box-shadow: 0 8px 32px rgba(255, 179, 0, 0.3);
+                        animation: slideInRight 0.5s ease;
+                        cursor: pointer;
+                        font-family: 'Inter', sans-serif;
+                    `;
+                    notificacao.innerHTML = `
+                        <div style="display:flex;align-items:center;gap:12px;">
+                            <span style="font-size:24px;">🎉</span>
+                            <div>
+                                <div>Novo Semestre!</div>
+                                <div style="font-size:12px;font-weight:400;opacity:0.8;">2026.2 começou hoje</div>
+                            </div>
+                            <button onclick="this.parentElement.parentElement.remove()" style="background:none;border:none;color:var(--color-primary);cursor:pointer;font-size:18px;">✕</button>
+                        </div>
+                    `;
+                    document.body.appendChild(notificacao);
+
+                    // Remove após 10 segundos
+                    setTimeout(() => {
+                        if (notificacao.parentElement) {
+                            notificacao.style.opacity = '0';
+                            notificacao.style.transition = 'opacity 0.5s';
+                            setTimeout(() => notificacao.remove(), 500);
+                        }
+                    }, 10000);
+
+                    // Adiciona o estilo da animação
+                    const style = document.createElement('style');
+                    style.textContent = `
+                        @keyframes slideInRight {
+                            from { transform: translateX(100%); opacity: 0; }
+                            to { transform: translateX(0); opacity: 1; }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }
+
+                // Verifica se passou do 1º semestre (atualização automática)
+                if (hoje > dataFimSemestre1 && hoje < dataInicioSemestre2) {
+                    // Entre semestres
+                    const msg = document.createElement('div');
+                    msg.style.cssText = `
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        background: var(--color-card);
+                        border: 1px solid var(--color-border);
+                        color: var(--color-text);
+                        padding: 14px 20px;
+                        border-radius: 12px;
+                        font-size: 14px;
+                        z-index: 999;
+                        box-shadow: var(--shadow);
+                        animation: slideInRight 0.5s ease;
+                        font-family: 'Inter', sans-serif;
+                    `;
+                    msg.innerHTML = `
+                        <div style="display:flex;align-items:center;gap:10px;">
+                            <span>⏳</span>
+                            <div>
+                                <div style="font-weight:600;">Férias entre semestres</div>
+                                <div style="font-size:12px;color:var(--color-text-muted);">2026.2 começa em 3 de agosto</div>
+                            </div>
+                            <button onclick="this.parentElement.parentElement.remove()" style="background:none;border:none;color:var(--color-text-muted);cursor:pointer;">✕</button>
+                        </div>
+                    `;
+                    // Só mostra se não tiver notificação já
+                    if (!document.querySelector('.entre-semestres-msg')) {
+                        msg.className = 'entre-semestres-msg';
+                        document.body.appendChild(msg);
+                        setTimeout(() => {
+                            if (msg.parentElement) msg.remove();
+                        }, 8000);
+                    }
+                }
             }
 
             // ===== RENDERIZAÇÃO DASHBOARD =====
@@ -2781,6 +3299,12 @@
                 const secEl = document.getElementById('secondsDisplay');
                 if (timeEl) timeEl.textContent = `${h}:${m}`;
                 if (secEl) secEl.textContent = s;
+
+                // Relógio da presença
+                const pTime = document.getElementById('presencaTime');
+                const pSec = document.getElementById('presencaSeconds');
+                if (pTime) pTime.textContent = `${h}:${m}`;
+                if (pSec) pSec.textContent = s;
             }
 
             // ===== CITAÇÃO DO DIA =====
@@ -3007,15 +3531,14 @@
                 editandoId = null;
             };
 
-            // ===== NOTAS - VERSÃO CORRIGIDA =====
+            // ===== NOTAS =====
             function renderNotas() {
                 const container = document.getElementById('notasContainer');
                 if (!container) return;
 
                 container.innerHTML = turmas.map(d => {
                     const nota = notas[d.cod] || { b1: '', b2: '', b3: '', b4: '' };
-                    
-                    // Pega as 4 notas dos bimestres
+
                     const bimestres = [1, 2, 3, 4];
                     const notasValidas = bimestres.map(b => {
                         const valor = nota['b'+b];
@@ -3023,17 +3546,17 @@
                         const num = parseFloat(valor.toString().replace(',', '.'));
                         return !isNaN(num) && num >= 0 && num <= 10 ? num : null;
                     });
-                    
+
                     const notasFiltradas = notasValidas.filter(n => n !== null);
                     const totalValidas = notasFiltradas.length;
-                    
+
                     let mediaAnual = 0;
                     let status = 'aguardando';
                     let statusText = '⏳ Aguardando notas';
                     let notaRecuperacao = null;
                     let mensagemRecuperacao = '';
                     let detalhesCalculo = '';
-                    
+
                     if (totalValidas === 0) {
                         status = 'aguardando';
                         statusText = '⏳ Aguardando notas';
@@ -3042,9 +3565,9 @@
                         mediaAnual = soma / totalValidas;
                         status = 'parcial';
                         statusText = `🟡 ${totalValidas}/4 bimestres · MA: ${mediaAnual.toFixed(1)}`;
-                        
+
                         detalhesCalculo = `MA parcial = (${notasFiltradas.map(n => n.toFixed(1)).join(' + ')}) / ${totalValidas} = ${mediaAnual.toFixed(1)}`;
-                        
+
                         const bimestresFaltando = 4 - totalValidas;
                         if (bimestresFaltando > 0 && mediaAnual < 7) {
                             const pontosNecessarios = 7.0 * 4;
@@ -3052,7 +3575,7 @@
                             const pontosFaltando = pontosNecessarios - pontosAtuais;
                             const notaPorBimestre = pontosFaltando / bimestresFaltando;
                             notaRecuperacao = Math.max(0, Math.min(10, notaPorBimestre));
-                            
+
                             if (notaRecuperacao <= 10) {
                                 mensagemRecuperacao = `🎯 Precisa tirar ${notaRecuperacao.toFixed(1)} em cada um dos ${bimestresFaltando} bimestre(s) restante(s)`;
                             } else {
@@ -3062,19 +3585,19 @@
                     } else {
                         const soma = notasFiltradas.reduce((a, b) => a + b, 0);
                         mediaAnual = soma / 4;
-                        
+
                         detalhesCalculo = `MA = (${notasFiltradas.map(n => n.toFixed(1)).join(' + ')}) / 4 = ${mediaAnual.toFixed(1)}`;
-                        
+
                         if (mediaAnual >= 7.0) {
                             status = 'aprovado';
                             statusText = '✅ Aprovado!';
                         } else {
                             status = 'recuperacao';
                             statusText = `🔴 Recuperação (MA: ${mediaAnual.toFixed(1)})`;
-                            
+
                             const notaNecessaria = (7.0 * 10 - mediaAnual * 6) / 4;
                             notaRecuperacao = Math.max(0, Math.min(10, notaNecessaria));
-                            
+
                             if (notaRecuperacao <= 10) {
                                 mensagemRecuperacao = `📝 Precisa tirar ${notaRecuperacao.toFixed(1)} (ou mais) na recuperação`;
                                 detalhesCalculo += ` | Nota_Rec = (7.0×10 - ${mediaAnual.toFixed(1)}×6) / 4 = ${notaRecuperacao.toFixed(1)}`;
@@ -3092,10 +3615,10 @@
                                 ${[1,2,3,4].map(b => `
                                     <div class="nota-bimestre">
                                         <div class="bimestre-label">${b}º Bim</div>
-                                        <input type="text" 
+                                        <input type="text"
                                             inputmode="decimal"
                                             pattern="[0-9,.]*"
-                                            value="${nota['b'+b] || ''}" 
+                                            value="${nota['b'+b] || ''}"
                                             onchange="atualizarNota('${d.cod}', 'b${b}', this.value)"
                                             oninput="validarNota(this)"
                                             placeholder="--" />
@@ -3108,7 +3631,7 @@
                                     <span style="font-size:13px;color:var(--color-text-muted);">${totalValidas}/4 bimestres</span>
                                     <span style="font-size:12px;font-weight:600;color:${mediaAnual >= 7 ? 'var(--color-success)' : totalValidas < 4 ? 'var(--color-warning)' : 'var(--color-danger)'};">${statusText}</span>
                                 </div>
-                                
+
                                 ${mensagemRecuperacao ? `
                                     <div style="margin-top: 10px; padding: 10px 14px; background: ${notaRecuperacao !== null && notaRecuperacao <= 10 ? 'rgba(255, 179, 0, 0.08)' : 'rgba(229, 57, 53, 0.08)'}; border-radius: 8px; border-left: 4px solid ${notaRecuperacao !== null && notaRecuperacao <= 10 ? 'var(--color-warning)' : 'var(--color-danger)'};">
                                         <div style="font-size: 14px; font-weight: 600; color: ${notaRecuperacao !== null && notaRecuperacao <= 10 ? 'var(--color-warning)' : 'var(--color-danger)'};">
@@ -3133,7 +3656,7 @@
                                         `}
                                     </div>
                                 ` : ''}
-                                
+
                                 ${detalhesCalculo ? `
                                     <div class="detalhes-calculo">${detalhesCalculo}</div>
                                 ` : ''}
@@ -3143,7 +3666,6 @@
                 }).join('');
             }
 
-            // ===== VALIDAÇÃO DE NOTAS =====
             function validarNota(input) {
                 let valor = input.value.replace(',', '.');
                 valor = valor.replace(/[^0-9.]/g, '');
@@ -3162,10 +3684,10 @@
 
             window.atualizarNota = function(cod, bimestre, valor) {
                 if (!window.__security.checkRateLimit('nota_update')) return;
-                
+
                 let valorLimpo = valor.replace(',', '.').replace(/[^0-9.]/g, '');
                 const num = parseFloat(valorLimpo);
-                
+
                 if (valorLimpo !== '' && (isNaN(num) || num < 0 || num > 10)) {
                     alert('⚠️ A nota deve ser entre 0 e 10.');
                     const nota = notas[cod] || { b1: '', b2: '', b3: '', b4: '' };
@@ -3175,7 +3697,7 @@
                     }
                     return;
                 }
-                
+
                 if (!notas[cod]) notas[cod] = { b1: '', b2: '', b3: '', b4: '' };
                 notas[cod][bimestre] = valorLimpo;
                 saveData('gda_notas', notas);
@@ -3324,12 +3846,12 @@
             window.editarAtendimento = function(id) {
                 const atendimento = atendimentos.find(a => a.id === id);
                 if (!atendimento) return;
-                
+
                 document.getElementById('formAtendimentoDisciplina').value = atendimento.disciplina || '';
                 document.getElementById('formAtendimentoData').value = atendimento.data || '';
                 document.getElementById('formAtendimentoHora').value = atendimento.hora || '';
                 document.getElementById('formAtendimentoDescricao').value = atendimento.descricao || '';
-                
+
                 document.getElementById('modalAtendimentoTitle').innerHTML = '<i class="fas fa-edit"></i> Editar Atendimento';
                 document.getElementById('modalAtendimentoOverlay').classList.add('open');
                 editandoAtendimentoId = id;
@@ -3341,10 +3863,10 @@
                 document.getElementById('modalAtendimentoTitle').innerHTML = '<i class="fas fa-handshake"></i> Nova Participação em Atendimento';
                 document.getElementById('modalAtendimentoOverlay').classList.add('open');
                 editandoAtendimentoId = null;
-                
+
                 const hoje = new Date().toISOString().split('T')[0];
                 document.getElementById('formAtendimentoData').value = hoje;
-                
+
                 const agora = new Date();
                 const h = String(agora.getHours()).padStart(2, '0');
                 const m = String(agora.getMinutes()).padStart(2, '0');
@@ -3630,8 +4152,8 @@
                                         <div class="progress-circle-container">
                                             <svg class="progress-circle" viewBox="0 0 120 120">
                                                 <circle class="progress-bg" cx="60" cy="60" r="54" />
-                                                <circle class="progress-fg" cx="60" cy="60" r="54" 
-                                                        stroke-dasharray="339.292" 
+                                                <circle class="progress-fg" cx="60" cy="60" r="54"
+                                                        stroke-dasharray="339.292"
                                                         stroke-dashoffset="339.292" />
                                             </svg>
                                             <div class="progress-center">
@@ -3804,10 +4326,14 @@
                     });
                 });
 
-                console.log('✅ GDA v3.1 - Módulo Notas atualizado!');
+                // Verifica mudança de semestre ao carregar
+                verificarMudancaSemestre();
+
+                console.log('✅ GDA v3.2 - Módulo Presença + Detecção Semestre!');
                 console.log('📊 MA = (1ºBI + 2ºBI + 3ºBI + 4ºBI) / 4');
                 console.log('📝 Nota_Rec = (7.0 × 10 - MA × 6) / 4');
-                console.log('🎨 CSS em todos os selects atualizado');
+                console.log('✅ Detecção automática do início do 2º semestre (03/08/2026)');
+                console.log('✅ Módulo de Presença com confirmação e justificativa');
             }
 
             // ===== CLICK FORA DO MODAL =====
@@ -3816,6 +4342,8 @@
                 if (e.target === modal) closeModal();
                 const modalAtendimento = document.getElementById('modalAtendimentoOverlay');
                 if (e.target === modalAtendimento) closeModalAtendimento();
+                const modalPresenca = document.getElementById('modalPresencaOverlay');
+                if (e.target === modalPresenca) fecharModalPresenca();
             });
 
             // ===== TOGGLE SUBMENU =====
@@ -3840,14 +4368,17 @@
                 setInterval(updateClockDisplay, 1000);
                 atualizarBadgePanico();
 
+                // Verifica mudança de semestre a cada minuto
+                setInterval(verificarMudancaSemestre, 60000);
+
                 console.log('%c▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓', 'font-size:8px;color:#4ecdc4;');
-                console.log('%c   GDA v3.1 - MÓDULO NOTAS ATUALIZADO   ', 'font-size:16px;color:#ffd93d;font-weight:bold;');
+                console.log('%c   GDA v3.2 - MÓDULO PRESENÇA + DETECÇÃO   ', 'font-size:16px;color:#ffd93d;font-weight:bold;');
                 console.log('%c▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓', 'font-size:8px;color:#4ecdc4;');
-                console.log('%c✅ MA = (1ºBI + 2ºBI + 3ºBI + 4ºBI) / 4', 'font-size:12px;color:#4caf50;');
-                console.log('%c✅ Nota_Rec = (7.0 × 10 - MA × 6) / 4', 'font-size:12px;color:#4caf50;');
-                console.log('%c✅ Cálculo de nota necessária na recuperação', 'font-size:12px;color:#4caf50;');
-                console.log('%c✅ Cálculo de nota necessária nos bimestres restantes', 'font-size:12px;color:#4caf50;');
-                console.log('%c✅ CSS estilizado em todos os selects', 'font-size:12px;color:#4caf50;');
+                console.log('%c✅ Detecção automática do 2º semestre', 'font-size:12px;color:#4caf50;');
+                console.log('%c✅ Módulo de Presença com confirmação', 'font-size:12px;color:#4caf50;');
+                console.log('%c✅ Justificativa para faltas', 'font-size:12px;color:#4caf50;');
+                console.log('%c✅ Relógio com segundos na sidebar', 'font-size:12px;color:#4caf50;');
+                console.log('%c✅ Nome completo: Igor Veras Morais', 'font-size:12px;color:#4caf50;');
             });
 
         })();
