@@ -1000,6 +1000,73 @@
             min-width: 150px;
         }
 
+        /* ===== ASSUNTOS ===== */
+        .assuntos-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 16px;
+        }
+        @media (max-width: 768px) {
+            .assuntos-grid { grid-template-columns: 1fr; }
+        }
+        .assunto-card {
+            background: var(--color-card);
+            border-radius: var(--radius);
+            padding: 16px 18px;
+            border: 1px solid var(--color-border);
+            transition: var(--transition);
+            border-left: 4px solid var(--color-accent);
+        }
+        .assunto-card:hover {
+            border-color: rgba(255, 179, 0, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        .assunto-card .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+        .assunto-card .data { font-size: 12px; color: var(--color-text-muted); }
+        .assunto-card .disciplina { font-size: 13px; font-weight: 600; color: var(--color-accent); }
+        .assunto-card .titulo { font-size: 15px; font-weight: 700; color: var(--color-text); margin: 4px 0; }
+        .assunto-card .descricao {
+            font-size: 13px;
+            color: var(--color-text-muted);
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 6px;
+            margin-top: 4px;
+        }
+        .assunto-card .acoes {
+            margin-top: 10px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            padding-top: 8px;
+            border-top: 1px solid var(--color-border);
+        }
+        .assunto-card .acoes button {
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: var(--transition);
+            border: 1px solid var(--color-border);
+            background: rgba(255, 255, 255, 0.02);
+            color: var(--color-text-muted);
+        }
+        .assunto-card .acoes .btn-delete:hover {
+            border-color: var(--color-danger);
+            color: var(--color-danger);
+            background: rgba(229, 57, 53, 0.05);
+        }
+
         /* ===== ATIVIDADES GRID ===== */
         .atividades-grid {
             display: grid;
@@ -1315,6 +1382,20 @@
             background: rgba(255, 255, 255, 0.02);
             border-radius: 6px;
             border-left: 2px solid var(--color-border);
+        }
+        .presenca-card .btn-excluir-presenca {
+            padding: 4px 12px;
+            border-radius: 12px;
+            border: 1px solid var(--color-danger);
+            background: rgba(229, 57, 53, 0.1);
+            color: var(--color-danger);
+            cursor: pointer;
+            font-size: 11px;
+            font-family: 'Inter', sans-serif;
+            transition: var(--transition);
+        }
+        .presenca-card .btn-excluir-presenca:hover {
+            background: rgba(229, 57, 53, 0.2);
         }
         .presenca-stats {
             display: grid;
@@ -1963,6 +2044,7 @@
             .modal-presenca { padding: 24px; }
             .presenca-grid { grid-template-columns: 1fr; }
             .presenca-stats { grid-template-columns: 1fr 1fr; }
+            .assuntos-grid { grid-template-columns: 1fr; }
         }
 
         @media (max-width: 600px) {
@@ -2063,6 +2145,19 @@
         select::-ms-expand {
             display: none;
         }
+
+        /* ===== ANIMAÇÃO PARA NOTIFICAÇÃO DE MEIA-NOITE ===== */
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes pulseNotify {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .notificacao-meia-noite {
+            animation: slideInRight 0.5s ease, pulseNotify 2s ease 0.5s 2;
+        }
     </style>
 </head>
 <body>
@@ -2130,6 +2225,11 @@
                 <span class="material-icons-sharp">event_note</span>
                 <h3>Presença</h3>
                 <span class="badge-link" id="presencaBadge">0</span>
+            </a>
+            <a href="#" data-page="assuntos">
+                <span class="material-icons-sharp">subject</span>
+                <h3>Assuntos</h3>
+                <span class="badge-link" id="assuntosBadge">0</span>
             </a>
 
             <div class="nav-label" style="margin-top:8px;">Panico</div>
@@ -2560,6 +2660,7 @@
             let historicoPanico = loadData('gda_historico_panico', []);
             let atendimentos = loadData('gda_atendimentos', []);
             let presencas = loadData('gda_presencas', []);
+            let assuntos = loadData('gda_assuntos', {});
             let participantesTemp = [];
             let subtarefasTemp = [];
             let editandoId = null;
@@ -2567,6 +2668,7 @@
             let respiracaoAtiva = false;
             let respiracaoInterval = null;
             let tipoPresencaAtual = 'presente';
+            let ultimaVerificacaoMeiaNoite = null;
 
             // ===== FUNÇÕES AUXILIARES =====
             function getSaudacao() {
@@ -2597,6 +2699,155 @@
                 } else {
                     return { semestre: '2026.2', inicio: dataInicioSemestre2, fim: dataFimSemestre2 };
                 }
+            }
+
+            // ===== VERIFICADOR DE MEIA-NOITE =====
+            function verificarMeiaNoite() {
+                const agora = new Date();
+                const horaAtual = agora.getHours();
+                const minutoAtual = agora.getMinutes();
+                const segundoAtual = agora.getSeconds();
+
+                // Verifica se é exatamente 00:00:00
+                if (horaAtual === 0 && minutoAtual === 0 && segundoAtual === 0) {
+                    const hojeStr = agora.toISOString().split('T')[0];
+                    
+                    // Evita múltiplas execuções no mesmo dia
+                    if (ultimaVerificacaoMeiaNoite === hojeStr) return;
+                    ultimaVerificacaoMeiaNoite = hojeStr;
+
+                    console.log('🔄 NOVO DIA INICIADO:', hojeStr);
+
+                    // Verifica se é 3 de agosto
+                    if (agora.getMonth() === 7 && agora.getDate() === 3) {
+                        mostrarNotificacaoInicioSemestre();
+                    }
+
+                    // Limpa registros de presença do dia anterior (opcional - mantém histórico)
+                    // Não removemos registros, apenas atualizamos a interface
+
+                    // Atualiza todos os componentes
+                    renderTelaInicial();
+                    renderDashboard();
+                    renderPresenca();
+                    atualizarStatusPresenca();
+                    atualizarBadgePresenca();
+
+                    // Notificação visual
+                    mostrarNotificacaoMeiaNoite();
+                }
+            }
+
+            function mostrarNotificacaoMeiaNoite() {
+                const notificacao = document.createElement('div');
+                notificacao.className = 'notificacao-meia-noite';
+                notificacao.style.cssText = `
+                    position: fixed;
+                    bottom: 20px;
+                    right: 20px;
+                    background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
+                    color: var(--color-primary);
+                    padding: 16px 24px;
+                    border-radius: 12px;
+                    font-weight: 700;
+                    font-size: 15px;
+                    z-index: 999;
+                    box-shadow: 0 8px 32px rgba(255, 179, 0, 0.3);
+                    cursor: default;
+                    font-family: 'Inter', sans-serif;
+                    max-width: 320px;
+                    border: 1px solid rgba(255,255,255,0.1);
+                `;
+                notificacao.innerHTML = `
+                    <div style="display:flex;align-items:center;gap:12px;">
+                        <span style="font-size:28px;">🌅</span>
+                        <div>
+                            <div style="font-weight:700;">Novo Dia!</div>
+                            <div style="font-size:12px;font-weight:400;opacity:0.8;">
+                                ${new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long' })}
+                            </div>
+                            <div style="font-size:11px;font-weight:400;opacity:0.6;margin-top:2px;">
+                                Registros de presença atualizados
+                            </div>
+                        </div>
+                        <button onclick="this.parentElement.parentElement.remove()" 
+                                style="background:none;border:none;color:var(--color-primary);cursor:pointer;font-size:18px;opacity:0.5;hover:opacity:1;">
+                            ✕
+                        </button>
+                    </div>
+                `;
+                document.body.appendChild(notificacao);
+
+                // Remove automaticamente após 8 segundos
+                setTimeout(() => {
+                    if (notificacao.parentElement) {
+                        notificacao.style.opacity = '0';
+                        notificacao.style.transition = 'opacity 0.5s';
+                        setTimeout(() => notificacao.remove(), 500);
+                    }
+                }, 8000);
+            }
+
+            function mostrarNotificacaoInicioSemestre() {
+                const notificacao = document.createElement('div');
+                notificacao.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
+                    color: var(--color-primary);
+                    padding: 20px 28px;
+                    border-radius: 16px;
+                    font-weight: 700;
+                    font-size: 18px;
+                    z-index: 9999;
+                    box-shadow: 0 8px 48px rgba(255, 179, 0, 0.4);
+                    animation: slideInRight 0.6s ease;
+                    cursor: pointer;
+                    font-family: 'Inter', sans-serif;
+                    max-width: 420px;
+                    border: 2px solid rgba(255,255,255,0.15);
+                `;
+                notificacao.innerHTML = `
+                    <div style="display:flex;align-items:center;gap:16px;">
+                        <span style="font-size:36px;">🎉</span>
+                        <div>
+                            <div style="font-size:20px;font-weight:800;">NOVO SEMESTRE!</div>
+                            <div style="font-size:14px;font-weight:400;opacity:0.9;margin-top:2px;">
+                                2026.2 começou hoje, 3 de agosto!
+                            </div>
+                            <div style="font-size:12px;font-weight:400;opacity:0.7;margin-top:4px;">
+                                💪 Bora começar com tudo!
+                            </div>
+                        </div>
+                        <button onclick="this.parentElement.parentElement.remove()" 
+                                style="background:none;border:none;color:var(--color-primary);cursor:pointer;font-size:22px;opacity:0.6;hover:opacity:1;margin-left:auto;">
+                            ✕
+                        </button>
+                    </div>
+                `;
+                document.body.appendChild(notificacao);
+
+                // Adiciona estilo da animação se não existir
+                if (!document.getElementById('style-notificacao')) {
+                    const style = document.createElement('style');
+                    style.id = 'style-notificacao';
+                    style.textContent = `
+                        @keyframes slideInRight {
+                            from { transform: translateX(100%); opacity: 0; }
+                            to { transform: translateX(0); opacity: 1; }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }
+
+                setTimeout(() => {
+                    if (notificacao.parentElement) {
+                        notificacao.style.opacity = '0';
+                        notificacao.style.transition = 'opacity 0.5s';
+                        setTimeout(() => notificacao.remove(), 500);
+                    }
+                }, 15000);
             }
 
             // ===== PARTICIPANTES E SUBTAREFAS =====
@@ -2784,7 +3035,8 @@
                     tipo: tipoPresencaAtual,
                     justificativa: justificativa,
                     nome: 'Igor Veras Morais',
-                    curso: 'Controle Ambiental - 2º Sem'
+                    curso: 'Controle Ambiental - 2º Sem',
+                    atestado: false // Campo para atestado
                 };
 
                 presencas.push(registro);
@@ -2815,6 +3067,7 @@
                             ${emoji} ${texto} às ${registroHoje.hora}
                         </span>
                         ${registroHoje.justificativa ? `<br><span style="font-size:9px;color:var(--color-text-muted);opacity:0.6;">📝 ${registroHoje.justificativa}</span>` : ''}
+                        ${registroHoje.atestado ? `<br><span style="font-size:9px;color:var(--color-success);">📋 Atestado entregue à coordenação</span>` : ''}
                     `;
                 } else {
                     display.innerHTML = `<span class="status-presenca aguardando">⏳ Aguardando registro</span>`;
@@ -2827,6 +3080,90 @@
                     badge.textContent = presencas.length;
                     badge.style.display = presencas.length > 0 ? 'inline-block' : 'none';
                 }
+            }
+
+            // ===== EXCLUIR REGISTRO DE PRESENÇA =====
+            function excluirRegistroPresenca(id) {
+                const registro = presencas.find(p => p.id === id);
+                if (!registro) return;
+
+                // Criar modal de justificativa
+                const modal = document.createElement('div');
+                modal.style.cssText = `
+                    position: fixed;
+                    top: 0; left: 0; right: 0; bottom: 0;
+                    background: rgba(0,0,0,0.7);
+                    backdrop-filter: blur(8px);
+                    z-index: 9999;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 20px;
+                `;
+                modal.innerHTML = `
+                    <div style="background: var(--color-secondary); border-radius: 24px; padding: 32px; max-width: 500px; width: 100%; border: 1px solid var(--color-border);">
+                        <h2 style="color: var(--color-danger); margin-bottom: 16px;">🗑️ Excluir Registro</h2>
+                        <p style="color: var(--color-text-muted); margin-bottom: 16px;">
+                            Você está prestes a excluir o registro de <strong>${registro.tipo === 'presente' ? 'PRESENÇA' : 'FALTA'}</strong> 
+                            do dia ${new Date(registro.data + 'T00:00:00').toLocaleDateString('pt-BR')} às ${registro.hora}.
+                        </p>
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; font-size: 13px; font-weight: 600; color: var(--color-text-muted); margin-bottom: 6px;">
+                                📝 Justificativa para exclusão *
+                            </label>
+                            <textarea id="justificativaExclusao" rows="3" style="width: 100%; padding: 10px 14px; border-radius: 10px; border: 1px solid var(--color-border); background: rgba(255,255,255,0.02); color: var(--color-text); font-family: 'Inter', sans-serif; font-size: 14px; resize: vertical; outline: none; transition: 0.3s ease;"></textarea>
+                        </div>
+                        <div style="display: flex; gap: 12px;">
+                            <button onclick="this.closest('div[style*=\\'backdrop-filter\\']').remove()" style="flex:1; padding: 10px; border-radius: 12px; border: 1px solid var(--color-border); background: rgba(255,255,255,0.05); color: var(--color-text-muted); cursor: pointer; font-family: 'Inter', sans-serif; font-weight: 600;">
+                                Cancelar
+                            </button>
+                            <button onclick="confirmarExclusaoPresenca(${id})" style="flex:1; padding: 10px; border-radius: 12px; border: none; background: linear-gradient(135deg, var(--color-danger), #b71c1c); color: #fff; cursor: pointer; font-family: 'Inter', sans-serif; font-weight: 700;">
+                                Confirmar Exclusão
+                            </button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+
+                // Fechar ao clicar fora
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) modal.remove();
+                });
+            }
+
+            function confirmarExclusaoPresenca(id) {
+                const justificativa = document.getElementById('justificativaExclusao').value.trim();
+                if (!justificativa) {
+                    alert('⚠️ Por favor, informe a justificativa para a exclusão.');
+                    return;
+                }
+
+                // Registrar a exclusão no histórico
+                const registro = presencas.find(p => p.id === id);
+                if (registro) {
+                    const historicoExclusao = loadData('gda_presencas_excluidas', []);
+                    historicoExclusao.push({
+                        id: Date.now(),
+                        registroOriginal: registro,
+                        dataExclusao: new Date().toISOString(),
+                        justificativa: justificativa,
+                        excluidoPor: 'Igor Veras Morais'
+                    });
+                    saveData('gda_presencas_excluidas', historicoExclusao);
+                }
+
+                // Remover o registro
+                presencas = presencas.filter(p => p.id !== id);
+                saveData('gda_presencas', presencas);
+
+                // Fechar modal
+                const modal = document.querySelector('[style*="backdrop-filter: blur(8px);"]');
+                if (modal) modal.remove();
+
+                alert('✅ Registro excluído com sucesso!');
+                renderPresenca();
+                atualizarStatusPresenca();
+                atualizarBadgePresenca();
             }
 
             // ===== RENDER PRESENÇA =====
@@ -2881,7 +3218,7 @@
                     });
 
                     return `
-                        <div class="presenca-card">
+                        <div class="presenca-card" data-id="${p.id}">
                             <div class="header">
                                 <span class="data">📅 ${dataFormatada}</span>
                                 <span class="hora">⏰ ${p.hora}</span>
@@ -2895,10 +3232,184 @@
                                     📝 ${p.justificativa}
                                 </div>
                             ` : ''}
+                            ${p.atestado ? `
+                                <div style="margin-top:4px;font-size:11px;color:var(--color-success);">
+                                    📋 Atestado entregue à coordenação
+                                </div>
+                            ` : ''}
+                            <div style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap;">
+                                <button class="btn-excluir-presenca" data-id="${p.id}" style="padding:4px 12px;border-radius:12px;border:1px solid var(--color-danger);background:rgba(229,57,53,0.1);color:var(--color-danger);cursor:pointer;font-size:11px;font-family:'Inter',sans-serif;transition:0.3s;">
+                                    🗑️ Excluir
+                                </button>
+                                <button class="btn-atestado-presenca" data-id="${p.id}" style="padding:4px 12px;border-radius:12px;border:1px solid var(--color-success);background:rgba(76,175,80,0.1);color:var(--color-success);cursor:pointer;font-size:11px;font-family:'Inter',sans-serif;transition:0.3s;">
+                                    📋 ${p.atestado ? 'Remover Atestado' : 'Marcar Atestado'}
+                                </button>
+                            </div>
                         </div>
                     `;
                 }).join('');
+
+                // Adicionar eventos de exclusão
+                document.querySelectorAll('.btn-excluir-presenca').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const id = parseInt(this.dataset.id);
+                        excluirRegistroPresenca(id);
+                    });
+                });
+
+                // Adicionar eventos de atestado
+                document.querySelectorAll('.btn-atestado-presenca').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const id = parseInt(this.dataset.id);
+                        alternarAtestadoPresenca(id);
+                    });
+                });
             }
+
+            // ===== ALTERNAR ATESTADO =====
+            function alternarAtestadoPresenca(id) {
+                const registro = presencas.find(p => p.id === id);
+                if (!registro) return;
+
+                if (!registro.atestado) {
+                    const confirmar = confirm('📋 Confirmar que você entregou o atestado à coordenação?');
+                    if (!confirmar) return;
+                }
+
+                registro.atestado = !registro.atestado;
+                saveData('gda_presencas', presencas);
+                renderPresenca();
+                atualizarStatusPresenca();
+            }
+
+            // ===== MÓDULO ASSUNTOS =====
+            function adicionarAssunto(disciplina, titulo, descricao, data) {
+                if (!assuntos[disciplina]) assuntos[disciplina] = [];
+                assuntos[disciplina].push({
+                    id: Date.now(),
+                    titulo: titulo,
+                    descricao: descricao,
+                    data: data || new Date().toISOString().split('T')[0],
+                    timestamp: Date.now()
+                });
+                saveData('gda_assuntos', assuntos);
+                renderAssuntos();
+                atualizarBadgeAssuntos();
+            }
+
+            function excluirAssunto(disciplina, id) {
+                if (!assuntos[disciplina]) return;
+                const justificativa = prompt('📝 Justificativa para excluir este assunto:');
+                if (!justificativa) return;
+                
+                assuntos[disciplina] = assuntos[disciplina].filter(a => a.id !== id);
+                if (assuntos[disciplina].length === 0) {
+                    delete assuntos[disciplina];
+                }
+                saveData('gda_assuntos', assuntos);
+                renderAssuntos();
+                atualizarBadgeAssuntos();
+                alert('✅ Assunto excluído com sucesso!');
+            }
+
+            function renderAssuntos() {
+                const container = document.getElementById('assuntosContainer');
+                if (!container) return;
+
+                // Preencher o select do formulário
+                const select = document.getElementById('formAssuntoDisciplina');
+                if (select) {
+                    const currentValue = select.value;
+                    select.innerHTML = '<option value="">Selecione uma disciplina</option>' +
+                        turmas.map(t => `<option value="${t.nome}">${t.nome}</option>`).join('');
+                    if (currentValue) select.value = currentValue;
+                }
+
+                const disciplinas = Object.keys(assuntos);
+                if (disciplinas.length === 0) {
+                    container.innerHTML = `
+                        <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--color-text-muted);background:var(--color-card);border-radius:var(--radius);border:1px solid var(--color-border);">
+                            <i class="fas fa-subject" style="font-size:32px;display:block;margin-bottom:12px;color:rgba(255,179,0,0.1);"></i>
+                            Nenhum assunto registrado.
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = disciplinas.map(disciplina => {
+                    const items = assuntos[disciplina].sort((a, b) => b.timestamp - a.timestamp);
+                    return `
+                        <div style="grid-column:1/-1;background:var(--color-card);border-radius:var(--radius);border:1px solid var(--color-border);margin-bottom:16px;overflow:hidden;">
+                            <div style="padding:12px 20px;background:rgba(255,179,0,0.05);border-bottom:1px solid var(--color-border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+                                <h3 style="font-size:16px;font-weight:700;color:var(--color-accent);">📚 ${disciplina}</h3>
+                                <span style="font-size:12px;color:var(--color-text-muted);">${items.length} assunto(s)</span>
+                            </div>
+                            <div class="assuntos-grid" style="padding:12px;">
+                                ${items.map(a => `
+                                    <div class="assunto-card" data-id="${a.id}">
+                                        <div class="header">
+                                            <span class="disciplina">📅 ${new Date(a.data + 'T00:00:00').toLocaleDateString('pt-BR')}</span>
+                                        </div>
+                                        <div class="titulo">${a.titulo}</div>
+                                        <div class="descricao">${a.descricao}</div>
+                                        <div class="acoes">
+                                            <button class="btn-delete-assunto" data-disciplina="${disciplina}" data-id="${a.id}">
+                                                <i class="fas fa-trash-alt"></i> Remover
+                                            </button>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                // Eventos de exclusão
+                document.querySelectorAll('.btn-delete-assunto').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const disciplina = this.dataset.disciplina;
+                        const id = parseInt(this.dataset.id);
+                        excluirAssunto(disciplina, id);
+                    });
+                });
+            }
+
+            function atualizarBadgeAssuntos() {
+                const badge = document.getElementById('assuntosBadge');
+                if (badge) {
+                    const total = Object.values(assuntos).reduce((acc, arr) => acc + arr.length, 0);
+                    badge.textContent = total;
+                    badge.style.display = total > 0 ? 'inline-block' : 'none';
+                }
+            }
+
+            // ===== FORMULÁRIO DE ASSUNTOS =====
+            document.addEventListener('submit', function(e) {
+                if (e.target.id === 'assuntoForm') {
+                    e.preventDefault();
+                    const disciplina = document.getElementById('formAssuntoDisciplina').value;
+                    const titulo = document.getElementById('formAssuntoTitulo').value.trim();
+                    const descricao = document.getElementById('formAssuntoDescricao').value.trim();
+                    const data = document.getElementById('formAssuntoData').value;
+
+                    if (!disciplina || !titulo || !descricao) {
+                        alert('⚠️ Preencha todos os campos obrigatórios.');
+                        return;
+                    }
+
+                    adicionarAssunto(disciplina, titulo, descricao, data);
+                    
+                    // Limpar formulário
+                    document.getElementById('formAssuntoTitulo').value = '';
+                    document.getElementById('formAssuntoDescricao').value = '';
+                    document.getElementById('formAssuntoData').value = new Date().toISOString().split('T')[0];
+                    
+                    alert('✅ Assunto registrado com sucesso!');
+                }
+            });
 
             // ===== MODO PÂNICO =====
             window.abrirPanico = function() {
@@ -3289,6 +3800,7 @@
 
                 atualizarBadgePanico();
                 atualizarBadgePresenca();
+                atualizarBadgeAssuntos();
             }
 
             function calcularProgressoPeriodo(inicio, fim, hoje) {
@@ -4177,6 +4689,12 @@
                     relatorioSelect.innerHTML = '<option value="">Selecione uma disciplina</option>' +
                         turmas.map(t => `<option value="${t.nome}">${t.nome}</option>`).join('');
                 }
+
+                const assuntoSelect = document.getElementById('formAssuntoDisciplina');
+                if (assuntoSelect) {
+                    assuntoSelect.innerHTML = '<option value="">Selecione uma disciplina</option>' +
+                        turmas.map(t => `<option value="${t.nome}">${t.nome}</option>`).join('');
+                }
             }
 
             // ===== ROTEAMENTO =====
@@ -4198,13 +4716,16 @@
                 if (pageId === 'presenca') {
                     renderPresenca();
                 }
+                if (pageId === 'assuntos') {
+                    renderAssuntos();
+                }
             }
 
             // ===== CARREGAR PÁGINAS =====
             async function loadPages() {
                 const container = document.getElementById('pageContainer');
                 const pages = ['inicial', 'dashboard', 'checklist', 'turmas', 'atividades', 'notas', 'relatorios',
-                    'historicopanico', 'atendimentos', 'presenca'
+                    'historicopanico', 'atendimentos', 'presenca', 'assuntos'
                 ];
 
                 for (const page of pages) {
@@ -4236,6 +4757,46 @@
 
                                 <div id="presencaStats" class="presenca-stats"></div>
                                 <div class="presenca-grid" id="presencaContainer"></div>
+                            `;
+                        } else if (page === 'assuntos') {
+                            content = `
+                                <div class="section-title">
+                                    <i class="fas fa-subject"></i> Assuntos por Disciplina
+                                    <span class="badge" id="assuntosTotalBadge">${Object.values(assuntos).reduce((acc, arr) => acc + arr.length, 0)}</span>
+                                </div>
+
+                                <div style="background:var(--color-card);border-radius:var(--radius);padding:20px 24px;border:1px solid var(--color-border);margin-bottom:20px;">
+                                    <h3 style="margin-bottom:16px;color:var(--color-text);">📝 Registrar Novo Assunto</h3>
+                                    <form id="assuntoForm">
+                                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                                            <div>
+                                                <label style="display:block;font-size:13px;font-weight:600;color:var(--color-text-muted);margin-bottom:4px;">Disciplina *</label>
+                                                <select id="formAssuntoDisciplina" required>
+                                                    <option value="">Selecione uma disciplina</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label style="display:block;font-size:13px;font-weight:600;color:var(--color-text-muted);margin-bottom:4px;">Data</label>
+                                                <input type="date" id="formAssuntoData" value="${new Date().toISOString().split('T')[0]}" />
+                                            </div>
+                                        </div>
+                                        <div style="margin-top:12px;">
+                                            <label style="display:block;font-size:13px;font-weight:600;color:var(--color-text-muted);margin-bottom:4px;">Título *</label>
+                                            <input type="text" id="formAssuntoTitulo" placeholder="Ex: Aula sobre métodos de coleta" required />
+                                        </div>
+                                        <div style="margin-top:12px;">
+                                            <label style="display:block;font-size:13px;font-weight:600;color:var(--color-text-muted);margin-bottom:4px;">Descrição *</label>
+                                            <textarea id="formAssuntoDescricao" placeholder="Descreva o assunto abordado..." rows="3" required></textarea>
+                                        </div>
+                                        <div style="margin-top:16px;">
+                                            <button type="submit" style="background:linear-gradient(135deg,var(--color-accent),var(--color-accent-hover));color:var(--color-primary);border:none;padding:10px 28px;border-radius:30px;font-weight:700;font-size:14px;cursor:pointer;transition:0.3s;font-family:'Inter',sans-serif;">
+                                                <i class="fas fa-save"></i> Registrar Assunto
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <div id="assuntosContainer" class="assuntos-grid"></div>
                             `;
                         } else if (page === 'atendimentos') {
                             content = `
@@ -4473,6 +5034,7 @@
                 renderHistoricoPanico();
                 renderAtendimentos();
                 renderPresenca();
+                renderAssuntos();
 
                 document.querySelectorAll('.navbar a[data-page]').forEach(link => {
                     link.addEventListener('click', function(e) {
@@ -4494,12 +5056,15 @@
 
                 verificarMudancaSemestre();
 
-                console.log('✅ GDA v3.2 - Módulo Presença + Histórico!');
+                console.log('✅ GDA v3.2 - Módulo Presença + Histórico + Assuntos!');
                 console.log('📊 MA = (1ºBI + 2ºBI + 3ºBI + 4ºBI) / 4');
                 console.log('📝 Nota_Rec = (7.0 × 10 - MA × 6) / 4');
                 console.log('✅ Detecção automática do início do 2º semestre (03/08/2026)');
                 console.log('✅ Módulo de Presença com confirmação e justificativa');
-                console.log('✅ Histórico completo de presenças e faltas');
+                console.log('✅ Exclusão de registro com justificativa');
+                console.log('✅ Campo "Entregue atestado à coordenação"');
+                console.log('✅ Módulo de Assuntos por Disciplina');
+                console.log('✅ Verificação automática de meia-noite');
             }
 
             // ===== CLICK FORA DO MODAL =====
@@ -4534,7 +5099,10 @@
                 setInterval(updateClockDisplay, 1000);
                 atualizarBadgePanico();
                 atualizarBadgePresenca();
+                atualizarBadgeAssuntos();
 
+                // Verificação de meia-noite a cada segundo
+                setInterval(verificarMeiaNoite, 1000);
                 setInterval(verificarMudancaSemestre, 60000);
 
                 console.log('%c▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓', 'font-size:8px;color:#4ecdc4;');
@@ -4542,6 +5110,10 @@
                 console.log('%c▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓', 'font-size:8px;color:#4ecdc4;');
                 console.log('%c✅ Módulo Presença integrado ao menu lateral', 'font-size:12px;color:#4caf50;');
                 console.log('%c✅ Histórico completo de presenças e faltas', 'font-size:12px;color:#4caf50;');
+                console.log('%c✅ Exclusão com justificativa', 'font-size:12px;color:#4caf50;');
+                console.log('%c✅ Campo de atestado à coordenação', 'font-size:12px;color:#4caf50;');
+                console.log('%c✅ Módulo de Assuntos por disciplina', 'font-size:12px;color:#4caf50;');
+                console.log('%c✅ Verificação automática de meia-noite', 'font-size:12px;color:#4caf50;');
                 console.log('%c✅ Relógio apenas no modal de registro', 'font-size:12px;color:#4caf50;');
                 console.log('%c✅ CSS corrigido para nomes dos módulos', 'font-size:12px;color:#4caf50;');
             });
