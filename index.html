@@ -2158,6 +2158,20 @@
         .notificacao-meia-noite {
             animation: slideInRight 0.5s ease, pulseNotify 2s ease 0.5s 2;
         }
+
+        /* ===== SVG FALLBACK CORRIGIDO ===== */
+        .avatar-fallback {
+            width: 100%;
+            height: 100%;
+            background: var(--color-card);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--color-accent);
+            font-family: 'Inter', sans-serif;
+        }
     </style>
 </head>
 <body>
@@ -2174,7 +2188,7 @@
             <button class="btn-entrar" onclick="entrarNoSistema()">
                 <i class="fas fa-sign-in-alt"></i> Entrar no Sistema
             </button>
-            <div class="versao">v3.2 · Com Presença e Histórico</div>
+            <div class="versao">v3.3 · Com Presença e Histórico</div>
         </div>
     </div>
 
@@ -2274,7 +2288,7 @@
         <div class="user-info">
             <div class="avatar">
                 <img src="https://images.iimg.live/images/prime-memory-4768.webp" alt="Igor Veras Morais"
-                onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'150\' height=\'150\'%3E%3Crect width=\'150\' height=\'150\' fill=\'%231a232e\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' text-anchor=\'middle\' dy=\'.3em\' font-size=\'60\' font-family=\'Arial\' fill=\'%23ffb300\'%3EIV%3C/text%3E%3C/svg%3E'" />
+                onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'avatar-fallback\'>IV</div>'" />
             </div>
             <div class="name">Igor Veras Morais</div>
             <div class="role">2º Sem · Controle Ambiental</div>
@@ -2350,7 +2364,7 @@
                 <div style="padding:10px 14px;background:rgba(255,255,255,0.02);border-radius:8px;border:1px solid var(--color-border);">
                     <div id="participantesContainer"></div>
                     <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
-                        <input type="text" id="novoParticipante" placeholder="Nome do participante..." style="flex:1;padding:6px 12px;border-radius:6px;border:1px solid var(--color-border);background:rgba(255,255,255,0.02);color:var(--color-text);font-family:'Inter',sans-serif;font-size:12px;outline:min-width:120px;" />
+                        <input type="text" id="novoParticipante" placeholder="Nome do participante..." style="flex:1;padding:6px 12px;border-radius:6px;border:1px solid var(--color-border);background:rgba(255,255,255,0.02);color:var(--color-text);font-family:'Inter',sans-serif;font-size:12px;outline:none;min-width:120px;" />
                         <input type="date" id="novoPrazoParticipante" style="padding:6px 12px;border-radius:6px;border:1px solid var(--color-border);background:rgba(255,255,255,0.02);color:var(--color-text);font-family:'Inter',sans-serif;font-size:12px;outline:none;" />
                         <button type="button" onclick="adicionarParticipante()" style="padding:4px 14px;border-radius:6px;border:1px solid var(--color-border);background:rgba(255,179,0,0.08);color:var(--color-accent);cursor:pointer;font-size:12px;font-family:'Inter',sans-serif;">Adicionar</button>
                     </div>
@@ -2536,7 +2550,7 @@
         // ██    ██ ██      ██   ██ ██      ██
         //  ██████  ███████ ██   ██ ███████ ███████
         // ============================================================
-        // GDA v3.2 - MÓDULO PRESENÇA + HISTÓRICO + DETECÇÃO SEMESTRE
+        // GDA v3.3 - MÓDULO PRESENÇA + HISTÓRICO + DETECÇÃO SEMESTRE
         // ============================================================
 
         (function() {
@@ -2566,6 +2580,12 @@
                         .replace(/javascript:/gi, '')
                         .replace(/on\w+=/gi, '')
                         .slice(0, 2000);
+                },
+                escapeHtml: function(input) {
+                    if (typeof input !== 'string') return input;
+                    const div = document.createElement('div');
+                    div.textContent = input;
+                    return div.innerHTML;
                 }
             };
 
@@ -2669,6 +2689,9 @@
             let respiracaoInterval = null;
             let tipoPresencaAtual = 'presente';
             let ultimaVerificacaoMeiaNoite = null;
+            let notificacaoSemestreMostrada = false;
+            let filtroAtividadesAtual = 'todas';
+            let timeoutRespirar = null;
 
             // ===== FUNÇÕES AUXILIARES =====
             function getSaudacao() {
@@ -2685,22 +2708,6 @@
                 return '🌙';
             }
 
-            function getSemestreAtual() {
-                const hoje = new Date();
-                const dataInicioSemestre1 = new Date('2026-01-21');
-                const dataFimSemestre1 = new Date('2026-07-23');
-                const dataInicioSemestre2 = new Date('2026-08-03');
-                const dataFimSemestre2 = new Date('2026-12-18');
-
-                if (hoje < dataInicioSemestre2) {
-                    return { semestre: '2026.1', inicio: dataInicioSemestre1, fim: dataFimSemestre1 };
-                } else if (hoje > dataFimSemestre2) {
-                    return { semestre: '2026.2 (Concluído)', inicio: dataInicioSemestre2, fim: dataFimSemestre2 };
-                } else {
-                    return { semestre: '2026.2', inicio: dataInicioSemestre2, fim: dataFimSemestre2 };
-                }
-            }
-
             // ===== VERIFICADOR DE MEIA-NOITE =====
             function verificarMeiaNoite() {
                 const agora = new Date();
@@ -2708,32 +2715,30 @@
                 const minutoAtual = agora.getMinutes();
                 const segundoAtual = agora.getSeconds();
 
-                // Verifica se é exatamente 00:00:00
                 if (horaAtual === 0 && minutoAtual === 0 && segundoAtual === 0) {
                     const hojeStr = agora.toISOString().split('T')[0];
                     
-                    // Evita múltiplas execuções no mesmo dia
                     if (ultimaVerificacaoMeiaNoite === hojeStr) return;
                     ultimaVerificacaoMeiaNoite = hojeStr;
 
                     console.log('🔄 NOVO DIA INICIADO:', hojeStr);
+
+                    // Reset do checklist diário
+                    checklistState = {};
+                    saveData('gda_checklist', checklistState);
 
                     // Verifica se é 3 de agosto
                     if (agora.getMonth() === 7 && agora.getDate() === 3) {
                         mostrarNotificacaoInicioSemestre();
                     }
 
-                    // Limpa registros de presença do dia anterior (opcional - mantém histórico)
-                    // Não removemos registros, apenas atualizamos a interface
-
-                    // Atualiza todos os componentes
                     renderTelaInicial();
                     renderDashboard();
                     renderPresenca();
+                    renderChecklist();
                     atualizarStatusPresenca();
                     atualizarBadgePresenca();
 
-                    // Notificação visual
                     mostrarNotificacaoMeiaNoite();
                 }
             }
@@ -2767,7 +2772,7 @@
                                 ${new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long' })}
                             </div>
                             <div style="font-size:11px;font-weight:400;opacity:0.6;margin-top:2px;">
-                                Registros de presença atualizados
+                                Checklist resetado
                             </div>
                         </div>
                         <button onclick="this.parentElement.parentElement.remove()" 
@@ -2778,7 +2783,6 @@
                 `;
                 document.body.appendChild(notificacao);
 
-                // Remove automaticamente após 8 segundos
                 setTimeout(() => {
                     if (notificacao.parentElement) {
                         notificacao.style.opacity = '0';
@@ -2789,6 +2793,9 @@
             }
 
             function mostrarNotificacaoInicioSemestre() {
+                if (notificacaoSemestreMostrada) return;
+                notificacaoSemestreMostrada = true;
+
                 const notificacao = document.createElement('div');
                 notificacao.style.cssText = `
                     position: fixed;
@@ -2828,19 +2835,6 @@
                 `;
                 document.body.appendChild(notificacao);
 
-                // Adiciona estilo da animação se não existir
-                if (!document.getElementById('style-notificacao')) {
-                    const style = document.createElement('style');
-                    style.id = 'style-notificacao';
-                    style.textContent = `
-                        @keyframes slideInRight {
-                            from { transform: translateX(100%); opacity: 0; }
-                            to { transform: translateX(0); opacity: 1; }
-                        }
-                    `;
-                    document.head.appendChild(style);
-                }
-
                 setTimeout(() => {
                     if (notificacao.parentElement) {
                         notificacao.style.opacity = '0';
@@ -2862,7 +2856,7 @@
                 container.innerHTML = participantesTemp.map((p, i) =>
                     `
                     <div style="display:flex;align-items:center;gap:8px;padding:4px 12px;background:rgba(255,179,0,0.08);border-radius:20px;margin:4px 0;">
-                        <span>👤 ${p.nome}</span>
+                        <span>👤 ${window.__security.escapeHtml(p.nome)}</span>
                         <span class="prazo-individual ${p.prazo && new Date(p.prazo) < new Date() ? 'urgente' : 'ok'}" style="font-size:11px;color:${p.prazo && new Date(p.prazo) < new Date() ? 'var(--color-danger)' : 'var(--color-success)'}">
                             📅 ${p.prazo ? new Date(p.prazo + 'T00:00:00').toLocaleDateString('pt-BR') : 'Sem prazo'}
                         </span>
@@ -2878,7 +2872,7 @@
                 const nome = input.value.trim();
                 const prazo = prazoInput.value;
                 if (!nome) { alert('Digite o nome do participante.'); return; }
-                participantesTemp.push({ nome, prazo });
+                participantesTemp.push({ nome: window.__security.sanitizeInput(nome), prazo });
                 input.value = '';
                 prazoInput.value = '';
                 renderParticipantes();
@@ -2903,7 +2897,7 @@
                         <div class="checkbox ${st.concluido ? 'done' : ''}" onclick="toggleSubtarefa(${i})" style="width:18px;height:18px;border-radius:4px;border:2px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:0.3s ease;font-size:11px;color:var(--color-primary);${st.concluido ? 'background:linear-gradient(135deg,var(--color-accent),var(--color-accent-hover));border-color:var(--color-accent);' : ''}">
                             ${st.concluido ? '<i class="fas fa-check"></i>' : ''}
                         </div>
-                        <span style="flex:1;color:${st.concluido ? 'var(--color-text-muted)' : 'var(--color-text)'};${st.concluido ? 'text-decoration:line-through;' : ''}">${st.descricao}</span>
+                        <span style="flex:1;color:${st.concluido ? 'var(--color-text-muted)' : 'var(--color-text)'};${st.concluido ? 'text-decoration:line-through;' : ''}">${window.__security.escapeHtml(st.descricao)}</span>
                         <button onclick="removerSubtarefa(${i})" style="background:none;border:none;color:var(--color-text-muted);cursor:pointer;font-size:12px;">✕</button>
                     </div>
                 `
@@ -2914,7 +2908,7 @@
                 const input = document.getElementById('novaSubtarefa');
                 const descricao = input.value.trim();
                 if (!descricao) { alert('Digite uma descrição para a subtarefa.'); return; }
-                subtarefasTemp.push({ descricao, concluido: false });
+                subtarefasTemp.push({ descricao: window.__security.sanitizeInput(descricao), concluido: false });
                 input.value = '';
                 renderSubtarefas();
             };
@@ -2937,7 +2931,6 @@
                 const hoje = new Date();
                 const dataStr = hoje.toISOString().split('T')[0];
 
-                // Verifica se já registrou hoje
                 const registroHoje = presencas.find(p => p.data === dataStr);
                 if (registroHoje) {
                     alert(`⚠️ Você já registrou ${registroHoje.tipo === 'presente' ? 'PRESENÇA' : 'FALTA'} hoje às ${registroHoje.hora}.`);
@@ -2978,7 +2971,6 @@
                 modal.classList.add('open');
                 document.body.style.overflow = 'hidden';
 
-                // Inicia o relógio no modal
                 atualizarRelogioModal();
                 if (window.relogioModalInterval) clearInterval(window.relogioModalInterval);
                 window.relogioModalInterval = setInterval(atualizarRelogioModal, 1000);
@@ -3033,10 +3025,10 @@
                     data: dataStr,
                     hora: horaStr,
                     tipo: tipoPresencaAtual,
-                    justificativa: justificativa,
+                    justificativa: window.__security.sanitizeInput(justificativa),
                     nome: 'Igor Veras Morais',
                     curso: 'Controle Ambiental - 2º Sem',
-                    atestado: false // Campo para atestado
+                    atestado: false
                 };
 
                 presencas.push(registro);
@@ -3066,7 +3058,7 @@
                         <span class="status-presenca ${registroHoje.tipo === 'presente' ? 'presente' : 'falta'}">
                             ${emoji} ${texto} às ${registroHoje.hora}
                         </span>
-                        ${registroHoje.justificativa ? `<br><span style="font-size:9px;color:var(--color-text-muted);opacity:0.6;">📝 ${registroHoje.justificativa}</span>` : ''}
+                        ${registroHoje.justificativa ? `<br><span style="font-size:9px;color:var(--color-text-muted);opacity:0.6;">📝 ${window.__security.escapeHtml(registroHoje.justificativa)}</span>` : ''}
                         ${registroHoje.atestado ? `<br><span style="font-size:9px;color:var(--color-success);">📋 Atestado entregue à coordenação</span>` : ''}
                     `;
                 } else {
@@ -3087,7 +3079,6 @@
                 const registro = presencas.find(p => p.id === id);
                 if (!registro) return;
 
-                // Criar modal de justificativa
                 const modal = document.createElement('div');
                 modal.style.cssText = `
                     position: fixed;
@@ -3117,7 +3108,7 @@
                             <button onclick="this.closest('div[style*=\\'backdrop-filter\\']').remove()" style="flex:1; padding: 10px; border-radius: 12px; border: 1px solid var(--color-border); background: rgba(255,255,255,0.05); color: var(--color-text-muted); cursor: pointer; font-family: 'Inter', sans-serif; font-weight: 600;">
                                 Cancelar
                             </button>
-                            <button onclick="confirmarExclusaoPresenca(${id})" style="flex:1; padding: 10px; border-radius: 12px; border: none; background: linear-gradient(135deg, var(--color-danger), #b71c1c); color: #fff; cursor: pointer; font-family: 'Inter', sans-serif; font-weight: 700;">
+                            <button onclick="window.confirmarExclusaoPresenca(${id})" style="flex:1; padding: 10px; border-radius: 12px; border: none; background: linear-gradient(135deg, var(--color-danger), #b71c1c); color: #fff; cursor: pointer; font-family: 'Inter', sans-serif; font-weight: 700;">
                                 Confirmar Exclusão
                             </button>
                         </div>
@@ -3125,20 +3116,18 @@
                 `;
                 document.body.appendChild(modal);
 
-                // Fechar ao clicar fora
                 modal.addEventListener('click', function(e) {
                     if (e.target === modal) modal.remove();
                 });
             }
 
-            function confirmarExclusaoPresenca(id) {
+            window.confirmarExclusaoPresenca = function(id) {
                 const justificativa = document.getElementById('justificativaExclusao').value.trim();
                 if (!justificativa) {
                     alert('⚠️ Por favor, informe a justificativa para a exclusão.');
                     return;
                 }
 
-                // Registrar a exclusão no histórico
                 const registro = presencas.find(p => p.id === id);
                 if (registro) {
                     const historicoExclusao = loadData('gda_presencas_excluidas', []);
@@ -3146,17 +3135,15 @@
                         id: Date.now(),
                         registroOriginal: registro,
                         dataExclusao: new Date().toISOString(),
-                        justificativa: justificativa,
+                        justificativa: window.__security.sanitizeInput(justificativa),
                         excluidoPor: 'Igor Veras Morais'
                     });
                     saveData('gda_presencas_excluidas', historicoExclusao);
                 }
 
-                // Remover o registro
                 presencas = presencas.filter(p => p.id !== id);
                 saveData('gda_presencas', presencas);
 
-                // Fechar modal
                 const modal = document.querySelector('[style*="backdrop-filter: blur(8px);"]');
                 if (modal) modal.remove();
 
@@ -3164,14 +3151,13 @@
                 renderPresenca();
                 atualizarStatusPresenca();
                 atualizarBadgePresenca();
-            }
+            };
 
             // ===== RENDER PRESENÇA =====
             function renderPresenca() {
                 const container = document.getElementById('presencaContainer');
                 if (!container) return;
 
-                // Stats
                 const total = presencas.length;
                 const presentes = presencas.filter(p => p.tipo === 'presente').length;
                 const faltas = presencas.filter(p => p.tipo === 'falta').length;
@@ -3229,7 +3215,7 @@
                             </div>
                             ${p.justificativa ? `
                                 <div class="justificativa">
-                                    📝 ${p.justificativa}
+                                    📝 ${window.__security.escapeHtml(p.justificativa)}
                                 </div>
                             ` : ''}
                             ${p.atestado ? `
@@ -3249,7 +3235,6 @@
                     `;
                 }).join('');
 
-                // Adicionar eventos de exclusão
                 document.querySelectorAll('.btn-excluir-presenca').forEach(btn => {
                     btn.addEventListener('click', function(e) {
                         e.stopPropagation();
@@ -3258,7 +3243,6 @@
                     });
                 });
 
-                // Adicionar eventos de atestado
                 document.querySelectorAll('.btn-atestado-presenca').forEach(btn => {
                     btn.addEventListener('click', function(e) {
                         e.stopPropagation();
@@ -3289,8 +3273,8 @@
                 if (!assuntos[disciplina]) assuntos[disciplina] = [];
                 assuntos[disciplina].push({
                     id: Date.now(),
-                    titulo: titulo,
-                    descricao: descricao,
+                    titulo: window.__security.sanitizeInput(titulo),
+                    descricao: window.__security.sanitizeInput(descricao),
                     data: data || new Date().toISOString().split('T')[0],
                     timestamp: Date.now()
                 });
@@ -3318,7 +3302,6 @@
                 const container = document.getElementById('assuntosContainer');
                 if (!container) return;
 
-                // Preencher o select do formulário
                 const select = document.getElementById('formAssuntoDisciplina');
                 if (select) {
                     const currentValue = select.value;
@@ -3343,7 +3326,7 @@
                     return `
                         <div style="grid-column:1/-1;background:var(--color-card);border-radius:var(--radius);border:1px solid var(--color-border);margin-bottom:16px;overflow:hidden;">
                             <div style="padding:12px 20px;background:rgba(255,179,0,0.05);border-bottom:1px solid var(--color-border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
-                                <h3 style="font-size:16px;font-weight:700;color:var(--color-accent);">📚 ${disciplina}</h3>
+                                <h3 style="font-size:16px;font-weight:700;color:var(--color-accent);">📚 ${window.__security.escapeHtml(disciplina)}</h3>
                                 <span style="font-size:12px;color:var(--color-text-muted);">${items.length} assunto(s)</span>
                             </div>
                             <div class="assuntos-grid" style="padding:12px;">
@@ -3352,8 +3335,8 @@
                                         <div class="header">
                                             <span class="disciplina">📅 ${new Date(a.data + 'T00:00:00').toLocaleDateString('pt-BR')}</span>
                                         </div>
-                                        <div class="titulo">${a.titulo}</div>
-                                        <div class="descricao">${a.descricao}</div>
+                                        <div class="titulo">${window.__security.escapeHtml(a.titulo)}</div>
+                                        <div class="descricao">${window.__security.escapeHtml(a.descricao)}</div>
                                         <div class="acoes">
                                             <button class="btn-delete-assunto" data-disciplina="${disciplina}" data-id="${a.id}">
                                                 <i class="fas fa-trash-alt"></i> Remover
@@ -3366,7 +3349,6 @@
                     `;
                 }).join('');
 
-                // Eventos de exclusão
                 document.querySelectorAll('.btn-delete-assunto').forEach(btn => {
                     btn.addEventListener('click', function(e) {
                         e.stopPropagation();
@@ -3402,7 +3384,6 @@
 
                     adicionarAssunto(disciplina, titulo, descricao, data);
                     
-                    // Limpar formulário
                     document.getElementById('formAssuntoTitulo').value = '';
                     document.getElementById('formAssuntoDescricao').value = '';
                     document.getElementById('formAssuntoData').value = new Date().toISOString().split('T')[0];
@@ -3443,6 +3424,10 @@
                     clearInterval(respiracaoInterval);
                     respiracaoInterval = null;
                 }
+                if (timeoutRespirar) {
+                    clearTimeout(timeoutRespirar);
+                    timeoutRespirar = null;
+                }
             };
 
             window.sairPanico = function() {
@@ -3452,6 +3437,10 @@
                 if (respiracaoInterval) {
                     clearInterval(respiracaoInterval);
                     respiracaoInterval = null;
+                }
+                if (timeoutRespirar) {
+                    clearTimeout(timeoutRespirar);
+                    timeoutRespirar = null;
                 }
                 respiracaoAtiva = false;
                 atualizarBadgePanico();
@@ -3487,6 +3476,7 @@
                 }
 
                 function proximoPasso() {
+                    if (!respiracaoAtiva) return;
                     contador--;
                     if (contador < 0) {
                         faseAtual = (faseAtual + 1) % fases.length;
@@ -3499,13 +3489,13 @@
                                 return;
                             }
                         }
-                        proximoPasso();
+                        timeoutRespirar = setTimeout(proximoPasso, 1000);
                         return;
                     }
                     timerEl.textContent = contador;
                     timerEl.style.transform = 'scale(1.2)';
                     setTimeout(() => { timerEl.style.transform = 'scale(1)'; }, 200);
-                    setTimeout(proximoPasso, 1000);
+                    timeoutRespirar = setTimeout(proximoPasso, 1000);
                 }
 
                 let ciclosCompletos = 0;
@@ -3523,6 +3513,10 @@
                             clearInterval(respiracaoInterval);
                             respiracaoInterval = null;
                         }
+                        if (timeoutRespirar) {
+                            clearTimeout(timeoutRespirar);
+                            timeoutRespirar = null;
+                        }
                         iniciarRespiração();
                     };
                     fraseEl.textContent = '✅ FINALIZADO';
@@ -3531,7 +3525,7 @@
                 }
 
                 atualizarFase();
-                setTimeout(proximoPasso, 1000);
+                timeoutRespirar = setTimeout(proximoPasso, 1000);
             };
 
             window.novaFrasePanico = function() {
@@ -3555,8 +3549,8 @@
                     id: Date.now(),
                     data: new Date().toISOString().split('T')[0],
                     hora: new Date().toLocaleTimeString('pt-BR'),
-                    disciplina: disciplina || 'Não especificada',
-                    motivo: motivo || 'Não informado',
+                    disciplina: window.__security.sanitizeInput(disciplina) || 'Não especificada',
+                    motivo: window.__security.sanitizeInput(motivo) || 'Não informado',
                     resolvido: false
                 };
 
@@ -3607,11 +3601,11 @@
                     return `
                         <div class="panico-registro" data-id="${r.id}">
                             <div class="header">
-                                <span class="disciplina">📚 ${r.disciplina}</span>
+                                <span class="disciplina">📚 ${window.__security.escapeHtml(r.disciplina)}</span>
                                 <span class="data-hora">${r.data} · ${r.hora}</span>
                                 <span class="status ${statusClass}">${statusText}</span>
                             </div>
-                            <div class="motivo">${r.motivo}</div>
+                            <div class="motivo">${window.__security.escapeHtml(r.motivo)}</div>
                             <div style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap;">
                                 <button class="btn-resolver-panico" data-id="${r.id}" style="padding:4px 16px;border-radius:12px;border:1px solid var(--color-success);background:rgba(76,175,80,0.1);color:var(--color-success);cursor:pointer;font-size:12px;font-family:'Inter',sans-serif;">
                                     ${r.resolvido ? '🔄 Desmarcar' : '✅ Marcar como resolvido'}
@@ -3660,9 +3654,6 @@
                 }
             }
 
-            window.marcarPanicoResolvido = marcarPanicoResolvido;
-            window.deletarRegistroPanico = deletarRegistroPanico;
-
             // ===== RENDERIZAÇÃO TELA INICIAL =====
             function renderTelaInicial() {
                 const saudacao = getSaudacao();
@@ -3684,13 +3675,23 @@
                 if (elDate) elDate.textContent =
                     `${hoje.getDate()} de ${meses[hoje.getMonth()]} de ${hoje.getFullYear()}`;
 
+                // Calcular aulas de hoje baseado no horário
+                const diaSemana = hoje.getDay();
+                const aulasHoje = turmas.filter(t => {
+                    const horario = t.horario;
+                    if (diaSemana === 0) return false; // Domingo
+                    if (diaSemana === 6) return false; // Sábado
+                    // 2 = Terça, 3 = Quarta, 4 = Quinta, 5 = Sexta
+                    const diaMap = {2: '2', 3: '3', 4: '4', 5: '5', 1: '1'};
+                    return horario.includes(diaMap[diaSemana] || '');
+                }).length;
+
                 const elAulas = document.getElementById('aulasHoje');
-                if (elAulas) elAulas.textContent = '4';
+                if (elAulas) elAulas.textContent = aulasHoje;
 
                 updateClockDisplay();
                 atualizarStatusPresenca();
 
-                // CHECKLIST
                 const total = checklistItems.length;
                 const done = checklistItems.filter(item => checklistState[item.id] === true).length;
                 const pct = total > 0 ? Math.round((done / total) * 100) : 0;
@@ -3699,7 +3700,6 @@
                 if (elCheckDone) elCheckDone.textContent = done;
                 if (elCheckBar) elCheckBar.style.width = `${pct}%`;
 
-                // HORAS DE ESTUDO
                 const hojeStr = hoje.toISOString().split('T')[0];
                 const horasHoje = relatorios.filter(r => r.data === hojeStr).reduce((acc, r) => acc + r.tempo, 0);
                 const horasFormatadas = Math.floor(horasHoje / 60);
@@ -3712,7 +3712,6 @@
                 const metaEstudo = 120;
                 if (elEstudoBar) elEstudoBar.style.width = `${Math.min(100, (horasHoje / metaEstudo) * 100)}%`;
 
-                // PROGRESSO DO SEMESTRE
                 const dataInicioSemestre1 = new Date('2026-01-21');
                 const dataFimSemestre1 = new Date('2026-07-23');
                 const dataInicioSemestre2 = new Date('2026-08-03');
@@ -3730,12 +3729,10 @@
                 let semanasPassadasFinal = 0;
                 let semanasRestantesFinal = 0;
                 let diasRestantesFinal = 0;
-                let semestreAtual = '2026.1';
 
                 const agora = new Date();
 
                 if (agora < dataInicioSemestre2) {
-                    semestreAtual = '2026.1';
                     const progresso1 = calcularProgressoPeriodo(dataInicioSemestre1, dataFimSemestre1, agora);
                     percentualFinal = progresso1.percentual;
                     mensagemFinal = progresso1.status === 'concluido' ?
@@ -3756,14 +3753,12 @@
                     semanasRestantesFinal = Math.max(0, totalSemanas1 - semanasPassadasFinal);
                     diasRestantesFinal = Math.max(0, totalDias1 - diasPassados1);
                 } else if (agora > dataFimSemestre2) {
-                    semestreAtual = '2026.2 (Concluído)';
                     percentualFinal = 100;
                     mensagemFinal = '🎉 Semestre 2026.2 concluído! Parabéns!';
                     semanasPassadasFinal = 18;
                     semanasRestantesFinal = 0;
                     diasRestantesFinal = 0;
                 } else {
-                    semestreAtual = '2026.2';
                     const totalDias2 = Math.ceil((dataFimSemestre2 - dataInicioSemestre2) / (1000 * 60 * 60 * 24));
                     const diasPassados2 = Math.ceil((agora - dataInicioSemestre2) / (1000 * 60 * 60 * 24));
                     const totalSemanas2 = Math.ceil(totalDias2 / 7);
@@ -3787,7 +3782,6 @@
                     elProgressFg.style.strokeDashoffset = offset;
                 }
 
-                // FRASE DO DIA
                 const elQuote = document.getElementById('dailyQuote');
                 const elAuthor = document.getElementById('quoteAuthor');
                 if (elQuote && !elQuote.dataset.loaded) {
@@ -3822,51 +3816,9 @@
                 const dataInicioSemestre2 = new Date('2026-08-03');
                 const dataFimSemestre1 = new Date('2026-07-23');
 
-                if (hoje.toDateString() === dataInicioSemestre2.toDateString()) {
-                    const notificacao = document.createElement('div');
-                    notificacao.style.cssText = `
-                        position: fixed;
-                        top: 20px;
-                        right: 20px;
-                        background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
-                        color: var(--color-primary);
-                        padding: 16px 24px;
-                        border-radius: 12px;
-                        font-weight: 700;
-                        font-size: 16px;
-                        z-index: 999;
-                        box-shadow: 0 8px 32px rgba(255, 179, 0, 0.3);
-                        animation: slideInRight 0.5s ease;
-                        cursor: pointer;
-                        font-family: 'Inter', sans-serif;
-                    `;
-                    notificacao.innerHTML = `
-                        <div style="display:flex;align-items:center;gap:12px;">
-                            <span style="font-size:24px;">🎉</span>
-                            <div>
-                                <div>Novo Semestre!</div>
-                                <div style="font-size:12px;font-weight:400;opacity:0.8;">2026.2 começou hoje</div>
-                            </div>
-                            <button onclick="this.parentElement.parentElement.remove()" style="background:none;border:none;color:var(--color-primary);cursor:pointer;font-size:18px;">✕</button>
-                        </div>
-                    `;
-                    document.body.appendChild(notificacao);
-                    setTimeout(() => {
-                        if (notificacao.parentElement) {
-                            notificacao.style.opacity = '0';
-                            notificacao.style.transition = 'opacity 0.5s';
-                            setTimeout(() => notificacao.remove(), 500);
-                        }
-                    }, 10000);
-
-                    const style = document.createElement('style');
-                    style.textContent = `
-                        @keyframes slideInRight {
-                            from { transform: translateX(100%); opacity: 0; }
-                            to { transform: translateX(0); opacity: 1; }
-                        }
-                    `;
-                    document.head.appendChild(style);
+                if (hoje.toDateString() === dataInicioSemestre2.toDateString() && !notificacaoSemestreMostrada) {
+                    notificacaoSemestreMostrada = true;
+                    mostrarNotificacaoInicioSemestre();
                 }
 
                 if (hoje > dataFimSemestre1 && hoje < dataInicioSemestre2) {
@@ -3959,7 +3911,6 @@
                 if (timeEl) timeEl.textContent = `${h}:${m}`;
                 if (secEl) secEl.textContent = s;
 
-                // Atualiza o relógio do modal se estiver aberto
                 if (document.getElementById('modalPresencaOverlay').classList.contains('open')) {
                     atualizarRelogioModal();
                 }
@@ -4057,16 +4008,37 @@
                 const container = document.getElementById('atividadesContainer');
                 if (!container) return;
 
-                if (atividades.length === 0) {
+                let atividadesFiltradas = atividades;
+                if (filtroAtividadesAtual === 'individual') {
+                    atividadesFiltradas = atividades.filter(a => a.tipo === 'individual');
+                } else if (filtroAtividadesAtual === 'grupo') {
+                    atividadesFiltradas = atividades.filter(a => a.tipo === 'grupo');
+                } else if (filtroAtividadesAtual === 'andamento') {
+                    atividadesFiltradas = atividades.filter(a => {
+                        const progresso = a.subtarefas && a.subtarefas.length > 0 ?
+                            Math.round((a.subtarefas.filter(st => st.concluido).length / a.subtarefas.length) * 100) :
+                            (a.progresso || 0);
+                        return progresso < 100;
+                    });
+                } else if (filtroAtividadesAtual === 'concluida') {
+                    atividadesFiltradas = atividades.filter(a => {
+                        const progresso = a.subtarefas && a.subtarefas.length > 0 ?
+                            Math.round((a.subtarefas.filter(st => st.concluido).length / a.subtarefas.length) * 100) :
+                            (a.progresso || 0);
+                        return progresso === 100;
+                    });
+                }
+
+                if (atividadesFiltradas.length === 0) {
                     container.innerHTML =
                         `<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--color-text-muted);background:var(--color-card);border-radius:var(--radius);border:1px solid var(--color-border);">
                         <i class="fas fa-inbox" style="font-size:32px;display:block;margin-bottom:12px;color:rgba(255,179,0,0.1);"></i>
-                        Nenhuma atividade cadastrada. Clique em "Nova Atividade" para começar.
+                        Nenhuma atividade ${filtroAtividadesAtual !== 'todas' ? 'com o filtro "' + filtroAtividadesAtual + '"' : ''} encontrada.
                     </div>`;
                     return;
                 }
 
-                container.innerHTML = atividades.map(a => {
+                container.innerHTML = atividadesFiltradas.map(a => {
                     const progresso = a.subtarefas && a.subtarefas.length > 0 ?
                         Math.round((a.subtarefas.filter(st => st.concluido).length / a.subtarefas.length) *
                         100) :
@@ -4082,7 +4054,7 @@
                                     const urgente = prazoDate && prazoDate < hoje;
                                     return `
                                         <span class="participante-tag">
-                                            👤 ${p.nome}
+                                            👤 ${window.__security.escapeHtml(p.nome)}
                                             ${p.prazo ? `<span class="prazo-individual ${urgente ? 'urgente' : 'ok'}">📅 ${prazoDate.toLocaleDateString('pt-BR')}</span>` : ''}
                                         </span>
                                     `;
@@ -4093,8 +4065,8 @@
 
                     return `
                         <div class="atividade-card prioridade-${a.prioridade}" data-id="${a.id}">
-                            <div class="disciplina"><i class="fas fa-book"></i> ${a.disciplina || 'Sem disciplina'}</div>
-                            <div class="titulo">${a.titulo || 'Sem título'}</div>
+                            <div class="disciplina"><i class="fas fa-book"></i> ${window.__security.escapeHtml(a.disciplina || 'Sem disciplina')}</div>
+                            <div class="titulo">${window.__security.escapeHtml(a.titulo || 'Sem título')}</div>
                             ${participantesHtml}
                             <div class="datas">
                                 <span>📅 Início: ${a.inicio ? new Date(a.inicio + 'T00:00:00').toLocaleDateString('pt-BR') : 'Não definido'}</span>
@@ -4190,6 +4162,23 @@
             };
 
             // ===== NOTAS =====
+            // Função validarNota exposta globalmente
+            window.validarNota = function(input) {
+                let valor = input.value.replace(',', '.');
+                valor = valor.replace(/[^0-9.]/g, '');
+                const partes = valor.split('.');
+                if (partes.length > 2) {
+                    valor = partes[0] + '.' + partes[1].slice(0, 2);
+                }
+                const num = parseFloat(valor);
+                if (num > 10) {
+                    valor = '10';
+                } else if (num < 0 && valor !== '') {
+                    valor = '0';
+                }
+                input.value = valor;
+            };
+
             function renderNotas() {
                 const container = document.getElementById('notasContainer');
                 if (!container) return;
@@ -4268,7 +4257,7 @@
 
                     return `
                         <div class="notas-card">
-                            <div class="disciplina-nome">${d.nome} <span class="codigo">${d.cod}</span></div>
+                            <div class="disciplina-nome">${window.__security.escapeHtml(d.nome)} <span class="codigo">${d.cod}</span></div>
                             <div class="notas-bimestres">
                                 ${[1,2,3,4].map(b => `
                                     <div class="nota-bimestre">
@@ -4277,8 +4266,8 @@
                                             inputmode="decimal"
                                             pattern="[0-9,.]*"
                                             value="${nota['b'+b] || ''}"
-                                            onchange="atualizarNota('${d.cod}', 'b${b}', this.value)"
-                                            oninput="validarNota(this)"
+                                            onchange="window.atualizarNota('${d.cod}', 'b${b}', this.value)"
+                                            oninput="window.validarNota(this)"
                                             placeholder="--" />
                                     </div>
                                 `).join('')}
@@ -4324,24 +4313,11 @@
                 }).join('');
             }
 
-            function validarNota(input) {
-                let valor = input.value.replace(',', '.');
-                valor = valor.replace(/[^0-9.]/g, '');
-                const partes = valor.split('.');
-                if (partes.length > 2) {
-                    valor = partes[0] + '.' + partes[1].slice(0, 2);
-                }
-                const num = parseFloat(valor);
-                if (num > 10) {
-                    valor = '10';
-                } else if (num < 0 && valor !== '') {
-                    valor = '0';
-                }
-                input.value = valor;
-            }
-
             window.atualizarNota = function(cod, bimestre, valor) {
-                if (!window.__security.checkRateLimit('nota_update')) return;
+                if (!window.__security.checkRateLimit('nota_update')) {
+                    alert('⚠️ Muitas requisições. Aguarde um momento.');
+                    return;
+                }
 
                 let valorLimpo = valor.replace(',', '.').replace(/[^0-9.]/g, '');
                 const num = parseFloat(valorLimpo);
@@ -4409,9 +4385,9 @@
                             <div class="relatorio-dia-itens">
                                 ${items.map(r => `
                                     <div class="relatorio-item">
-                                        <span class="disciplina">📚 ${r.disciplina}</span>
+                                        <span class="disciplina">📚 ${window.__security.escapeHtml(r.disciplina)}</span>
                                         <span class="horas">⏱️ ${r.tempo}min</span>
-                                        <span class="texto">${r.texto}</span>
+                                        <span class="texto">${window.__security.escapeHtml(r.texto)}</span>
                                     </div>
                                 `).join('')}
                             </div>
@@ -4463,10 +4439,10 @@
                 container.innerHTML = sorted.map(a => `
                     <div class="atendimento-card" data-id="${a.id}">
                         <div class="header">
-                            <span class="disciplina">📚 ${a.disciplina}</span>
+                            <span class="disciplina">📚 ${window.__security.escapeHtml(a.disciplina)}</span>
                             <span class="data-hora">${new Date(a.data + 'T00:00:00').toLocaleDateString('pt-BR')} · ${a.hora}</span>
                         </div>
-                        <div class="descricao">${a.descricao}</div>
+                        <div class="descricao">${window.__security.escapeHtml(a.descricao)}</div>
                         <div class="acoes">
                             <button class="btn-edit-atendimento" data-id="${a.id}"><i class="fas fa-edit"></i> Editar</button>
                             <button class="btn-delete-atendimento" data-id="${a.id}"><i class="fas fa-trash-alt"></i> Remover</button>
@@ -4555,19 +4531,19 @@
                         if (idx !== -1) {
                             atendimentos[idx] = {
                                 ...atendimentos[idx],
-                                disciplina,
+                                disciplina: window.__security.sanitizeInput(disciplina),
                                 data,
                                 hora,
-                                descricao
+                                descricao: window.__security.sanitizeInput(descricao)
                             };
                         }
                     } else {
                         atendimentos.push({
                             id: Date.now(),
-                            disciplina,
+                            disciplina: window.__security.sanitizeInput(disciplina),
                             data,
                             hora,
-                            descricao,
+                            descricao: window.__security.sanitizeInput(descricao),
                             timestamp: new Date(data + 'T' + hora).getTime()
                         });
                     }
@@ -4595,9 +4571,9 @@
                     relatorios.push({
                         id: Date.now(),
                         data: new Date().toISOString().split('T')[0],
-                        disciplina,
+                        disciplina: window.__security.sanitizeInput(disciplina),
                         tempo,
-                        texto
+                        texto: window.__security.sanitizeInput(texto)
                     });
                     saveData('gda_relatorios', relatorios);
                     renderRelatorios();
@@ -4635,32 +4611,44 @@
                         if (idx !== -1) {
                             atividades[idx] = {
                                 ...atividades[idx],
-                                titulo,
+                                titulo: window.__security.sanitizeInput(titulo),
                                 tipo,
                                 prioridade,
-                                disciplina,
+                                disciplina: window.__security.sanitizeInput(disciplina),
                                 inicio,
                                 prazo,
                                 entregaDocente,
-                                observacoes,
-                                participantes: participantesTemp,
-                                subtarefas: subtarefasTemp,
+                                observacoes: window.__security.sanitizeInput(observacoes),
+                                participantes: participantesTemp.map(p => ({
+                                    nome: window.__security.sanitizeInput(p.nome),
+                                    prazo: p.prazo
+                                })),
+                                subtarefas: subtarefasTemp.map(st => ({
+                                    descricao: window.__security.sanitizeInput(st.descricao),
+                                    concluido: st.concluido
+                                })),
                                 progresso
                             };
                         }
                     } else {
                         atividades.push({
                             id: Date.now(),
-                            titulo,
+                            titulo: window.__security.sanitizeInput(titulo),
                             tipo,
                             prioridade,
-                            disciplina,
+                            disciplina: window.__security.sanitizeInput(disciplina),
                             inicio,
                             prazo,
                             entregaDocente,
-                            observacoes,
-                            participantes: participantesTemp,
-                            subtarefas: subtarefasTemp,
+                            observacoes: window.__security.sanitizeInput(observacoes),
+                            participantes: participantesTemp.map(p => ({
+                                nome: window.__security.sanitizeInput(p.nome),
+                                prazo: p.prazo
+                            })),
+                            subtarefas: subtarefasTemp.map(st => ({
+                                descricao: window.__security.sanitizeInput(st.descricao),
+                                concluido: st.concluido
+                            })),
                             progresso
                         });
                     }
@@ -5049,14 +5037,14 @@
                         document.querySelectorAll('.filtros-atividades button').forEach(b => b.classList
                             .remove('active'));
                         this.classList.add('active');
-                        const filtro = this.dataset.filtro;
-                        console.log('🔍 Filtro aplicado:', filtro);
+                        filtroAtividadesAtual = this.dataset.filtro;
+                        renderAtividades();
                     });
                 });
 
                 verificarMudancaSemestre();
 
-                console.log('✅ GDA v3.2 - Módulo Presença + Histórico + Assuntos!');
+                console.log('✅ GDA v3.3 - MÓDULO PRESENÇA + HISTÓRICO + ASSUNTOS!');
                 console.log('📊 MA = (1ºBI + 2ºBI + 3ºBI + 4ºBI) / 4');
                 console.log('📝 Nota_Rec = (7.0 × 10 - MA × 6) / 4');
                 console.log('✅ Detecção automática do início do 2º semestre (03/08/2026)');
@@ -5065,6 +5053,10 @@
                 console.log('✅ Campo "Entregue atestado à coordenação"');
                 console.log('✅ Módulo de Assuntos por Disciplina');
                 console.log('✅ Verificação automática de meia-noite');
+                console.log('✅ Filtros de atividades funcionando');
+                console.log('✅ Respiração guiada com cancelamento correto');
+                console.log('✅ Sanitização de inputs aplicada');
+                console.log('✅ Funções expostas globalmente (validarNota, confirmarExclusaoPresenca)');
             }
 
             // ===== CLICK FORA DO MODAL =====
@@ -5101,12 +5093,11 @@
                 atualizarBadgePresenca();
                 atualizarBadgeAssuntos();
 
-                // Verificação de meia-noite a cada segundo
                 setInterval(verificarMeiaNoite, 1000);
                 setInterval(verificarMudancaSemestre, 60000);
 
                 console.log('%c▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓', 'font-size:8px;color:#4ecdc4;');
-                console.log('%c   GDA v3.2 - MÓDULO PRESENÇA + HISTÓRICO   ', 'font-size:16px;color:#ffd93d;font-weight:bold;');
+                console.log('%c   GDA v3.3 - MÓDULO PRESENÇA + HISTÓRICO   ', 'font-size:16px;color:#ffd93d;font-weight:bold;');
                 console.log('%c▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓', 'font-size:8px;color:#4ecdc4;');
                 console.log('%c✅ Módulo Presença integrado ao menu lateral', 'font-size:12px;color:#4caf50;');
                 console.log('%c✅ Histórico completo de presenças e faltas', 'font-size:12px;color:#4caf50;');
@@ -5114,8 +5105,11 @@
                 console.log('%c✅ Campo de atestado à coordenação', 'font-size:12px;color:#4caf50;');
                 console.log('%c✅ Módulo de Assuntos por disciplina', 'font-size:12px;color:#4caf50;');
                 console.log('%c✅ Verificação automática de meia-noite', 'font-size:12px;color:#4caf50;');
-                console.log('%c✅ Relógio apenas no modal de registro', 'font-size:12px;color:#4caf50;');
-                console.log('%c✅ CSS corrigido para nomes dos módulos', 'font-size:12px;color:#4caf50;');
+                console.log('%c✅ Checklist reseta diariamente', 'font-size:12px;color:#4caf50;');
+                console.log('%c✅ Filtros de atividades funcionando', 'font-size:12px;color:#4caf50;');
+                console.log('%c✅ Sanitização de inputs aplicada', 'font-size:12px;color:#4caf50;');
+                console.log('%c✅ Funções expostas globalmente', 'font-size:12px;color:#4caf50;');
+                console.log('%c✅ Respiração guiada com cancelamento', 'font-size:12px;color:#4caf50;');
             });
 
         })();
