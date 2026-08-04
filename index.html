@@ -11,7 +11,7 @@
 
     <style>
         /* ============================================================
-           CSS COMPLETO - VERSÃO 5.5 (com registro atrasado + ocorrências)
+           CSS COMPLETO - VERSÃO 5.6 (CORRIGIDA)
            ============================================================ */
         
         :root {
@@ -400,7 +400,7 @@
         }
 
         /* ============================================================
-           ESTILOS DO REGISTRO ATRASADO
+           ESTILOS DO REGISTRO ATRASADO E OCORRÊNCIAS
            ============================================================ */
         .presenca-atrasada-card {
             background: var(--color-card);
@@ -551,7 +551,7 @@
         }
 
         /* ============================================================
-           ESTILOS DAS PÁGINAS (mantidos)
+           ESTILOS DAS PÁGINAS
            ============================================================ */
         .welcome-hero {
             background: linear-gradient(135deg, var(--color-card), var(--color-secondary));
@@ -1698,7 +1698,7 @@
         }
 
         /* ============================================================
-           MODAL
+           MODAIS
            ============================================================ */
         .modal-overlay {
             display: none;
@@ -1815,7 +1815,6 @@
             .modal .modal-actions button { width: 100%; }
         }
 
-        /* ===== MODAL PRESENÇA ===== */
         .modal-presenca-overlay {
             display: none;
             position: fixed;
@@ -1927,7 +1926,6 @@
         .modal-presenca .modal-actions .btn-cancelar:hover { background: rgba(255, 255, 255, 0.1); }
         @media (max-width: 480px) { .modal-presenca .modal-actions { flex-direction: column; } .modal-presenca .modal-actions .btn-cancelar { flex: 1; } }
 
-        /* ===== MODAL REGISTRO ATRASADO ===== */
         .modal-atrasado-overlay {
             display: none;
             position: fixed;
@@ -2027,7 +2025,6 @@
         .modal-atrasado .modal-actions .btn-cancelar:hover { background: rgba(255, 255, 255, 0.1); }
         @media (max-width: 480px) { .modal-atrasado .modal-actions { flex-direction: column; } }
 
-        /* ===== MODAL OCORRÊNCIA ===== */
         .modal-ocorrencia-overlay {
             display: none;
             position: fixed;
@@ -2365,7 +2362,7 @@
             <button class="btn-entrar" id="btnEntrar">
                 <i class="fas fa-sign-in-alt"></i> Entrar no Sistema
             </button>
-            <div class="versao">v5.6 · Com Registro Atrasado e Ocorrências</div>
+            <div class="versao">v5.6 · Cloud Conectado</div>
         </div>
     </div>
 
@@ -2413,7 +2410,6 @@
                 <span class="material-icons-sharp">subject</span><h3>Assuntos</h3>
                 <span class="badge-link" id="assuntosBadge">0</span>
             </a>
-            <!-- NOVA PÁGINA OCORRÊNCIAS -->
             <a href="#" data-page="ocorrencias" id="navOcorrencias">
                 <span class="material-icons-sharp">report</span><h3>Ocorrências</h3>
                 <span class="badge-link" id="ocorrenciasBadge">0</span>
@@ -2647,22 +2643,22 @@
     </div>
 
     <!-- ============================================================
-    SCRIPTS - VERSÃO 5.5
+    SCRIPTS - VERSÃO 5.6 CORRIGIDA
     ============================================================ -->
     <script>
     (function() {
         'use strict';
 
-        console.log('🚀 GDA v5.5 - Com Registro Atrasado e Ocorrências');
+        console.log('🚀 GDA v5.6 - Cloud Conectado');
 
         // ============================================================
-        //  CONFIGURAÇÃO POCKETBASE (COM _)
+        //  CONFIGURAÇÃO POCKETBASE
         // ============================================================
 
         const PB_URL = 'http://127.0.0.1:8090/api/collections';
-const PB_EMAIL = 'igorifcmi@gmail.com';
-const PB_SENHA = 'admin123';
-        // Nomes das coleções
+        const PB_EMAIL = 'igorifcmi@gmail.com';
+        const PB_SENHA = 'admin123';
+
         const COL = {
             presencas: 'presencas',
             atividades: 'atividades_',
@@ -2700,7 +2696,7 @@ const PB_SENHA = 'admin123';
         let timeoutRespirar = null;
 
         // ============================================================
-        //  FUNÇÕES DE DATA (FUSO HORÁRIO CORRIGIDO)
+        //  FUNÇÕES AUXILIARES
         // ============================================================
 
         function getDataLocal() {
@@ -2721,35 +2717,69 @@ const PB_SENHA = 'admin123';
             return dias[new Date().getDay()];
         }
 
+        function gerarIdLocal() { return 'local_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6); }
+        function escapeHtml(t) { if (!t) return ''; const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+
+        function loadData(key, def) { try { const d = localStorage.getItem(key); return d ? JSON.parse(d) : def; } catch(e) { return def; } }
+        function saveData(key, data) { try { localStorage.setItem(key, JSON.stringify(data)); return true; } catch(e) { return false; } }
+
+        function mostrarToast(msg, tipo = 'info', duracao = 3000) {
+            const container = document.getElementById('toastContainer');
+            if (!container) return;
+            const toast = document.createElement('div');
+            toast.className = `toast ${tipo}`;
+            toast.textContent = msg;
+            container.appendChild(toast);
+            setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, duracao);
+        }
+
+        function getSaudacao() { const h = new Date().getHours(); if (h < 12) return 'Bom dia'; if (h < 18) return 'Boa tarde'; return 'Boa noite'; }
+        function getEmojiSaudacao() { const h = new Date().getHours(); if (h < 12) return '🌅'; if (h < 18) return '☀️'; return '🌙'; }
+
         // ============================================================
-        //  AUTENTICAÇÃO
+        //  AUTENTICAÇÃO POCKETBASE (CORRIGIDA)
         // ============================================================
 
         async function autenticarPocketBase() {
             if (pbToken) return true;
             try {
+                console.log('🔐 Tentando autenticar...');
+                console.log(`📧 Email: ${PB_EMAIL}`);
+                
                 const response = await fetch(`${PB_URL}/users/auth-with-password`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ identity: PB_EMAIL, password: PB_SENHA })
                 });
+                
+                console.log(`📡 Status: ${response.status}`);
+                
                 const dados = await response.json();
+                console.log('📦 Resposta:', dados);
+                
                 if (dados.token) {
                     pbToken = dados.token;
                     pbUser = dados.record;
-                    console.log('✅ Autenticado no PocketBase');
+                    console.log('✅ Autenticado com sucesso!');
+                    mostrarToast('✅ Conectado à nuvem!', 'sucesso');
                     return true;
+                } else {
+                    console.warn('⚠️ Falha na autenticação:', dados.message);
+                    mostrarToast(`⚠️ ${dados.message || 'Credenciais inválidas'}`, 'aviso');
+                    return false;
                 }
-                return false;
             } catch (e) {
-                console.warn('⚠️ PocketBase offline:', e.message);
+                console.error('❌ Erro na autenticação:', e);
+                mostrarToast('⚠️ Erro ao conectar ao PocketBase', 'aviso');
                 return false;
             }
         }
 
         async function pbFetch(endpoint, options = {}) {
-            if (!pbToken) await autenticarPocketBase();
-            if (!pbToken) throw new Error('Não autenticado');
+            if (!pbToken) {
+                const autenticado = await autenticarPocketBase();
+                if (!autenticado) throw new Error('Não autenticado');
+            }
             
             const headers = {
                 'Content-Type': 'application/json',
@@ -2772,37 +2802,7 @@ const PB_SENHA = 'admin123';
         }
 
         // ============================================================
-        //  TOAST
-        // ============================================================
-
-        function mostrarToast(msg, tipo = 'info', duracao = 3000) {
-            const container = document.getElementById('toastContainer');
-            if (!container) return;
-            const toast = document.createElement('div');
-            toast.className = `toast ${tipo}`;
-            toast.textContent = msg;
-            container.appendChild(toast);
-            setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, duracao);
-        }
-
-        // ============================================================
-        //  STORAGE
-        // ============================================================
-
-        function loadData(key, def) { try { const d = localStorage.getItem(key); return d ? JSON.parse(d) : def; } catch(e) { return def; } }
-        function saveData(key, data) { try { localStorage.setItem(key, JSON.stringify(data)); return true; } catch(e) { return false; } }
-
-        // ============================================================
-        //  FUNÇÕES AUXILIARES
-        // ============================================================
-
-        function getSaudacao() { const h = new Date().getHours(); if (h < 12) return 'Bom dia'; if (h < 18) return 'Boa tarde'; return 'Boa noite'; }
-        function getEmojiSaudacao() { const h = new Date().getHours(); if (h < 12) return '🌅'; if (h < 18) return '☀️'; return '🌙'; }
-        function gerarIdLocal() { return 'local_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6); }
-        function escapeHtml(t) { if (!t) return ''; const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
-
-        // ============================================================
-        //  FUNÇÕES POCKETBASE - PRESENÇAS ATRASADAS
+        //  FUNÇÕES POCKETBASE (TODAS)
         // ============================================================
 
         async function salvarPresencaAtrasadaPB(dados) {
@@ -2810,9 +2810,7 @@ const PB_SENHA = 'admin123';
                 return await pbFetch(`${COL.registro_atrasado}/records`, {
                     method: 'POST',
                     body: JSON.stringify({
-                        data: dados.data,
-                        hora: dados.hora,
-                        tipo: dados.tipo,
+                        data: dados.data, hora: dados.hora, tipo: dados.tipo,
                         justificativa: dados.justificativa || '',
                         usuario: dados.usuario || 'Igor Veras Morais',
                         registrado_em: dados.registrado_em || getDataLocal()
@@ -2826,19 +2824,13 @@ const PB_SENHA = 'admin123';
             catch(e) { console.warn('⚠️ Erro ao buscar presenças atrasadas:', e); return []; }
         }
 
-        // ============================================================
-        //  FUNÇÕES POCKETBASE - OCORRÊNCIAS
-        // ============================================================
-
         async function salvarOcorrenciaPB(dados) {
             try {
                 return await pbFetch(`${COL.ocorrencias}/records`, {
                     method: 'POST',
                     body: JSON.stringify({
-                        data: dados.data,
-                        disciplina: dados.disciplina || '',
-                        tipo: dados.tipo || 'outros',
-                        descricao: dados.descricao || '',
+                        data: dados.data, disciplina: dados.disciplina || '',
+                        tipo: dados.tipo || 'outros', descricao: dados.descricao || '',
                         para_coordenacao: dados.para_coordenacao || false,
                         usuario: dados.usuario || 'Igor Veras Morais',
                         registrado_em: dados.registrado_em || getDataLocal()
@@ -2852,17 +2844,14 @@ const PB_SENHA = 'admin123';
             catch(e) { console.warn('⚠️ Erro ao buscar ocorrências:', e); return []; }
         }
 
-        // ============================================================
-        //  FUNÇÕES POCKETBASE - PRESENÇAS
-        // ============================================================
-
         async function salvarPresencaPB(dados) {
             try {
                 return await pbFetch(`${COL.presencas}/records`, {
                     method: 'POST',
                     body: JSON.stringify({
                         data: dados.data, hora: dados.hora, tipo: dados.tipo,
-                        justificativa: dados.justificativa || '', usuario: dados.usuario || 'Igor Veras Morais'
+                        justificativa: dados.justificativa || '',
+                        usuario: dados.usuario || 'Igor Veras Morais'
                     })
                 });
             } catch(e) { console.warn('⚠️ Erro ao salvar presença:', e); return null; }
@@ -2873,10 +2862,6 @@ const PB_SENHA = 'admin123';
             catch(e) { console.warn('⚠️ Erro ao buscar presenças:', e); return []; }
         }
 
-        // ============================================================
-        //  FUNÇÕES POCKETBASE - ATIVIDADES
-        // ============================================================
-
         async function salvarAtividadePB(dados) {
             try {
                 return await pbFetch(`${COL.atividades}/records`, {
@@ -2885,8 +2870,10 @@ const PB_SENHA = 'admin123';
                         titulo: dados.titulo, disciplina: dados.disciplina,
                         prioridade: dados.prioridade || 'media', tipo: dados.tipo || 'individual',
                         inicio: dados.inicio || '', prazo: dados.prazo || '',
-                        entregaDocente: dados.entregaDocente || '', observacoes: dados.observacoes || '',
-                        progresso: dados.progresso || 0, participantes: dados.participantes || [],
+                        entregaDocente: dados.entregaDocente || '',
+                        observacoes: dados.observacoes || '',
+                        progresso: dados.progresso || 0,
+                        participantes: dados.participantes || [],
                         subtarefas: dados.subtarefas || []
                     })
                 });
@@ -2911,17 +2898,15 @@ const PB_SENHA = 'admin123';
                         titulo: dados.titulo, disciplina: dados.disciplina,
                         prioridade: dados.prioridade, tipo: dados.tipo,
                         inicio: dados.inicio, prazo: dados.prazo,
-                        entregaDocente: dados.entregaDocente || '', observacoes: dados.observacoes || '',
-                        progresso: dados.progresso || 0, participantes: dados.participantes || [],
+                        entregaDocente: dados.entregaDocente || '',
+                        observacoes: dados.observacoes || '',
+                        progresso: dados.progresso || 0,
+                        participantes: dados.participantes || [],
                         subtarefas: dados.subtarefas || []
                     })
                 });
             } catch(e) { console.warn('⚠️ Erro ao atualizar atividade:', e); return null; }
         }
-
-        // ============================================================
-        //  FUNÇÕES POCKETBASE - NOTAS
-        // ============================================================
 
         async function salvarNotaPB(dados) {
             try {
@@ -2934,7 +2919,11 @@ const PB_SENHA = 'admin123';
                 }
                 return await pbFetch(`${COL.notas}/records`, {
                     method: 'POST',
-                    body: JSON.stringify({ cod_disciplina: dados.cod_disciplina, bimestre: dados.bimestre, valor: dados.valor })
+                    body: JSON.stringify({
+                        cod_disciplina: dados.cod_disciplina,
+                        bimestre: dados.bimestre,
+                        valor: dados.valor
+                    })
                 });
             } catch(e) { console.warn('⚠️ Erro ao salvar nota:', e); return null; }
         }
@@ -2951,15 +2940,14 @@ const PB_SENHA = 'admin123';
             } catch(e) { console.warn('⚠️ Erro ao buscar notas:', e); return {}; }
         }
 
-        // ============================================================
-        //  FUNÇÕES POCKETBASE - RELATÓRIOS
-        // ============================================================
-
         async function salvarRelatorioPB(dados) {
             try {
                 return await pbFetch(`${COL.relatorios}/records`, {
                     method: 'POST',
-                    body: JSON.stringify({ data: dados.data, disciplina: dados.disciplina, tempo: dados.tempo, texto: dados.texto })
+                    body: JSON.stringify({
+                        data: dados.data, disciplina: dados.disciplina,
+                        tempo: dados.tempo, texto: dados.texto
+                    })
                 });
             } catch(e) { console.warn('⚠️ Erro ao salvar relatório:', e); return null; }
         }
@@ -2969,17 +2957,14 @@ const PB_SENHA = 'admin123';
             catch(e) { console.warn('⚠️ Erro ao buscar relatórios:', e); return []; }
         }
 
-        // ============================================================
-        //  FUNÇÕES POCKETBASE - ASSUNTOS
-        // ============================================================
-
         async function salvarAssuntoPB(dados) {
             try {
                 return await pbFetch(`${COL.assuntos}/records`, {
                     method: 'POST',
                     body: JSON.stringify({
                         disciplina: dados.disciplina, titulo: dados.titulo,
-                        descricao: dados.descricao, data: dados.data, timestamp: Date.now()
+                        descricao: dados.descricao, data: dados.data,
+                        timestamp: Date.now()
                     })
                 });
             } catch(e) { console.warn('⚠️ Erro ao salvar assunto:', e); return null; }
@@ -2991,7 +2976,11 @@ const PB_SENHA = 'admin123';
                 const obj = {};
                 r.items.forEach(item => {
                     if (!obj[item.disciplina]) obj[item.disciplina] = [];
-                    obj[item.disciplina].push({ id: item.id, titulo: item.titulo, descricao: item.descricao, data: item.data, timestamp: item.timestamp });
+                    obj[item.disciplina].push({
+                        id: item.id, titulo: item.titulo,
+                        descricao: item.descricao, data: item.data,
+                        timestamp: item.timestamp
+                    });
                 });
                 return obj;
             } catch(e) { console.warn('⚠️ Erro ao buscar assuntos:', e); return {}; }
@@ -3002,17 +2991,14 @@ const PB_SENHA = 'admin123';
             catch(e) { console.warn('⚠️ Erro ao deletar assunto:', e); return false; }
         }
 
-        // ============================================================
-        //  FUNÇÕES POCKETBASE - ATENDIMENTOS
-        // ============================================================
-
         async function salvarAtendimentoPB(dados) {
             try {
                 return await pbFetch(`${COL.atendimentos}/records`, {
                     method: 'POST',
                     body: JSON.stringify({
                         disciplina: dados.disciplina, data: dados.data,
-                        hora: dados.hora, descricao: dados.descricao, timestamp: Date.now()
+                        hora: dados.hora, descricao: dados.descricao,
+                        timestamp: Date.now()
                     })
                 });
             } catch(e) { console.warn('⚠️ Erro ao salvar atendimento:', e); return null; }
@@ -3032,14 +3018,13 @@ const PB_SENHA = 'admin123';
             try {
                 return await pbFetch(`${COL.atendimentos}/records/${id}`, {
                     method: 'PATCH',
-                    body: JSON.stringify({ disciplina: dados.disciplina, data: dados.data, hora: dados.hora, descricao: dados.descricao })
+                    body: JSON.stringify({
+                        disciplina: dados.disciplina, data: dados.data,
+                        hora: dados.hora, descricao: dados.descricao
+                    })
                 });
             } catch(e) { console.warn('⚠️ Erro ao atualizar atendimento:', e); return null; }
         }
-
-        // ============================================================
-        //  FUNÇÕES POCKETBASE - HISTÓRICO PÂNICO
-        // ============================================================
 
         async function salvarPanicoPB(dados) {
             try {
@@ -3047,7 +3032,8 @@ const PB_SENHA = 'admin123';
                     method: 'POST',
                     body: JSON.stringify({
                         data: dados.data, hora: dados.hora,
-                        disciplina: dados.disciplina || '', motivo: dados.motivo || '',
+                        disciplina: dados.disciplina || '',
+                        motivo: dados.motivo || '',
                         resolvido: dados.resolvido || false
                     })
                 });
@@ -3071,10 +3057,6 @@ const PB_SENHA = 'admin123';
             try { await pbFetch(`${COL.panico}/records/${id}`, { method: 'DELETE' }); return true; }
             catch(e) { console.warn('⚠️ Erro ao deletar pânico:', e); return false; }
         }
-
-        // ============================================================
-        //  FUNÇÕES POCKETBASE - CHECKLIST
-        // ============================================================
 
         async function salvarChecklistPB(dados) {
             try {
@@ -3364,7 +3346,7 @@ const PB_SENHA = 'admin123';
         }
 
         // ============================================================
-        //  FUNÇÕES DE RENDERIZAÇÃO
+        //  FUNÇÕES DE RENDERIZAÇÃO (RESUMIDAS)
         // ============================================================
 
         function renderChecklist() {
@@ -3535,7 +3517,6 @@ const PB_SENHA = 'admin123';
         }
 
         function renderPresenca() {
-            // Render presenças normais
             const container = document.getElementById('presencaContainer');
             if (!container) return;
             const total = presencas.length;
@@ -3571,7 +3552,6 @@ const PB_SENHA = 'admin123';
             if (badge) badge.textContent = presencas.length + ' registros';
             atualizarBadgePresenca();
 
-            // Render presenças atrasadas
             renderPresencasAtrasadas();
         }
 
@@ -3701,7 +3681,7 @@ const PB_SENHA = 'admin123';
         }
 
         // ============================================================
-        //  FUNÇÕES - MODAIS PRESENÇA ATRASADA
+        //  FUNÇÕES - MODAIS
         // ============================================================
 
         function abrirModalAtrasado() {
@@ -3730,7 +3710,6 @@ const PB_SENHA = 'admin123';
                 return;
             }
 
-            // Validar data a partir de 03/08/2026
             const dataRegistro = new Date(data + 'T00:00:00');
             const dataLimite = new Date('2026-08-03T00:00:00');
             if (dataRegistro < dataLimite) {
@@ -3764,10 +3743,6 @@ const PB_SENHA = 'admin123';
                 mostrarToast('✅ Registro removido!', 'sucesso');
             }
         }
-
-        // ============================================================
-        //  FUNÇÕES - MODAIS OCORRÊNCIAS
-        // ============================================================
 
         function abrirModalOcorrencia() {
             const modal = document.getElementById('modalOcorrenciaOverlay');
@@ -3824,10 +3799,6 @@ const PB_SENHA = 'admin123';
                 mostrarToast('✅ Ocorrência removida!', 'sucesso');
             }
         }
-
-        // ============================================================
-        //  FUNÇÕES - PRESENÇA NORMAL
-        // ============================================================
 
         function abrirModalPresenca(tipo) {
             tipoPresencaAtual = tipo;
@@ -4351,7 +4322,7 @@ const PB_SENHA = 'admin123';
         }
 
         // ============================================================
-        //  FUNÇÕES - TELA INICIAL E DASHBOARD
+        //  FUNÇÕES - TELA INICIAL, DASHBOARD, RELÓGIO
         // ============================================================
 
         function renderTelaInicial() {
@@ -4466,10 +4437,6 @@ const PB_SENHA = 'admin123';
             updateClockDisplay();
         }
 
-        // ============================================================
-        //  FUNÇÕES - RELÓGIO E CITAÇÃO
-        // ============================================================
-
         function updateClockDisplay() {
             const now = new Date();
             const h = String(now.getHours()).padStart(2, '0');
@@ -4570,7 +4537,7 @@ const PB_SENHA = 'admin123';
         // ============================================================
 
         function init() {
-            console.log('🚀 Inicializando GDA v5.5...');
+            console.log('🚀 Inicializando GDA v5.6...');
             
             renderizarPaginas();
             
@@ -4586,14 +4553,18 @@ const PB_SENHA = 'admin123';
             carregarDadosCloud();
             
             // Eventos - Botões
-            document.getElementById('btnConfirmarAtrasado').addEventListener('click', confirmarAtrasado);
-            document.getElementById('btnConfirmarOcorrencia').addEventListener('click', confirmarOcorrencia);
+            const btnConfirmarAtrasado = document.getElementById('btnConfirmarAtrasado');
+            if (btnConfirmarAtrasado) btnConfirmarAtrasado.addEventListener('click', confirmarAtrasado);
+            
+            const btnConfirmarOcorrencia = document.getElementById('btnConfirmarOcorrencia');
+            if (btnConfirmarOcorrencia) btnConfirmarOcorrencia.addEventListener('click', confirmarOcorrencia);
             
             // Eventos - Navegação
             document.querySelectorAll('.navbar a[data-page]').forEach(link => {
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
-                    showPage(this.dataset.page);
+                    const page = this.dataset.page;
+                    if (page) showPage(page);
                 });
             });
             
@@ -4612,143 +4583,185 @@ const PB_SENHA = 'admin123';
             setInterval(updateClockDisplay, 1000);
             
             // Formulários
-            document.getElementById('relatorioForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                const disciplina = document.getElementById('relatorioDisciplina').value;
-                const tempo = parseInt(document.getElementById('relatorioTempo').value);
-                const texto = document.getElementById('relatorioTexto').value.trim();
-                if (!disciplina || !tempo || !texto) { mostrarToast('Preencha todos os campos!', 'aviso'); return; }
-                salvarRelatorio(disciplina, tempo, texto);
-                document.getElementById('relatorioTexto').value = '';
-                document.getElementById('relatorioTempo').value = '';
-                document.getElementById('relatorioDisciplina').value = '';
-            });
+            const relatorioForm = document.getElementById('relatorioForm');
+            if (relatorioForm) {
+                relatorioForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const disciplina = document.getElementById('relatorioDisciplina').value;
+                    const tempo = parseInt(document.getElementById('relatorioTempo').value);
+                    const texto = document.getElementById('relatorioTexto').value.trim();
+                    if (!disciplina || !tempo || !texto) { mostrarToast('Preencha todos os campos!', 'aviso'); return; }
+                    salvarRelatorio(disciplina, tempo, texto);
+                    document.getElementById('relatorioTexto').value = '';
+                    document.getElementById('relatorioTempo').value = '';
+                    document.getElementById('relatorioDisciplina').value = '';
+                });
+            }
             
-            document.getElementById('assuntoForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                const disciplina = document.getElementById('formAssuntoDisciplina').value;
-                const titulo = document.getElementById('formAssuntoTitulo').value.trim();
-                const descricao = document.getElementById('formAssuntoDescricao').value.trim();
-                const data = document.getElementById('formAssuntoData').value;
-                if (!disciplina || !titulo || !descricao) { mostrarToast('Preencha todos os campos.', 'aviso'); return; }
-                adicionarAssunto(disciplina, titulo, descricao, data);
-                document.getElementById('formAssuntoTitulo').value = '';
-                document.getElementById('formAssuntoDescricao').value = '';
-                document.getElementById('formAssuntoData').value = getDataLocal();
-            });
+            const assuntoForm = document.getElementById('assuntoForm');
+            if (assuntoForm) {
+                assuntoForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const disciplina = document.getElementById('formAssuntoDisciplina').value;
+                    const titulo = document.getElementById('formAssuntoTitulo').value.trim();
+                    const descricao = document.getElementById('formAssuntoDescricao').value.trim();
+                    const data = document.getElementById('formAssuntoData').value;
+                    if (!disciplina || !titulo || !descricao) { mostrarToast('Preencha todos os campos.', 'aviso'); return; }
+                    adicionarAssunto(disciplina, titulo, descricao, data);
+                    document.getElementById('formAssuntoTitulo').value = '';
+                    document.getElementById('formAssuntoDescricao').value = '';
+                    document.getElementById('formAssuntoData').value = getDataLocal();
+                });
+            }
             
-            document.getElementById('atendimentoForm').addEventListener('submit', async function(e) {
-                e.preventDefault();
-                const disciplina = document.getElementById('formAtendimentoDisciplina').value;
-                const data = document.getElementById('formAtendimentoData').value;
-                const hora = document.getElementById('formAtendimentoHora').value;
-                const descricao = document.getElementById('formAtendimentoDescricao').value.trim();
-                if (!disciplina || !data || !hora || !descricao || descricao.length < 10) {
-                    mostrarToast('Preencha todos os campos! (Mínimo 10 caracteres)', 'aviso');
-                    return;
-                }
-                if (editandoAtendimentoId) {
-                    const idx = atendimentos.findIndex(a => a.id === editandoAtendimentoId);
-                    if (idx !== -1) {
-                        atendimentos[idx] = { ...atendimentos[idx], disciplina, data, hora, descricao };
-                        await atualizarAtendimentoPB(editandoAtendimentoId, { disciplina, data, hora, descricao });
+            const atendimentoForm = document.getElementById('atendimentoForm');
+            if (atendimentoForm) {
+                atendimentoForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    const disciplina = document.getElementById('formAtendimentoDisciplina').value;
+                    const data = document.getElementById('formAtendimentoData').value;
+                    const hora = document.getElementById('formAtendimentoHora').value;
+                    const descricao = document.getElementById('formAtendimentoDescricao').value.trim();
+                    if (!disciplina || !data || !hora || !descricao || descricao.length < 10) {
+                        mostrarToast('Preencha todos os campos! (Mínimo 10 caracteres)', 'aviso');
+                        return;
                     }
-                } else {
-                    const novo = { id: gerarIdLocal(), disciplina, data, hora, descricao, timestamp: new Date(data + 'T' + hora).getTime() };
-                    atendimentos.push(novo);
-                    const pb = await salvarAtendimentoPB({ disciplina, data, hora, descricao });
-                    if (pb && pb.id) {
-                        const idx = atendimentos.findIndex(a => a.id === novo.id);
-                        if (idx !== -1) atendimentos[idx].id = pb.id;
+                    if (editandoAtendimentoId) {
+                        const idx = atendimentos.findIndex(a => a.id === editandoAtendimentoId);
+                        if (idx !== -1) {
+                            atendimentos[idx] = { ...atendimentos[idx], disciplina, data, hora, descricao };
+                            await atualizarAtendimentoPB(editandoAtendimentoId, { disciplina, data, hora, descricao });
+                        }
+                    } else {
+                        const novo = { id: gerarIdLocal(), disciplina, data, hora, descricao, timestamp: new Date(data + 'T' + hora).getTime() };
+                        atendimentos.push(novo);
+                        const pb = await salvarAtendimentoPB({ disciplina, data, hora, descricao });
+                        if (pb && pb.id) {
+                            const idx = atendimentos.findIndex(a => a.id === novo.id);
+                            if (idx !== -1) atendimentos[idx].id = pb.id;
+                        }
                     }
-                }
-                saveData('gda_atendimentos', atendimentos);
-                renderAtendimentos();
-                renderTelaInicial();
-                renderDashboard();
-                closeModalAtendimento();
-                mostrarToast('✅ Atendimento salvo!', 'sucesso');
-                editandoAtendimentoId = null;
-            });
+                    saveData('gda_atendimentos', atendimentos);
+                    renderAtendimentos();
+                    renderTelaInicial();
+                    renderDashboard();
+                    closeModalAtendimento();
+                    mostrarToast('✅ Atendimento salvo!', 'sucesso');
+                    editandoAtendimentoId = null;
+                });
+            }
             
-            document.getElementById('atividadeForm').addEventListener('submit', async function(e) {
-                e.preventDefault();
-                const titulo = document.getElementById('formTitulo').value.trim();
-                const tipo = document.getElementById('formTipo').value;
-                const prioridade = document.getElementById('formPrioridade').value;
-                const disciplina = document.getElementById('formDisciplina').value;
-                const inicio = document.getElementById('formInicio').value;
-                const prazo = document.getElementById('formPrazo').value;
-                const entregaDocente = document.getElementById('formEntregaDocente').value;
-                const observacoes = document.getElementById('formObservacoes').value.trim();
-                if (!titulo || !disciplina || !inicio || !prazo || !entregaDocente) {
-                    mostrarToast('Preencha todos os campos obrigatórios.', 'aviso');
-                    return;
-                }
-                const progresso = subtarefasTemp.length > 0 ? Math.round((subtarefasTemp.filter(st => st.concluido).length / subtarefasTemp.length) * 100) : 0;
-                const dados = {
-                    titulo, tipo, prioridade, disciplina, inicio, prazo, entregaDocente,
-                    observacoes: observacoes || '',
-                    participantes: participantesTemp.map(p => ({ nome: p.nome, prazo: p.prazo })),
-                    subtarefas: subtarefasTemp.map(st => ({ descricao: st.descricao, concluido: st.concluido })),
-                    progresso
-                };
-                if (editandoId) {
-                    const idx = atividades.findIndex(a => a.id === editandoId);
-                    if (idx !== -1) {
-                        atividades[idx] = { ...atividades[idx], ...dados };
-                        await atualizarAtividadePB(editandoId, dados);
+            const atividadeForm = document.getElementById('atividadeForm');
+            if (atividadeForm) {
+                atividadeForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    const titulo = document.getElementById('formTitulo').value.trim();
+                    const tipo = document.getElementById('formTipo').value;
+                    const prioridade = document.getElementById('formPrioridade').value;
+                    const disciplina = document.getElementById('formDisciplina').value;
+                    const inicio = document.getElementById('formInicio').value;
+                    const prazo = document.getElementById('formPrazo').value;
+                    const entregaDocente = document.getElementById('formEntregaDocente').value;
+                    const observacoes = document.getElementById('formObservacoes').value.trim();
+                    if (!titulo || !disciplina || !inicio || !prazo || !entregaDocente) {
+                        mostrarToast('Preencha todos os campos obrigatórios.', 'aviso');
+                        return;
                     }
-                } else {
-                    const nova = { id: gerarIdLocal(), ...dados };
-                    atividades.push(nova);
-                    const pb = await salvarAtividadePB(dados);
-                    if (pb && pb.id) {
-                        const idx = atividades.findIndex(a => a.id === nova.id);
-                        if (idx !== -1) atividades[idx].id = pb.id;
+                    const progresso = subtarefasTemp.length > 0 ? Math.round((subtarefasTemp.filter(st => st.concluido).length / subtarefasTemp.length) * 100) : 0;
+                    const dados = {
+                        titulo, tipo, prioridade, disciplina, inicio, prazo, entregaDocente,
+                        observacoes: observacoes || '',
+                        participantes: participantesTemp.map(p => ({ nome: p.nome, prazo: p.prazo })),
+                        subtarefas: subtarefasTemp.map(st => ({ descricao: st.descricao, concluido: st.concluido })),
+                        progresso
+                    };
+                    if (editandoId) {
+                        const idx = atividades.findIndex(a => a.id === editandoId);
+                        if (idx !== -1) {
+                            atividades[idx] = { ...atividades[idx], ...dados };
+                            await atualizarAtividadePB(editandoId, dados);
+                        }
+                    } else {
+                        const nova = { id: gerarIdLocal(), ...dados };
+                        atividades.push(nova);
+                        const pb = await salvarAtividadePB(dados);
+                        if (pb && pb.id) {
+                            const idx = atividades.findIndex(a => a.id === nova.id);
+                            if (idx !== -1) atividades[idx].id = pb.id;
+                        }
                     }
-                }
-                saveData('gda_atividades', atividades);
-                renderAtividades();
-                renderTelaInicial();
-                renderDashboard();
-                closeModal();
-                mostrarToast('✅ Atividade salva!', 'sucesso');
-                editandoId = null;
-                participantesTemp = [];
-                subtarefasTemp = [];
-            });
+                    saveData('gda_atividades', atividades);
+                    renderAtividades();
+                    renderTelaInicial();
+                    renderDashboard();
+                    closeModal();
+                    mostrarToast('✅ Atividade salva!', 'sucesso');
+                    editandoId = null;
+                    participantesTemp = [];
+                    subtarefasTemp = [];
+                });
+            }
             
             // Botões presença
-            document.getElementById('btnPresencaPresente').addEventListener('click', () => abrirModalPresenca('presente'));
-            document.getElementById('btnPresencaFalta').addEventListener('click', () => abrirModalPresenca('falta'));
+            const btnPresencaPresente = document.getElementById('btnPresencaPresente');
+            if (btnPresencaPresente) btnPresencaPresente.addEventListener('click', () => abrirModalPresenca('presente'));
+            
+            const btnPresencaFalta = document.getElementById('btnPresencaFalta');
+            if (btnPresencaFalta) btnPresencaFalta.addEventListener('click', () => abrirModalPresenca('falta'));
             
             // Botões pânico
-            document.getElementById('btnPanico').addEventListener('click', (e) => { e.preventDefault(); abrirPanico(); });
-            document.getElementById('btnSairPanico').addEventListener('click', sairPanico);
-            document.getElementById('btnRegistrarPanico').addEventListener('click', registrarPanico);
-            document.getElementById('btnNovaFrasePanico').addEventListener('click', novaFrasePanico);
+            const btnPanico = document.getElementById('btnPanico');
+            if (btnPanico) btnPanico.addEventListener('click', (e) => { e.preventDefault(); abrirPanico(); });
+            
+            const btnSairPanico = document.getElementById('btnSairPanico');
+            if (btnSairPanico) btnSairPanico.addEventListener('click', sairPanico);
+            
+            const btnRegistrarPanico = document.getElementById('btnRegistrarPanico');
+            if (btnRegistrarPanico) btnRegistrarPanico.addEventListener('click', registrarPanico);
+            
+            const btnNovaFrasePanico = document.getElementById('btnNovaFrasePanico');
+            if (btnNovaFrasePanico) btnNovaFrasePanico.addEventListener('click', novaFrasePanico);
             
             // Submenu
-            document.getElementById('sistemasToggle').addEventListener('click', function(e) {
-                e.preventDefault();
-                document.getElementById('submenuSistemas').classList.toggle('open');
-            });
+            const sistemasToggle = document.getElementById('sistemasToggle');
+            if (sistemasToggle) {
+                sistemasToggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const submenu = document.getElementById('submenuSistemas');
+                    if (submenu) submenu.classList.toggle('open');
+                });
+            }
             
             // Splash
-            document.getElementById('btnEntrar').addEventListener('click', function() {
-                document.getElementById('splashOverlay').classList.add('hidden');
-            });
+            const btnEntrar = document.getElementById('btnEntrar');
+            if (btnEntrar) {
+                btnEntrar.addEventListener('click', function() {
+                    const splash = document.getElementById('splashOverlay');
+                    if (splash) splash.classList.add('hidden');
+                    console.log('🔓 Acesso liberado!');
+                });
+            }
             
             // Fechar modais
-            document.getElementById('modalOverlay').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
-            document.getElementById('modalAtendimentoOverlay').addEventListener('click', function(e) { if (e.target === this) closeModalAtendimento(); });
-            document.getElementById('modalPresencaOverlay').addEventListener('click', function(e) { if (e.target === this) fecharModalPresenca(); });
-            document.getElementById('modalAtrasadoOverlay').addEventListener('click', function(e) { if (e.target === this) fecharModalAtrasado(); });
-            document.getElementById('modalOcorrenciaOverlay').addEventListener('click', function(e) { if (e.target === this) fecharModalOcorrencia(); });
-            document.getElementById('panicoOverlay').addEventListener('click', function(e) { if (e.target === this) sairPanico(); });
+            const modalOverlay = document.getElementById('modalOverlay');
+            if (modalOverlay) modalOverlay.addEventListener('click', function(e) { if (e.target === this) closeModal(); });
             
-            console.log('✅ GDA v5.5 inicializado com sucesso!');
+            const modalAtendimentoOverlay = document.getElementById('modalAtendimentoOverlay');
+            if (modalAtendimentoOverlay) modalAtendimentoOverlay.addEventListener('click', function(e) { if (e.target === this) closeModalAtendimento(); });
+            
+            const modalPresencaOverlay = document.getElementById('modalPresencaOverlay');
+            if (modalPresencaOverlay) modalPresencaOverlay.addEventListener('click', function(e) { if (e.target === this) fecharModalPresenca(); });
+            
+            const modalAtrasadoOverlay = document.getElementById('modalAtrasadoOverlay');
+            if (modalAtrasadoOverlay) modalAtrasadoOverlay.addEventListener('click', function(e) { if (e.target === this) fecharModalAtrasado(); });
+            
+            const modalOcorrenciaOverlay = document.getElementById('modalOcorrenciaOverlay');
+            if (modalOcorrenciaOverlay) modalOcorrenciaOverlay.addEventListener('click', function(e) { if (e.target === this) fecharModalOcorrencia(); });
+            
+            const panicoOverlay = document.getElementById('panicoOverlay');
+            if (panicoOverlay) panicoOverlay.addEventListener('click', function(e) { if (e.target === this) sairPanico(); });
+            
+            console.log('✅ GDA v5.6 inicializado com sucesso!');
             console.log(`📊 Dados: Atividades: ${atividades.length}, Presenças: ${presencas.length}, Relatórios: ${relatorios.length}, Assuntos: ${Object.keys(assuntos).length}`);
         }
 
