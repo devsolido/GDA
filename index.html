@@ -11,7 +11,7 @@
 
     <style>
         /* ============================================================
-           CSS COMPLETO - VERSÃO 5.3
+           CSS COMPLETO - VERSÃO 5.5 (com registro atrasado + ocorrências)
            ============================================================ */
         
         :root {
@@ -29,6 +29,8 @@
             --color-info: #1565c0;
             --color-panico: #d32f2f;
             --color-panico-hover: #b71c1c;
+            --color-ocorrencia: #7b1fa2;
+            --color-ocorrencia-hover: #4a148c;
             --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
             --radius: 16px;
             --transition: 0.3s ease;
@@ -286,8 +288,7 @@
             gap: 6px;
         }
         header .user-info .avatar {
-            width: 44px;
-            height: 44px;
+            width: 44px; height: 44px;
             border-radius: 50%;
             overflow: hidden;
             flex-shrink: 0;
@@ -398,7 +399,160 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* ===== ESTILOS DAS PÁGINAS ===== */
+        /* ============================================================
+           ESTILOS DO REGISTRO ATRASADO
+           ============================================================ */
+        .presenca-atrasada-card {
+            background: var(--color-card);
+            border-radius: var(--radius);
+            padding: 14px 16px;
+            border: 1px solid var(--color-border);
+            transition: var(--transition);
+            border-left: 4px solid var(--color-warning);
+            margin-bottom: 10px;
+        }
+        .presenca-atrasada-card:hover {
+            border-color: rgba(255, 179, 0, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        .presenca-atrasada-card .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+        .presenca-atrasada-card .data-hora { font-size: 13px; font-weight: 600; color: var(--color-accent); }
+        .presenca-atrasada-card .hora { font-size: 11px; color: var(--color-text-muted); }
+        .presenca-atrasada-card .tipo {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 12px;
+            border-radius: 20px;
+        }
+        .presenca-atrasada-card .tipo.presente {
+            background: rgba(76, 175, 80, 0.12);
+            color: var(--color-success);
+        }
+        .presenca-atrasada-card .tipo.falta {
+            background: rgba(229, 57, 53, 0.12);
+            color: var(--color-danger);
+        }
+        .presenca-atrasada-card .justificativa {
+            font-size: 12px;
+            color: var(--color-text-muted);
+            margin-top: 4px;
+            padding: 6px 10px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 6px;
+            border-left: 2px solid var(--color-warning);
+        }
+        .presenca-atrasada-card .badge-atrasado {
+            font-size: 10px;
+            background: rgba(255, 179, 0, 0.12);
+            color: var(--color-warning);
+            padding: 2px 10px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .btn-registro-atrasado {
+            background: linear-gradient(135deg, var(--color-warning), #e65100);
+            color: #fff;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
+            min-height: var(--toque-min);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-registro-atrasado:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 20px rgba(255, 179, 0, 0.3);
+        }
+
+        .btn-ocorrencia {
+            background: linear-gradient(135deg, var(--color-ocorrencia), var(--color-ocorrencia-hover));
+            color: #fff;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
+            min-height: var(--toque-min);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-ocorrencia:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 20px rgba(123, 31, 162, 0.3);
+        }
+
+        .ocorrencia-card {
+            background: var(--color-card);
+            border-radius: var(--radius);
+            padding: 14px 16px;
+            border: 1px solid var(--color-border);
+            transition: var(--transition);
+            border-left: 4px solid var(--color-ocorrencia);
+            margin-bottom: 10px;
+        }
+        .ocorrencia-card:hover {
+            border-color: rgba(123, 31, 162, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        .ocorrencia-card .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+        .ocorrencia-card .data-hora { font-size: 13px; font-weight: 600; color: var(--color-accent); }
+        .ocorrencia-card .disciplina { font-size: 12px; font-weight: 600; color: var(--color-ocorrencia); }
+        .ocorrencia-card .tipo {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 12px;
+            border-radius: 20px;
+            background: rgba(123, 31, 162, 0.12);
+            color: var(--color-ocorrencia);
+        }
+        .ocorrencia-card .descricao {
+            font-size: 12px;
+            color: var(--color-text-muted);
+            margin-top: 4px;
+            padding: 6px 10px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 6px;
+            border-left: 2px solid var(--color-ocorrencia);
+        }
+        .ocorrencia-card .para-coordenacao {
+            font-size: 11px;
+            color: var(--color-success);
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* ============================================================
+           ESTILOS DAS PÁGINAS (mantidos)
+           ============================================================ */
         .welcome-hero {
             background: linear-gradient(135deg, var(--color-card), var(--color-secondary));
             border-radius: var(--radius);
@@ -1543,7 +1697,9 @@
             background: rgba(229, 57, 53, 0.05);
         }
 
-        /* ===== MODAL ===== */
+        /* ============================================================
+           MODAL
+           ============================================================ */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -1771,7 +1927,199 @@
         .modal-presenca .modal-actions .btn-cancelar:hover { background: rgba(255, 255, 255, 0.1); }
         @media (max-width: 480px) { .modal-presenca .modal-actions { flex-direction: column; } .modal-presenca .modal-actions .btn-cancelar { flex: 1; } }
 
-        /* ===== MODO PÂNICO ===== */
+        /* ===== MODAL REGISTRO ATRASADO ===== */
+        .modal-atrasado-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(12px);
+            z-index: 301;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+        .modal-atrasado-overlay.open { display: flex; }
+        .modal-atrasado {
+            background: var(--color-secondary);
+            border-radius: 20px;
+            padding: 28px 24px;
+            max-width: 520px;
+            width: 100%;
+            border: 1px solid var(--color-border);
+            box-shadow: var(--shadow);
+            position: relative;
+            animation: modalSlideIn 0.3s ease;
+        }
+        .modal-atrasado .modal-icon { font-size: 40px; text-align: center; margin-bottom: 10px; }
+        .modal-atrasado h2 { font-size: 19px; font-weight: 700; text-align: center; color: var(--color-text); margin-bottom: 4px; }
+        .modal-atrasado .subtitle { text-align: center; color: var(--color-text-muted); font-size: 13px; margin-bottom: 16px; }
+        .modal-atrasado .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            font-size: 13px;
+        }
+        .modal-atrasado .info-row .label { color: var(--color-text-muted); }
+        .modal-atrasado .info-row .value { color: var(--color-text); font-weight: 600; }
+        .modal-atrasado .info-row .value.highlight { color: var(--color-accent); }
+        .modal-atrasado label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--color-text-muted);
+            margin-top: 12px;
+            margin-bottom: 4px;
+        }
+        .modal-atrasado input,
+        .modal-atrasado select,
+        .modal-atrasado textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid var(--color-border);
+            background: rgba(255, 255, 255, 0.02);
+            color: var(--color-text);
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            outline: none;
+            transition: var(--transition);
+            min-height: var(--toque-min);
+        }
+        .modal-atrasado input:focus,
+        .modal-atrasado select:focus,
+        .modal-atrasado textarea:focus {
+            border-color: var(--color-accent);
+            box-shadow: 0 0 0 3px rgba(255, 179, 0, 0.08);
+        }
+        .modal-atrasado .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid var(--color-border);
+        }
+        .modal-atrasado .modal-actions button {
+            flex: 1;
+            padding: 10px 16px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
+            min-height: var(--toque-min);
+        }
+        .modal-atrasado .modal-actions .btn-confirmar {
+            background: linear-gradient(135deg, var(--color-warning), #e65100);
+            color: #fff;
+        }
+        .modal-atrasado .modal-actions .btn-confirmar:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 20px rgba(255, 179, 0, 0.3);
+        }
+        .modal-atrasado .modal-actions .btn-cancelar {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--color-text-muted);
+        }
+        .modal-atrasado .modal-actions .btn-cancelar:hover { background: rgba(255, 255, 255, 0.1); }
+        @media (max-width: 480px) { .modal-atrasado .modal-actions { flex-direction: column; } }
+
+        /* ===== MODAL OCORRÊNCIA ===== */
+        .modal-ocorrencia-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(12px);
+            z-index: 302;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+        .modal-ocorrencia-overlay.open { display: flex; }
+        .modal-ocorrencia {
+            background: var(--color-secondary);
+            border-radius: 20px;
+            padding: 28px 24px;
+            max-width: 520px;
+            width: 100%;
+            border: 1px solid var(--color-border);
+            box-shadow: var(--shadow);
+            position: relative;
+            animation: modalSlideIn 0.3s ease;
+        }
+        .modal-ocorrencia .modal-icon { font-size: 40px; text-align: center; margin-bottom: 10px; }
+        .modal-ocorrencia h2 { font-size: 19px; font-weight: 700; text-align: center; color: var(--color-text); margin-bottom: 4px; }
+        .modal-ocorrencia .subtitle { text-align: center; color: var(--color-text-muted); font-size: 13px; margin-bottom: 16px; }
+        .modal-ocorrencia label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--color-text-muted);
+            margin-top: 12px;
+            margin-bottom: 4px;
+        }
+        .modal-ocorrencia input,
+        .modal-ocorrencia select,
+        .modal-ocorrencia textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid var(--color-border);
+            background: rgba(255, 255, 255, 0.02);
+            color: var(--color-text);
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            outline: none;
+            transition: var(--transition);
+            min-height: var(--toque-min);
+        }
+        .modal-ocorrencia input:focus,
+        .modal-ocorrencia select:focus,
+        .modal-ocorrencia textarea:focus {
+            border-color: var(--color-accent);
+            box-shadow: 0 0 0 3px rgba(255, 179, 0, 0.08);
+        }
+        .modal-ocorrencia .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid var(--color-border);
+        }
+        .modal-ocorrencia .modal-actions button {
+            flex: 1;
+            padding: 10px 16px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
+            min-height: var(--toque-min);
+        }
+        .modal-ocorrencia .modal-actions .btn-confirmar {
+            background: linear-gradient(135deg, var(--color-ocorrencia), var(--color-ocorrencia-hover));
+            color: #fff;
+        }
+        .modal-ocorrencia .modal-actions .btn-confirmar:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 20px rgba(123, 31, 162, 0.3);
+        }
+        .modal-ocorrencia .modal-actions .btn-cancelar {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--color-text-muted);
+        }
+        .modal-ocorrencia .modal-actions .btn-cancelar:hover { background: rgba(255, 255, 255, 0.1); }
+        @media (max-width: 480px) { .modal-ocorrencia .modal-actions { flex-direction: column; } }
+
+        /* ============================================================
+           MODO PÂNICO
+           ============================================================ */
         .panico-overlay {
             display: none;
             position: fixed;
@@ -1895,6 +2243,8 @@
             .relato-acoes { flex-direction: column; }
             .atendimentos-grid { grid-template-columns: 1fr; }
             .modal-presenca { padding: 20px; }
+            .modal-atrasado { padding: 20px; }
+            .modal-ocorrencia { padding: 20px; }
             .presenca-grid { grid-template-columns: 1fr; }
             .presenca-stats { grid-template-columns: 1fr 1fr; }
             .assuntos-grid { grid-template-columns: 1fr; }
@@ -1945,6 +2295,8 @@
             .panico-recursos button { font-size: 11px; padding: 6px 14px; }
             .modal-presenca .modal-actions { flex-direction: column; }
             .modal-presenca .modal-actions .btn-cancelar { flex: 1; }
+            .modal-atrasado .modal-actions { flex-direction: column; }
+            .modal-ocorrencia .modal-actions { flex-direction: column; }
             .presenca-stats { grid-template-columns: 1fr; }
             .notas-grid { grid-template-columns: 1fr !important; }
             .notas-bimestres { grid-template-columns: repeat(2, 1fr) !important; }
@@ -1973,6 +2325,8 @@
             .stat-card { padding: 10px 12px; }
             .atividade-card { padding: 12px 14px; }
             .presenca-card { padding: 10px 12px; }
+            .presenca-atrasada-card { padding: 10px 12px; }
+            .ocorrencia-card { padding: 10px 12px; }
             .assunto-card { padding: 10px 12px; }
             .modal input, .modal select, .modal textarea { font-size: 16px !important; }
             input, select, textarea { font-size: 16px !important; }
@@ -1983,7 +2337,7 @@
             touch-action: manipulation;
         }
         input, select, textarea { font-size: 16px !important; }
-        .modal-presenca-overlay, .modal-overlay, .panico-overlay {
+        .modal-presenca-overlay, .modal-overlay, .panico-overlay, .modal-atrasado-overlay, .modal-ocorrencia-overlay {
             -webkit-overflow-scrolling: touch;
         }
 
@@ -2011,7 +2365,7 @@
             <button class="btn-entrar" id="btnEntrar">
                 <i class="fas fa-sign-in-alt"></i> Entrar no Sistema
             </button>
-            <div class="versao">v5.3 · Cloud Conectado</div>
+            <div class="versao">v5.5 · Com Registro Atrasado e Ocorrências</div>
         </div>
     </div>
 
@@ -2058,6 +2412,11 @@
             <a href="#" data-page="assuntos" id="navAssuntos">
                 <span class="material-icons-sharp">subject</span><h3>Assuntos</h3>
                 <span class="badge-link" id="assuntosBadge">0</span>
+            </a>
+            <!-- NOVA PÁGINA OCORRÊNCIAS -->
+            <a href="#" data-page="ocorrencias" id="navOcorrencias">
+                <span class="material-icons-sharp">report</span><h3>Ocorrências</h3>
+                <span class="badge-link" id="ocorrenciasBadge">0</span>
             </a>
 
             <div class="nav-label" style="margin-top:8px;">Panico</div>
@@ -2213,73 +2572,88 @@
         </div>
     </div>
 
-    <!-- ===== MODO PÂNICO ===== -->
-    <div class="panico-overlay" id="panicoOverlay">
-        <div class="panico-container">
-            <div class="panico-header">
-                <span class="panico-icone">⚠️</span>
-                <h1 class="panico-titulo">SISTEMA DE EMERGÊNCIA ACADÊMICA</h1>
-                <div class="panico-status">MODO PÂNICO ATIVADO</div>
+    <!-- ===== MODAL REGISTRO ATRASADO ===== -->
+    <div class="modal-atrasado-overlay" id="modalAtrasadoOverlay">
+        <div class="modal-atrasado">
+            <div class="modal-icon">⏰</div>
+            <h2>Registro de Presença Atrasada</h2>
+            <p class="subtitle">Registre presença ou falta de dias anteriores ou horários alternativos</p>
+            
+            <div class="info-row"><span class="label">👤 Aluno</span><span class="value">Igor Veras Morais</span></div>
+            <div class="info-row"><span class="label">📚 Curso</span><span class="value">Controle Ambiental - 2º Sem</span></div>
+            
+            <label>📅 Data do Registro *</label>
+            <input type="date" id="formAtrasadoData" />
+            
+            <label>⏰ Hora *</label>
+            <input type="time" id="formAtrasadoHora" />
+            
+            <label>📋 Tipo *</label>
+            <select id="formAtrasadoTipo">
+                <option value="presente">✅ Presente</option>
+                <option value="falta">❌ Falta</option>
+            </select>
+            
+            <label>📝 Justificativa *</label>
+            <textarea id="formAtrasadoJustificativa" placeholder="Descreva o motivo do registro atrasado..." rows="3"></textarea>
+            
+            <div style="margin-top:8px;font-size:11px;color:var(--color-text-muted);">
+                ⚠️ Registros permitidos a partir de 03/08/2026
             </div>
-            <div class="panico-calma">
-                <p class="panico-frase-principal">"Calma. Você vai conseguir."</p>
-                <p class="panico-subfrase">Respire fundo. Vamos resolver isso juntos.</p>
+            
+            <div class="modal-actions">
+                <button class="btn-cancelar" onclick="fecharModalAtrasado()">Cancelar</button>
+                <button class="btn-confirmar" id="btnConfirmarAtrasado">Registrar</button>
             </div>
-            <hr class="panico-divider" />
-            <div class="panico-respiracao">
-                <h2>RESPIRAÇÃO GUIADA</h2>
-                <div class="respiracao-circulo">
-                    <div class="circulo" id="circuloRespirar"></div>
-                    <div class="respiracao-texto">
-                        <span class="frase" id="respirarFrase">INSPIRE</span>
-                        <span class="timer" id="respirarTimer">4</span>
-                    </div>
-                </div>
-                <button class="btn-respirar" id="btnIniciarRespirar">Iniciar Respiração</button>
-            </div>
-            <hr class="panico-divider" />
-            <div class="panico-motivacao">
-                <p class="frase" id="motivacaoFrase">"Você já superou desafios maiores. Isso também vai passar."</p>
-                <span class="autor" id="motivacaoAutor">— Desconhecido</span>
-                <button class="btn-nova-frase" id="btnNovaFrasePanico">Nova Frase</button>
-            </div>
-            <hr class="panico-divider" />
-            <div class="panico-relato">
-                <h2>RELATO DO MOMENTO</h2>
-                <div class="relato-disciplina">
-                    <label>Disciplina relacionada</label>
-                    <select id="panicoDisciplina"><option value="">Selecione...</option></select>
-                </div>
-                <div class="relato-motivo">
-                    <label>Descreva o que aconteceu</label>
-                    <textarea id="panicoMotivo" placeholder="Descreva o que causou o pânico..."></textarea>
-                </div>
-                <div class="relato-data">
-                    <span>📅 <span id="panicoData"></span></span>
-                    <span>⏰ <span id="panicoHora"></span></span>
-                </div>
-                <div class="relato-acoes">
-                    <button class="btn-registrar" id="btnRegistrarPanico">Registrar Relato</button>
-                    <button class="btn-sair-panico" id="btnSairPanico">Sair do Modo Pânico</button>
-                </div>
-            </div>
-            <hr class="panico-divider" />
-            <div class="panico-recursos">
-                <button class="primary-rec" onclick="window.open('https://www.podefalar.org.br/', '_blank')">
-                    💬 Iniciativa Pode Falar
-                </button>
+        </div>
+    </div>
+
+    <!-- ===== MODAL OCORRÊNCIA ===== -->
+    <div class="modal-ocorrencia-overlay" id="modalOcorrenciaOverlay">
+        <div class="modal-ocorrencia">
+            <div class="modal-icon">📋</div>
+            <h2>Registrar Ocorrência do Dia</h2>
+            <p class="subtitle">Registre situações importantes que ocorreram (briga, falta de professor, etc.)</p>
+            
+            <label>📅 Data *</label>
+            <input type="date" id="formOcorrenciaData" />
+            
+            <label>📚 Disciplina *</label>
+            <select id="formOcorrenciaDisciplina"><option value="">Selecione uma disciplina</option></select>
+            
+            <label>📋 Tipo de Ocorrência *</label>
+            <select id="formOcorrenciaTipo">
+                <option value="briga">🔴 Briga/Conflito</option>
+                <option value="falta_professor">🟠 Falta de Professor</option>
+                <option value="problemas_tecnicos">🔵 Problemas Técnicos</option>
+                <option value="intercorrencia">🟡 Intercorrência</option>
+                <option value="outros">⚪ Outros</option>
+            </select>
+            
+            <label>📝 Descrição Detalhada *</label>
+            <textarea id="formOcorrenciaDescricao" placeholder="Descreva detalhadamente o que aconteceu..." rows="3"></textarea>
+            
+            <label>📋 Para Coordenação/Administração?</label>
+            <select id="formOcorrenciaCoordenacao">
+                <option value="nao">❌ Não</option>
+                <option value="sim">✅ Sim, encaminhar</option>
+            </select>
+            
+            <div class="modal-actions">
+                <button class="btn-cancelar" onclick="fecharModalOcorrencia()">Cancelar</button>
+                <button class="btn-confirmar" id="btnConfirmarOcorrencia">Registrar Ocorrência</button>
             </div>
         </div>
     </div>
 
     <!-- ============================================================
-    SCRIPTS - VERSÃO 5.3
+    SCRIPTS - VERSÃO 5.5
     ============================================================ -->
     <script>
     (function() {
         'use strict';
 
-        console.log('🚀 GDA v5.3 - Cloud Conectado');
+        console.log('🚀 GDA v5.5 - Com Registro Atrasado e Ocorrências');
 
         // ============================================================
         //  CONFIGURAÇÃO POCKETBASE (COM _)
@@ -2289,7 +2663,7 @@
         const PB_EMAIL = 'igorifcmi@gmail.com';
         const PB_SENHA = 'SUA_SENHA_AQUI'; // ← SUBSTITUA
 
-        // Nomes das coleções (com _)
+        // Nomes das coleções
         const COL = {
             presencas: 'presencas',
             atividades: 'atividades_',
@@ -2298,11 +2672,55 @@
             assuntos: 'assuntos_',
             atendimentos: 'atendimentos_',
             panico: 'historico_panico_',
-            checklist: 'checklist_'
+            checklist: 'checklist_',
+            registro_atrasado: 'registro_atrasado',
+            ocorrencias: 'ocorrencias_dia_a_dia'
         };
 
         let pbToken = null;
         let pbUser = null;
+        let presencasAtrasadas = loadData('gda_presencas_atrasadas', []);
+        let ocorrencias = loadData('gda_ocorrencias', []);
+        let presencas = loadData('gda_presencas', []);
+        let atividades = loadData('gda_atividades', []);
+        let notas = loadData('gda_notas', {});
+        let relatorios = loadData('gda_relatorios', []);
+        let checklistState = loadData('gda_checklist', {});
+        let historicoPanico = loadData('gda_historico_panico', []);
+        let atendimentos = loadData('gda_atendimentos', []);
+        let assuntos = loadData('gda_assuntos', {});
+        let participantesTemp = [];
+        let subtarefasTemp = [];
+        let editandoId = null;
+        let editandoAtendimentoId = null;
+        let respiracaoAtiva = false;
+        let respiracaoInterval = null;
+        let tipoPresencaAtual = 'presente';
+        let ultimoDiaVerificado = getDataLocal();
+        let filtroAtividadesAtual = 'todas';
+        let timeoutRespirar = null;
+
+        // ============================================================
+        //  FUNÇÕES DE DATA (FUSO HORÁRIO CORRIGIDO)
+        // ============================================================
+
+        function getDataLocal() {
+            const hoje = new Date();
+            const ano = hoje.getFullYear();
+            const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+            const dia = String(hoje.getDate()).padStart(2, '0');
+            return `${ano}-${mes}-${dia}`;
+        }
+
+        function getHoraLocal() {
+            const agora = new Date();
+            return `${String(agora.getHours()).padStart(2, '0')}:${String(agora.getMinutes()).padStart(2, '0')}`;
+        }
+
+        function getDiaSemanaLocal() {
+            const dias = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
+            return dias[new Date().getDay()];
+        }
 
         // ============================================================
         //  AUTENTICAÇÃO
@@ -2376,81 +2794,6 @@
         function saveData(key, data) { try { localStorage.setItem(key, JSON.stringify(data)); return true; } catch(e) { return false; } }
 
         // ============================================================
-        //  DADOS
-        // ============================================================
-
-        const turmas = [
-            { cod: 'TICAM0147', nome: 'ARTES', professor: 'THAYS ALVES COSTA', turma: 'B2371M', horario: '6M34' },
-            { cod: 'TICAM0152', nome: 'FILOSOFIA', professor: 'JESSIKA CURTINAZ DA SILVA', turma: 'B2371M', horario: '4M56' },
-            { cod: 'TICAM0159', nome: 'FUNDAMENTOS DE SANEAMENTO E SAÚDE PÚBLICA', professor: 'DANIELLE IVANA PEREIRA DOS SANTOS', turma: 'B2371M', horario: '3M34' },
-            { cod: 'TICAM0153', nome: 'GEOGRAFIA', professor: 'SILVANA DE SOUSA SILVA', turma: 'B2371M', horario: '5M12' },
-            { cod: 'TICAM0157', nome: 'INFORMÁTICA BÁSICA', professor: 'FABIO DE OLIVEIRA TORRES', turma: 'B2731M', horario: '4M12' },
-            { cod: 'TICAM0154', nome: 'INTRODUÇÃO AO TÉCNICO EM CONTROLE AMBIENTAL', professor: 'SAMARA AVELINO DE SOUZA FRANCA', turma: 'B2731M', horario: '6M12' },
-            { cod: 'TICAM0146', nome: 'LIBRAS', professor: 'ANDREZA DOS SANTOS FLEXA', turma: 'B2731M', horario: '5M34' },
-            { cod: 'TICAM0145', nome: 'LÍNGUA PORTUGUESA', professor: 'KAUANA DE CARVALHO PENALVA', turma: 'B2731M', horario: '2M456' },
-            { cod: 'TICAM0148', nome: 'MATEMÁTICA', professor: 'SÓRIA PEREIRA LIMA SOARES', turma: 'B2371M', horario: '2M123' },
-            { cod: 'TICAM0156', nome: 'METODOLOGIA DE PROJETOS AMBIENTAIS', professor: 'ADANNA DE SOUZA ANDRADE', turma: 'B2371M', horario: '3M56' },
-            { cod: 'TICAM0149', nome: 'QUÍMICA', professor: 'EDLÉIA APARECIDA FERREIRA DE SOUSA', turma: 'B2371M', horario: '3M12' },
-            { cod: 'TICAM0155', nome: 'SEGURANÇA E SAÚDE OCUPACIONAL', professor: 'EDLÉIA APARECIDA FERREIRA DE SOUSA e HALENE HELENSIEVA QUEIROZ MORAES', turma: 'B2371M', horario: '6M56' },
-            { cod: 'TICAM0150', nome: 'SOCIOLOGIA', professor: 'MARCELO MELO DOS SANTOS', turma: 'B2371M', horario: '5M56' },
-            { cod: 'TICAM0158', nome: 'TÉCNICAS EM EDUCAÇÃO AMBIENTAL', professor: 'DANIELLE IVANA PEREIRA DOS SANTOS', turma: 'B2371M', horario: '4M34' }
-        ];
-
-        const checklistItems = [
-            { id: 'linkedin', label: 'Verificar LinkedIn', icon: 'fab fa-linkedin' },
-            { id: 'gupy', label: 'Gupy - Vaga Aprendiz Home Office', icon: 'fas fa-briefcase' },
-            { id: 'sigaa', label: 'Verificar SIGAA (notas/frequência)', icon: 'fas fa-university' },
-            { id: 'calendario', label: 'Verificar calendário e compromissos', icon: 'fas fa-calendar-alt' },
-            { id: 'intercambios', label: 'Intercâmbios - Oportunidades', icon: 'fas fa-globe-americas' },
-            { id: 'ingles', label: 'Estudar Inglês (30 min)', icon: 'fas fa-language' }
-        ];
-
-        const frasesMotivacionais = [
-            { frase: '"Você já superou desafios maiores. Isso também vai passar."', autor: 'Desconhecido' },
-            { frase: '"Não precisa resolver tudo agora. Um passo de cada vez."', autor: 'Desconhecido' },
-            { frase: '"Você não está sozinho(a). Peça ajuda quando precisar."', autor: 'Desconhecido' },
-            { frase: '"Errar faz parte. O importante é aprender e seguir em frente."', autor: 'Desconhecido' },
-            { frase: '"Cada dificuldade é uma oportunidade para crescer."', autor: 'Desconhecido' },
-            { frase: '"Respire. Você é capaz de superar isso."', autor: 'Desconhecido' },
-            { frase: '"Acalme sua mente e foque no que você pode fazer agora."', autor: 'Desconhecido' },
-            { frase: '"Você tem tudo o que precisa para resolver isso."', autor: 'Desconhecido' }
-        ];
-
-        const frasesTelaInicial = [
-            { frase: '"Acredite em si mesmo e todo o resto virá naturalmente."', autor: 'The Rock' },
-            { frase: '"O sucesso é a soma de pequenos esforços repetidos dia após dia."', autor: 'Robert Collier' },
-            { frase: '"A persistência é o caminho do êxito."', autor: 'Charles Chaplin' },
-            { frase: '"Você é mais forte do que pensa, mais capaz do que imagina."', autor: 'Desconhecido' },
-            { frase: '"Cada dia é uma nova oportunidade para mudar sua vida."', autor: 'Desconhecido' },
-            { frase: '"O único lugar onde o sucesso vem antes do trabalho é no dicionário."', autor: 'Vidal Sassoon' },
-            { frase: '"Não importa o quão devagar você vá, desde que não pare."', autor: 'Confúcio' },
-            { frase: '"A educação é a arma mais poderosa que você pode usar para mudar o mundo."', autor: 'Nelson Mandela' }
-        ];
-
-        // ============================================================
-        //  ESTADO
-        // ============================================================
-
-        let atividades = loadData('gda_atividades', []);
-        let notas = loadData('gda_notas', {});
-        let relatorios = loadData('gda_relatorios', []);
-        let checklistState = loadData('gda_checklist', {});
-        let historicoPanico = loadData('gda_historico_panico', []);
-        let atendimentos = loadData('gda_atendimentos', []);
-        let presencas = loadData('gda_presencas', []);
-        let assuntos = loadData('gda_assuntos', {});
-        let participantesTemp = [];
-        let subtarefasTemp = [];
-        let editandoId = null;
-        let editandoAtendimentoId = null;
-        let respiracaoAtiva = false;
-        let respiracaoInterval = null;
-        let tipoPresencaAtual = 'presente';
-        let ultimoDiaVerificado = new Date().toISOString().split('T')[0];
-        let filtroAtividadesAtual = 'todas';
-        let timeoutRespirar = null;
-
-        // ============================================================
         //  FUNÇÕES AUXILIARES
         // ============================================================
 
@@ -2458,6 +2801,57 @@
         function getEmojiSaudacao() { const h = new Date().getHours(); if (h < 12) return '🌅'; if (h < 18) return '☀️'; return '🌙'; }
         function gerarIdLocal() { return 'local_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6); }
         function escapeHtml(t) { if (!t) return ''; const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+
+        // ============================================================
+        //  FUNÇÕES POCKETBASE - PRESENÇAS ATRASADAS
+        // ============================================================
+
+        async function salvarPresencaAtrasadaPB(dados) {
+            try {
+                return await pbFetch(`${COL.registro_atrasado}/records`, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        data: dados.data,
+                        hora: dados.hora,
+                        tipo: dados.tipo,
+                        justificativa: dados.justificativa || '',
+                        usuario: dados.usuario || 'Igor Veras Morais',
+                        registrado_em: dados.registrado_em || getDataLocal()
+                    })
+                });
+            } catch(e) { console.warn('⚠️ Erro ao salvar presença atrasada:', e); return null; }
+        }
+
+        async function buscarPresencasAtrasadasPB() {
+            try { const r = await pbFetch(`${COL.registro_atrasado}/records?sort=-data`); return r.items || []; }
+            catch(e) { console.warn('⚠️ Erro ao buscar presenças atrasadas:', e); return []; }
+        }
+
+        // ============================================================
+        //  FUNÇÕES POCKETBASE - OCORRÊNCIAS
+        // ============================================================
+
+        async function salvarOcorrenciaPB(dados) {
+            try {
+                return await pbFetch(`${COL.ocorrencias}/records`, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        data: dados.data,
+                        disciplina: dados.disciplina || '',
+                        tipo: dados.tipo || 'outros',
+                        descricao: dados.descricao || '',
+                        para_coordenacao: dados.para_coordenacao || false,
+                        usuario: dados.usuario || 'Igor Veras Morais',
+                        registrado_em: dados.registrado_em || getDataLocal()
+                    })
+                });
+            } catch(e) { console.warn('⚠️ Erro ao salvar ocorrência:', e); return null; }
+        }
+
+        async function buscarOcorrenciasPB() {
+            try { const r = await pbFetch(`${COL.ocorrencias}/records?sort=-data`); return r.items || []; }
+            catch(e) { console.warn('⚠️ Erro ao buscar ocorrências:', e); return []; }
+        }
 
         // ============================================================
         //  FUNÇÕES POCKETBASE - PRESENÇAS
@@ -2706,6 +3100,58 @@
         }
 
         // ============================================================
+        //  DADOS ESTÁTICOS
+        // ============================================================
+
+        const turmas = [
+            { cod: 'TICAM0147', nome: 'ARTES', professor: 'THAYS ALVES COSTA', turma: 'B2371M', horario: '6M34' },
+            { cod: 'TICAM0152', nome: 'FILOSOFIA', professor: 'JESSIKA CURTINAZ DA SILVA', turma: 'B2371M', horario: '4M56' },
+            { cod: 'TICAM0159', nome: 'FUNDAMENTOS DE SANEAMENTO E SAÚDE PÚBLICA', professor: 'DANIELLE IVANA PEREIRA DOS SANTOS', turma: 'B2371M', horario: '3M34' },
+            { cod: 'TICAM0153', nome: 'GEOGRAFIA', professor: 'SILVANA DE SOUSA SILVA', turma: 'B2371M', horario: '5M12' },
+            { cod: 'TICAM0157', nome: 'INFORMÁTICA BÁSICA', professor: 'FABIO DE OLIVEIRA TORRES', turma: 'B2731M', horario: '4M12' },
+            { cod: 'TICAM0154', nome: 'INTRODUÇÃO AO TÉCNICO EM CONTROLE AMBIENTAL', professor: 'SAMARA AVELINO DE SOUZA FRANCA', turma: 'B2731M', horario: '6M12' },
+            { cod: 'TICAM0146', nome: 'LIBRAS', professor: 'ANDREZA DOS SANTOS FLEXA', turma: 'B2731M', horario: '5M34' },
+            { cod: 'TICAM0145', nome: 'LÍNGUA PORTUGUESA', professor: 'KAUANA DE CARVALHO PENALVA', turma: 'B2731M', horario: '2M456' },
+            { cod: 'TICAM0148', nome: 'MATEMÁTICA', professor: 'SÓRIA PEREIRA LIMA SOARES', turma: 'B2371M', horario: '2M123' },
+            { cod: 'TICAM0156', nome: 'METODOLOGIA DE PROJETOS AMBIENTAIS', professor: 'ADANNA DE SOUZA ANDRADE', turma: 'B2371M', horario: '3M56' },
+            { cod: 'TICAM0149', nome: 'QUÍMICA', professor: 'EDLÉIA APARECIDA FERREIRA DE SOUSA', turma: 'B2371M', horario: '3M12' },
+            { cod: 'TICAM0155', nome: 'SEGURANÇA E SAÚDE OCUPACIONAL', professor: 'EDLÉIA APARECIDA FERREIRA DE SOUSA e HALENE HELENSIEVA QUEIROZ MORAES', turma: 'B2371M', horario: '6M56' },
+            { cod: 'TICAM0150', nome: 'SOCIOLOGIA', professor: 'MARCELO MELO DOS SANTOS', turma: 'B2371M', horario: '5M56' },
+            { cod: 'TICAM0158', nome: 'TÉCNICAS EM EDUCAÇÃO AMBIENTAL', professor: 'DANIELLE IVANA PEREIRA DOS SANTOS', turma: 'B2371M', horario: '4M34' }
+        ];
+
+        const checklistItems = [
+            { id: 'linkedin', label: 'Verificar LinkedIn', icon: 'fab fa-linkedin' },
+            { id: 'gupy', label: 'Gupy - Vaga Aprendiz Home Office', icon: 'fas fa-briefcase' },
+            { id: 'sigaa', label: 'Verificar SIGAA (notas/frequência)', icon: 'fas fa-university' },
+            { id: 'calendario', label: 'Verificar calendário e compromissos', icon: 'fas fa-calendar-alt' },
+            { id: 'intercambios', label: 'Intercâmbios - Oportunidades', icon: 'fas fa-globe-americas' },
+            { id: 'ingles', label: 'Estudar Inglês (30 min)', icon: 'fas fa-language' }
+        ];
+
+        const frasesMotivacionais = [
+            { frase: '"Você já superou desafios maiores. Isso também vai passar."', autor: 'Desconhecido' },
+            { frase: '"Não precisa resolver tudo agora. Um passo de cada vez."', autor: 'Desconhecido' },
+            { frase: '"Você não está sozinho(a). Peça ajuda quando precisar."', autor: 'Desconhecido' },
+            { frase: '"Errar faz parte. O importante é aprender e seguir em frente."', autor: 'Desconhecido' },
+            { frase: '"Cada dificuldade é uma oportunidade para crescer."', autor: 'Desconhecido' },
+            { frase: '"Respire. Você é capaz de superar isso."', autor: 'Desconhecido' },
+            { frase: '"Acalme sua mente e foque no que você pode fazer agora."', autor: 'Desconhecido' },
+            { frase: '"Você tem tudo o que precisa para resolver isso."', autor: 'Desconhecido' }
+        ];
+
+        const frasesTelaInicial = [
+            { frase: '"Acredite em si mesmo e todo o resto virá naturalmente."', autor: 'The Rock' },
+            { frase: '"O sucesso é a soma de pequenos esforços repetidos dia após dia."', autor: 'Robert Collier' },
+            { frase: '"A persistência é o caminho do êxito."', autor: 'Charles Chaplin' },
+            { frase: '"Você é mais forte do que pensa, mais capaz do que imagina."', autor: 'Desconhecido' },
+            { frase: '"Cada dia é uma nova oportunidade para mudar sua vida."', autor: 'Desconhecido' },
+            { frase: '"O único lugar onde o sucesso vem antes do trabalho é no dicionário."', autor: 'Vidal Sassoon' },
+            { frase: '"Não importa o quão devagar você vá, desde que não pare."', autor: 'Confúcio' },
+            { frase: '"A educação é a arma mais poderosa que você pode usar para mudar o mundo."', autor: 'Nelson Mandela' }
+        ];
+
+        // ============================================================
         //  RENDERIZAÇÃO - PÁGINAS
         // ============================================================
 
@@ -2724,9 +3170,9 @@
                                 </div>
                             </div>
                             <div class="date-info">
-                                <span class="date-day" id="currentDay">Segunda-feira</span>
-                                <span class="date-full" id="currentDate">27 de Julho de 2026</span>
-                                <span class="aulas-hoje">📚 <strong id="aulasHoje">4</strong> aulas hoje</span>
+                                <span class="date-day" id="currentDay">${getDiaSemanaLocal()}</span>
+                                <span class="date-full" id="currentDate">${new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })}</span>
+                                <span class="aulas-hoje">📚 <strong id="aulasHoje">0</strong> aulas hoje</span>
                             </div>
                         </div>
                         <div class="clock-hero">
@@ -2867,12 +3313,18 @@
                 <!-- PRESENÇA -->
                 <div class="page" id="page-presenca">
                     <div class="section-title">
-                        <i class="fas fa-calendar-check"></i> Registro de Presença <span class="badge" id="presencaTotalBadge">0 registros</span>
-                        <button onclick="abrirModalPresenca('presente')" style="margin-left:auto;padding:6px 16px;border-radius:30px;border:1px solid var(--color-success);background:rgba(76,175,80,0.1);color:var(--color-success);cursor:pointer;font-family:'Inter',sans-serif;font-size:13px;min-height:44px;"><i class="fas fa-check"></i> Registrar Presença</button>
-                        <button onclick="abrirModalPresenca('falta')" style="padding:6px 16px;border-radius:30px;border:1px solid var(--color-danger);background:rgba(229,57,53,0.1);color:var(--color-danger);cursor:pointer;font-family:'Inter',sans-serif;font-size:13px;min-height:44px;"><i class="fas fa-times"></i> Registrar Falta</button>
+                        <i class="fas fa-calendar-check"></i> Registro de Presença <span class="badge" id="presencaTotalBadge">${presencas.length} registros</span>
+                        <button onclick="abrirModalPresenca('presente')" style="margin-left:auto;padding:6px 16px;border-radius:30px;border:1px solid var(--color-success);background:rgba(76,175,80,0.1);color:var(--color-success);cursor:pointer;font-family:'Inter',sans-serif;font-size:13px;min-height:44px;"><i class="fas fa-check"></i> Presente</button>
+                        <button onclick="abrirModalPresenca('falta')" style="padding:6px 16px;border-radius:30px;border:1px solid var(--color-danger);background:rgba(229,57,53,0.1);color:var(--color-danger);cursor:pointer;font-family:'Inter',sans-serif;font-size:13px;min-height:44px;"><i class="fas fa-times"></i> Falta</button>
+                        <button onclick="abrirModalAtrasado()" class="btn-registro-atrasado" style="margin-left:auto;"><i class="fas fa-clock"></i> Atrasado</button>
                     </div>
                     <div id="presencaStats" class="presenca-stats"></div>
+                    
+                    <h4 style="margin-top:16px;margin-bottom:8px;color:var(--color-text);font-size:14px;">📋 Registros do Dia</h4>
                     <div class="presenca-grid" id="presencaContainer"></div>
+                    
+                    <h4 style="margin-top:16px;margin-bottom:8px;color:var(--color-warning);font-size:14px;">⏰ Registros Atrasados</h4>
+                    <div id="presencaAtrasadaContainer"></div>
                 </div>
 
                 <!-- ASSUNTOS -->
@@ -2883,7 +3335,7 @@
                         <form id="assuntoForm">
                             <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
                                 <div><label style="display:block;font-size:12px;font-weight:600;color:var(--color-text-muted);margin-bottom:4px;">Disciplina *</label><select id="formAssuntoDisciplina" required><option value="">Selecione uma disciplina</option></select></div>
-                                <div><label style="display:block;font-size:12px;font-weight:600;color:var(--color-text-muted);margin-bottom:4px;">Data</label><input type="date" id="formAssuntoData" /></div>
+                                <div><label style="display:block;font-size:12px;font-weight:600;color:var(--color-text-muted);margin-bottom:4px;">Data</label><input type="date" id="formAssuntoData" value="${getDataLocal()}" /></div>
                             </div>
                             <div style="margin-top:10px;"><label style="display:block;font-size:12px;font-weight:600;color:var(--color-text-muted);margin-bottom:4px;">Título *</label><input type="text" id="formAssuntoTitulo" placeholder="Ex: Aula sobre métodos de coleta" required style="min-height:44px;" /></div>
                             <div style="margin-top:10px;"><label style="display:block;font-size:12px;font-weight:600;color:var(--color-text-muted);margin-bottom:4px;">Descrição *</label><textarea id="formAssuntoDescricao" placeholder="Descreva o assunto abordado..." rows="3" required style="min-height:44px;"></textarea></div>
@@ -2897,6 +3349,16 @@
                 <div class="page" id="page-historicopanico">
                     <div class="section-title"><i class="fas fa-history"></i> Histórico do Pânico <span class="badge" id="historicoBadge">0</span></div>
                     <div id="historicoPanicoContainer"></div>
+                </div>
+
+                <!-- OCORRÊNCIAS -->
+                <div class="page" id="page-ocorrencias">
+                    <div class="section-title">
+                        <i class="fas fa-report"></i> Ocorrências do Dia a Dia
+                        <span class="badge" id="ocorrenciasTotalBadge">0</span>
+                        <button onclick="abrirModalOcorrencia()" class="btn-ocorrencia" style="margin-left:auto;"><i class="fas fa-plus"></i> Nova Ocorrência</button>
+                    </div>
+                    <div id="ocorrenciasContainer"></div>
                 </div>
             `;
             console.log('✅ Páginas renderizadas');
@@ -2923,7 +3385,7 @@
                     const id = this.dataset.id;
                     checklistState[id] = !checklistState[id];
                     saveData('gda_checklist', checklistState);
-                    const hoje = new Date().toISOString().split('T')[0];
+                    const hoje = getDataLocal();
                     const items = checklistItems.map(i => ({ id: i.id, feito: checklistState[i.id] || false }));
                     salvarChecklistPB({ dia: hoje, items: items });
                     renderChecklist();
@@ -3074,6 +3536,7 @@
         }
 
         function renderPresenca() {
+            // Render presenças normais
             const container = document.getElementById('presencaContainer');
             if (!container) return;
             const total = presencas.length;
@@ -3087,27 +3550,96 @@
             }
             if (presencas.length === 0) {
                 container.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:30px 16px;color:var(--color-text-muted);background:var(--color-card);border-radius:var(--radius);border:1px solid var(--color-border);"><i class="fas fa-calendar-check" style="font-size:28px;display:block;margin-bottom:10px;color:rgba(255,179,0,0.1);"></i>Nenhum registro de presença encontrado.</div>`;
-                return;
+            } else {
+                const sorted = [...presencas].sort((a,b) => new Date(b.data) - new Date(a.data));
+                container.innerHTML = sorted.map(p => {
+                    const dataFormatada = new Date(p.data + 'T00:00:00').toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
+                    return `<div class="presenca-card" data-id="${p.id}">
+                        <div class="header"><span class="data">📅 ${dataFormatada}</span><span class="hora">⏰ ${p.hora}</span></div>
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px;"><span class="tipo ${p.tipo === 'presente' ? 'presente' : 'falta'}">${p.tipo === 'presente' ? '✅' : '❌'} ${p.tipo === 'presente' ? 'Presente' : 'Falta'}</span><span style="font-size:10px;color:var(--color-text-muted);">👤 ${p.nome}</span></div>
+                        ${p.justificativa ? `<div class="justificativa">📝 ${escapeHtml(p.justificativa)}</div>` : ''}
+                        ${p.atestado ? `<div style="margin-top:4px;font-size:10px;color:var(--color-success);">📋 Atestado entregue à coordenação</div>` : ''}
+                        <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;">
+                            <button class="btn-excluir-presenca" data-id="${p.id}" style="padding:6px 12px;border-radius:12px;border:1px solid var(--color-danger);background:rgba(229,57,53,0.1);color:var(--color-danger);cursor:pointer;font-size:12px;font-family:'Inter',sans-serif;transition:0.3s;min-height:44px;">🗑️ Excluir</button>
+                            <button class="btn-atestado-presenca" data-id="${p.id}" style="padding:6px 12px;border-radius:12px;border:1px solid var(--color-success);background:rgba(76,175,80,0.1);color:var(--color-success);cursor:pointer;font-size:12px;font-family:'Inter',sans-serif;transition:0.3s;min-height:44px;">📋 ${p.atestado ? 'Remover Atestado' : 'Marcar Atestado'}</button>
+                        </div>
+                    </div>`;
+                }).join('');
+                document.querySelectorAll('.btn-excluir-presenca').forEach(btn => btn.addEventListener('click', function() { excluirRegistroPresenca(this.dataset.id); }));
+                document.querySelectorAll('.btn-atestado-presenca').forEach(btn => btn.addEventListener('click', function() { alternarAtestadoPresenca(this.dataset.id); }));
             }
-            const sorted = [...presencas].sort((a,b) => new Date(b.data) - new Date(a.data));
-            container.innerHTML = sorted.map(p => {
-                const dataFormatada = new Date(p.data + 'T00:00:00').toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
-                return `<div class="presenca-card" data-id="${p.id}">
-                    <div class="header"><span class="data">📅 ${dataFormatada}</span><span class="hora">⏰ ${p.hora}</span></div>
-                    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px;"><span class="tipo ${p.tipo === 'presente' ? 'presente' : 'falta'}">${p.tipo === 'presente' ? '✅' : '❌'} ${p.tipo === 'presente' ? 'Presente' : 'Falta'}</span><span style="font-size:10px;color:var(--color-text-muted);">👤 ${p.nome}</span></div>
-                    ${p.justificativa ? `<div class="justificativa">📝 ${escapeHtml(p.justificativa)}</div>` : ''}
-                    ${p.atestado ? `<div style="margin-top:4px;font-size:10px;color:var(--color-success);">📋 Atestado entregue à coordenação</div>` : ''}
-                    <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;">
-                        <button class="btn-excluir-presenca" data-id="${p.id}" style="padding:6px 12px;border-radius:12px;border:1px solid var(--color-danger);background:rgba(229,57,53,0.1);color:var(--color-danger);cursor:pointer;font-size:12px;font-family:'Inter',sans-serif;transition:0.3s;min-height:44px;">🗑️ Excluir</button>
-                        <button class="btn-atestado-presenca" data-id="${p.id}" style="padding:6px 12px;border-radius:12px;border:1px solid var(--color-success);background:rgba(76,175,80,0.1);color:var(--color-success);cursor:pointer;font-size:12px;font-family:'Inter',sans-serif;transition:0.3s;min-height:44px;">📋 ${p.atestado ? 'Remover Atestado' : 'Marcar Atestado'}</button>
-                    </div>
-                </div>`;
-            }).join('');
-            document.querySelectorAll('.btn-excluir-presenca').forEach(btn => btn.addEventListener('click', function() { excluirRegistroPresenca(this.dataset.id); }));
-            document.querySelectorAll('.btn-atestado-presenca').forEach(btn => btn.addEventListener('click', function() { alternarAtestadoPresenca(this.dataset.id); }));
             const badge = document.getElementById('presencaTotalBadge');
             if (badge) badge.textContent = presencas.length + ' registros';
             atualizarBadgePresenca();
+
+            // Render presenças atrasadas
+            renderPresencasAtrasadas();
+        }
+
+        function renderPresencasAtrasadas() {
+            const container = document.getElementById('presencaAtrasadaContainer');
+            if (!container) return;
+            if (presencasAtrasadas.length === 0) {
+                container.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:20px 16px;color:var(--color-text-muted);background:var(--color-card);border-radius:var(--radius);border:1px dashed var(--color-border);font-size:13px;">⏰ Nenhum registro atrasado encontrado.</div>`;
+                return;
+            }
+            const sorted = [...presencasAtrasadas].sort((a,b) => new Date(b.data) - new Date(a.data));
+            container.innerHTML = sorted.map(p => {
+                const dataFormatada = new Date(p.data + 'T00:00:00').toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
+                return `<div class="presenca-atrasada-card" data-id="${p.id}">
+                    <div class="header">
+                        <span class="data-hora">📅 ${dataFormatada}</span>
+                        <span class="hora">⏰ ${p.hora}</span>
+                        <span class="badge-atrasado">⏳ Atrasado</span>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px;">
+                        <span class="tipo ${p.tipo === 'presente' ? 'presente' : 'falta'}">${p.tipo === 'presente' ? '✅' : '❌'} ${p.tipo === 'presente' ? 'Presente' : 'Falta'}</span>
+                        <span style="font-size:10px;color:var(--color-text-muted);">👤 ${p.usuario || 'Igor Veras Morais'}</span>
+                    </div>
+                    ${p.justificativa ? `<div class="justificativa">📝 ${escapeHtml(p.justificativa)}</div>` : ''}
+                    <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;">
+                        <button class="btn-excluir-atrasado" data-id="${p.id}" style="padding:6px 12px;border-radius:12px;border:1px solid var(--color-danger);background:rgba(229,57,53,0.1);color:var(--color-danger);cursor:pointer;font-size:12px;font-family:'Inter',sans-serif;transition:0.3s;min-height:44px;">🗑️ Excluir</button>
+                    </div>
+                </div>`;
+            }).join('');
+            document.querySelectorAll('.btn-excluir-atrasado').forEach(btn => btn.addEventListener('click', function() { excluirPresencaAtrasada(this.dataset.id); }));
+        }
+
+        function renderOcorrencias() {
+            const container = document.getElementById('ocorrenciasContainer');
+            if (!container) return;
+            if (ocorrencias.length === 0) {
+                container.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:30px 16px;color:var(--color-text-muted);background:var(--color-card);border-radius:var(--radius);border:1px solid var(--color-border);"><i class="fas fa-report" style="font-size:28px;display:block;margin-bottom:10px;color:rgba(123,31,162,0.1);"></i>Nenhuma ocorrência registrada.</div>`;
+                return;
+            }
+            const sorted = [...ocorrencias].sort((a,b) => new Date(b.data) - new Date(a.data));
+            const tipos = {
+                briga: '🔴 Briga/Conflito',
+                falta_professor: '🟠 Falta de Professor',
+                problemas_tecnicos: '🔵 Problemas Técnicos',
+                intercorrencia: '🟡 Intercorrência',
+                outros: '⚪ Outros'
+            };
+            container.innerHTML = sorted.map(o => {
+                const dataFormatada = new Date(o.data + 'T00:00:00').toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
+                return `<div class="ocorrencia-card" data-id="${o.id}">
+                    <div class="header">
+                        <span class="data-hora">📅 ${dataFormatada}</span>
+                        <span class="disciplina">📚 ${escapeHtml(o.disciplina || 'Sem disciplina')}</span>
+                        <span class="tipo">${tipos[o.tipo] || o.tipo}</span>
+                    </div>
+                    <div class="descricao">${escapeHtml(o.descricao)}</div>
+                    ${o.para_coordenacao ? `<div class="para-coordenacao">📋 <strong>Encaminhado à Coordenação/Administração</strong></div>` : ''}
+                    <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;">
+                        <button class="btn-excluir-ocorrencia" data-id="${o.id}" style="padding:6px 12px;border-radius:12px;border:1px solid var(--color-danger);background:rgba(229,57,53,0.1);color:var(--color-danger);cursor:pointer;font-size:12px;font-family:'Inter',sans-serif;transition:0.3s;min-height:44px;">🗑️ Excluir</button>
+                    </div>
+                </div>`;
+            }).join('');
+            document.querySelectorAll('.btn-excluir-ocorrencia').forEach(btn => btn.addEventListener('click', function() { excluirOcorrencia(this.dataset.id); }));
+            const badge = document.getElementById('ocorrenciasTotalBadge');
+            if (badge) badge.textContent = ocorrencias.length;
+            const badgeMenu = document.getElementById('ocorrenciasBadge');
+            if (badgeMenu) { badgeMenu.textContent = ocorrencias.length; badgeMenu.style.display = ocorrencias.length > 0 ? 'inline-block' : 'none'; }
         }
 
         function renderAssuntos() {
@@ -3170,129 +3702,138 @@
         }
 
         // ============================================================
-        //  FUNÇÕES - TELA INICIAL E DASHBOARD
+        //  FUNÇÕES - MODAIS PRESENÇA ATRASADA
         // ============================================================
 
-        function renderTelaInicial() {
-            const saudacao = getSaudacao();
-            const emoji = getEmojiSaudacao();
-            const nome = 'Igor';
-            const elGreeting = document.getElementById('greetingTitle');
-            if (elGreeting) elGreeting.textContent = `${emoji} ${saudacao}, ${nome}!`;
-            const hoje = new Date();
-            const diasSemana = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
-            const meses = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-            const elDay = document.getElementById('currentDay');
-            const elDate = document.getElementById('currentDate');
-            if (elDay) elDay.textContent = diasSemana[hoje.getDay()];
-            if (elDate) elDate.textContent = `${hoje.getDate()} de ${meses[hoje.getMonth()]} de ${hoje.getFullYear()}`;
-            const diaSemana = hoje.getDay();
-            const aulasHoje = turmas.filter(t => {
-                if (diaSemana === 0 || diaSemana === 6) return false;
-                const diaMap = {2:'2',3:'3',4:'4',5:'5',1:'1'};
-                return t.horario.includes(diaMap[diaSemana] || '');
-            }).length;
-            const elAulas = document.getElementById('aulasHoje');
-            if (elAulas) elAulas.textContent = aulasHoje;
-            updateClockDisplay();
-            atualizarStatusPresenca();
-            const total = checklistItems.length;
-            const done = checklistItems.filter(item => checklistState[item.id] === true).length;
-            const pct = total > 0 ? Math.round((done / total) * 100) : 0;
-            const elCheckDone = document.getElementById('checkDoneCount');
-            const elCheckBar = document.getElementById('checkProgressBar');
-            if (elCheckDone) elCheckDone.textContent = done;
-            if (elCheckBar) elCheckBar.style.width = `${pct}%`;
-            const hojeStr = hoje.toISOString().split('T')[0];
-            const horasHoje = relatorios.filter(r => r.data === hojeStr).reduce((acc, r) => acc + r.tempo, 0);
-            const horasFormatadas = Math.floor(horasHoje / 60);
-            const minutosFormatados = horasHoje % 60;
-            const elHoras = document.getElementById('totalHorasEstudo');
-            if (elHoras) elHoras.textContent = horasFormatadas > 0 ? `${horasFormatadas}h${minutosFormatados > 0 ? ` ${minutosFormatados}min` : ''}` : `${minutosFormatados}min`;
-            const elEstudoBar = document.getElementById('estudoProgressBar');
-            if (elEstudoBar) elEstudoBar.style.width = `${Math.min(100, (horasHoje / 120) * 100)}%`;
-            const dataInicioSemestre2 = new Date('2026-08-03');
-            const dataFimSemestre2 = new Date('2026-12-18');
-            const agora = new Date();
-            let percentualFinal = 0, mensagemFinal = '', semanasPassadasFinal = 0, semanasRestantesFinal = 0, diasRestantesFinal = 0;
-            if (agora < dataInicioSemestre2) {
-                mensagemFinal = '📅 Aguardando início do semestre 2026.2 (3 de agosto)';
-            } else if (agora > dataFimSemestre2) {
-                percentualFinal = 100;
-                mensagemFinal = '🎉 Semestre 2026.2 concluído! Parabéns!';
-            } else {
-                const totalDias2 = Math.ceil((dataFimSemestre2 - dataInicioSemestre2) / (1000 * 60 * 60 * 24));
-                const diasPassados2 = Math.ceil((agora - dataInicioSemestre2) / (1000 * 60 * 60 * 24));
-                const totalSemanas2 = Math.ceil(totalDias2 / 7);
-                semanasPassadasFinal = Math.ceil(diasPassados2 / 7);
-                percentualFinal = Math.min(100, Math.max(0, Math.round((diasPassados2 / totalDias2) * 100)));
-                mensagemFinal = `📈 ${percentualFinal}% do 2026.2 concluído`;
-                semanasRestantesFinal = Math.max(0, totalSemanas2 - semanasPassadasFinal);
-                diasRestantesFinal = Math.max(0, totalDias2 - diasPassados2);
-            }
-            const elSemanaCursadas = document.getElementById('semanasCursadas');
-            const elSemanaRestantes = document.getElementById('semanasRestantes');
-            const elDiasLetivos = document.getElementById('diasLetivos');
-            const elPercent = document.getElementById('semesterPercent');
-            const elProgressFg = document.querySelector('.progress-fg');
-            const elProgressMsg = document.getElementById('progressMessage');
-            if (elSemanaCursadas) elSemanaCursadas.textContent = semanasPassadasFinal;
-            if (elSemanaRestantes) elSemanaRestantes.textContent = semanasRestantesFinal;
-            if (elDiasLetivos) elDiasLetivos.textContent = diasRestantesFinal;
-            if (elPercent) elPercent.textContent = `${percentualFinal}%`;
-            if (elProgressMsg) elProgressMsg.textContent = mensagemFinal;
-            if (elProgressFg) {
-                const circumference = 339.292;
-                elProgressFg.style.strokeDashoffset = circumference * (1 - percentualFinal / 100);
-            }
-            const elQuote = document.getElementById('dailyQuote');
-            const elAuthor = document.getElementById('quoteAuthor');
-            if (elQuote && !elQuote.dataset.loaded) {
-                const random = frasesTelaInicial[Math.floor(Math.random() * frasesTelaInicial.length)];
-                elQuote.textContent = random.frase;
-                if (elAuthor) elAuthor.textContent = random.autor;
-                elQuote.dataset.loaded = 'true';
-            }
-            atualizarBadgePanico();
-            atualizarBadgePresenca();
-            atualizarBadgeAssuntos();
+        function abrirModalAtrasado() {
+            const modal = document.getElementById('modalAtrasadoOverlay');
+            modal.classList.add('open');
+            document.body.style.overflow = 'hidden';
+            document.getElementById('formAtrasadoData').value = getDataLocal();
+            document.getElementById('formAtrasadoHora').value = getHoraLocal();
+            document.getElementById('formAtrasadoTipo').value = 'presente';
+            document.getElementById('formAtrasadoJustificativa').value = '';
         }
 
-        function renderDashboard() {
-            const totalAtiv = atividades.length;
-            const grupo = atividades.filter(a => a.tipo === 'grupo').length;
-            const individual = atividades.filter(a => a.tipo === 'individual').length;
-            const total = checklistItems.length;
-            const done = checklistItems.filter(item => checklistState[item.id] === true).length;
-            let medias = [];
-            turmas.forEach(d => {
-                const nota = notas[d.cod] || { b1: '', b2: '', b3: '', b4: '' };
-                const valores = [parseFloat(nota.b1), parseFloat(nota.b2), parseFloat(nota.b3), parseFloat(nota.b4)];
-                const validas = valores.filter(v => !isNaN(v) && v > 0);
-                if (validas.length > 0) medias.push(validas.reduce((a,b) => a+b, 0) / validas.length);
-            });
-            const mediaGeral = medias.length > 0 ? (medias.reduce((a,b) => a+b, 0) / medias.length) : 0;
-            const elTotalAtiv = document.getElementById('totalAtividades');
-            const elTotalGrupo = document.getElementById('totalGrupo');
-            const elTotalIndividual = document.getElementById('totalIndividual');
-            const elCheckDone = document.getElementById('checkDoneCountDashboard');
-            const elMediaGeral = document.getElementById('mediaGeralDashboard');
-            if (elTotalAtiv) elTotalAtiv.textContent = totalAtiv;
-            if (elTotalGrupo) elTotalGrupo.textContent = grupo;
-            if (elTotalIndividual) elTotalIndividual.textContent = individual;
-            if (elCheckDone) elCheckDone.textContent = done;
-            if (elMediaGeral) elMediaGeral.textContent = mediaGeral.toFixed(1);
-            updateClockDisplay();
+        function fecharModalAtrasado() {
+            document.getElementById('modalAtrasadoOverlay').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        function confirmarAtrasado() {
+            const data = document.getElementById('formAtrasadoData').value;
+            const hora = document.getElementById('formAtrasadoHora').value;
+            const tipo = document.getElementById('formAtrasadoTipo').value;
+            const justificativa = document.getElementById('formAtrasadoJustificativa').value.trim();
+
+            if (!data || !hora || !justificativa) {
+                mostrarToast('⚠️ Preencha todos os campos!', 'aviso');
+                return;
+            }
+
+            // Validar data a partir de 03/08/2026
+            const dataRegistro = new Date(data + 'T00:00:00');
+            const dataLimite = new Date('2026-08-03T00:00:00');
+            if (dataRegistro < dataLimite) {
+                mostrarToast('⚠️ Registros permitidos apenas a partir de 03/08/2026.', 'aviso');
+                return;
+            }
+
+            const registro = {
+                id: gerarIdLocal(),
+                data: data,
+                hora: hora,
+                tipo: tipo,
+                justificativa: justificativa,
+                usuario: 'Igor Veras Morais',
+                registrado_em: getDataLocal()
+            };
+
+            presencasAtrasadas.push(registro);
+            saveData('gda_presencas_atrasadas', presencasAtrasadas);
+            salvarPresencaAtrasadaPB(registro);
+            fecharModalAtrasado();
+            mostrarToast('✅ Registro atrasado salvo com sucesso!', 'sucesso');
+            renderPresencasAtrasadas();
+        }
+
+        function excluirPresencaAtrasada(id) {
+            if (confirm('Remover este registro atrasado?')) {
+                presencasAtrasadas = presencasAtrasadas.filter(p => p.id !== id);
+                saveData('gda_presencas_atrasadas', presencasAtrasadas);
+                renderPresencasAtrasadas();
+                mostrarToast('✅ Registro removido!', 'sucesso');
+            }
         }
 
         // ============================================================
-        //  FUNÇÕES - PRESENÇA
+        //  FUNÇÕES - MODAIS OCORRÊNCIAS
+        // ============================================================
+
+        function abrirModalOcorrencia() {
+            const modal = document.getElementById('modalOcorrenciaOverlay');
+            modal.classList.add('open');
+            document.body.style.overflow = 'hidden';
+            document.getElementById('formOcorrenciaData').value = getDataLocal();
+            document.getElementById('formOcorrenciaDisciplina').value = '';
+            document.getElementById('formOcorrenciaTipo').value = 'outros';
+            document.getElementById('formOcorrenciaDescricao').value = '';
+            document.getElementById('formOcorrenciaCoordenacao').value = 'nao';
+        }
+
+        function fecharModalOcorrencia() {
+            document.getElementById('modalOcorrenciaOverlay').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        function confirmarOcorrencia() {
+            const data = document.getElementById('formOcorrenciaData').value;
+            const disciplina = document.getElementById('formOcorrenciaDisciplina').value;
+            const tipo = document.getElementById('formOcorrenciaTipo').value;
+            const descricao = document.getElementById('formOcorrenciaDescricao').value.trim();
+            const paraCoordenacao = document.getElementById('formOcorrenciaCoordenacao').value === 'sim';
+
+            if (!data || !disciplina || !descricao) {
+                mostrarToast('⚠️ Preencha todos os campos obrigatórios!', 'aviso');
+                return;
+            }
+
+            const ocorrencia = {
+                id: gerarIdLocal(),
+                data: data,
+                disciplina: disciplina,
+                tipo: tipo,
+                descricao: descricao,
+                para_coordenacao: paraCoordenacao,
+                usuario: 'Igor Veras Morais',
+                registrado_em: getDataLocal()
+            };
+
+            ocorrencias.push(ocorrencia);
+            saveData('gda_ocorrencias', ocorrencias);
+            salvarOcorrenciaPB(ocorrencia);
+            fecharModalOcorrencia();
+            mostrarToast('✅ Ocorrência registrada com sucesso!', 'sucesso');
+            renderOcorrencias();
+        }
+
+        function excluirOcorrencia(id) {
+            if (confirm('Remover esta ocorrência?')) {
+                ocorrencias = ocorrencias.filter(o => o.id !== id);
+                saveData('gda_ocorrencias', ocorrencias);
+                renderOcorrencias();
+                mostrarToast('✅ Ocorrência removida!', 'sucesso');
+            }
+        }
+
+        // ============================================================
+        //  FUNÇÕES - PRESENÇA NORMAL
         // ============================================================
 
         function abrirModalPresenca(tipo) {
             tipoPresencaAtual = tipo;
             const hoje = new Date();
-            const dataStr = hoje.toISOString().split('T')[0];
+            const dataStr = getDataLocal();
             if (presencas.find(p => p.data === dataStr)) {
                 mostrarToast('⚠️ Você já registrou presença hoje!', 'aviso');
                 return;
@@ -3349,8 +3890,8 @@
 
         function confirmarPresenca() {
             const hoje = new Date();
-            const dataStr = hoje.toISOString().split('T')[0];
-            const horaStr = hoje.toLocaleTimeString('pt-BR');
+            const dataStr = getDataLocal();
+            const horaStr = getHoraLocal();
             if (presencas.find(p => p.data === dataStr)) {
                 mostrarToast('⚠️ Você já registrou presença hoje!', 'aviso');
                 fecharModalPresenca();
@@ -3382,7 +3923,7 @@
         }
 
         function atualizarStatusPresenca() {
-            const hoje = new Date().toISOString().split('T')[0];
+            const hoje = getDataLocal();
             const registroHoje = presencas.find(p => p.data === hoje);
             const display = document.getElementById('statusPresencaDisplay');
             if (registroHoje) {
@@ -3398,7 +3939,7 @@
 
         function atualizarBadgePresenca() {
             const badge = document.getElementById('presencaBadge');
-            if (badge) { badge.textContent = presencas.length; badge.style.display = presencas.length > 0 ? 'inline-block' : 'none'; }
+            if (badge) { badge.textContent = presencas.length + presencasAtrasadas.length; badge.style.display = (presencas.length + presencasAtrasadas.length) > 0 ? 'inline-block' : 'none'; }
         }
 
         function excluirRegistroPresenca(id) {
@@ -3438,7 +3979,7 @@
             const hoje = new Date();
             const prazo = new Date(hoje); prazo.setDate(prazo.getDate() + 14);
             const entrega = new Date(hoje); entrega.setDate(entrega.getDate() + 16);
-            document.getElementById('formInicio').value = hoje.toISOString().split('T')[0];
+            document.getElementById('formInicio').value = getDataLocal();
             document.getElementById('formPrazo').value = prazo.toISOString().split('T')[0];
             document.getElementById('formEntregaDocente').value = entrega.toISOString().split('T')[0];
         }
@@ -3574,7 +4115,7 @@
         // ============================================================
 
         function salvarRelatorio(disciplina, tempo, texto) {
-            const novoRelatorio = { id: gerarIdLocal(), data: new Date().toISOString().split('T')[0], disciplina, tempo, texto };
+            const novoRelatorio = { id: gerarIdLocal(), data: getDataLocal(), disciplina, tempo, texto };
             relatorios.push(novoRelatorio);
             saveData('gda_relatorios', relatorios);
             salvarRelatorioPB({ data: novoRelatorio.data, disciplina, tempo, texto });
@@ -3593,7 +4134,7 @@
             document.getElementById('modalAtendimentoTitle').innerHTML = '<i class="fas fa-handshake"></i> Nova Participação em Atendimento';
             document.getElementById('modalAtendimentoOverlay').classList.add('open');
             editandoAtendimentoId = null;
-            document.getElementById('formAtendimentoData').value = new Date().toISOString().split('T')[0];
+            document.getElementById('formAtendimentoData').value = getDataLocal();
             const agora = new Date();
             document.getElementById('formAtendimentoHora').value = `${String(agora.getHours()).padStart(2,'0')}:${String(agora.getMinutes()).padStart(2,'0')}`;
         }
@@ -3630,10 +4171,10 @@
 
         function adicionarAssunto(disciplina, titulo, descricao, data) {
             if (!assuntos[disciplina]) assuntos[disciplina] = [];
-            const novoAssunto = { id: gerarIdLocal(), titulo, descricao, data: data || new Date().toISOString().split('T')[0], timestamp: Date.now() };
+            const novoAssunto = { id: gerarIdLocal(), titulo, descricao, data: data || getDataLocal(), timestamp: Date.now() };
             assuntos[disciplina].push(novoAssunto);
             saveData('gda_assuntos', assuntos);
-            salvarAssuntoPB({ disciplina, titulo, descricao, data: data || new Date().toISOString().split('T')[0] });
+            salvarAssuntoPB({ disciplina, titulo, descricao, data: data || getDataLocal() });
             renderAssuntos();
             atualizarBadgeAssuntos();
             mostrarToast('✅ Assunto registrado!', 'sucesso');
@@ -3764,8 +4305,8 @@
             if (!disciplina && !motivo) { mostrarToast('Descreva o aconteceu ou selecione a disciplina.', 'aviso'); return; }
             const registro = {
                 id: gerarIdLocal(),
-                data: new Date().toISOString().split('T')[0],
-                hora: new Date().toLocaleTimeString('pt-BR'),
+                data: getDataLocal(),
+                hora: getHoraLocal(),
                 disciplina: disciplina || 'Não especificada',
                 motivo: motivo || 'Não informado',
                 resolvido: false
@@ -3808,6 +4349,122 @@
                 badge.textContent = pendentes;
                 badge.style.display = pendentes > 0 ? 'inline-block' : 'none';
             }
+        }
+
+        // ============================================================
+        //  FUNÇÕES - TELA INICIAL E DASHBOARD
+        // ============================================================
+
+        function renderTelaInicial() {
+            const saudacao = getSaudacao();
+            const emoji = getEmojiSaudacao();
+            const nome = 'Igor';
+            const elGreeting = document.getElementById('greetingTitle');
+            if (elGreeting) elGreeting.textContent = `${emoji} ${saudacao}, ${nome}!`;
+            const hoje = new Date();
+            const diasSemana = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
+            const meses = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+            const elDay = document.getElementById('currentDay');
+            const elDate = document.getElementById('currentDate');
+            if (elDay) elDay.textContent = diasSemana[hoje.getDay()];
+            if (elDate) elDate.textContent = `${hoje.getDate()} de ${meses[hoje.getMonth()]} de ${hoje.getFullYear()}`;
+            const diaSemana = hoje.getDay();
+            const aulasHoje = turmas.filter(t => {
+                if (diaSemana === 0 || diaSemana === 6) return false;
+                const diaMap = {2:'2',3:'3',4:'4',5:'5',1:'1'};
+                return t.horario.includes(diaMap[diaSemana] || '');
+            }).length;
+            const elAulas = document.getElementById('aulasHoje');
+            if (elAulas) elAulas.textContent = aulasHoje;
+            updateClockDisplay();
+            atualizarStatusPresenca();
+            const total = checklistItems.length;
+            const done = checklistItems.filter(item => checklistState[item.id] === true).length;
+            const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+            const elCheckDone = document.getElementById('checkDoneCount');
+            const elCheckBar = document.getElementById('checkProgressBar');
+            if (elCheckDone) elCheckDone.textContent = done;
+            if (elCheckBar) elCheckBar.style.width = `${pct}%`;
+            const hojeStr = getDataLocal();
+            const horasHoje = relatorios.filter(r => r.data === hojeStr).reduce((acc, r) => acc + r.tempo, 0);
+            const horasFormatadas = Math.floor(horasHoje / 60);
+            const minutosFormatados = horasHoje % 60;
+            const elHoras = document.getElementById('totalHorasEstudo');
+            if (elHoras) elHoras.textContent = horasFormatadas > 0 ? `${horasFormatadas}h${minutosFormatados > 0 ? ` ${minutosFormatados}min` : ''}` : `${minutosFormatados}min`;
+            const elEstudoBar = document.getElementById('estudoProgressBar');
+            if (elEstudoBar) elEstudoBar.style.width = `${Math.min(100, (horasHoje / 120) * 100)}%`;
+            const dataInicioSemestre2 = new Date('2026-08-03');
+            const dataFimSemestre2 = new Date('2026-12-18');
+            const agora = new Date();
+            let percentualFinal = 0, mensagemFinal = '', semanasPassadasFinal = 0, semanasRestantesFinal = 0, diasRestantesFinal = 0;
+            if (agora < dataInicioSemestre2) {
+                mensagemFinal = '📅 Aguardando início do semestre 2026.2 (3 de agosto)';
+            } else if (agora > dataFimSemestre2) {
+                percentualFinal = 100;
+                mensagemFinal = '🎉 Semestre 2026.2 concluído! Parabéns!';
+            } else {
+                const totalDias2 = Math.ceil((dataFimSemestre2 - dataInicioSemestre2) / (1000 * 60 * 60 * 24));
+                const diasPassados2 = Math.ceil((agora - dataInicioSemestre2) / (1000 * 60 * 60 * 24));
+                const totalSemanas2 = Math.ceil(totalDias2 / 7);
+                semanasPassadasFinal = Math.ceil(diasPassados2 / 7);
+                percentualFinal = Math.min(100, Math.max(0, Math.round((diasPassados2 / totalDias2) * 100)));
+                mensagemFinal = `📈 ${percentualFinal}% do 2026.2 concluído`;
+                semanasRestantesFinal = Math.max(0, totalSemanas2 - semanasPassadasFinal);
+                diasRestantesFinal = Math.max(0, totalDias2 - diasPassados2);
+            }
+            const elSemanaCursadas = document.getElementById('semanasCursadas');
+            const elSemanaRestantes = document.getElementById('semanasRestantes');
+            const elDiasLetivos = document.getElementById('diasLetivos');
+            const elPercent = document.getElementById('semesterPercent');
+            const elProgressFg = document.querySelector('.progress-fg');
+            const elProgressMsg = document.getElementById('progressMessage');
+            if (elSemanaCursadas) elSemanaCursadas.textContent = semanasPassadasFinal;
+            if (elSemanaRestantes) elSemanaRestantes.textContent = semanasRestantesFinal;
+            if (elDiasLetivos) elDiasLetivos.textContent = diasRestantesFinal;
+            if (elPercent) elPercent.textContent = `${percentualFinal}%`;
+            if (elProgressMsg) elProgressMsg.textContent = mensagemFinal;
+            if (elProgressFg) {
+                const circumference = 339.292;
+                elProgressFg.style.strokeDashoffset = circumference * (1 - percentualFinal / 100);
+            }
+            const elQuote = document.getElementById('dailyQuote');
+            const elAuthor = document.getElementById('quoteAuthor');
+            if (elQuote && !elQuote.dataset.loaded) {
+                const random = frasesTelaInicial[Math.floor(Math.random() * frasesTelaInicial.length)];
+                elQuote.textContent = random.frase;
+                if (elAuthor) elAuthor.textContent = random.autor;
+                elQuote.dataset.loaded = 'true';
+            }
+            atualizarBadgePanico();
+            atualizarBadgePresenca();
+            atualizarBadgeAssuntos();
+        }
+
+        function renderDashboard() {
+            const totalAtiv = atividades.length;
+            const grupo = atividades.filter(a => a.tipo === 'grupo').length;
+            const individual = atividades.filter(a => a.tipo === 'individual').length;
+            const total = checklistItems.length;
+            const done = checklistItems.filter(item => checklistState[item.id] === true).length;
+            let medias = [];
+            turmas.forEach(d => {
+                const nota = notas[d.cod] || { b1: '', b2: '', b3: '', b4: '' };
+                const valores = [parseFloat(nota.b1), parseFloat(nota.b2), parseFloat(nota.b3), parseFloat(nota.b4)];
+                const validas = valores.filter(v => !isNaN(v) && v > 0);
+                if (validas.length > 0) medias.push(validas.reduce((a,b) => a+b, 0) / validas.length);
+            });
+            const mediaGeral = medias.length > 0 ? (medias.reduce((a,b) => a+b, 0) / medias.length) : 0;
+            const elTotalAtiv = document.getElementById('totalAtividades');
+            const elTotalGrupo = document.getElementById('totalGrupo');
+            const elTotalIndividual = document.getElementById('totalIndividual');
+            const elCheckDone = document.getElementById('checkDoneCountDashboard');
+            const elMediaGeral = document.getElementById('mediaGeralDashboard');
+            if (elTotalAtiv) elTotalAtiv.textContent = totalAtiv;
+            if (elTotalGrupo) elTotalGrupo.textContent = grupo;
+            if (elTotalIndividual) elTotalIndividual.textContent = individual;
+            if (elCheckDone) elCheckDone.textContent = done;
+            if (elMediaGeral) elMediaGeral.textContent = mediaGeral.toFixed(1);
+            updateClockDisplay();
         }
 
         // ============================================================
@@ -3860,14 +4517,16 @@
                 console.log('☁️ Carregando dados da nuvem...');
                 await autenticarPocketBase();
                 
-                const [p, a, n, r, as, at, pa] = await Promise.all([
+                const [p, a, n, r, as, at, pa, pa2, oc] = await Promise.all([
                     buscarPresencasPB(),
                     buscarAtividadesPB(),
                     buscarNotasPB(),
                     buscarRelatoriosPB(),
                     buscarAssuntosPB(),
                     buscarAtendimentosPB(),
-                    buscarPanicoPB()
+                    buscarPanicoPB(),
+                    buscarPresencasAtrasadasPB(),
+                    buscarOcorrenciasPB()
                 ]);
                 
                 if (p.length > 0) { presencas = p.map(i => ({ id: i.id, data: i.data, hora: i.hora, tipo: i.tipo, justificativa: i.justificativa || '', nome: i.usuario || 'Igor Veras Morais', curso: 'Controle Ambiental - 2º Sem', atestado: i.atestado || false })); saveData('gda_presencas', presencas); }
@@ -3877,8 +4536,10 @@
                 if (Object.keys(as).length > 0) { assuntos = as; saveData('gda_assuntos', assuntos); }
                 if (at.length > 0) { atendimentos = at; saveData('gda_atendimentos', atendimentos); }
                 if (pa.length > 0) { historicoPanico = pa; saveData('gda_historico_panico', historicoPanico); }
+                if (pa2.length > 0) { presencasAtrasadas = pa2; saveData('gda_presencas_atrasadas', presencasAtrasadas); }
+                if (oc.length > 0) { ocorrencias = oc; saveData('gda_ocorrencias', ocorrencias); }
                 
-                const hoje = new Date().toISOString().split('T')[0];
+                const hoje = getDataLocal();
                 const ch = await buscarChecklistPB(hoje);
                 if (ch.length > 0) { const ns = {}; ch.forEach(item => { ns[item.id] = item.feito; }); checklistState = ns; saveData('gda_checklist', checklistState); }
                 
@@ -3899,6 +4560,7 @@
             renderAtendimentos();
             renderPresenca();
             renderAssuntos();
+            renderOcorrencias();
             atualizarBadgePanico();
             atualizarBadgePresenca();
             atualizarBadgeAssuntos();
@@ -3909,11 +4571,11 @@
         // ============================================================
 
         function init() {
-            console.log('🚀 Inicializando GDA v5.3...');
+            console.log('🚀 Inicializando GDA v5.5...');
             
             renderizarPaginas();
             
-            const selects = ['formDisciplina', 'relatorioDisciplina', 'formAssuntoDisciplina', 'formAtendimentoDisciplina'];
+            const selects = ['formDisciplina', 'relatorioDisciplina', 'formAssuntoDisciplina', 'formAtendimentoDisciplina', 'formOcorrenciaDisciplina'];
             selects.forEach(id => {
                 const select = document.getElementById(id);
                 if (select) {
@@ -3924,7 +4586,11 @@
             // Carregar dados da nuvem
             carregarDadosCloud();
             
-            // Eventos de navegação
+            // Eventos - Botões
+            document.getElementById('btnConfirmarAtrasado').addEventListener('click', confirmarAtrasado);
+            document.getElementById('btnConfirmarOcorrencia').addEventListener('click', confirmarOcorrencia);
+            
+            // Eventos - Navegação
             document.querySelectorAll('.navbar a[data-page]').forEach(link => {
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -3932,7 +4598,7 @@
                 });
             });
             
-            // Filtros de atividades
+            // Eventos - Filtros
             document.querySelectorAll('.filtros-atividades button').forEach(btn => {
                 btn.addEventListener('click', function() {
                     document.querySelectorAll('.filtros-atividades button').forEach(b => b.classList.remove('active'));
@@ -3946,7 +4612,7 @@
             updateClockDisplay();
             setInterval(updateClockDisplay, 1000);
             
-            // Formulário de relatório
+            // Formulários
             document.getElementById('relatorioForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 const disciplina = document.getElementById('relatorioDisciplina').value;
@@ -3959,7 +4625,6 @@
                 document.getElementById('relatorioDisciplina').value = '';
             });
             
-            // Formulário de assunto
             document.getElementById('assuntoForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 const disciplina = document.getElementById('formAssuntoDisciplina').value;
@@ -3970,10 +4635,9 @@
                 adicionarAssunto(disciplina, titulo, descricao, data);
                 document.getElementById('formAssuntoTitulo').value = '';
                 document.getElementById('formAssuntoDescricao').value = '';
-                document.getElementById('formAssuntoData').value = '';
+                document.getElementById('formAssuntoData').value = getDataLocal();
             });
             
-            // Formulário de atendimento
             document.getElementById('atendimentoForm').addEventListener('submit', async function(e) {
                 e.preventDefault();
                 const disciplina = document.getElementById('formAtendimentoDisciplina').value;
@@ -4008,7 +4672,6 @@
                 editandoAtendimentoId = null;
             });
             
-            // Formulário de atividade
             document.getElementById('atividadeForm').addEventListener('submit', async function(e) {
                 e.preventDefault();
                 const titulo = document.getElementById('formTitulo').value.trim();
@@ -4057,7 +4720,7 @@
                 subtarefasTemp = [];
             });
             
-            // Botões de presença
+            // Botões presença
             document.getElementById('btnPresencaPresente').addEventListener('click', () => abrirModalPresenca('presente'));
             document.getElementById('btnPresencaFalta').addEventListener('click', () => abrirModalPresenca('falta'));
             
@@ -4082,9 +4745,11 @@
             document.getElementById('modalOverlay').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
             document.getElementById('modalAtendimentoOverlay').addEventListener('click', function(e) { if (e.target === this) closeModalAtendimento(); });
             document.getElementById('modalPresencaOverlay').addEventListener('click', function(e) { if (e.target === this) fecharModalPresenca(); });
+            document.getElementById('modalAtrasadoOverlay').addEventListener('click', function(e) { if (e.target === this) fecharModalAtrasado(); });
+            document.getElementById('modalOcorrenciaOverlay').addEventListener('click', function(e) { if (e.target === this) fecharModalOcorrencia(); });
             document.getElementById('panicoOverlay').addEventListener('click', function(e) { if (e.target === this) sairPanico(); });
             
-            console.log('✅ GDA v5.3 inicializado com sucesso!');
+            console.log('✅ GDA v5.5 inicializado com sucesso!');
             console.log(`📊 Dados: Atividades: ${atividades.length}, Presenças: ${presencas.length}, Relatórios: ${relatorios.length}, Assuntos: ${Object.keys(assuntos).length}`);
         }
 
@@ -4095,6 +4760,12 @@
         window.abrirModalPresenca = abrirModalPresenca;
         window.confirmarPresenca = confirmarPresenca;
         window.fecharModalPresenca = fecharModalPresenca;
+        window.abrirModalAtrasado = abrirModalAtrasado;
+        window.fecharModalAtrasado = fecharModalAtrasado;
+        window.confirmarAtrasado = confirmarAtrasado;
+        window.abrirModalOcorrencia = abrirModalOcorrencia;
+        window.fecharModalOcorrencia = fecharModalOcorrencia;
+        window.confirmarOcorrencia = confirmarOcorrencia;
         window.validarNota = validarNota;
         window.atualizarNota = atualizarNota;
         window.novaFrase = novaFrase;
