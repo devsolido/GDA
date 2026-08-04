@@ -11,7 +11,7 @@
 
     <style>
         /* ============================================================
-           CSS COMPLETO CORRIGIDO
+           CSS COMPLETO - VERSÃO 5.1
            ============================================================ */
         
         /* ===== VARIÁVEIS E RESET ===== */
@@ -2408,7 +2408,7 @@
             <button class="btn-entrar" id="btnEntrar">
                 <i class="fas fa-sign-in-alt"></i> Entrar no Sistema
             </button>
-            <div class="versao">v5.0 · Cloud + Seguro + Responsivo</div>
+            <div class="versao">v5.1 · Cloud + Seguro + Responsivo</div>
         </div>
     </div>
 
@@ -2763,24 +2763,24 @@
     </div>
 
     <!-- ============================================================
-    SCRIPTS COMPLETOS CORRIGIDOS
+    SCRIPTS COMPLETOS CORRIGIDOS - VERSÃO 5.1
     ============================================================ -->
     <script>
     // ============================================================
-    //  GDA v5.0 - COMPLETO CORRIGIDO
-    //  - API Key removida (usa autenticação por email/senha)
-    //  - URLs configuráveis por ambiente
-    //  - Sistema de Toast notifications
-    //  - IDs unificados (local_ + PB ID)
-    //  - Checklist sincronizado com cloud
-    //  - Reset de dia robusto
-    //  - Validação de datas
-    //  - Responsividade vertical completa
-    //  - Alvos de toque mínimos (44px)
+    //  GDA v5.1 - COMPLETO CORRIGIDO
+    //  - Todos os await em funções async
+    //  - Sistema de logs completo
+    //  - Mensagens de erro detalhadas
+    //  - Fallback para localStorage
+    //  - Responsividade vertical
+    //  - Alvos de toque (44px)
     // ============================================================
 
     (function() {
         'use strict';
+
+        console.log('🚀 Iniciando GDA v5.1...');
+        console.log(`📅 Data/Hora: ${new Date().toLocaleString('pt-BR')}`);
 
         // ============================================================
         //  CONFIGURAÇÃO DE AMBIENTE
@@ -2797,12 +2797,13 @@
             ? PRODUCTION_URL
             : 'http://127.0.0.1:8090';
 
-        // Credenciais - em produção, use variáveis de ambiente ou .env
+        // Credenciais - em produção, use variáveis de ambiente
         const PB_EMAIL = 'igorifcmi@gmail.com';
-        const PB_SENHA = 'SUA_SENHA_AQUI'; // Substitua pela sua senha
+        const PB_SENHA = 'SUA_SENHA_AQUI'; // ← SUBSTITUA PELA SUA SENHA
 
         console.log(`🌐 Ambiente: ${isProduction ? 'Produção' : 'Desenvolvimento'}`);
         console.log(`📡 API: ${PB_URL}`);
+        console.log(`👤 Usuário: ${PB_EMAIL}`);
 
         // ============================================================
         //  SISTEMA DE TOAST
@@ -2810,10 +2811,15 @@
 
         function mostrarToast(mensagem, tipo = 'info', duracao = 3000) {
             const container = document.getElementById('toastContainer');
+            if (!container) {
+                console.warn('⚠️ Toast container não encontrado');
+                return;
+            }
             const toast = document.createElement('div');
             toast.className = `toast ${tipo}`;
             toast.textContent = mensagem;
             container.appendChild(toast);
+            console.log(`📢 Toast [${tipo}]: ${mensagem}`);
             
             setTimeout(() => {
                 toast.style.opacity = '0';
@@ -2825,6 +2831,49 @@
         window.alert = mostrarToast;
 
         // ============================================================
+        //  SISTEMA DE LOGS
+        // ============================================================
+
+        const LOG_LEVELS = {
+            DEBUG: 0,
+            INFO: 1,
+            WARN: 2,
+            ERROR: 3
+        };
+
+        let currentLogLevel = LOG_LEVELS.DEBUG;
+
+        function logDebug(mensagem, dados = null) {
+            if (currentLogLevel <= LOG_LEVELS.DEBUG) {
+                console.log(`🔍 [DEBUG] ${mensagem}`, dados || '');
+            }
+        }
+
+        function logInfo(mensagem, dados = null) {
+            if (currentLogLevel <= LOG_LEVELS.INFO) {
+                console.log(`ℹ️ [INFO] ${mensagem}`, dados || '');
+            }
+        }
+
+        function logWarn(mensagem, dados = null) {
+            if (currentLogLevel <= LOG_LEVELS.WARN) {
+                console.warn(`⚠️ [WARN] ${mensagem}`, dados || '');
+            }
+        }
+
+        function logError(mensagem, erro = null) {
+            if (currentLogLevel <= LOG_LEVELS.ERROR) {
+                console.error(`❌ [ERROR] ${mensagem}`, erro || '');
+                if (erro && erro.stack) {
+                    console.error('📋 Stack trace:', erro.stack);
+                }
+            }
+        }
+
+        // Expor logs globalmente
+        window.__logs = { logDebug, logInfo, logWarn, logError };
+
+        // ============================================================
         //  AUTENTICAÇÃO POCKETBASE
         // ============================================================
 
@@ -2832,16 +2881,38 @@
         let pbUser = null;
         let authAttempts = 0;
         const MAX_AUTH_ATTEMPTS = 3;
+        let authInProgress = false;
 
         async function autenticarPocketBase() {
-            if (pbToken) return true;
+            logInfo('🔄 Iniciando autenticação PocketBase...');
+            
+            if (pbToken) {
+                logDebug('✅ Token já existe, autenticado');
+                return true;
+            }
+            
+            if (authInProgress) {
+                logDebug('⏳ Autenticação em andamento, aguardando...');
+                return new Promise((resolve) => {
+                    const checkAuth = setInterval(() => {
+                        if (!authInProgress) {
+                            clearInterval(checkAuth);
+                            resolve(!!pbToken);
+                        }
+                    }, 100);
+                });
+            }
             
             if (authAttempts >= MAX_AUTH_ATTEMPTS) {
-                mostrarToast('⚠️ Falha na autenticação. Use dados locais.', 'erro');
+                logWarn(`⚠️ Máximo de tentativas (${MAX_AUTH_ATTEMPTS}) atingido`);
+                mostrarToast('⚠️ Falha na autenticação. Usando dados locais.', 'aviso');
                 return false;
             }
 
+            authInProgress = true;
+            
             try {
+                logInfo('🔐 Tentando autenticar com email/senha...');
                 mostrarToast('🔐 Conectando à nuvem...', 'info', 2000);
                 
                 const response = await fetch(`${PB_URL}/api/collections/users/auth-with-password`, {
@@ -2853,25 +2924,32 @@
                     })
                 });
                 
+                logDebug(`📡 Resposta da autenticação: ${response.status} ${response.statusText}`);
+                
                 const dados = await response.json();
+                logDebug('📦 Dados da autenticação:', dados);
                 
                 if (dados.token) {
                     pbToken = dados.token;
                     pbUser = dados.record;
-                    mostrarToast('✅ Conectado à nuvem!', 'sucesso');
-                    console.log('✅ Autenticado no PocketBase');
                     authAttempts = 0;
+                    logInfo(`✅ Autenticado com sucesso! Usuário: ${dados.record?.email || PB_EMAIL}`);
+                    mostrarToast('✅ Conectado à nuvem!', 'sucesso');
                     return true;
                 } else {
                     authAttempts++;
-                    mostrarToast(`⚠️ Erro na autenticação: ${dados.message || 'Credenciais inválidas'}`, 'erro');
+                    const msg = dados.message || 'Credenciais inválidas';
+                    logError(`❌ Falha na autenticação: ${msg}`, dados);
+                    mostrarToast(`⚠️ Erro na autenticação: ${msg}`, 'erro');
                     return false;
                 }
             } catch (erro) {
                 authAttempts++;
-                console.error('❌ Erro na autenticação:', erro);
+                logError('❌ Erro na autenticação:', erro);
                 mostrarToast('⚠️ Não foi possível conectar à nuvem. Modo offline.', 'aviso');
                 return false;
+            } finally {
+                authInProgress = false;
             }
         }
 
@@ -2880,10 +2958,14 @@
         // ============================================================
 
         async function pbFetch(endpoint, options = {}) {
+            const method = options.method || 'GET';
+            logDebug(`📡 ${method} ${endpoint}`);
+            
             if (!pbToken) {
+                logDebug('⏳ Sem token, autenticando...');
                 const autenticado = await autenticarPocketBase();
                 if (!autenticado) {
-                    throw new Error('Não autenticado');
+                    throw new Error('Não foi possível autenticar');
                 }
             }
             
@@ -2894,6 +2976,7 @@
             };
             
             const url = `${PB_URL}/api/collections/${endpoint}`;
+            logDebug(`🌐 URL: ${url}`);
             
             try {
                 const response = await fetch(url, {
@@ -2901,8 +2984,10 @@
                     headers
                 });
                 
+                logDebug(`📡 Resposta: ${response.status} ${response.statusText}`);
+                
                 if (response.status === 401) {
-                    // Token expirado - tenta renovar
+                    logWarn('⏳ Token expirado, tentando renovar...');
                     pbToken = null;
                     const autenticado = await autenticarPocketBase();
                     if (autenticado) {
@@ -2916,9 +3001,11 @@
                     throw new Error('Token expirado e não foi possível renovar');
                 }
                 
-                return response.json();
+                const dados = await response.json();
+                logDebug(`📦 Dados recebidos:`, dados);
+                return dados;
             } catch (erro) {
-                console.error('❌ Erro no fetch:', erro);
+                logError('❌ Erro no fetch:', erro);
                 throw erro;
             }
         }
@@ -2935,6 +3022,7 @@
                     filtros.push(`${key}='${safeValue}'`);
                 }
             }
+            logDebug(`🔍 Filtros: ${filtros.join(' && ')}`);
             return filtros.length > 0 ? `?filter=${encodeURIComponent(filtros.join(' && '))}` : '';
         }
 
@@ -2943,12 +3031,18 @@
         // ============================================================
 
         function gerarIdLocal() {
-            return 'local_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+            const id = 'local_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+            logDebug(`🆔 ID local gerado: ${id}`);
+            return id;
         }
 
         function extrairId(elemento) {
             const id = elemento.dataset.id || elemento.dataset.pbId;
-            if (!id) return null;
+            if (!id) {
+                logWarn('⚠️ ID não encontrado no elemento');
+                return null;
+            }
+            logDebug(`🆔 ID extraído: ${id}`);
             return id.toString();
         }
 
@@ -2957,6 +3051,7 @@
         // ============================================================
 
         async function salvarPresencaPB(dados) {
+            logInfo('💾 Salvando presença na nuvem...', dados);
             try {
                 const resultado = await pbFetch('presencas/records', {
                     method: 'POST',
@@ -2969,20 +3064,23 @@
                         atestado: dados.atestado || false
                     })
                 });
+                logInfo('✅ Presença salva na nuvem com sucesso!', resultado);
                 return resultado;
             } catch (erro) {
-                console.error('❌ Erro ao salvar presença:', erro);
+                logError('❌ Erro ao salvar presença:', erro);
                 mostrarToast('⚠️ Erro ao salvar presença na nuvem', 'aviso');
                 return null;
             }
         }
 
         async function buscarPresencasPB() {
+            logInfo('🔍 Buscando presenças na nuvem...');
             try {
                 const dados = await pbFetch('presencas/records?sort=-data');
+                logInfo(`✅ ${dados.items?.length || 0} presenças encontradas`);
                 return dados.items || [];
             } catch (erro) {
-                console.error('❌ Erro ao buscar presenças:', erro);
+                logError('❌ Erro ao buscar presenças:', erro);
                 return [];
             }
         }
@@ -2992,6 +3090,7 @@
         // ============================================================
 
         async function salvarAtividadePB(dados) {
+            logInfo('💾 Salvando atividade na nuvem...', dados);
             try {
                 const resultado = await pbFetch('atividades_/records', {
                     method: 'POST',
@@ -3009,37 +3108,43 @@
                         subtarefas: dados.subtarefas || []
                     })
                 });
+                logInfo('✅ Atividade salva na nuvem com sucesso!', resultado);
                 return resultado;
             } catch (erro) {
-                console.error('❌ Erro ao salvar atividade:', erro);
+                logError('❌ Erro ao salvar atividade:', erro);
                 mostrarToast('⚠️ Erro ao salvar atividade na nuvem', 'aviso');
                 return null;
             }
         }
 
         async function buscarAtividadesPB() {
+            logInfo('🔍 Buscando atividades na nuvem...');
             try {
                 const dados = await pbFetch('atividades_/records?sort=-created');
+                logInfo(`✅ ${dados.items?.length || 0} atividades encontradas`);
                 return dados.items || [];
             } catch (erro) {
-                console.error('❌ Erro ao buscar atividades:', erro);
+                logError('❌ Erro ao buscar atividades:', erro);
                 return [];
             }
         }
 
         async function deletarAtividadePB(id) {
+            logInfo(`🗑️ Deletando atividade ${id} da nuvem...`);
             try {
                 await pbFetch(`atividades_/records/${id}`, {
                     method: 'DELETE'
                 });
+                logInfo('✅ Atividade deletada da nuvem');
                 return true;
             } catch (erro) {
-                console.error('❌ Erro ao deletar atividade:', erro);
+                logError(`❌ Erro ao deletar atividade ${id}:`, erro);
                 return false;
             }
         }
 
         async function atualizarAtividadePB(id, dados) {
+            logInfo(`✏️ Atualizando atividade ${id} na nuvem...`, dados);
             try {
                 const resultado = await pbFetch(`atividades_/records/${id}`, {
                     method: 'PATCH',
@@ -3057,9 +3162,10 @@
                         subtarefas: dados.subtarefas || []
                     })
                 });
+                logInfo('✅ Atividade atualizada na nuvem com sucesso!', resultado);
                 return resultado;
             } catch (erro) {
-                console.error('❌ Erro ao atualizar atividade:', erro);
+                logError(`❌ Erro ao atualizar atividade ${id}:`, erro);
                 return null;
             }
         }
@@ -3069,6 +3175,7 @@
         // ============================================================
 
         async function salvarNotaPB(dados) {
+            logInfo('💾 Salvando nota na nuvem...', dados);
             try {
                 const filtro = construirFiltro({
                     cod_disciplina: dados.cod_disciplina,
@@ -3082,6 +3189,7 @@
                         method: 'PATCH',
                         body: JSON.stringify({ valor: dados.valor })
                     });
+                    logInfo('✅ Nota atualizada na nuvem!', resultado);
                     return resultado;
                 } else {
                     const resultado = await pbFetch('notas_/records', {
@@ -3092,16 +3200,18 @@
                             valor: dados.valor
                         })
                     });
+                    logInfo('✅ Nova nota criada na nuvem!', resultado);
                     return resultado;
                 }
             } catch (erro) {
-                console.error('❌ Erro ao salvar nota:', erro);
+                logError('❌ Erro ao salvar nota:', erro);
                 mostrarToast('⚠️ Erro ao salvar nota na nuvem', 'aviso');
                 return null;
             }
         }
 
         async function buscarNotasPB() {
+            logInfo('🔍 Buscando notas na nuvem...');
             try {
                 const dados = await pbFetch('notas_/records');
                 const notasObj = {};
@@ -3111,9 +3221,10 @@
                     }
                     notasObj[item.cod_disciplina][`b${item.bimestre}`] = item.valor;
                 });
+                logInfo(`✅ ${dados.items?.length || 0} notas encontradas`);
                 return notasObj;
             } catch (erro) {
-                console.error('❌ Erro ao buscar notas:', erro);
+                logError('❌ Erro ao buscar notas:', erro);
                 return {};
             }
         }
@@ -3123,6 +3234,7 @@
         // ============================================================
 
         async function salvarRelatorioPB(dados) {
+            logInfo('💾 Salvando relatório na nuvem...', dados);
             try {
                 const resultado = await pbFetch('relatorios_/records', {
                     method: 'POST',
@@ -3133,20 +3245,23 @@
                         texto: dados.texto
                     })
                 });
+                logInfo('✅ Relatório salvo na nuvem!', resultado);
                 return resultado;
             } catch (erro) {
-                console.error('❌ Erro ao salvar relatório:', erro);
+                logError('❌ Erro ao salvar relatório:', erro);
                 mostrarToast('⚠️ Erro ao salvar relatório na nuvem', 'aviso');
                 return null;
             }
         }
 
         async function buscarRelatoriosPB() {
+            logInfo('🔍 Buscando relatórios na nuvem...');
             try {
                 const dados = await pbFetch('relatorios_/records?sort=-data');
+                logInfo(`✅ ${dados.items?.length || 0} relatórios encontrados`);
                 return dados.items || [];
             } catch (erro) {
-                console.error('❌ Erro ao buscar relatórios:', erro);
+                logError('❌ Erro ao buscar relatórios:', erro);
                 return [];
             }
         }
@@ -3156,6 +3271,7 @@
         // ============================================================
 
         async function salvarAssuntoPB(dados) {
+            logInfo('💾 Salvando assunto na nuvem...', dados);
             try {
                 const resultado = await pbFetch('assuntos_/records', {
                     method: 'POST',
@@ -3167,15 +3283,17 @@
                         timestamp: Date.now()
                     })
                 });
+                logInfo('✅ Assunto salvo na nuvem!', resultado);
                 return resultado;
             } catch (erro) {
-                console.error('❌ Erro ao salvar assunto:', erro);
+                logError('❌ Erro ao salvar assunto:', erro);
                 mostrarToast('⚠️ Erro ao salvar assunto na nuvem', 'aviso');
                 return null;
             }
         }
 
         async function buscarAssuntosPB() {
+            logInfo('🔍 Buscando assuntos na nuvem...');
             try {
                 const dados = await pbFetch('assuntos_/records?sort=-timestamp');
                 const assuntosObj = {};
@@ -3191,21 +3309,24 @@
                         timestamp: item.timestamp
                     });
                 });
+                logInfo(`✅ ${dados.items?.length || 0} assuntos encontrados`);
                 return assuntosObj;
             } catch (erro) {
-                console.error('❌ Erro ao buscar assuntos:', erro);
+                logError('❌ Erro ao buscar assuntos:', erro);
                 return {};
             }
         }
 
         async function deletarAssuntoPB(id) {
+            logInfo(`🗑️ Deletando assunto ${id} da nuvem...`);
             try {
                 await pbFetch(`assuntos_/records/${id}`, {
                     method: 'DELETE'
                 });
+                logInfo('✅ Assunto deletado da nuvem');
                 return true;
             } catch (erro) {
-                console.error('❌ Erro ao deletar assunto:', erro);
+                logError(`❌ Erro ao deletar assunto ${id}:`, erro);
                 return false;
             }
         }
@@ -3215,6 +3336,7 @@
         // ============================================================
 
         async function salvarAtendimentoPB(dados) {
+            logInfo('💾 Salvando atendimento na nuvem...', dados);
             try {
                 const resultado = await pbFetch('atendimentos_/records', {
                     method: 'POST',
@@ -3226,37 +3348,43 @@
                         timestamp: Date.now()
                     })
                 });
+                logInfo('✅ Atendimento salvo na nuvem!', resultado);
                 return resultado;
             } catch (erro) {
-                console.error('❌ Erro ao salvar atendimento:', erro);
+                logError('❌ Erro ao salvar atendimento:', erro);
                 mostrarToast('⚠️ Erro ao salvar atendimento na nuvem', 'aviso');
                 return null;
             }
         }
 
         async function buscarAtendimentosPB() {
+            logInfo('🔍 Buscando atendimentos na nuvem...');
             try {
                 const dados = await pbFetch('atendimentos_/records?sort=-timestamp');
+                logInfo(`✅ ${dados.items?.length || 0} atendimentos encontrados`);
                 return dados.items || [];
             } catch (erro) {
-                console.error('❌ Erro ao buscar atendimentos:', erro);
+                logError('❌ Erro ao buscar atendimentos:', erro);
                 return [];
             }
         }
 
         async function deletarAtendimentoPB(id) {
+            logInfo(`🗑️ Deletando atendimento ${id} da nuvem...`);
             try {
                 await pbFetch(`atendimentos_/records/${id}`, {
                     method: 'DELETE'
                 });
+                logInfo('✅ Atendimento deletado da nuvem');
                 return true;
             } catch (erro) {
-                console.error('❌ Erro ao deletar atendimento:', erro);
+                logError(`❌ Erro ao deletar atendimento ${id}:`, erro);
                 return false;
             }
         }
 
         async function atualizarAtendimentoPB(id, dados) {
+            logInfo(`✏️ Atualizando atendimento ${id} na nuvem...`, dados);
             try {
                 const resultado = await pbFetch(`atendimentos_/records/${id}`, {
                     method: 'PATCH',
@@ -3267,9 +3395,10 @@
                         descricao: dados.descricao
                     })
                 });
+                logInfo('✅ Atendimento atualizado na nuvem!', resultado);
                 return resultado;
             } catch (erro) {
-                console.error('❌ Erro ao atualizar atendimento:', erro);
+                logError(`❌ Erro ao atualizar atendimento ${id}:`, erro);
                 return null;
             }
         }
@@ -3279,6 +3408,7 @@
         // ============================================================
 
         async function salvarPanicoPB(dados) {
+            logInfo('💾 Salvando registro de pânico na nuvem...', dados);
             try {
                 const resultado = await pbFetch('historico_panico_/records', {
                     method: 'POST',
@@ -3290,25 +3420,29 @@
                         resolvido: dados.resolvido || false
                     })
                 });
+                logInfo('✅ Registro de pânico salvo na nuvem!', resultado);
                 return resultado;
             } catch (erro) {
-                console.error('❌ Erro ao salvar pânico:', erro);
+                logError('❌ Erro ao salvar pânico:', erro);
                 mostrarToast('⚠️ Erro ao salvar relato na nuvem', 'aviso');
                 return null;
             }
         }
 
         async function buscarPanicoPB() {
+            logInfo('🔍 Buscando registros de pânico na nuvem...');
             try {
                 const dados = await pbFetch('historico_panico_/records?sort=-data');
+                logInfo(`✅ ${dados.items?.length || 0} registros de pânico encontrados`);
                 return dados.items || [];
             } catch (erro) {
-                console.error('❌ Erro ao buscar pânico:', erro);
+                logError('❌ Erro ao buscar pânico:', erro);
                 return [];
             }
         }
 
         async function atualizarPanicoPB(id, dados) {
+            logInfo(`✏️ Atualizando pânico ${id} na nuvem...`, dados);
             try {
                 const resultado = await pbFetch(`historico_panico_/records/${id}`, {
                     method: 'PATCH',
@@ -3316,21 +3450,24 @@
                         resolvido: dados.resolvido
                     })
                 });
+                logInfo('✅ Pânico atualizado na nuvem!', resultado);
                 return resultado;
             } catch (erro) {
-                console.error('❌ Erro ao atualizar pânico:', erro);
+                logError(`❌ Erro ao atualizar pânico ${id}:`, erro);
                 return null;
             }
         }
 
         async function deletarPanicoPB(id) {
+            logInfo(`🗑️ Deletando pânico ${id} da nuvem...`);
             try {
                 await pbFetch(`historico_panico_/records/${id}`, {
                     method: 'DELETE'
                 });
+                logInfo('✅ Pânico deletado da nuvem');
                 return true;
             } catch (erro) {
-                console.error('❌ Erro ao deletar pânico:', erro);
+                logError(`❌ Erro ao deletar pânico ${id}:`, erro);
                 return false;
             }
         }
@@ -3340,6 +3477,7 @@
         // ============================================================
 
         async function salvarChecklistPB(dados) {
+            logInfo('💾 Salvando checklist na nuvem...', dados);
             try {
                 const filtro = construirFiltro({ dia: dados.dia });
                 const existente = await pbFetch(`checklist_/records${filtro}`);
@@ -3350,6 +3488,7 @@
                         method: 'PATCH',
                         body: JSON.stringify({ items: dados.items })
                     });
+                    logInfo('✅ Checklist atualizado na nuvem!', resultado);
                     return resultado;
                 } else {
                     const resultado = await pbFetch('checklist_/records', {
@@ -3359,25 +3498,29 @@
                             items: dados.items
                         })
                     });
+                    logInfo('✅ Checklist criado na nuvem!', resultado);
                     return resultado;
                 }
             } catch (erro) {
-                console.error('❌ Erro ao salvar checklist:', erro);
+                logError('❌ Erro ao salvar checklist:', erro);
                 mostrarToast('⚠️ Erro ao salvar checklist na nuvem', 'aviso');
                 return null;
             }
         }
 
         async function buscarChecklistPB(dia) {
+            logInfo(`🔍 Buscando checklist do dia ${dia} na nuvem...`);
             try {
                 const filtro = construirFiltro({ dia });
                 const dados = await pbFetch(`checklist_/records${filtro}`);
                 if (dados.items && dados.items.length > 0) {
+                    logInfo(`✅ Checklist encontrado: ${dados.items[0].items?.length || 0} itens`);
                     return dados.items[0].items || [];
                 }
+                logInfo('ℹ️ Nenhum checklist encontrado para este dia');
                 return [];
             } catch (erro) {
-                console.error('❌ Erro ao buscar checklist:', erro);
+                logError('❌ Erro ao buscar checklist:', erro);
                 return [];
             }
         }
@@ -3458,15 +3601,24 @@
         function loadData(key, defaultValue) {
             try {
                 const data = localStorage.getItem(key);
-                return data ? JSON.parse(data) : defaultValue;
-            } catch (e) { return defaultValue; }
+                const parsed = data ? JSON.parse(data) : defaultValue;
+                logDebug(`📂 Load ${key}: ${parsed ? 'encontrado' : 'vazio'}`);
+                return parsed;
+            } catch (e) { 
+                logWarn(`⚠️ Erro ao carregar ${key}:`, e);
+                return defaultValue; 
+            }
         }
 
         function saveData(key, data) {
             try {
                 localStorage.setItem(key, JSON.stringify(data));
+                logDebug(`💾 Save ${key}: ${data ? 'salvo' : 'vazio'}`);
                 return true;
-            } catch (e) { return false; }
+            } catch (e) { 
+                logWarn(`⚠️ Erro ao salvar ${key}:`, e);
+                return false; 
+            }
         }
 
         // ============================================================
@@ -3493,6 +3645,11 @@
         let filtroAtividadesAtual = 'todas';
         let timeoutRespirar = null;
         let dadosCarregados = false;
+
+        logInfo('📊 Estado inicial carregado');
+        logDebug(`📊 Atividades: ${atividades.length}`);
+        logDebug(`📊 Presenças: ${presencas.length}`);
+        logDebug(`📊 Relatórios: ${relatorios.length}`);
 
         // ============================================================
         //  FUNÇÕES AUXILIARES
@@ -3521,7 +3678,7 @@
             
             if (hoje !== ultimoDiaVerificado) {
                 ultimoDiaVerificado = hoje;
-                console.log('🔄 NOVO DIA DETECTADO:', hoje);
+                logInfo(`🔄 NOVO DIA DETECTADO: ${hoje}`);
                 
                 // Reset do checklist
                 checklistState = {};
@@ -3553,6 +3710,7 @@
 
         // Verificar a cada 10 segundos
         setInterval(verificarMudancaDia, 10000);
+        logInfo('⏰ Verificador de mudança de dia iniciado (10s)');
 
         function mostrarNotificacaoMeiaNoite() {
             const notificacao = document.createElement('div');
@@ -3593,6 +3751,7 @@
                 </div>
             `;
             document.body.appendChild(notificacao);
+            logInfo('🌅 Notificação de meia-noite exibida');
             setTimeout(() => {
                 if (notificacao.parentElement) {
                     notificacao.style.opacity = '0';
@@ -3605,6 +3764,8 @@
         function mostrarNotificacaoInicioSemestre() {
             if (notificacaoSemestreMostrada) return;
             notificacaoSemestreMostrada = true;
+            logInfo('🎉 Início do semestre detectado!');
+            
             const notificacao = document.createElement('div');
             notificacao.style.cssText = `
                 position: fixed;
@@ -3662,15 +3823,18 @@
             const entrega = document.getElementById('formEntregaDocente').value;
             
             if (inicio && prazo && new Date(prazo) < new Date(inicio)) {
+                logWarn('⚠️ Data de prazo anterior à data de início');
                 mostrarToast('⚠️ O prazo final deve ser após a data de início!', 'aviso');
                 return false;
             }
             
             if (prazo && entrega && new Date(entrega) < new Date(prazo)) {
+                logWarn('⚠️ Data de entrega anterior ao prazo');
                 mostrarToast('⚠️ A entrega docente deve ser após o prazo final!', 'aviso');
                 return false;
             }
             
+            logDebug('✅ Datas validadas com sucesso');
             return true;
         }
 
@@ -3697,18 +3861,25 @@
         }
 
         window.adicionarParticipante = function() {
+            logDebug('➕ Adicionando participante');
             const input = document.getElementById('novoParticipante');
             const prazoInput = document.getElementById('novoPrazoParticipante');
             const nome = input.value.trim();
             const prazo = prazoInput.value;
-            if (!nome) { mostrarToast('⚠️ Digite o nome do participante.', 'aviso'); return; }
+            if (!nome) { 
+                logWarn('⚠️ Tentativa de adicionar participante sem nome');
+                mostrarToast('⚠️ Digite o nome do participante.', 'aviso'); 
+                return; 
+            }
             participantesTemp.push({ nome: window.__security.sanitizeInput(nome), prazo });
             input.value = '';
             prazoInput.value = '';
             renderParticipantes();
+            logInfo(`✅ Participante "${nome}" adicionado`);
         };
 
         window.removerParticipante = function(index) {
+            logDebug(`➖ Removendo participante ${index}`);
             participantesTemp.splice(index, 1);
             renderParticipantes();
         };
@@ -3732,20 +3903,28 @@
         }
 
         window.adicionarSubtarefa = function() {
+            logDebug('➕ Adicionando subtarefa');
             const input = document.getElementById('novaSubtarefa');
             const descricao = input.value.trim();
-            if (!descricao) { mostrarToast('⚠️ Digite uma descrição para a subtarefa.', 'aviso'); return; }
+            if (!descricao) { 
+                logWarn('⚠️ Tentativa de adicionar subtarefa sem descrição');
+                mostrarToast('⚠️ Digite uma descrição para a subtarefa.', 'aviso'); 
+                return; 
+            }
             subtarefasTemp.push({ descricao: window.__security.sanitizeInput(descricao), concluido: false });
             input.value = '';
             renderSubtarefas();
+            logInfo(`✅ Subtarefa "${descricao}" adicionada`);
         };
 
         window.toggleSubtarefa = function(index) {
+            logDebug(`🔄 Alternando subtarefa ${index}`);
             subtarefasTemp[index].concluido = !subtarefasTemp[index].concluido;
             renderSubtarefas();
         };
 
         window.removerSubtarefa = function(index) {
+            logDebug(`➖ Removendo subtarefa ${index}`);
             subtarefasTemp.splice(index, 1);
             renderSubtarefas();
         };
@@ -3755,6 +3934,7 @@
         // ============================================================
 
         function abrirModalPresenca(tipo) {
+            logInfo(`📋 Abrindo modal de presença: ${tipo}`);
             tipoPresencaAtual = tipo;
 
             const hoje = new Date();
@@ -3762,6 +3942,7 @@
 
             const registroHoje = presencas.find(p => p.data === dataStr);
             if (registroHoje) {
+                logWarn(`⚠️ Registro já existe para hoje: ${registroHoje.tipo}`);
                 mostrarToast(`⚠️ Você já registrou ${registroHoje.tipo === 'presente' ? 'PRESENÇA' : 'FALTA'} hoje às ${registroHoje.hora}.`, 'aviso');
                 return;
             }
@@ -3803,6 +3984,8 @@
             atualizarRelogioModal();
             if (window.relogioModalInterval) clearInterval(window.relogioModalInterval);
             window.relogioModalInterval = setInterval(atualizarRelogioModal, 1000);
+            
+            logDebug('✅ Modal de presença aberto');
         }
 
         function atualizarRelogioModal() {
@@ -3818,6 +4001,7 @@
         }
 
         function fecharModalPresenca() {
+            logDebug('🔒 Fechando modal de presença');
             document.getElementById('modalPresencaOverlay').classList.remove('open');
             document.body.style.overflow = '';
             if (window.relogioModalInterval) {
@@ -3827,12 +4011,14 @@
         }
 
         function confirmarPresenca() {
+            logInfo('✅ Confirmando presença...');
             const hoje = new Date();
             const dataStr = hoje.toISOString().split('T')[0];
             const horaStr = hoje.toLocaleTimeString('pt-BR');
 
             const registroHoje = presencas.find(p => p.data === dataStr);
             if (registroHoje) {
+                logWarn(`⚠️ Registro já existe para hoje: ${registroHoje.tipo}`);
                 mostrarToast(`⚠️ Você já registrou ${registroHoje.tipo === 'presente' ? 'PRESENÇA' : 'FALTA'} hoje às ${registroHoje.hora}.`, 'aviso');
                 fecharModalPresenca();
                 return;
@@ -3842,6 +4028,7 @@
             if (tipoPresencaAtual === 'falta') {
                 justificativa = document.getElementById('justificativaFalta').value.trim();
                 if (!justificativa) {
+                    logWarn('⚠️ Falta sem justificativa');
                     mostrarToast('⚠️ Por favor, informe a justificativa para a falta.', 'aviso');
                     return;
                 }
@@ -3860,6 +4047,7 @@
 
             presencas.push(registro);
             saveData('gda_presencas', presencas);
+            logInfo(`📋 Registro de presença salvo localmente: ${registro.id}`);
 
             // Salvar no PocketBase
             salvarPresencaPB({
@@ -3868,6 +4056,10 @@
                 tipo: tipoPresencaAtual,
                 justificativa: justificativa,
                 usuario: 'Igor Veras Morais'
+            }).then(resultado => {
+                if (resultado) {
+                    logInfo(`✅ Presença salva na nuvem: ${resultado.id}`);
+                }
             });
 
             fecharModalPresenca();
@@ -3915,8 +4107,12 @@
         // ============================================================
 
         function excluirRegistroPresenca(id) {
+            logInfo(`🗑️ Iniciando exclusão do registro ${id}`);
             const registro = presencas.find(p => p.id === id);
-            if (!registro) return;
+            if (!registro) {
+                logWarn(`⚠️ Registro ${id} não encontrado`);
+                return;
+            }
 
             // Criar modal de confirmação
             const overlay = document.createElement('div');
@@ -3955,6 +4151,7 @@
                 </div>
             `;
             document.body.appendChild(overlay);
+            logDebug('📋 Modal de exclusão exibido');
 
             overlay.addEventListener('click', function(e) {
                 if (e.target === overlay) overlay.remove();
@@ -3965,10 +4162,12 @@
         }
 
         function confirmarExclusaoPresenca(id) {
+            logInfo(`🗑️ Confirmando exclusão do registro ${id}`);
             const overlay = window._modalExclusao;
             const justificativa = document.getElementById('justificativaExclusao')?.value.trim();
             
             if (!justificativa) {
+                logWarn('⚠️ Exclusão sem justificativa');
                 mostrarToast('⚠️ Por favor, informe a justificativa para a exclusão.', 'aviso');
                 return;
             }
@@ -3984,6 +4183,7 @@
                     excluidoPor: 'Igor Veras Morais'
                 });
                 saveData('gda_presencas_excluidas', historicoExclusao);
+                logInfo(`📋 Registro de exclusão salvo: ${historicoExclusao.length}`);
             }
 
             presencas = presencas.filter(p => p.id !== id);
@@ -3995,6 +4195,7 @@
             renderPresenca();
             atualizarStatusPresenca();
             atualizarBadgePresenca();
+            logInfo('✅ Registro de presença excluído');
         }
 
         // ============================================================
@@ -4115,6 +4316,7 @@
         // ============================================================
 
         function adicionarAssunto(disciplina, titulo, descricao, data) {
+            logInfo(`📚 Adicionando assunto: ${titulo} (${disciplina})`);
             if (!assuntos[disciplina]) assuntos[disciplina] = [];
             const novoAssunto = {
                 id: gerarIdLocal(),
@@ -4136,9 +4338,11 @@
             
             renderAssuntos();
             atualizarBadgeAssuntos();
+            logInfo(`✅ Assunto "${titulo}" adicionado`);
         }
 
         function excluirAssunto(disciplina, id) {
+            logInfo(`🗑️ Excluindo assunto ${id} da disciplina ${disciplina}`);
             if (!assuntos[disciplina]) return;
             const justificativa = prompt('📝 Justificativa para excluir este assunto:');
             if (!justificativa) return;
@@ -4155,6 +4359,7 @@
             renderAssuntos();
             atualizarBadgeAssuntos();
             mostrarToast('✅ Assunto excluído com sucesso!', 'sucesso');
+            logInfo(`✅ Assunto ${id} excluído`);
         }
 
         function renderAssuntos() {
@@ -4236,6 +4441,7 @@
         // ============================================================
 
         function abrirPanico() {
+            logInfo('🚨 Abrindo modo pânico');
             const overlay = document.getElementById('panicoOverlay');
             overlay.classList.add('open');
             document.body.style.overflow = 'hidden';
@@ -4269,9 +4475,11 @@
                 clearTimeout(timeoutRespirar);
                 timeoutRespirar = null;
             }
+            logDebug('✅ Modo pânico ativado');
         }
 
         function sairPanico() {
+            logInfo('🚨 Saindo do modo pânico');
             const overlay = document.getElementById('panicoOverlay');
             overlay.classList.remove('open');
             document.body.style.overflow = '';
@@ -4289,6 +4497,7 @@
 
         function iniciarRespiração() {
             if (respiracaoAtiva) return;
+            logInfo('🧘 Iniciando respiração guiada');
             respiracaoAtiva = true;
 
             const btn = document.getElementById('btnIniciarRespirar');
@@ -4363,6 +4572,7 @@
                 fraseEl.textContent = '✅ FINALIZADO';
                 timerEl.textContent = '✨';
                 circulo.className = 'circulo';
+                logInfo('🧘 Respiração finalizada');
             }
 
             atualizarFase();
@@ -4374,13 +4584,16 @@
             const random = frases[Math.floor(Math.random() * frases.length)];
             document.getElementById('motivacaoFrase').textContent = random.frase;
             document.getElementById('motivacaoAutor').textContent = `— ${random.autor}`;
+            logInfo('🔄 Nova frase motivacional exibida');
         }
 
         function registrarPanico() {
+            logInfo('📝 Registrando relato de pânico');
             const disciplina = document.getElementById('panicoDisciplina').value;
             const motivo = document.getElementById('panicoMotivo').value.trim();
 
             if (!disciplina && !motivo) {
+                logWarn('⚠️ Tentativa de registrar pânico sem dados');
                 mostrarToast('Descreva o que aconteceu ou selecione a disciplina para registrar.', 'aviso');
                 return;
             }
@@ -4407,6 +4620,7 @@
             });
 
             mostrarToast('✅ Relato registrado! Você não está sozinho(a).', 'sucesso');
+            logInfo(`✅ Relato de pânico registrado: ${registro.id}`);
 
             document.getElementById('panicoDisciplina').value = '';
             document.getElementById('panicoMotivo').value = '';
@@ -4488,6 +4702,7 @@
         }
 
         function marcarPanicoResolvido(id) {
+            logInfo(`🔄 Marcando pânico ${id} como resolvido`);
             const registro = historicoPanico.find(r => r.id === id);
             if (registro) {
                 registro.resolvido = !registro.resolvido;
@@ -4498,10 +4713,12 @@
                 
                 renderHistoricoPanico();
                 atualizarBadgePanico();
+                logInfo(`✅ Pânico ${id} atualizado para: ${registro.resolvido ? 'resolvido' : 'pendente'}`);
             }
         }
 
         function deletarRegistroPanico(id) {
+            logInfo(`🗑️ Deletando pânico ${id}`);
             if (confirm('Remover este registro?')) {
                 historicoPanico = historicoPanico.filter(r => r.id !== id);
                 saveData('gda_historico_panico', historicoPanico);
@@ -4511,6 +4728,7 @@
                 
                 renderHistoricoPanico();
                 atualizarBadgePanico();
+                logInfo(`✅ Pânico ${id} deletado`);
             }
         }
 
@@ -4519,6 +4737,7 @@
         // ============================================================
 
         function renderTelaInicial() {
+            logDebug('🔄 Renderizando tela inicial');
             const saudacao = getSaudacao();
             const emoji = getEmojiSaudacao();
             const nome = 'Igor';
@@ -4651,6 +4870,7 @@
             atualizarBadgePanico();
             atualizarBadgePresenca();
             atualizarBadgeAssuntos();
+            logDebug('✅ Tela inicial renderizada');
         }
 
         function calcularProgressoPeriodo(inicio, fim, hoje) {
@@ -4711,6 +4931,7 @@
                         </div>
                     `;
                     document.body.appendChild(msg);
+                    logInfo('⏳ Mensagem de férias entre semestres exibida');
                     setTimeout(() => {
                         if (msg.parentElement) msg.remove();
                     }, 8000);
@@ -4723,6 +4944,7 @@
         // ============================================================
 
         function renderDashboard() {
+            logDebug('🔄 Renderizando dashboard');
             const totalAtiv = atividades.length;
             const grupo = atividades.filter(a => a.tipo === 'grupo').length;
             const individual = atividades.filter(a => a.tipo === 'individual').length;
@@ -4754,6 +4976,7 @@
             if (elMediaGeral) elMediaGeral.textContent = mediaGeral.toFixed(1);
 
             updateClockDisplay();
+            logDebug('✅ Dashboard renderizado');
         }
 
         // ============================================================
@@ -4798,6 +5021,7 @@
                 card.style.transform = 'scale(0.98)';
                 setTimeout(() => { card.style.transform = 'scale(1)'; }, 200);
             }
+            logInfo('🔄 Nova frase do dia: ' + random.frase.substring(0, 50) + '...');
         }
 
         // ============================================================
@@ -4840,6 +5064,7 @@
                     renderChecklist();
                     renderTelaInicial();
                     renderDashboard();
+                    logInfo(`🔄 Checklist ${id}: ${checklistState[id] ? 'feito' : 'desfeito'}`);
                 });
             });
 
@@ -4848,6 +5073,7 @@
             const pct = total > 0 ? Math.round((done / total) * 100) : 0;
             const el = document.getElementById('checkPct');
             if (el) el.textContent = `${pct}%`;
+            logDebug(`📋 Checklist: ${done}/${total} (${pct}%)`);
         }
 
         // ============================================================
@@ -4989,6 +5215,7 @@
         }
 
         function deletarAtividade(id) {
+            logInfo(`🗑️ Deletando atividade ${id}`);
             atividades = atividades.filter(a => a.id !== id);
             saveData('gda_atividades', atividades);
             
@@ -4999,11 +5226,16 @@
             renderTelaInicial();
             renderDashboard();
             mostrarToast('✅ Atividade removida!', 'sucesso');
+            logInfo(`✅ Atividade ${id} deletada`);
         }
 
         function editarAtividade(id) {
+            logInfo(`✏️ Editando atividade ${id}`);
             const atividade = atividades.find(a => a.id === id);
-            if (!atividade) return;
+            if (!atividade) {
+                logWarn(`⚠️ Atividade ${id} não encontrada`);
+                return;
+            }
             document.getElementById('formTitulo').value = atividade.titulo || '';
             document.getElementById('formTipo').value = atividade.tipo || 'individual';
             document.getElementById('formPrioridade').value = atividade.prioridade || 'media';
@@ -5022,9 +5254,11 @@
             document.getElementById('modalTitle').innerHTML = '<i class="fas fa-edit"></i> Editar Atividade';
             document.getElementById('modalOverlay').classList.add('open');
             editandoId = id;
+            logDebug('✅ Modal de edição aberto');
         }
 
         function openModal() {
+            logInfo('➕ Abrindo modal de nova atividade');
             document.getElementById('atividadeForm').reset();
             document.getElementById('modalTitle').innerHTML = '<i class="fas fa-plus-circle"></i> Nova Atividade';
             participantesTemp = [];
@@ -5042,9 +5276,11 @@
             document.getElementById('formInicio').value = hoje.toISOString().split('T')[0];
             document.getElementById('formPrazo').value = prazo.toISOString().split('T')[0];
             document.getElementById('formEntregaDocente').value = entrega.toISOString().split('T')[0];
+            logDebug('✅ Modal de nova atividade aberto');
         }
 
         function closeModal() {
+            logDebug('🔒 Fechando modal de atividade');
             document.getElementById('modalOverlay').classList.remove('open');
             editandoId = null;
         }
@@ -5204,10 +5440,12 @@
         }
 
         function atualizarNota(cod, bimestre, valor) {
+            logInfo(`📝 Atualizando nota ${cod} - ${bimestre}: ${valor}`);
             let valorLimpo = valor.replace(',', '.').replace(/[^0-9.]/g, '');
             const num = parseFloat(valorLimpo);
 
             if (valorLimpo !== '' && (isNaN(num) || num < 0 || num > 10)) {
+                logWarn(`⚠️ Nota inválida: ${valorLimpo}`);
                 mostrarToast('⚠️ A nota deve ser entre 0 e 10.', 'aviso');
                 // Restaurar valor anterior com segurança
                 const nota = notas[cod] || { b1: '', b2: '', b3: '', b4: '' };
@@ -5232,6 +5470,7 @@
             renderNotas();
             renderTelaInicial();
             renderDashboard();
+            logInfo(`✅ Nota ${cod} - ${bimestre} atualizada para ${valorLimpo}`);
         }
 
         // ============================================================
@@ -5370,6 +5609,7 @@
         }
 
         function deletarAtendimento(id) {
+            logInfo(`🗑️ Deletando atendimento ${id}`);
             atendimentos = atendimentos.filter(a => a.id !== id);
             saveData('gda_atendimentos', atendimentos);
             
@@ -5380,11 +5620,16 @@
             renderTelaInicial();
             renderDashboard();
             mostrarToast('✅ Atendimento removido!', 'sucesso');
+            logInfo(`✅ Atendimento ${id} deletado`);
         }
 
         function editarAtendimento(id) {
+            logInfo(`✏️ Editando atendimento ${id}`);
             const atendimento = atendimentos.find(a => a.id === id);
-            if (!atendimento) return;
+            if (!atendimento) {
+                logWarn(`⚠️ Atendimento ${id} não encontrado`);
+                return;
+            }
 
             document.getElementById('formAtendimentoDisciplina').value = atendimento.disciplina || '';
             document.getElementById('formAtendimentoData').value = atendimento.data || '';
@@ -5394,9 +5639,11 @@
             document.getElementById('modalAtendimentoTitle').innerHTML = '<i class="fas fa-edit"></i> Editar Atendimento';
             document.getElementById('modalAtendimentoOverlay').classList.add('open');
             editandoAtendimentoId = id;
+            logDebug('✅ Modal de edição de atendimento aberto');
         }
 
         function openModalAtendimento() {
+            logInfo('➕ Abrindo modal de novo atendimento');
             document.getElementById('atendimentoForm').reset();
             document.getElementById('modalAtendimentoTitle').innerHTML = '<i class="fas fa-handshake"></i> Nova Participação em Atendimento';
             document.getElementById('modalAtendimentoOverlay').classList.add('open');
@@ -5409,18 +5656,22 @@
             const h = String(agora.getHours()).padStart(2, '0');
             const m = String(agora.getMinutes()).padStart(2, '0');
             document.getElementById('formAtendimentoHora').value = `${h}:${m}`;
+            logDebug('✅ Modal de novo atendimento aberto');
         }
 
         function closeModalAtendimento() {
+            logDebug('🔒 Fechando modal de atendimento');
             document.getElementById('modalAtendimentoOverlay').classList.remove('open');
             editandoAtendimentoId = null;
         }
 
         // ============================================================
-        //  FORMULÁRIOS
+        //  FORMULÁRIOS - VERSÃO CORRIGIDA COM ASYNC
         // ============================================================
 
-        document.addEventListener('submit', function(e) {
+        document.addEventListener('submit', async function(e) {
+            logDebug(`📝 Submetendo formulário: ${e.target.id}`);
+            
             if (e.target.id === 'atendimentoForm') {
                 e.preventDefault();
                 const disciplina = document.getElementById('formAtendimentoDisciplina').value;
@@ -5429,6 +5680,7 @@
                 const descricao = document.getElementById('formAtendimentoDescricao').value.trim();
 
                 if (!disciplina || !data || !hora || !descricao || descricao.length < 10) {
+                    logWarn('⚠️ Campos obrigatórios do atendimento não preenchidos');
                     mostrarToast('Preencha todos os campos! (Descrição mínima de 10 caracteres)', 'aviso');
                     return;
                 }
@@ -5443,6 +5695,7 @@
                             hora,
                             descricao: window.__security.sanitizeInput(descricao)
                         };
+                        logInfo(`✏️ Atendimento ${editandoAtendimentoId} atualizado localmente`);
                     }
                 } else {
                     const novoAtendimento = {
@@ -5454,14 +5707,23 @@
                         timestamp: new Date(data + 'T' + hora).getTime()
                     };
                     atendimentos.push(novoAtendimento);
+                    logInfo(`📋 Novo atendimento criado localmente: ${novoAtendimento.id}`);
                     
                     // Salvar no PocketBase
-                    salvarAtendimentoPB({
+                    const pbResultado = await salvarAtendimentoPB({
                         disciplina: disciplina,
                         data: data,
                         hora: hora,
                         descricao: descricao
                     });
+                    if (pbResultado && pbResultado.id) {
+                        const idx = atendimentos.findIndex(a => a.id === novoAtendimento.id);
+                        if (idx !== -1) {
+                            atendimentos[idx].id = pbResultado.id;
+                            atendimentos[idx]._pbId = pbResultado.id;
+                            logInfo(`✅ Atendimento sincronizado com nuvem: ${pbResultado.id}`);
+                        }
+                    }
                 }
 
                 saveData('gda_atendimentos', atendimentos);
@@ -5470,6 +5732,7 @@
                 renderDashboard();
                 closeModalAtendimento();
                 mostrarToast('✅ Atendimento salvo!', 'sucesso');
+                logInfo('✅ Atendimento salvo com sucesso');
                 editandoAtendimentoId = null;
             }
 
@@ -5480,6 +5743,7 @@
                 const texto = document.getElementById('relatorioTexto').value.trim();
 
                 if (!disciplina || !tempo || !texto) {
+                    logWarn('⚠️ Campos obrigatórios do relatório não preenchidos');
                     mostrarToast('Preencha todos os campos!', 'aviso');
                     return;
                 }
@@ -5493,14 +5757,24 @@
                 };
                 relatorios.push(novoRelatorio);
                 saveData('gda_relatorios', relatorios);
+                logInfo(`📋 Novo relatório criado: ${novoRelatorio.id}`);
                 
                 // Salvar no PocketBase
-                salvarRelatorioPB({
+                const pbResultado = await salvarRelatorioPB({
                     data: novoRelatorio.data,
                     disciplina: disciplina,
                     tempo: tempo,
                     texto: texto
                 });
+                if (pbResultado && pbResultado.id) {
+                    const idx = relatorios.findIndex(r => r.id === novoRelatorio.id);
+                    if (idx !== -1) {
+                        relatorios[idx].id = pbResultado.id;
+                        relatorios[idx]._pbId = pbResultado.id;
+                        saveData('gda_relatorios', relatorios);
+                        logInfo(`✅ Relatório sincronizado com nuvem: ${pbResultado.id}`);
+                    }
+                }
                 
                 renderRelatorios();
                 renderTelaInicial();
@@ -5509,10 +5783,12 @@
                 document.getElementById('relatorioTempo').value = '';
                 document.getElementById('relatorioDisciplina').value = '';
                 mostrarToast('✅ Relatório salvo!', 'sucesso');
+                logInfo('✅ Relatório salvo com sucesso');
             }
 
             if (e.target.id === 'atividadeForm') {
                 e.preventDefault();
+                logInfo('📝 Submetendo formulário de atividade');
                 
                 // Validar datas
                 if (!validarDatasAtividade()) {
@@ -5529,6 +5805,7 @@
                 const observacoes = document.getElementById('formObservacoes').value.trim();
 
                 if (!titulo || !disciplina || !inicio || !prazo || !entregaDocente) {
+                    logWarn('⚠️ Campos obrigatórios da atividade não preenchidos');
                     mostrarToast('Preencha todos os campos obrigatórios.', 'aviso');
                     return;
                 }
@@ -5561,21 +5838,27 @@
                     const idx = atividades.findIndex(a => a.id === editandoId);
                     if (idx !== -1) {
                         atividades[idx] = { ...atividades[idx], ...dadosAtividade };
+                        logInfo(`✏️ Atividade ${editandoId} atualizada localmente`);
                         // Atualizar no PocketBase
-                        atualizarAtividadePB(editandoId, dadosAtividade);
+                        const pbResultado = await atualizarAtividadePB(editandoId, dadosAtividade);
+                        if (pbResultado) {
+                            logInfo(`✅ Atividade ${editandoId} atualizada na nuvem`);
+                        }
                     }
                 } else {
                     const novaAtividade = { id: gerarIdLocal(), ...dadosAtividade };
                     atividades.push(novaAtividade);
-                    // Salvar no PocketBase
+                    logInfo(`📋 Nova atividade criada localmente: ${novaAtividade.id}`);
+                    
+                    // Salvar no PocketBase e atualizar ID local
                     const pbResultado = await salvarAtividadePB(dadosAtividade);
                     if (pbResultado && pbResultado.id) {
-                        // Atualizar ID local com o ID do PB
                         const idx = atividades.findIndex(a => a.id === novaAtividade.id);
                         if (idx !== -1) {
                             atividades[idx].id = pbResultado.id;
                             atividades[idx]._pbId = pbResultado.id;
                             saveData('gda_atividades', atividades);
+                            logInfo(`✅ Atividade sincronizada com nuvem: ${pbResultado.id}`);
                         }
                     }
                 }
@@ -5586,6 +5869,7 @@
                 renderDashboard();
                 closeModal();
                 mostrarToast('✅ Atividade salva!', 'sucesso');
+                logInfo('✅ Atividade salva com sucesso');
                 editandoId = null;
                 participantesTemp = [];
                 subtarefasTemp = [];
@@ -5597,21 +5881,25 @@
         // ============================================================
 
         function populateSelects() {
+            logDebug('🔄 Populando selects');
             const select = document.getElementById('formDisciplina');
             if (select) {
                 select.innerHTML = turmas.map(t => `<option value="${t.nome}">${t.nome}</option>`).join('');
+                logDebug(`✅ ${select.options.length} disciplinas carregadas em formDisciplina`);
             }
 
             const relatorioSelect = document.getElementById('relatorioDisciplina');
             if (relatorioSelect) {
                 relatorioSelect.innerHTML = '<option value="">Selecione uma disciplina</option>' +
                     turmas.map(t => `<option value="${t.nome}">${t.nome}</option>`).join('');
+                logDebug(`✅ ${relatorioSelect.options.length} disciplinas carregadas em relatorioDisciplina`);
             }
 
             const assuntoSelect = document.getElementById('formAssuntoDisciplina');
             if (assuntoSelect) {
                 assuntoSelect.innerHTML = '<option value="">Selecione uma disciplina</option>' +
                     turmas.map(t => `<option value="${t.nome}">${t.nome}</option>`).join('');
+                logDebug(`✅ ${assuntoSelect.options.length} disciplinas carregadas em formAssuntoDisciplina`);
             }
         }
 
@@ -5620,6 +5908,7 @@
         // ============================================================
 
         function showPage(pageId) {
+            logDebug(`🔄 Navegando para: ${pageId}`);
             document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
             const target = document.getElementById(`page-${pageId}`);
             if (target) target.classList.add('active');
@@ -5640,6 +5929,7 @@
             if (pageId === 'assuntos') {
                 renderAssuntos();
             }
+            logDebug(`✅ Página ${pageId} exibida`);
         }
 
         // ============================================================
@@ -5647,116 +5937,141 @@
         // ============================================================
 
         async function carregarDadosCloud() {
-            if (dadosCarregados) return;
+            if (dadosCarregados) {
+                logDebug('ℹ️ Dados já carregados, pulando');
+                return;
+            }
+            
+            logInfo('☁️ Iniciando sincronização com a nuvem...');
+            mostrarToast('☁️ Sincronizando com a nuvem...', 'info', 2000);
             
             try {
-                mostrarToast('☁️ Sincronizando com a nuvem...', 'info', 2000);
-                
                 // Autenticar primeiro
                 const autenticado = await autenticarPocketBase();
                 if (!autenticado) {
+                    logWarn('⚠️ Modo offline - dados locais');
                     mostrarToast('⚠️ Modo offline - dados locais', 'aviso');
-                }
-                
-                // Carregar presenças
-                const presencasCloud = await buscarPresencasPB();
-                if (presencasCloud.length > 0) {
-                    presencas = presencasCloud.map(p => ({
-                        id: p.id,
-                        data: p.data,
-                        hora: p.hora,
-                        tipo: p.tipo,
-                        justificativa: p.justificativa || '',
-                        nome: p.usuario || 'Igor Veras Morais',
-                        curso: 'Controle Ambiental - 2º Sem',
-                        atestado: p.atestado || false
-                    }));
-                    saveData('gda_presencas', presencas);
-                }
-                
-                // Carregar atividades
-                const atividadesCloud = await buscarAtividadesPB();
-                if (atividadesCloud.length > 0) {
-                    atividades = atividadesCloud.map(a => ({
-                        id: a.id,
-                        titulo: a.titulo,
-                        disciplina: a.disciplina,
-                        prioridade: a.prioridade || 'media',
-                        tipo: a.tipo || 'individual',
-                        inicio: a.inicio || '',
-                        prazo: a.prazo || '',
-                        entregaDocente: a.entregaDocente || '',
-                        observacoes: a.observacoes || '',
-                        progresso: a.progresso || 0,
-                        participantes: a.participantes || [],
-                        subtarefas: a.subtarefas || []
-                    }));
-                    saveData('gda_atividades', atividades);
-                }
-                
-                // Carregar notas
-                const notasCloud = await buscarNotasPB();
-                if (Object.keys(notasCloud).length > 0) {
-                    notas = notasCloud;
-                    saveData('gda_notas', notas);
-                }
-                
-                // Carregar relatórios
-                const relatoriosCloud = await buscarRelatoriosPB();
-                if (relatoriosCloud.length > 0) {
-                    relatorios = relatoriosCloud;
-                    saveData('gda_relatorios', relatorios);
-                }
-                
-                // Carregar assuntos
-                const assuntosCloud = await buscarAssuntosPB();
-                if (Object.keys(assuntosCloud).length > 0) {
-                    assuntos = assuntosCloud;
-                    saveData('gda_assuntos', assuntos);
-                }
-                
-                // Carregar atendimentos
-                const atendimentosCloud = await buscarAtendimentosPB();
-                if (atendimentosCloud.length > 0) {
-                    atendimentos = atendimentosCloud;
-                    saveData('gda_atendimentos', atendimentos);
-                }
-                
-                // Carregar histórico do pânico
-                const panicoCloud = await buscarPanicoPB();
-                if (panicoCloud.length > 0) {
-                    historicoPanico = panicoCloud;
-                    saveData('gda_historico_panico', historicoPanico);
-                }
-                
-                // Carregar checklist
-                const hoje = new Date().toISOString().split('T')[0];
-                const checklistCloud = await buscarChecklistPB(hoje);
-                if (checklistCloud.length > 0) {
-                    const novoState = {};
-                    checklistCloud.forEach(item => {
-                        novoState[item.id] = item.feito;
-                    });
-                    checklistState = novoState;
-                    saveData('gda_checklist', checklistState);
                 } else {
-                    // Criar checklist do dia na nuvem
-                    const itemsArray = checklistItems.map(item => ({
-                        id: item.id,
-                        feito: checklistState[item.id] || false
-                    }));
-                    await salvarChecklistPB({ dia: hoje, items: itemsArray });
+                    // Carregar presenças
+                    logInfo('🔍 Carregando presenças...');
+                    const presencasCloud = await buscarPresencasPB();
+                    if (presencasCloud.length > 0) {
+                        presencas = presencasCloud.map(p => ({
+                            id: p.id,
+                            data: p.data,
+                            hora: p.hora,
+                            tipo: p.tipo,
+                            justificativa: p.justificativa || '',
+                            nome: p.usuario || 'Igor Veras Morais',
+                            curso: 'Controle Ambiental - 2º Sem',
+                            atestado: p.atestado || false
+                        }));
+                        saveData('gda_presencas', presencas);
+                        logInfo(`✅ ${presencas.length} presenças carregadas`);
+                    }
+                    
+                    // Carregar atividades
+                    logInfo('🔍 Carregando atividades...');
+                    const atividadesCloud = await buscarAtividadesPB();
+                    if (atividadesCloud.length > 0) {
+                        atividades = atividadesCloud.map(a => ({
+                            id: a.id,
+                            titulo: a.titulo,
+                            disciplina: a.disciplina,
+                            prioridade: a.prioridade || 'media',
+                            tipo: a.tipo || 'individual',
+                            inicio: a.inicio || '',
+                            prazo: a.prazo || '',
+                            entregaDocente: a.entregaDocente || '',
+                            observacoes: a.observacoes || '',
+                            progresso: a.progresso || 0,
+                            participantes: a.participantes || [],
+                            subtarefas: a.subtarefas || []
+                        }));
+                        saveData('gda_atividades', atividades);
+                        logInfo(`✅ ${atividades.length} atividades carregadas`);
+                    }
+                    
+                    // Carregar notas
+                    logInfo('🔍 Carregando notas...');
+                    const notasCloud = await buscarNotasPB();
+                    if (Object.keys(notasCloud).length > 0) {
+                        notas = notasCloud;
+                        saveData('gda_notas', notas);
+                        logInfo(`✅ ${Object.keys(notas).length} disciplinas com notas carregadas`);
+                    }
+                    
+                    // Carregar relatórios
+                    logInfo('🔍 Carregando relatórios...');
+                    const relatoriosCloud = await buscarRelatoriosPB();
+                    if (relatoriosCloud.length > 0) {
+                        relatorios = relatoriosCloud;
+                        saveData('gda_relatorios', relatorios);
+                        logInfo(`✅ ${relatorios.length} relatórios carregados`);
+                    }
+                    
+                    // Carregar assuntos
+                    logInfo('🔍 Carregando assuntos...');
+                    const assuntosCloud = await buscarAssuntosPB();
+                    if (Object.keys(assuntosCloud).length > 0) {
+                        assuntos = assuntosCloud;
+                        saveData('gda_assuntos', assuntos);
+                        const totalAssuntos = Object.values(assuntos).reduce((acc, arr) => acc + arr.length, 0);
+                        logInfo(`✅ ${totalAssuntos} assuntos carregados`);
+                    }
+                    
+                    // Carregar atendimentos
+                    logInfo('🔍 Carregando atendimentos...');
+                    const atendimentosCloud = await buscarAtendimentosPB();
+                    if (atendimentosCloud.length > 0) {
+                        atendimentos = atendimentosCloud;
+                        saveData('gda_atendimentos', atendimentos);
+                        logInfo(`✅ ${atendimentos.length} atendimentos carregados`);
+                    }
+                    
+                    // Carregar histórico do pânico
+                    logInfo('🔍 Carregando histórico do pânico...');
+                    const panicoCloud = await buscarPanicoPB();
+                    if (panicoCloud.length > 0) {
+                        historicoPanico = panicoCloud;
+                        saveData('gda_historico_panico', historicoPanico);
+                        logInfo(`✅ ${historicoPanico.length} registros de pânico carregados`);
+                    }
+                    
+                    // Carregar checklist
+                    logInfo('🔍 Carregando checklist...');
+                    const hoje = new Date().toISOString().split('T')[0];
+                    const checklistCloud = await buscarChecklistPB(hoje);
+                    if (checklistCloud.length > 0) {
+                        const novoState = {};
+                        checklistCloud.forEach(item => {
+                            novoState[item.id] = item.feito;
+                        });
+                        checklistState = novoState;
+                        saveData('gda_checklist', checklistState);
+                        logInfo(`✅ ${checklistCloud.length} itens de checklist carregados`);
+                    } else {
+                        // Criar checklist do dia na nuvem
+                        logInfo('📋 Criando novo checklist do dia na nuvem');
+                        const itemsArray = checklistItems.map(item => ({
+                            id: item.id,
+                            feito: checklistState[item.id] || false
+                        }));
+                        await salvarChecklistPB({ dia: hoje, items: itemsArray });
+                        logInfo('✅ Checklist do dia criado na nuvem');
+                    }
                 }
                 
-                console.log('✅ Dados carregados do PocketBase com sucesso!');
+                logInfo('✅ Dados carregados do PocketBase com sucesso!');
                 dadosCarregados = true;
                 
             } catch (erro) {
-                console.error('❌ Erro ao carregar dados do PocketBase:', erro);
+                logError('❌ Erro ao carregar dados do PocketBase:', erro);
                 mostrarToast('📁 Usando dados locais (offline)', 'aviso');
             }
             
             // Renderizar tudo
+            logInfo('🔄 Renderizando interface...');
             renderChecklist();
             renderTurmas();
             renderAtividades();
@@ -5771,6 +6086,7 @@
             atualizarBadgePanico();
             atualizarBadgePresenca();
             atualizarBadgeAssuntos();
+            logInfo('✅ Interface renderizada com sucesso!');
         }
 
         // ============================================================
@@ -5778,6 +6094,7 @@
         // ============================================================
 
         async function loadPages() {
+            logInfo('📄 Carregando páginas...');
             const container = document.getElementById('pageContainer');
             const pages = ['inicial', 'dashboard', 'checklist', 'turmas', 'atividades', 'notas', 'relatorios',
                 'historicopanico', 'atendimentos', 'presenca', 'assuntos'
@@ -5789,8 +6106,9 @@
                     if (!response.ok) throw new Error(`HTTP ${response.status}`);
                     const html = await response.text();
                     container.insertAdjacentHTML('beforeend', html);
+                    logDebug(`✅ Página ${page} carregada`);
                 } catch (error) {
-                    console.error(`Erro ao carregar ${page}:`, error);
+                    logError(`❌ Erro ao carregar ${page}:`, error);
                     const pageDiv = document.createElement('div');
                     pageDiv.id = `page-${page}`;
                     pageDiv.className = 'page';
@@ -6076,6 +6394,7 @@
                     }
                     pageDiv.innerHTML = content;
                     container.appendChild(pageDiv);
+                    logDebug(`✅ Página ${page} criada em fallback`);
                 }
             }
 
@@ -6096,21 +6415,22 @@
                     this.classList.add('active');
                     filtroAtividadesAtual = this.dataset.filtro;
                     renderAtividades();
+                    logInfo(`📋 Filtro de atividades alterado para: ${filtroAtividadesAtual}`);
                 });
             });
 
             verificarMudancaSemestre();
 
-            console.log('✅ GDA v5.0 - COMPLETO CORRIGIDO');
-            console.log('✅ API Key removida - usando autenticação');
-            console.log('✅ URLs configuráveis por ambiente');
-            console.log('✅ Sistema de Toast notifications');
-            console.log('✅ IDs unificados (local_ + PB ID)');
-            console.log('✅ Checklist sincronizado com cloud');
-            console.log('✅ Reset de dia robusto');
-            console.log('✅ Validação de datas');
-            console.log('✅ Responsividade vertical completa');
-            console.log('✅ Alvos de toque mínimos (44px)');
+            logInfo('✅ GDA v5.1 - COMPLETO CORRIGIDO CARREGADO COM SUCESSO!');
+            console.log('%c▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓', 'font-size:8px;color:#4ecdc4;');
+            console.log('%c   GDA v5.1 - COMPLETO CORRIGIDO   ', 'font-size:16px;color:#ffd93d;font-weight:bold;');
+            console.log('%c▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓', 'font-size:8px;color:#4ecdc4;');
+            console.log('%c✅ Todos os await em funções async', 'font-size:12px;color:#4caf50;');
+            console.log('%c✅ Sistema de logs completo', 'font-size:12px;color:#4caf50;');
+            console.log('%c✅ Mensagens de erro detalhadas', 'font-size:12px;color:#4caf50;');
+            console.log('%c✅ Fallback para localStorage', 'font-size:12px;color:#4caf50;');
+            console.log('%c✅ Responsividade vertical', 'font-size:12px;color:#4caf50;');
+            console.log('%c✅ Alvos de toque (44px)', 'font-size:12px;color:#4caf50;');
         }
 
         // ============================================================
@@ -6134,6 +6454,7 @@
             if (e.target.closest('#sistemasToggle')) {
                 e.preventDefault();
                 document.getElementById('submenuSistemas').classList.toggle('open');
+                logDebug(`🔄 Submenu sistemas: ${document.getElementById('submenuSistemas').classList.contains('open') ? 'aberto' : 'fechado'}`);
             }
         });
 
@@ -6172,6 +6493,7 @@
 
         document.getElementById('btnEntrar').addEventListener('click', function() {
             document.getElementById('splashOverlay').classList.add('hidden');
+            logInfo('🔓 Acesso liberado. Bem-vindo(a)!');
             console.log('%c🔓 Acesso liberado. Bem-vindo(a)!', 'font-size:14px;color:#4ecdc4;');
         });
 
@@ -6180,6 +6502,8 @@
         // ============================================================
 
         document.addEventListener('DOMContentLoaded', function() {
+            logInfo('🚀 DOM carregado, inicializando GDA v5.1...');
+            
             populateSelects();
             loadPages();
             updateClockDisplay();
@@ -6189,19 +6513,40 @@
             atualizarBadgeAssuntos();
             verificarMudancaSemestre();
 
-            console.log('%c▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓', 'font-size:8px;color:#4ecdc4;');
-            console.log('%c   GDA v5.0 - COMPLETO CORRIGIDO   ', 'font-size:16px;color:#ffd93d;font-weight:bold;');
-            console.log('%c▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓', 'font-size:8px;color:#4ecdc4;');
-            console.log('%c✅ API Key removida (autenticação segura)', 'font-size:12px;color:#4caf50;');
-            console.log('%c✅ URLs configuráveis por ambiente', 'font-size:12px;color:#4caf50;');
-            console.log('%c✅ Sistema de Toast notifications', 'font-size:12px;color:#4caf50;');
-            console.log('%c✅ IDs unificados (local + PB)', 'font-size:12px;color:#4caf50;');
-            console.log('%c✅ Checklist sincronizado com cloud', 'font-size:12px;color:#4caf50;');
-            console.log('%c✅ Reset de dia robusto', 'font-size:12px;color:#4caf50;');
-            console.log('%c✅ Validação de datas', 'font-size:12px;color:#4caf50;');
-            console.log('%c✅ Responsividade vertical completa', 'font-size:12px;color:#4caf50;');
-            console.log('%c✅ Alvos de toque mínimos (44px)', 'font-size:12px;color:#4caf50;');
+            logInfo('✅ Inicialização completa!');
         });
+
+        // ============================================================
+        //  EXPORTAÇÃO DE FUNÇÕES PARA USO GLOBAL
+        // ============================================================
+
+        window.abrirModalPresenca = abrirModalPresenca;
+        window.confirmarPresenca = confirmarPresenca;
+        window.fecharModalPresenca = fecharModalPresenca;
+        window.validarNota = validarNota;
+        window.atualizarNota = atualizarNota;
+        window.novaFrase = novaFrase;
+        window.adicionarParticipante = window.adicionarParticipante;
+        window.removerParticipante = window.removerParticipante;
+        window.adicionarSubtarefa = window.adicionarSubtarefa;
+        window.removerSubtarefa = window.removerSubtarefa;
+        window.toggleSubtarefa = window.toggleSubtarefa;
+        window.openModal = openModal;
+        window.closeModal = closeModal;
+        window.openModalAtendimento = openModalAtendimento;
+        window.closeModalAtendimento = closeModalAtendimento;
+        window.abrirPanico = abrirPanico;
+        window.sairPanico = sairPanico;
+        window.iniciarRespiração = iniciarRespiração;
+        window.novaFrasePanico = novaFrasePanico;
+        window.registrarPanico = registrarPanico;
+        window.confirmarExclusaoPresenca = confirmarExclusaoPresenca;
+        window.editarAtividade = editarAtividade;
+        window.deletarAtividade = deletarAtividade;
+        window.editarAtendimento = editarAtendimento;
+        window.deletarAtendimento = deletarAtendimento;
+
+        logInfo('✅ Todas as funções exportadas globalmente');
 
     })();
     </script>
