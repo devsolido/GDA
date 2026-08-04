@@ -29,7 +29,7 @@ $RECYCLE.BIN/
 .settings/
 
 # ==========================================
-# DEPENDÊNCIAS (para futuros backends)
+# DEPENDÊNCIAS (Node.js)
 # ==========================================
 node_modules/
 npm-debug.log*
@@ -38,9 +38,6 @@ yarn-error.log*
 package-lock.json
 yarn.lock
 pnpm-lock.yaml
-vendor/
-composer.lock
-composer.phar
 
 # ==========================================
 # ARQUIVOS DE AMBIENTE (segredos/credenciais)
@@ -60,7 +57,38 @@ secrets.json
 credentials.json
 serviceAccountKey.json
 firebase-credentials.json
+
+# ==========================================
+# BANCO DE DADOS LOCAL
+# ==========================================
+database/
+*.db
 *.sqlite
+*.sqlite3
+*.sql
+*.dump
+backup/
+db/
+data/
+*.db-journal
+*.sqlite-journal
+
+# ==========================================
+# ARQUIVOS DE MIGRAÇÃO/TEMPORÁRIOS
+# ==========================================
+localstorage-export.json
+migrar-*.js
+migrate-*.js
+testar-*.js
+test-*.js
+verificar-*.js
+temp-*.js
+*.tmp
+*.temp
+*.bak
+*.backup
+*.old
+*.orig
 
 # ==========================================
 # LOGS
@@ -73,19 +101,6 @@ yarn-error.log*
 firebase-debug.log
 
 # ==========================================
-# BACKUPS E TEMPORÁRIOS
-# ==========================================
-*.tmp
-*.temp
-*.bak
-*.backup
-*.old
-*.orig
-*.swp
-*.swo
-*~
-
-# ==========================================
 # BUILD E DISTRIBUIÇÃO
 # ==========================================
 dist/
@@ -95,18 +110,40 @@ out/
 *.min.js
 *.bundle.js
 *.bundle.css
+*.map
 
 # ==========================================
-# BANCO DE DADOS (caso use no futuro)
+# ARQUIVOS ESPECÍFICOS DO GDA
 # ==========================================
-*.db
-*.sqlite
-*.sqlite3
-*.sql
-*.dump
-backup/
-db/
-data/
+# Servidores locais (com tokens)
+server.js
+server-turso.js
+server-local.js
+
+# Arquivos de migração
+migrar-*.js
+migrate-*.js
+export-*.js
+
+# Testes
+test-*.js
+testar-*.js
+verificar-*.js
+check-*.js
+
+# Backups do banco
+*.db.backup
+*.sqlite.backup
+
+# ==========================================
+# DEPLOY E HOSPEDAGEM
+# ==========================================
+.vercel/
+.now/
+.netlify/
+*.deploy
+render.yaml
+railway.json
 
 # ==========================================
 # FIREBASE (caso use no futuro)
@@ -119,27 +156,7 @@ firestore.rules
 storage.rules
 
 # ==========================================
-# DEPLOY E HOSPEDAGEM
-# ==========================================
-.vercel/
-.now/
-.netlify/
-*.deploy
-
-# ==========================================
-# ARQUIVOS DO PROJETO (específicos)
-# ==========================================
-# Não incluir assets grandes ou pessoais
-assets/img/photos/
-assets/videos/
-*.psd
-*.ai
-*.xd
-*.sketch
-*.fig
-
-# ==========================================
-# RECURSOS OPCIONAIS (se você usar)
+# RECURSOS OPCIONAIS
 # ==========================================
 coverage/
 .nyc_output/
@@ -147,3 +164,38 @@ coverage/
 .eslintcache
 .prettierignore
 .stylelintcache
+
+# ==========================================
+# ARQUIVOS PESSOAIS
+# ==========================================
+assets/img/photos/
+assets/videos/
+*.psd
+*.ai
+*.xd
+*.sketch
+*.fig
+*.mp4
+*.mov
+*.avi
+*.wmv
+*.flv
+*.m4v
+*.webm
+*.mp3
+*.wav
+*.aac
+*.flac
+*.ogg
+*.wma
+
+# ==========================================
+# ARQUIVOS DE SISTEMA
+# ==========================================
+*.tmp
+*.temp
+*.bak
+*.backup
+*.old
+*.orig
+*~
