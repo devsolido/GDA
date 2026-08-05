@@ -10,14 +10,35 @@ const app = express();
 const TURSO_URL = process.env.TURSO_URL;
 const TURSO_TOKEN = process.env.TURSO_TOKEN;
 
+function normalizeTursoUrl(value) {
+    if (!value) return '';
+    return value.trim().replace(/^https?:\/\//i, '').replace(/\/+$/, '');
+}
+
+function getTursoBaseUrl() {
+    const host = normalizeTursoUrl(TURSO_URL);
+    if (!host) {
+        throw new Error('TURSO_URL não configurado. Defina a variável de ambiente no painel da Vercel.');
+    }
+    return `https://${host}`;
+}
+
+function buildTursoError(err) {
+    const message = err && err.message ? err.message : 'Erro desconhecido ao acessar o Turso.';
+    return {
+        error: message,
+        status: 'turso_error'
+    };
+}
+
 // Função para executar queries no Turso
 async function queryTurso(sql) {
     try {
         if (!TURSO_URL || !TURSO_TOKEN) {
-            throw new Error('❌ TURSO_URL ou TURSO_TOKEN não configurados!');
+            throw new Error('TURSO_URL ou TURSO_TOKEN não configurados. Verifique as variáveis de ambiente da Vercel.');
         }
 
-        const url = `https://${TURSO_URL}`;
+        const url = getTursoBaseUrl();
         console.log(`📡 Conectando a: ${url}`);
 
         const response = await fetch(`${url}/v2/pipeline`, {
@@ -40,7 +61,7 @@ async function queryTurso(sql) {
         }
         return data;
     } catch (err) {
-        console.error('❌ Erro na query:', err.message);
+        console.error('❌ Erro na query:', err && err.message ? err.message : err);
         throw err;
     }
 }
@@ -50,15 +71,41 @@ async function queryTurso(sql) {
 // ============================================================
 app.use(express.json());
 
-// CORS para desenvolvimento
 app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
+    const origin = req.headers.origin;
+    const allowedOrigins = [
+        'https://gda-kappa.vercel.app',
+        'http://localhost:3000',
+        'http://127.0.0.1:3000',
+        'http://localhost:5500',
+        'http://127.0.0.1:5500'
+    ];
+
+    const isAllowedOrigin = !origin || allowedOrigins.includes(origin) || /\.vercel\.app$/i.test(origin || '') || /github\.dev$/i.test(origin || '') || /localhost/.test(origin || '');
+
+    if (isAllowedOrigin) {
+        res.header('Access-Control-Allow-Origin', origin || '*');
+    }
+
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    res.header('Access-Control-Allow-Credentials', 'true');
+
     if (req.method === 'OPTIONS') {
         return res.sendStatus(200);
     }
+
     next();
+});
+
+app.use((err, req, res, next) => {
+    console.error('Erro da API:', err);
+    const isTursoError = err && err.message && /TURSO|Turso|fetch|Authorization|pipeline/i.test(err.message);
+    res.status(err.status || 500).json({
+        error: err.message || 'Erro interno do servidor',
+        turso: isTursoError,
+        ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
+    });
 });
 
 // ============================================================
