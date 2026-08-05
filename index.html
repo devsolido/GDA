@@ -4217,9 +4217,11 @@
         //  INICIALIZAÇÃO
         // ============================================================
 
-        function init() {
+        async function init() {
             console.log('🚀 Inicializando GDA v5.6 (Modo Offline)...');
-            
+
+            await hydrateCloudData();
+
             renderizarPaginas();
             
             const selects = ['formDisciplina', 'relatorioDisciplina', 'formAssuntoDisciplina', 'formAtendimentoDisciplina', 'formOcorrenciaDisciplina'];
