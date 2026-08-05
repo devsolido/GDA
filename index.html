@@ -2797,29 +2797,42 @@
             }
         }
 
-        async function hydrateCloudData() {
-            for (const key of Object.keys(CLOUD_SYNC_KEYS)) {
-                const localValue = loadData(key, null);
-                const cloudValue = await loadDataFromCloud(key, null);
+        function applyCloudValue(key, cloudValue) {
+            if (cloudValue === null || cloudValue === undefined) return;
+            localStorage.setItem(key, JSON.stringify(cloudValue));
+            if (key === 'gda_presencas_atrasadas') presencasAtrasadas = cloudValue;
+            if (key === 'gda_ocorrencias') ocorrencias = cloudValue;
+            if (key === 'gda_presencas') presencas = cloudValue;
+            if (key === 'gda_atividades') atividades = cloudValue;
+            if (key === 'gda_notas') notas = cloudValue;
+            if (key === 'gda_relatorios') relatorios = cloudValue;
+            if (key === 'gda_checklist') checklistState = cloudValue;
+            if (key === 'gda_historico_panico') historicoPanico = cloudValue;
+            if (key === 'gda_atendimentos') atendimentos = cloudValue;
+            if (key === 'gda_assuntos') assuntos = cloudValue;
+        }
 
-                if (cloudValue !== null && JSON.stringify(cloudValue) !== JSON.stringify(localValue)) {
-                    localStorage.setItem(key, JSON.stringify(cloudValue));
-                    if (key === 'gda_presencas_atrasadas') presencasAtrasadas = cloudValue;
-                    if (key === 'gda_ocorrencias') ocorrencias = cloudValue;
-                    if (key === 'gda_presencas') presencas = cloudValue;
-                    if (key === 'gda_atividades') atividades = cloudValue;
-                    if (key === 'gda_notas') notas = cloudValue;
-                    if (key === 'gda_relatorios') relatorios = cloudValue;
-                    if (key === 'gda_checklist') checklistState = cloudValue;
-                    if (key === 'gda_historico_panico') historicoPanico = cloudValue;
-                    if (key === 'gda_atendimentos') atendimentos = cloudValue;
-                    if (key === 'gda_assuntos') assuntos = cloudValue;
+        async function hydrateCloudData() {
+            const keys = Object.keys(CLOUD_SYNC_KEYS);
+            for (const key of keys) {
+                try {
+                    const localValue = loadData(key, null);
+                    const cloudValue = await loadDataFromCloud(key, null);
+                    if (cloudValue !== null && JSON.stringify(cloudValue) !== JSON.stringify(localValue)) {
+                        applyCloudValue(key, cloudValue);
+                    }
+                } catch (error) {
+                    console.warn(`⚠️ Falha ao hidratar ${key} da nuvem:`, error && error.message ? error.message : error);
                 }
             }
         }
 
         function loadData(key, def) { try { const d = localStorage.getItem(key); return d ? JSON.parse(d) : def; } catch(e) { return def; } }
-        function saveData(key, data) { try { localStorage.setItem(key, JSON.stringify(data)); } catch(e) { return false; } try { syncDataToCloud(key, data); } catch(e) {} return true; }
+        async function saveData(key, data) {
+            try { localStorage.setItem(key, JSON.stringify(data)); } catch(e) { return false; }
+            try { await syncDataToCloud(key, data); } catch(e) {}
+            return true;
+        }
 
         function mostrarToast(msg, tipo = 'info', duracao = 3000) {
             const container = document.getElementById('toastContainer');
