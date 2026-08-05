@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Exportar localStorage</title>
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #0b0f15; color: #e8edf4; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; background: #1a232e; padding: 24px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.06); }
+        button { background: #ffb300; color: #0b0f15; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 16px; }
+        pre { background: #121820; padding: 16px; border-radius: 8px; overflow: auto; max-height: 400px; font-size: 12px; border: 1px solid rgba(255,255,255,0.06); }
+        .status { margin: 12px 0; padding: 12px; border-radius: 8px; background: rgba(76,175,80,0.1); border: 1px solid rgba(76,175,80,0.2); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📤 Exportar Dados do GDA</h1>
+        <p>Extraia todos os dados do localStorage para migrar para o SQLite.</p>
+        
+        <div id="status" class="status">🔍 Coletando dados do localStorage...</div>
+        
+        <button onclick="exportarDados()">📥 Baixar Exportação</button>
+        
+        <h3>📋 Dados encontrados:</h3>
+        <pre id="preview">Carregando...</pre>
+    </div>
+    
+    <script>
+        function exportarDados() {
+            const keys = [
+                'gda_presencas',
+                'gda_presencas_atrasadas',
+                'gda_ocorrencias',
+                'gda_atividades',
+                'gda_notas',
+                'gda_relatorios',
+                'gda_checklist',
+                'gda_historico_panico',
+                'gda_atendimentos',
+                'gda_assuntos'
+            ];
+            
+            const dados = {};
+            let total = 0;
+            
+            keys.forEach(key => {
+                try {
+                    const value = localStorage.getItem(key);
+                    if (value) {
+                        dados[key] = JSON.parse(value);
+                        total += Array.isArray(dados[key]) ? dados[key].length : Object.keys(dados[key]).length;
+                    } else {
+                        dados[key] = [];
+                    }
+                } catch (e) {
+                    dados[key] = [];
+                }
+            });
+            
+            // Atualizar preview
+            document.getElementById('preview').textContent = JSON.stringify(dados, null, 2);
+            
+            // Atualizar status
+            document.getElementById('status').innerHTML = `✅ ${total} registros encontrados em ${keys.length} coleções`;
+            
+            // Baixar arquivo
+            const blob = new Blob([JSON.stringify(dados, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'localstorage-export.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+        
+        // Executar automaticamente
+        exportarDados();
+    </script>
+</body>
+</html>
