@@ -574,7 +574,7 @@ app.post('/api/sync/:key', async (req, res) => {
 // ROTA PRINCIPAL (para verificar se a API está online)
 // ============================================================
 app.get('/api', (req, res) => {
-    res.json({
+    const status = {
         nome: 'GDA - Gestão Digital Agregada',
         versao: '2.0.0',
         status: 'online',
@@ -593,7 +593,11 @@ app.get('/api', (req, res) => {
             '/api/assuntos',
             '/api/sync/:key'
         ]
-    });
+    };
+
+    console.info('[GDA][API] Requisição para /api recebida. Status da API:', status.status);
+    console.info('[GDA][API] Banco configurado?', status.banco !== 'Não configurado' ? 'sim' : 'não');
+    res.json(status);
 });
 
 // ============================================================

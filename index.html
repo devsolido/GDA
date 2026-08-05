@@ -2773,13 +2773,21 @@
         async function loadDataFromCloud(key, fallback) {
             if (!window.fetch) return fallback;
             try {
+                console.info(`[GDA][SYNC] Buscando ${key} na nuvem...`);
                 const response = await fetch(`/api/sync/${encodeURIComponent(key)}`);
-                if (!response.ok) return fallback;
+                if (!response.ok) {
+                    console.warn(`[GDA][SYNC] Falha ao buscar ${key}. Status: ${response.status}`);
+                    return fallback;
+                }
                 const data = await response.json();
-                if (data === null || data === undefined) return fallback;
+                if (data === null || data === undefined) {
+                    console.info(`[GDA][SYNC] ${key} não possui dados na nuvem.`);
+                    return fallback;
+                }
+                console.info(`[GDA][SYNC] Dados recebidos da nuvem para ${key}:`, data);
                 return data;
             } catch (error) {
-                console.warn(`⚠️ Não foi possível sincronizar ${key} com a nuvem:`, error.message || error);
+                console.warn(`[GDA][SYNC] Não foi possível sincronizar ${key} com a nuvem:`, error.message || error);
             }
             return fallback;
         }
@@ -2787,13 +2795,20 @@
         async function syncDataToCloud(key, data) {
             if (!window.fetch) return;
             try {
-                await fetch(`/api/sync/${encodeURIComponent(key)}`, {
+                console.info(`[GDA][SYNC] Enviando ${key} para a nuvem...`);
+                const response = await fetch(`/api/sync/${encodeURIComponent(key)}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ value: data })
                 });
+                if (!response.ok) {
+                    console.warn(`[GDA][SYNC] Falha ao enviar ${key}. Status: ${response.status}`);
+                    return;
+                }
+                const result = await response.json();
+                console.info(`[GDA][SYNC] ${key} sincronizado com sucesso:`, result);
             } catch (error) {
-                console.warn(`⚠️ Falha ao sincronizar ${key} com a nuvem:`, error.message || error);
+                console.warn(`[GDA][SYNC] Falha ao sincronizar ${key} com a nuvem:`, error.message || error);
             }
         }
 
@@ -2810,6 +2825,7 @@
             if (key === 'gda_historico_panico') historicoPanico = cloudValue;
             if (key === 'gda_atendimentos') atendimentos = cloudValue;
             if (key === 'gda_assuntos') assuntos = cloudValue;
+            console.info(`[GDA][STATE] Estado remoto aplicado para ${key}.`);
         }
 
         async function hydrateCloudData() {
@@ -4232,6 +4248,20 @@
 
         async function init() {
             console.log('🚀 Inicializando GDA v5.6 (Modo Offline)...');
+            console.info('[GDA][BOOT] Iniciando carregamento do app e verificação de sincronização.');
+
+            try {
+                const health = await fetch('/api');
+                if (health.ok) {
+                    const data = await health.json();
+                    console.info('[GDA][CLOUD] Nuvem ON:', data);
+                    console.info('[GDA][CLOUD] Backend ativo e pronto para sincronização.');
+                } else {
+                    console.warn('[GDA][CLOUD] Backend respondeu com erro:', health.status);
+                }
+            } catch (error) {
+                console.warn('[GDA][CLOUD] Backend indisponível:', error.message || error);
+            }
 
             await hydrateCloudData();
 
