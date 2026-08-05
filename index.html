@@ -2757,8 +2757,101 @@
         function gerarIdLocal() { return 'local_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6); }
         function escapeHtml(t) { if (!t) return ''; const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
 
+        const CLOUD_SYNC_KEYS = {
+            gda_presencas_atrasadas: 'presencas-atrasadas',
+            gda_ocorrencias: 'ocorrencias',
+            gda_presencas: 'presencas',
+            gda_atividades: 'atividades',
+            gda_notas: 'notas',
+            gda_relatorios: 'relatorios',
+            gda_checklist: 'checklist',
+            gda_historico_panico: 'panico',
+            gda_atendimentos: 'atendimentos',
+            gda_assuntos: 'assuntos'
+        };
+
+        async function loadDataFromCloud(key, fallback) {
+            const endpoint = CLOUD_SYNC_KEYS[key];
+            if (!endpoint || !window.fetch) return fallback;
+
+            try {
+                const response = await fetch(`/api/${endpoint}`);
+                if (!response.ok) return fallback;
+                const data = await response.json();
+                if (Array.isArray(data) || typeof data === 'object') {
+                    return data;
+                }
+            } catch (error) {
+                console.warn(`⚠️ Não foi possível sincronizar ${key} com a nuvem:`, error.message || error);
+            }
+
+            return fallback;
+        }
+
+        async function syncDataToCloud(key, data) {
+            const endpoint = CLOUD_SYNC_KEYS[key];
+            if (!endpoint || !window.fetch) return;
+
+            try {
+                if (key === 'gda_checklist') {
+                    const entries = Object.entries(data || {});
+                    for (const [id, concluido] of entries) {
+                        await fetch(`/api/checklist/${id}`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ concluido: !!concluido })
+                        });
+                    }
+                    return;
+                }
+
+                if (Array.isArray(data)) {
+                    for (const item of data) {
+                        if (!item) continue;
+                        await fetch(`/api/${endpoint}`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(item)
+                        });
+                    }
+                    return;
+                }
+
+                if (data && typeof data === 'object') {
+                    await fetch(`/api/${endpoint}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+                }
+            } catch (error) {
+                console.warn(`⚠️ Falha ao sincronizar ${key} com a nuvem:`, error.message || error);
+            }
+        }
+
+        async function hydrateCloudData() {
+            for (const key of Object.keys(CLOUD_SYNC_KEYS)) {
+                const localValue = loadData(key, null);
+                const cloudValue = await loadDataFromCloud(key, null);
+
+                if (cloudValue !== null && JSON.stringify(cloudValue) !== JSON.stringify(localValue)) {
+                    localStorage.setItem(key, JSON.stringify(cloudValue));
+                    if (key === 'gda_presencas_atrasadas') presencasAtrasadas = cloudValue;
+                    if (key === 'gda_ocorrencias') ocorrencias = cloudValue;
+                    if (key === 'gda_presencas') presencas = cloudValue;
+                    if (key === 'gda_atividades') atividades = cloudValue;
+                    if (key === 'gda_notas') notas = cloudValue;
+                    if (key === 'gda_relatorios') relatorios = cloudValue;
+                    if (key === 'gda_checklist') checklistState = cloudValue;
+                    if (key === 'gda_historico_panico') historicoPanico = cloudValue;
+                    if (key === 'gda_atendimentos') atendimentos = cloudValue;
+                    if (key === 'gda_assuntos') assuntos = cloudValue;
+                }
+            }
+        }
+
         function loadData(key, def) { try { const d = localStorage.getItem(key); return d ? JSON.parse(d) : def; } catch(e) { return def; } }
-        function saveData(key, data) { try { localStorage.setItem(key, JSON.stringify(data)); return true; } catch(e) { return false; } }
+        function saveData(key, data) { try { localStorage.setItem(key, JSON.stringify(data)); } catch(e) { return false; } try { syncDataToCloud(key, data); } catch(e) {} return true; }
 
         function mostrarToast(msg, tipo = 'info', duracao = 3000) {
             const container = document.getElementById('toastContainer');
