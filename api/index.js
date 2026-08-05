@@ -33,6 +33,24 @@ function buildTursoError(err) {
     };
 }
 
+async function ensureSyncTable() {
+    try {
+        const sql = `
+            CREATE TABLE IF NOT EXISTS gda_sync (
+                id TEXT PRIMARY KEY,
+                data_key TEXT UNIQUE,
+                payload TEXT,
+                updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+            )
+        `;
+        await queryTurso(sql);
+        return true;
+    } catch (err) {
+        console.error('❌ Falha ao preparar tabela de sincronização:', err && err.message ? err.message : err);
+        return false;
+    }
+}
+
 // Função para executar queries no Turso
 async function queryTurso(sql) {
     try {
@@ -518,6 +536,40 @@ app.post('/api/assuntos', async (req, res) => {
     }
 });
 
+app.get('/api/sync/:key', async (req, res) => {
+    try {
+        await ensureSyncTable();
+        const { key } = req.params;
+        const result = await queryTurso(`SELECT payload FROM gda_sync WHERE data_key = '${String(key).replace(/'/g, "''")}' LIMIT 1`);
+        const rows = result.results[0]?.response?.result?.rows || [];
+        if (!rows.length) {
+            return res.json(null);
+        }
+        const payload = rows[0][0]?.value ?? rows[0][0];
+        return res.json(typeof payload === 'string' ? JSON.parse(payload) : payload ?? null);
+    } catch (err) {
+        return res.status(500).json(buildTursoError(err));
+    }
+});
+
+app.post('/api/sync/:key', async (req, res) => {
+    try {
+        await ensureSyncTable();
+        const { key } = req.params;
+        const payload = JSON.stringify(req.body && Object.prototype.hasOwnProperty.call(req.body, 'value') ? req.body.value : req.body);
+        const now = new Date().toISOString();
+        const sql = `
+            INSERT INTO gda_sync (id, data_key, payload, updated_at)
+            VALUES ('${key}-${Date.now()}', '${String(key).replace(/'/g, "''")}', '${payload.replace(/'/g, "''")}', '${now}')
+            ON CONFLICT(data_key) DO UPDATE SET payload = excluded.payload, updated_at = excluded.updated_at
+        `;
+        await queryTurso(sql);
+        return res.json({ ok: true, key, updated_at: now });
+    } catch (err) {
+        return res.status(500).json(buildTursoError(err));
+    }
+});
+
 // ============================================================
 // ROTA PRINCIPAL (para verificar se a API está online)
 // ============================================================
@@ -538,7 +590,8 @@ app.get('/api', (req, res) => {
             '/api/checklist',
             '/api/panico',
             '/api/atendimentos',
-            '/api/assuntos'
+            '/api/assuntos',
+            '/api/sync/:key'
         ]
     });
 });

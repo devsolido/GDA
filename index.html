@@ -2771,59 +2771,27 @@
         };
 
         async function loadDataFromCloud(key, fallback) {
-            const endpoint = CLOUD_SYNC_KEYS[key];
-            if (!endpoint || !window.fetch) return fallback;
-
+            if (!window.fetch) return fallback;
             try {
-                const response = await fetch(`/api/${endpoint}`);
+                const response = await fetch(`/api/sync/${encodeURIComponent(key)}`);
                 if (!response.ok) return fallback;
                 const data = await response.json();
-                if (Array.isArray(data) || typeof data === 'object') {
-                    return data;
-                }
+                if (data === null || data === undefined) return fallback;
+                return data;
             } catch (error) {
                 console.warn(`⚠️ Não foi possível sincronizar ${key} com a nuvem:`, error.message || error);
             }
-
             return fallback;
         }
 
         async function syncDataToCloud(key, data) {
-            const endpoint = CLOUD_SYNC_KEYS[key];
-            if (!endpoint || !window.fetch) return;
-
+            if (!window.fetch) return;
             try {
-                if (key === 'gda_checklist') {
-                    const entries = Object.entries(data || {});
-                    for (const [id, concluido] of entries) {
-                        await fetch(`/api/checklist/${id}`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ concluido: !!concluido })
-                        });
-                    }
-                    return;
-                }
-
-                if (Array.isArray(data)) {
-                    for (const item of data) {
-                        if (!item) continue;
-                        await fetch(`/api/${endpoint}`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(item)
-                        });
-                    }
-                    return;
-                }
-
-                if (data && typeof data === 'object') {
-                    await fetch(`/api/${endpoint}`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(data)
-                    });
-                }
+                await fetch(`/api/sync/${encodeURIComponent(key)}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ value: data })
+                });
             } catch (error) {
                 console.warn(`⚠️ Falha ao sincronizar ${key} com a nuvem:`, error.message || error);
             }
