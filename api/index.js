@@ -2,7 +2,9 @@
 // Servidor completo para Vercel com conexão ao Turso
 
 const express = require('express');
+const path = require('path');
 const app = express();
+const ROOT_DIR = path.resolve(__dirname, '..');
 
 // ============================================================
 // CONFIGURAÇÃO TURSO (usando variáveis de ambiente da Vercel)
@@ -70,6 +72,19 @@ async function queryTurso(sql) {
 // MIDDLEWARE
 // ============================================================
 app.use(express.json());
+app.use(express.static(ROOT_DIR));
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(ROOT_DIR, 'index.html'));
+});
+
+app.get('/index.html', (req, res) => {
+    res.sendFile(path.join(ROOT_DIR, 'index.html'));
+});
+
+app.get(/^\/(?!api).*/, (req, res) => {
+    res.sendFile(path.join(ROOT_DIR, 'index.html'));
+});
 
 app.use((req, res, next) => {
     const origin = req.headers.origin;
