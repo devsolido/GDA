@@ -1,0 +1,39 @@
+{
+  "name": "gda",
+  "version": "1.0.0",
+  "description": "GDA - Gestão Digital Agregada | Sistema de gerenciamento acadêmico para estudantes",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/devsolido/GDA.git"
+  },
+  "keywords": [
+    "gestao",
+    "academico",
+    "estudante",
+    "controle",
+    "presenca",
+    "notas",
+    "atividades"
+  ],
+  "author": "Igor Veras Morais",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/devsolido/GDA/issues"
+  },
+  "homepage": "https://github.com/devsolido/GDA#readme",
+  "dependencies": {
+    "@libsql/client": "^0.17.4",
+    "better-sqlite3": "^13.0.2",
+    "express": "^5.2.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
