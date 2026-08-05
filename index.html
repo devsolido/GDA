@@ -2834,8 +2834,22 @@
                 try {
                     const localValue = loadData(key, null);
                     const cloudValue = await loadDataFromCloud(key, null);
-                    if (cloudValue !== null && JSON.stringify(cloudValue) !== JSON.stringify(localValue)) {
+
+                    if (cloudValue === null || cloudValue === undefined) {
+                        if (localValue !== null && localValue !== undefined) {
+                            console.info(`[GDA][SYNC] ${key} sem dados na nuvem. Publicando estado local...`);
+                            await syncDataToCloud(key, localValue);
+                        } else {
+                            console.info(`[GDA][SYNC] ${key} sem dados locais e sem dados na nuvem.`);
+                        }
+                        continue;
+                    }
+
+                    if (JSON.stringify(cloudValue) !== JSON.stringify(localValue)) {
+                        console.info(`[GDA][SYNC] ${key} tem estado remoto diferente do local. Aplicando dados da nuvem...`);
                         applyCloudValue(key, cloudValue);
+                    } else {
+                        console.info(`[GDA][SYNC] ${key} já está sincronizado entre local e nuvem.`);
                     }
                 } catch (error) {
                     console.warn(`⚠️ Falha ao hidratar ${key} da nuvem:`, error && error.message ? error.message : error);
