@@ -4572,8 +4572,13 @@
         if (mobileList && desktopNav) {
             // clone nav links
             mobileList.innerHTML = desktopNav.innerHTML;
-            // wire links to close overlay when clicked
-            mobileList.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+            // remove duplicate ids from cloned nodes to avoid DOM id collisions
+            mobileList.querySelectorAll('[id]').forEach(el => el.removeAttribute('id'));
+            // wire links to navigate via showPage and close overlay when clicked
+            mobileList.querySelectorAll('a[data-page]').forEach(a => a.addEventListener('click', function(e) {
+                e.preventDefault();
+                const page = this.dataset.page;
+                if (page && typeof showPage === 'function') showPage(page);
                 overlay.classList.remove('open');
                 overlay.setAttribute('aria-hidden','true');
             }));
