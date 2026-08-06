@@ -338,3 +338,30 @@ header .user-info .role { font-size: 11px; color: var(--color-text-muted); }
     .top-bar h1 { font-size: 20px; }
     .top-bar h1 small { font-size: 12px; display: block; margin-left: 0; }
 }
+
+/* TABLE -> LIST view on small screens */
+@media (max-width: 520px) {
+    table { display: block; width: 100%; }
+    table thead { display: none; }
+    table tbody, table tr { display: block; width: 100%; }
+    table tr { margin-bottom: 12px; border-radius: 12px; background: var(--color-card); padding: 10px; border: 1px solid var(--color-border); }
+    table td { display: flex; justify-content: space-between; padding: 6px 8px; border: none; }
+    table td::before { content: attr(data-label); color: var(--color-text-muted); font-size: 12px; margin-right: 8px; flex: 1; }
+    table td .disciplina { display: block; font-weight: 700; color: var(--color-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 60%; }
+    table td .prof { display: block; color: var(--color-text-muted); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+}
+
+/* Truncation helpers for cards */
+.notas-card .titulo, .assunto-card .titulo, .notas-card .disciplina-nome, .assunto-card .descricao {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.notas-card .titulo, .assunto-card .titulo { white-space: nowrap; }
+.assunto-card .descricao { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; white-space: normal; }
+
+/* Slightly increase gaps/paddings on mobile to avoid feeling cramped */
+@media (max-width: 768px) {
+    .container { padding: 16px; }
+    .notas-grid { gap: 18px; }
+    .section-title { gap: 8px; }
+}

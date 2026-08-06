@@ -3183,11 +3183,11 @@
             const tbody = document.getElementById('turmasTableBody');
             if (!tbody) return;
             tbody.innerHTML = turmas.map(t => `<tr>
-                <td class="cod">${t.cod}</td>
-                <td><strong>${t.nome}</strong><br><span class="prof">${t.professor}</span></td>
-                <td class="turma">${t.turma}</td>
-                <td><span class="status"><i class="fas fa-check-circle"></i> Matriculado</span></td>
-                <td class="horario">${t.horario}</td>
+                <td class="cod" data-label="Cód.">${t.cod}</td>
+                <td data-label="Componente / Docente"><strong class=\"disciplina\">${t.nome}</strong><br><span class=\"prof\">${t.professor}</span></td>
+                <td class="turma" data-label="Turma">${t.turma}</td>
+                <td data-label="Status"><span class=\"status\"><i class=\"fas fa-check-circle\"></i> Matriculado</span></td>
+                <td class="horario" data-label="Horário">${t.horario}</td>
             </tr>`).join('');
             const searchInput = document.getElementById('searchTurma');
             if (searchInput) {
