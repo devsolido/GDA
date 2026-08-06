@@ -50,7 +50,7 @@ function applySecurityHeaders(req, res, next) {
     res.setHeader('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
     res.setHeader('X-XSS-Protection', '0');
     res.setHeader('Cache-Control', 'no-store');
-    res.setHeader('Content-Security-Policy', "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; upgrade-insecure-requests");
+    res.setHeader('Content-Security-Policy', "default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https:; frame-ancestors 'none'; upgrade-insecure-requests");
 
     if (req.secure || req.headers['x-forwarded-proto'] === 'https') {
         res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
@@ -176,8 +176,11 @@ app.get('/index.html', (req, res) => {
     res.sendFile(path.join(ROOT_DIR, 'index.html'));
 });
 
-app.get(/^\/(?!api).*/, (req, res) => {
-    res.sendFile(path.join(ROOT_DIR, 'index.html'));
+app.get(/^\/(?!api).*/, (req, res) => {    const requestPath = req.path || '/';
+    const hasExtension = /\.[a-z0-9]+$/i.test(requestPath);
+    if (hasExtension) {
+        return res.status(404).json({ error: 'Not found' });
+    }    res.sendFile(path.join(ROOT_DIR, 'index.html'));
 });
 
 app.use((req, res, next) => {

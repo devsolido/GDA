@@ -33,6 +33,22 @@ test('envia headers de segurança nas respostas', async () => {
     assert.equal(res.headers.get('x-frame-options'), 'DENY');
     assert.equal(res.headers.get('referrer-policy'), 'no-referrer');
     assert.equal(res.headers.get('permissions-policy'), 'geolocation=(), microphone=(), camera=()');
+
+    const csp = res.headers.get('content-security-policy') || '';
+    assert.match(csp, /style-src[^;]*'unsafe-inline'/i);
+    assert.match(csp, /script-src[^;]*'unsafe-inline'/i);
+  } finally {
+    server.close();
+  }
+});
+
+test('serve arquivos estáticos sem cair na página inicial', async () => {
+  const { server, port } = await startServer();
+
+  try {
+    const res = await fetch(`http://127.0.0.1:${port}/styles/style.css`);
+    assert.equal(res.status, 200);
+    assert.match(res.headers.get('content-type') || '', /text\/css/i);
   } finally {
     server.close();
   }
