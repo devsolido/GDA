@@ -53,3 +53,16 @@ test('serve arquivos estáticos sem cair na página inicial', async () => {
     server.close();
   }
 });
+
+test('bloqueia o endpoint raiz da API para não expor detalhes internos', async () => {
+  const { server, port } = await startServer();
+
+  try {
+    const res = await fetch(`http://127.0.0.1:${port}/api`);
+    assert.equal(res.status, 404);
+    const body = await res.json();
+    assert.equal(body.error, 'Not found');
+  } finally {
+    server.close();
+  }
+});

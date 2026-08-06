@@ -705,33 +705,10 @@ app.post('/api/sync/:key', async (req, res) => {
 });
 
 // ============================================================
-// ROTA PRINCIPAL (para verificar se a API está online)
+// ROTA PRINCIPAL (bloqueada para evitar exposição de informações)
 // ============================================================
 app.get('/api', (req, res) => {
-    const status = {
-        nome: 'GDA - Gestão Digital Agregada',
-        versao: '2.0.0',
-        status: 'online',
-        banco: TURSO_URL || 'Não configurado',
-        rotas: [
-            '/api/turmas',
-            '/api/presencas',
-            '/api/presencas-atrasadas',
-            '/api/ocorrencias',
-            '/api/atividades',
-            '/api/notas',
-            '/api/relatorios',
-            '/api/checklist',
-            '/api/panico',
-            '/api/atendimentos',
-            '/api/assuntos',
-            '/api/sync/:key'
-        ]
-    };
-
-    console.info('[GDA][API] Requisição para /api recebida. Status da API:', status.status);
-    console.info('[GDA][API] Banco configurado?', status.banco !== 'Não configurado' ? 'sim' : 'não');
-    res.json(status);
+    res.status(404).json({ error: 'Not found' });
 });
 
 // ============================================================
