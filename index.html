@@ -982,7 +982,10 @@
             width: 100%;
             border-collapse: collapse;
             font-size: 13px;
-            min-width: 600px;
+            min-width: 0;
+            max-width: 100%;
+            table-layout: auto;
+            word-break: break-word;
         }
         table thead { background: rgba(255, 255, 255, 0.02); }
         table th {
@@ -1421,9 +1424,10 @@
 
         .notas-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
             gap: 14px;
             margin-top: 14px;
+            max-width: 100%;
         }
         @media (max-width: 768px) {
             .notas-grid { grid-template-columns: 1fr !important; }
