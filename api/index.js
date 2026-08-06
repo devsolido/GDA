@@ -8,6 +8,13 @@ const ROOT_DIR = path.resolve(__dirname, '..');
 const RATE_LIMIT_WINDOW_MS = 60 * 1000;
 const RATE_LIMIT_MAX_REQUESTS = 100;
 const rateLimitStore = new Map();
+const DEFAULT_ALLOWED_ORIGINS = [
+    'https://gda-kappa.vercel.app',
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+    'http://localhost:5500',
+    'http://127.0.0.1:5500'
+];
 const SENSITIVE_PATHS = [
     /^\/\.env(?:$|\/)/i,
     /^\/\.git(?:$|\/)/i,
@@ -71,6 +78,24 @@ function applyRateLimit(req, res, next) {
     recentRequests.push(now);
     rateLimitStore.set(clientIp, recentRequests);
     next();
+}
+
+function getAllowedOrigins() {
+    const configured = (process.env.CORS_ALLOWED_ORIGINS || '')
+        .split(',')
+        .map((value) => value.trim())
+        .filter(Boolean);
+
+    return configured.length ? configured : DEFAULT_ALLOWED_ORIGINS;
+}
+
+function isAllowedOrigin(origin) {
+    if (!origin) {
+        return true;
+    }
+
+    const allowedOrigins = getAllowedOrigins();
+    return allowedOrigins.includes(origin);
 }
 
 // ============================================================
@@ -172,51 +197,70 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(ROOT_DIR, 'index.html'));
 });
 
+app.head('/', (req, res) => {
+    res.status(200).end();
+});
+
 app.get('/index.html', (req, res) => {
     res.sendFile(path.join(ROOT_DIR, 'index.html'));
 });
 
-app.get(/^\/(?!api).*/, (req, res) => {    const requestPath = req.path || '/';
+app.head('/index.html', (req, res) => {
+    res.status(200).end();
+});
+
+app.get(/^\/(?!api).*/, (req, res) => {
+    const requestPath = req.path || '/';
     const hasExtension = /\.[a-z0-9]+$/i.test(requestPath);
     if (hasExtension) {
         return res.status(404).json({ error: 'Not found' });
-    }    res.sendFile(path.join(ROOT_DIR, 'index.html'));
+    }
+    res.sendFile(path.join(ROOT_DIR, 'index.html'));
+});
+
+app.head(/^\/(?!api).*/, (req, res) => {
+    const requestPath = req.path || '/';
+    const hasExtension = /\.[a-z0-9]+$/i.test(requestPath);
+    if (hasExtension) {
+        return res.status(404).end();
+    }
+    res.status(200).end();
 });
 
 app.use((req, res, next) => {
     const origin = req.headers.origin;
-    const allowedOrigins = [
-        'https://gda-kappa.vercel.app',
-        'http://localhost:3000',
-        'http://127.0.0.1:3000',
-        'http://localhost:5500',
-        'http://127.0.0.1:5500'
-    ];
 
-    const isAllowedOrigin = !origin || allowedOrigins.includes(origin) || /\.vercel\.app$/i.test(origin || '') || /github\.dev$/i.test(origin || '') || /localhost/.test(origin || '');
+    if (origin) {
+        if (!isAllowedOrigin(origin)) {
+            return res.status(403).json({ error: 'Origin not allowed' });
+        }
 
-    if (isAllowedOrigin) {
-        res.header('Access-Control-Allow-Origin', origin || '*');
+        res.header('Access-Control-Allow-Origin', origin);
+        res.header('Access-Control-Allow-Credentials', 'true');
     }
 
-    res.header('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
+    res.header('Vary', 'Origin');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS, HEAD');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-    res.header('Access-Control-Allow-Credentials', 'true');
 
     if (req.method === 'OPTIONS') {
-        return res.sendStatus(200);
+        return res.sendStatus(204);
     }
 
     if (req.method === 'TRACE' || req.method === 'CONNECT') {
         return res.status(405).json({ error: 'Method Not Allowed' });
     }
 
+    if (req.method === 'PUT' || req.method === 'PATCH') {
+        return res.status(405).set('Allow', 'GET, POST, DELETE, OPTIONS, HEAD').json({ error: 'Method Not Allowed' });
+    }
+
     next();
 });
 
 app.use('/api', (req, res, next) => {
-    if (req.method === 'PUT' || req.method === 'PATCH') {
-        return res.status(405).set('Allow', 'GET, POST, DELETE, OPTIONS').json({ error: 'Method Not Allowed' });
+    if (req.method === 'HEAD') {
+        return res.status(200).end();
     }
     next();
 });
