@@ -5,6 +5,73 @@ const express = require('express');
 const path = require('path');
 const app = express();
 const ROOT_DIR = path.resolve(__dirname, '..');
+const RATE_LIMIT_WINDOW_MS = 60 * 1000;
+const RATE_LIMIT_MAX_REQUESTS = 100;
+const rateLimitStore = new Map();
+const SENSITIVE_PATHS = [
+    /^\/\.env(?:$|\/)/i,
+    /^\/\.git(?:$|\/)/i,
+    /^\/(?:package\.json|vercel\.json|\.htaccess|web\.config|config\.json|secrets\.json|credentials\.json|\.env\.local|\.env\.production|\.env\.development|\.env\.test)(?:$|\/)/i,
+    /^\/(?:admin|administrator|login|wp-admin|cgi-bin|phpmyadmin|backup|config|server-status)(?:$|\/)/i
+];
+
+function sqlValue(value) {
+    if (value === null || typeof value === 'undefined') {
+        return 'NULL';
+    }
+
+    if (typeof value === 'number' || typeof value === 'boolean') {
+        return String(value);
+    }
+
+    if (typeof value === 'string') {
+        return `'${String(value).replace(/'/g, "''")}'`;
+    }
+
+    return `'${JSON.stringify(value).replace(/'/g, "''")}'`;
+}
+
+function isSensitivePath(requestPath) {
+    if (!requestPath || requestPath === '/') {
+        return false;
+    }
+
+    if (requestPath.includes('..')) {
+        return true;
+    }
+
+    return SENSITIVE_PATHS.some((pattern) => pattern.test(requestPath));
+}
+
+function applySecurityHeaders(req, res, next) {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'DENY');
+    res.setHeader('Referrer-Policy', 'no-referrer');
+    res.setHeader('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
+    res.setHeader('X-XSS-Protection', '0');
+    res.setHeader('Cache-Control', 'no-store');
+    res.setHeader('Content-Security-Policy', "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; upgrade-insecure-requests");
+
+    if (req.secure || req.headers['x-forwarded-proto'] === 'https') {
+        res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+    }
+
+    next();
+}
+
+function applyRateLimit(req, res, next) {
+    const clientIp = req.ip || req.socket?.remoteAddress || 'unknown';
+    const now = Date.now();
+    const recentRequests = (rateLimitStore.get(clientIp) || []).filter((timestamp) => now - timestamp < RATE_LIMIT_WINDOW_MS);
+
+    if (recentRequests.length >= RATE_LIMIT_MAX_REQUESTS) {
+        return res.status(429).json({ error: 'Too Many Requests' });
+    }
+
+    recentRequests.push(now);
+    rateLimitStore.set(clientIp, recentRequests);
+    next();
+}
 
 // ============================================================
 // CONFIGURAÇÃO TURSO (usando variáveis de ambiente da Vercel)
@@ -89,8 +156,17 @@ async function queryTurso(sql) {
 // ============================================================
 // MIDDLEWARE
 // ============================================================
-app.use(express.json());
-app.use(express.static(ROOT_DIR));
+app.disable('x-powered-by');
+app.use(applySecurityHeaders);
+app.use(applyRateLimit);
+app.use((req, res, next) => {
+    if (isSensitivePath(req.path)) {
+        return res.status(404).json({ error: 'Not found' });
+    }
+    next();
+});
+app.use(express.json({ limit: '1mb' }));
+app.use(express.static(ROOT_DIR, { dotfiles: 'ignore', index: false }));
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(ROOT_DIR, 'index.html'));
@@ -120,7 +196,7 @@ app.use((req, res, next) => {
         res.header('Access-Control-Allow-Origin', origin || '*');
     }
 
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
     res.header('Access-Control-Allow-Credentials', 'true');
 
@@ -128,6 +204,17 @@ app.use((req, res, next) => {
         return res.sendStatus(200);
     }
 
+    if (req.method === 'TRACE' || req.method === 'CONNECT') {
+        return res.status(405).json({ error: 'Method Not Allowed' });
+    }
+
+    next();
+});
+
+app.use('/api', (req, res, next) => {
+    if (req.method === 'PUT' || req.method === 'PATCH') {
+        return res.status(405).set('Allow', 'GET, POST, DELETE, OPTIONS').json({ error: 'Method Not Allowed' });
+    }
     next();
 });
 
@@ -189,8 +276,8 @@ app.post('/api/presencas', async (req, res) => {
         const sql = `
             INSERT OR REPLACE INTO presencas 
             (id, data, hora, tipo, justificativa, nome, curso, atestado)
-            VALUES ('${id}', '${data}', '${hora}', '${tipo}', '${justificativa || ''}', 
-                    '${nome}', '${curso || ''}', ${atestado ? 1 : 0})
+            VALUES (${sqlValue(id)}, ${sqlValue(data)}, ${sqlValue(hora)}, ${sqlValue(tipo)}, ${sqlValue(justificativa || '')}, 
+                    ${sqlValue(nome)}, ${sqlValue(curso || '')}, ${sqlValue(atestado ? 1 : 0)})
         `;
         await queryTurso(sql);
         res.json({ success: true, id });
@@ -202,7 +289,7 @@ app.post('/api/presencas', async (req, res) => {
 app.delete('/api/presencas/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        await queryTurso(`DELETE FROM presencas WHERE id = '${id}'`);
+        await queryTurso(`DELETE FROM presencas WHERE id = ${sqlValue(id)}`);
         res.json({ success: true });
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -234,8 +321,8 @@ app.post('/api/presencas-atrasadas', async (req, res) => {
         const sql = `
             INSERT OR REPLACE INTO presencas_atrasadas 
             (id, data, hora, tipo, justificativa, usuario, registrado_em)
-            VALUES ('${id}', '${data}', '${hora}', '${tipo}', '${justificativa}', 
-                    '${usuario || 'Igor Veras Morais'}', '${new Date().toISOString().split('T')[0]}')
+            VALUES (${sqlValue(id)}, ${sqlValue(data)}, ${sqlValue(hora)}, ${sqlValue(tipo)}, ${sqlValue(justificativa)}, 
+                    ${sqlValue(usuario || 'Igor Veras Morais')}, ${sqlValue(new Date().toISOString().split('T')[0])})
         `;
         await queryTurso(sql);
         res.json({ success: true, id });
@@ -269,9 +356,9 @@ app.post('/api/ocorrencias', async (req, res) => {
         const sql = `
             INSERT OR REPLACE INTO ocorrencias 
             (id, data, disciplina, tipo, descricao, para_coordenacao, usuario, registrado_em)
-            VALUES ('${id}', '${data}', '${disciplina}', '${tipo}', '${descricao}', 
-                    ${para_coordenacao ? 1 : 0}, '${usuario || 'Igor Veras Morais'}', 
-                    '${new Date().toISOString().split('T')[0]}')
+            VALUES (${sqlValue(id)}, ${sqlValue(data)}, ${sqlValue(disciplina)}, ${sqlValue(tipo)}, ${sqlValue(descricao)}, 
+                    ${sqlValue(para_coordenacao ? 1 : 0)}, ${sqlValue(usuario || 'Igor Veras Morais')}, 
+                    ${sqlValue(new Date().toISOString().split('T')[0])})
         `;
         await queryTurso(sql);
         res.json({ success: true, id });
@@ -310,10 +397,10 @@ app.post('/api/atividades', async (req, res) => {
             INSERT OR REPLACE INTO atividades 
             (id, titulo, tipo, prioridade, disciplina, inicio, prazo, entregaDocente, 
              observacoes, participantes, subtarefas, progresso)
-            VALUES ('${id}', '${titulo}', '${tipo}', '${prioridade}', '${disciplina}', 
-                    '${inicio}', '${prazo}', '${entregaDocente}', '${observacoes || ''}', 
-                    '${JSON.stringify(participantes || [])}', '${JSON.stringify(subtarefas || [])}', 
-                    ${progresso || 0})
+            VALUES (${sqlValue(id)}, ${sqlValue(titulo)}, ${sqlValue(tipo)}, ${sqlValue(prioridade)}, ${sqlValue(disciplina)}, 
+                    ${sqlValue(inicio)}, ${sqlValue(prazo)}, ${sqlValue(entregaDocente)}, ${sqlValue(observacoes || '')}, 
+                    ${sqlValue(JSON.stringify(participantes || []))}, ${sqlValue(JSON.stringify(subtarefas || []))}, 
+                    ${sqlValue(progresso || 0)})
         `;
         await queryTurso(sql);
         res.json({ success: true, id });
@@ -325,7 +412,7 @@ app.post('/api/atividades', async (req, res) => {
 app.delete('/api/atividades/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        await queryTurso(`DELETE FROM atividades WHERE id = '${id}'`);
+        await queryTurso(`DELETE FROM atividades WHERE id = ${sqlValue(id)}`);
         res.json({ success: true });
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -357,9 +444,9 @@ app.post('/api/notas', async (req, res) => {
         const sql = `
             INSERT OR REPLACE INTO notas 
             (disciplina_cod, disciplina_nome, b1, b2, b3, b4)
-            VALUES ('${disciplina_cod}', '${disciplina_nome}', 
-                    ${parseFloat(b1) || 0}, ${parseFloat(b2) || 0}, 
-                    ${parseFloat(b3) || 0}, ${parseFloat(b4) || 0})
+            VALUES (${sqlValue(disciplina_cod)}, ${sqlValue(disciplina_nome)}, 
+                    ${sqlValue(parseFloat(b1) || 0)}, ${sqlValue(parseFloat(b2) || 0)}, 
+                    ${sqlValue(parseFloat(b3) || 0)}, ${sqlValue(parseFloat(b4) || 0)})
         `;
         await queryTurso(sql);
         res.json({ success: true });
@@ -392,7 +479,7 @@ app.post('/api/relatorios', async (req, res) => {
         const { id, data, disciplina, tempo, texto } = req.body;
         const sql = `
             INSERT OR REPLACE INTO relatorios (id, data, disciplina, tempo, texto)
-            VALUES ('${id}', '${data}', '${disciplina}', ${tempo}, '${texto}')
+            VALUES (${sqlValue(id)}, ${sqlValue(data)}, ${sqlValue(disciplina)}, ${sqlValue(tempo)}, ${sqlValue(texto)})
         `;
         await queryTurso(sql);
         res.json({ success: true, id });
@@ -424,7 +511,7 @@ app.post('/api/checklist/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const { concluido } = req.body;
-        await queryTurso(`UPDATE checklist SET concluido = ${concluido ? 1 : 0} WHERE id = '${id}'`);
+        await queryTurso(`UPDATE checklist SET concluido = ${sqlValue(concluido ? 1 : 0)} WHERE id = ${sqlValue(id)}`);
         res.json({ success: true });
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -456,8 +543,8 @@ app.post('/api/panico', async (req, res) => {
         const sql = `
             INSERT OR REPLACE INTO historico_panico 
             (id, data, hora, disciplina, motivo, resolvido)
-            VALUES ('${id}', '${data}', '${hora}', '${disciplina}', '${motivo}', 
-                    ${resolvido ? 1 : 0})
+            VALUES (${sqlValue(id)}, ${sqlValue(data)}, ${sqlValue(hora)}, ${sqlValue(disciplina)}, ${sqlValue(motivo)}, 
+                    ${sqlValue(resolvido ? 1 : 0)})
         `;
         await queryTurso(sql);
         res.json({ success: true, id });
@@ -491,8 +578,8 @@ app.post('/api/atendimentos', async (req, res) => {
         const sql = `
             INSERT OR REPLACE INTO atendimentos 
             (id, disciplina, data, hora, descricao, timestamp)
-            VALUES ('${id}', '${disciplina}', '${data}', '${hora}', '${descricao}', 
-                    ${timestamp || Date.now()})
+            VALUES (${sqlValue(id)}, ${sqlValue(disciplina)}, ${sqlValue(data)}, ${sqlValue(hora)}, ${sqlValue(descricao)}, 
+                    ${sqlValue(timestamp || Date.now())})
         `;
         await queryTurso(sql);
         res.json({ success: true, id });
@@ -526,8 +613,8 @@ app.post('/api/assuntos', async (req, res) => {
         const sql = `
             INSERT OR REPLACE INTO assuntos 
             (id, disciplina, titulo, descricao, data, timestamp)
-            VALUES ('${id}', '${disciplina}', '${titulo}', '${descricao}', '${data}', 
-                    ${timestamp || Date.now()})
+            VALUES (${sqlValue(id)}, ${sqlValue(disciplina)}, ${sqlValue(titulo)}, ${sqlValue(descricao)}, ${sqlValue(data)}, 
+                    ${sqlValue(timestamp || Date.now())})
         `;
         await queryTurso(sql);
         res.json({ success: true, id });
@@ -540,7 +627,7 @@ app.get('/api/sync/:key', async (req, res) => {
     try {
         await ensureSyncTable();
         const { key } = req.params;
-        const result = await queryTurso(`SELECT payload FROM gda_sync WHERE data_key = '${String(key).replace(/'/g, "''")}' LIMIT 1`);
+        const result = await queryTurso(`SELECT payload FROM gda_sync WHERE data_key = ${sqlValue(String(key))} LIMIT 1`);
         const rows = result.results[0]?.response?.result?.rows || [];
         if (!rows.length) {
             return res.json(null);
@@ -560,7 +647,7 @@ app.post('/api/sync/:key', async (req, res) => {
         const now = new Date().toISOString();
         const sql = `
             INSERT INTO gda_sync (id, data_key, payload, updated_at)
-            VALUES ('${key}-${Date.now()}', '${String(key).replace(/'/g, "''")}', '${payload.replace(/'/g, "''")}', '${now}')
+            VALUES (${sqlValue(`${key}-${Date.now()}`)}, ${sqlValue(String(key))}, ${sqlValue(payload)}, ${sqlValue(now)})
             ON CONFLICT(data_key) DO UPDATE SET payload = excluded.payload, updated_at = excluded.updated_at
         `;
         await queryTurso(sql);
