@@ -365,3 +365,38 @@ header .user-info .role { font-size: 11px; color: var(--color-text-muted); }
     .notas-grid { gap: 18px; }
     .section-title { gap: 8px; }
 }
+
+/* Mobile menu overlay and global tweaks */
+.mobile-menu-btn {
+    display: none;
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    background: linear-gradient(135deg,var(--color-accent),var(--color-accent-hover));
+    color: var(--color-primary);
+    border: none;
+    padding: 8px 10px;
+    border-radius: 10px;
+    font-size: 18px;
+    z-index: 120;
+}
+@media (max-width: 600px) {
+    .mobile-menu-btn { display: block; }
+}
+
+.mobile-nav-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 200; }
+.mobile-nav-overlay.open { display: block; }
+.mobile-nav-content { width: 320px; max-width: 90%; height: 100%; background: var(--color-secondary); padding: 18px; box-shadow: var(--shadow); overflow-y: auto; }
+.mobile-nav-close { background: transparent; border: 1px solid var(--color-border); color: var(--color-text); padding: 6px 10px; border-radius: 8px; margin-bottom: 12px; }
+.mobile-nav-list a { display: flex; align-items: center; gap: 12px; padding: 10px 8px; border-radius: 8px; color: var(--color-text); text-decoration: none; }
+.mobile-nav-list a:hover { background: rgba(255,255,255,0.02); }
+
+/* Global truncation and spacing improvements */
+.disciplina, .titulo, .prof, .relatorio-header h3 { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card, .notas-card, .assunto-card, .stat-card { padding: 16px; }
+.table-search input { font-size: 14px; }
+
+/* Prevent overly large min-heights on small screens */
+@media (max-width: 480px) {
+    .splash-content .btn-entrar, .filtros-atividades button, header .navbar a { min-height: 40px; }
+}

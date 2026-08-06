@@ -2375,6 +2375,7 @@
 
     <!-- ===== SIDEBAR ===== -->
     <header>
+        <button id="mobileMenuBtn" class="mobile-menu-btn" aria-label="Abrir menu">☰</button>
         <div class="logo">
             <div class="logo-icon">GDA</div>
             <h2>GDA<span>.</span></h2>
@@ -2475,6 +2476,14 @@
             </div>
         </div>
     </header>
+
+    <!-- MOBILE NAV OVERLAY -->
+    <div id="mobileNavOverlay" class="mobile-nav-overlay" aria-hidden="true">
+        <div class="mobile-nav-content">
+            <button id="mobileNavClose" class="mobile-nav-close" aria-label="Fechar menu">✕</button>
+            <nav class="mobile-nav-list"></nav>
+        </div>
+    </div>
 
     <!-- ===== CONTAINER ===== -->
     <div class="container" id="mainContainer">
@@ -4549,6 +4558,47 @@
             init();
         }
 
+    })();
+    </script>
+
+    <script>
+    // Mobile nav behavior
+    (function(){
+        const mobileBtn = document.getElementById('mobileMenuBtn');
+        const overlay = document.getElementById('mobileNavOverlay');
+        const closeBtn = document.getElementById('mobileNavClose');
+        const mobileList = document.querySelector('.mobile-nav-list');
+        const desktopNav = document.querySelector('header .navbar');
+        if (mobileList && desktopNav) {
+            // clone nav links
+            mobileList.innerHTML = desktopNav.innerHTML;
+            // wire links to close overlay when clicked
+            mobileList.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+                overlay.classList.remove('open');
+                overlay.setAttribute('aria-hidden','true');
+            }));
+        }
+        if (mobileBtn && overlay) {
+            mobileBtn.addEventListener('click', () => {
+                overlay.classList.add('open');
+                overlay.setAttribute('aria-hidden','false');
+            });
+        }
+        if (closeBtn && overlay) {
+            closeBtn.addEventListener('click', () => {
+                overlay.classList.remove('open');
+                overlay.setAttribute('aria-hidden','true');
+            });
+        }
+        // close on backdrop click
+        if (overlay) {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    overlay.classList.remove('open');
+                    overlay.setAttribute('aria-hidden','true');
+                }
+            });
+        }
     })();
     </script>
 
