@@ -1,3 +1,19 @@
+Aqui está a versão **desativando o módulo duplo de usuário**, mantendo apenas **Igor**, e com a conexão com **API, backend e nuvem** restaurada:
+
+## ✅ Alterações realizadas:
+
+1. **Removido seletor de usuário** do splash screen
+2. **Usuário fixo "igor"** em todo o sistema
+3. **Chaves simplificadas** no localStorage (sem prefixo de usuário)
+4. **Conexão com API/backend/nuvem** restaurada
+5. **Barra de progresso** mantida
+6. **Toast de boas-vindas** aparece apenas uma vez
+7. **Bloco de fim de semana** mantido (sábado/domingo)
+8. **Tudo o resto permanece igual**
+
+Aqui está o código completo com as alterações:
+
+```html
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -11,7 +27,7 @@
 
     <style>
         /* ============================================================
-           CSS COMPLETO - VERSÃO 7.2 (COM BARRA DE PROGRESSO)
+           CSS COMPLETO - VERSÃO 7.3 (APENAS IGOR)
            ============================================================ */
         
         :root {
@@ -112,42 +128,6 @@
             color: var(--color-text-muted);
             margin-bottom: 16px;
             line-height: 1.6;
-        }
-
-        /* Seletor de usuário */
-        .splash-content .usuario-selector {
-            margin: 12px 0 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        .splash-content .usuario-selector label {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--color-text-muted);
-            text-align: left;
-        }
-        .splash-content .usuario-selector select {
-            width: 100%;
-            padding: 10px 14px;
-            border-radius: 10px;
-            border: 1px solid var(--color-border);
-            background: rgba(255, 255, 255, 0.03);
-            color: var(--color-text);
-            font-family: 'Inter', sans-serif;
-            font-size: 15px;
-            outline: none;
-            transition: var(--transition);
-            min-height: var(--toque-min);
-            cursor: pointer;
-        }
-        .splash-content .usuario-selector select:focus {
-            border-color: var(--color-accent);
-            box-shadow: 0 0 0 3px rgba(255, 179, 0, 0.08);
-        }
-        .splash-content .usuario-selector select option {
-            background: var(--color-secondary);
-            color: var(--color-text);
         }
 
         /* BARRA DE PROGRESSO */
@@ -2371,15 +2351,6 @@
                 <strong>Bora sobreviver a mais um semestre?</strong> 💪📚
             </div>
             
-            <!-- SELETOR DE USUÁRIO -->
-            <div class="usuario-selector">
-                <label for="usuarioSelect">👤 Selecione seu usuário</label>
-                <select id="usuarioSelect">
-                    <option value="igor">Igor</option>
-                    <option value="samuel">Samuel</option>
-                </select>
-            </div>
-            
             <!-- BARRA DE PROGRESSO -->
             <div class="progress-container" id="progressContainer">
                 <div class="progress-label">
@@ -2395,7 +2366,7 @@
             <button class="btn-entrar" id="btnEntrar" disabled>
                 <i class="fas fa-spinner fa-spin"></i> Carregando...
             </button>
-            <div class="versao">v7.2 · Multi-Usuário</div>
+            <div class="versao">v7.3 · Igor</div>
         </div>
     </div>
 
@@ -2781,48 +2752,28 @@
     </div>
 
     <!-- ============================================================
-    SCRIPTS - VERSÃO 7.2 (COM BARRA DE PROGRESSO)
+    SCRIPTS - VERSÃO 7.3 (APENAS IGOR)
     ============================================================ -->
     <script>
     (function() {
         'use strict';
 
-        console.log('🚀 GDA v7.2 - Multi-Usuário com Barra de Progresso');
+        console.log('🚀 GDA v7.3 - Apenas Igor');
 
         // ============================================================
-        //  USUÁRIO ATUAL
+        //  DADOS - localStorage (Chaves simples, sem usuário)
         // ============================================================
 
-        let usuarioAtual = localStorage.getItem('gda_usuario_atual') || 'igor';
-        let toastBoasVindasExibido = false;
-
-        function getUsuarioAtual() {
-            return usuarioAtual;
-        }
-
-        function setUsuarioAtual(usuario) {
-            usuarioAtual = usuario;
-            localStorage.setItem('gda_usuario_atual', usuario);
-        }
-
-        function getChaveUsuario(baseKey) {
-            return `gda_${usuarioAtual}_${baseKey}`;
-        }
-
-        // ============================================================
-        //  DADOS - localStorage
-        // ============================================================
-
-        let presencasAtrasadas = loadData('presencas_atrasadas', []);
-        let ocorrencias = loadData('ocorrencias', []);
-        let presencas = loadData('presencas', []);
-        let atividades = loadData('atividades', []);
-        let notas = loadData('notas', {});
-        let relatorios = loadData('relatorios', []);
-        let checklistState = loadData('checklist', {});
-        let historicoPanico = loadData('historico_panico', []);
-        let atendimentos = loadData('atendimentos', []);
-        let assuntos = loadData('assuntos', {});
+        let presencasAtrasadas = loadData('gda_presencas_atrasadas', []);
+        let ocorrencias = loadData('gda_ocorrencias', []);
+        let presencas = loadData('gda_presencas', []);
+        let atividades = loadData('gda_atividades', []);
+        let notas = loadData('gda_notas', {});
+        let relatorios = loadData('gda_relatorios', []);
+        let checklistState = loadData('gda_checklist', {});
+        let historicoPanico = loadData('gda_historico_panico', []);
+        let atendimentos = loadData('gda_atendimentos', []);
+        let assuntos = loadData('gda_assuntos', {});
         let participantesTemp = [];
         let subtarefasTemp = [];
         let editandoId = null;
@@ -2832,6 +2783,7 @@
         let tipoPresencaAtual = 'presente';
         let filtroAtividadesAtual = 'todas';
         let timeoutRespirar = null;
+        let toastBoasVindasExibido = false;
 
         // ============================================================
         //  FUNÇÕES AUXILIARES
@@ -2859,20 +2811,16 @@
         function escapeHtml(t) { if (!t) return ''; const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
 
         // ============================================================
-        //  FUNÇÕES DE CARREGAMENTO/SALVAMENTO (COM USUÁRIO)
+        //  FUNÇÕES DE CARREGAMENTO/SALVAMENTO (Chaves simples)
         // ============================================================
 
         function loadData(key, def) {
-            const chave = getChaveUsuario(key);
-            try { const d = localStorage.getItem(chave); return d ? JSON.parse(d) : def; } catch(e) { return def; }
+            try { const d = localStorage.getItem(key); return d ? JSON.parse(d) : def; } catch(e) { return def; }
         }
 
         async function saveData(key, data) {
-            const chave = getChaveUsuario(key);
-            try { localStorage.setItem(chave, JSON.stringify(data)); } catch(e) { return false; }
-            try {
-                await syncDataToCloud(chave, data);
-            } catch(e) {}
+            try { localStorage.setItem(key, JSON.stringify(data)); } catch(e) { return false; }
+            try { await syncDataToCloud(key, data); } catch(e) {}
             return true;
         }
 
@@ -2922,54 +2870,54 @@
             }
         }
 
-        async function carregarDadosUsuario(usuario, onProgress) {
+        async function carregarDados(onProgress) {
             const chaves = [
-                'presencas_atrasadas', 'ocorrencias', 'presencas', 'atividades',
-                'notas', 'relatorios', 'checklist', 'historico_panico',
-                'atendimentos', 'assuntos'
+                'gda_presencas_atrasadas', 'gda_ocorrencias', 'gda_presencas', 'gda_atividades',
+                'gda_notas', 'gda_relatorios', 'gda_checklist', 'gda_historico_panico',
+                'gda_atendimentos', 'gda_assuntos'
             ];
             
             let total = chaves.length;
             let concluidas = 0;
             
             for (const chave of chaves) {
-                const chaveComUsuario = `gda_${usuario}_${chave}`;
                 try {
                     const localValue = loadData(chave, null);
-                    const cloudValue = await loadDataFromCloud(chaveComUsuario, null);
+                    const cloudValue = await loadDataFromCloud(chave, null);
                     
                     if (cloudValue !== null && cloudValue !== undefined) {
-                        localStorage.setItem(chaveComUsuario, JSON.stringify(cloudValue));
+                        localStorage.setItem(chave, JSON.stringify(cloudValue));
                         atualizarVariavel(chave, cloudValue);
                     } else if (localValue !== null && localValue !== undefined) {
-                        await syncDataToCloud(chaveComUsuario, localValue);
+                        await syncDataToCloud(chave, localValue);
                     }
                     
                     concluidas++;
                     if (onProgress) {
                         const percent = Math.round((concluidas / total) * 100);
-                        onProgress(percent, `Carregando ${chave.replace('_', ' ')}...`);
+                        onProgress(percent, `Carregando...`);
                     }
                 } catch (error) {
-                    console.warn(`⚠️ Falha ao carregar ${chave} para ${usuario}:`, error);
+                    console.warn(`⚠️ Falha ao carregar ${chave}:`, error);
                     concluidas++;
                     if (onProgress) {
                         const percent = Math.round((concluidas / total) * 100);
-                        onProgress(percent, `Carregando ${chave.replace('_', ' ')}...`);
+                        onProgress(percent, `Carregando...`);
                     }
                 }
             }
             
-            presencasAtrasadas = loadData('presencas_atrasadas', []);
-            ocorrencias = loadData('ocorrencias', []);
-            presencas = loadData('presencas', []);
-            atividades = loadData('atividades', []);
-            notas = loadData('notas', {});
-            relatorios = loadData('relatorios', []);
-            checklistState = loadData('checklist', {});
-            historicoPanico = loadData('historico_panico', []);
-            atendimentos = loadData('atendimentos', []);
-            assuntos = loadData('assuntos', {});
+            // Recarregar variáveis
+            presencasAtrasadas = loadData('gda_presencas_atrasadas', []);
+            ocorrencias = loadData('gda_ocorrencias', []);
+            presencas = loadData('gda_presencas', []);
+            atividades = loadData('gda_atividades', []);
+            notas = loadData('gda_notas', {});
+            relatorios = loadData('gda_relatorios', []);
+            checklistState = loadData('gda_checklist', {});
+            historicoPanico = loadData('gda_historico_panico', []);
+            atendimentos = loadData('gda_atendimentos', []);
+            assuntos = loadData('gda_assuntos', {});
             
             if (onProgress) {
                 onProgress(100, '✅ Pronto!');
@@ -2978,16 +2926,16 @@
 
         function atualizarVariavel(chave, valor) {
             const mapa = {
-                'presencas_atrasadas': () => presencasAtrasadas = valor,
-                'ocorrencias': () => ocorrencias = valor,
-                'presencas': () => presencas = valor,
-                'atividades': () => atividades = valor,
-                'notas': () => notas = valor,
-                'relatorios': () => relatorios = valor,
-                'checklist': () => checklistState = valor,
-                'historico_panico': () => historicoPanico = valor,
-                'atendimentos': () => atendimentos = valor,
-                'assuntos': () => assuntos = valor
+                'gda_presencas_atrasadas': () => presencasAtrasadas = valor,
+                'gda_ocorrencias': () => ocorrencias = valor,
+                'gda_presencas': () => presencas = valor,
+                'gda_atividades': () => atividades = valor,
+                'gda_notas': () => notas = valor,
+                'gda_relatorios': () => relatorios = valor,
+                'gda_checklist': () => checklistState = valor,
+                'gda_historico_panico': () => historicoPanico = valor,
+                'gda_atendimentos': () => atendimentos = valor,
+                'gda_assuntos': () => assuntos = valor
             };
             if (mapa[chave]) mapa[chave]();
         }
@@ -3074,7 +3022,7 @@
         ];
 
         // ============================================================
-        //  RENDERIZAÇÃO - PÁGINAS
+        //  FUNÇÕES DE RENDERIZAÇÃO (MANTIDAS - COM NOME IGOR FIXO)
         // ============================================================
 
         function renderizarPaginas() {
@@ -3087,7 +3035,7 @@
                             <div class="greeting-text">
                                 <span class="greeting-icon" id="greetingEmoji">🌅</span>
                                 <div>
-                                    <h1 class="greeting-title" id="greetingTitle">Bom dia, ${usuarioAtual.charAt(0).toUpperCase() + usuarioAtual.slice(1)}!</h1>
+                                    <h1 class="greeting-title" id="greetingTitle">Bom dia, Igor!</h1>
                                     <p class="greeting-subtitle">Hoje é uma nova oportunidade para brilhar! ✨</p>
                                 </div>
                             </div>
@@ -3287,6 +3235,24 @@
         }
 
         // ============================================================
+        //  FUNÇÃO: VERIFICAR DIA DA SEMANA (BLOQUEIO DE FIM DE SEMANA)
+        // ============================================================
+
+        function verificarDiaSemana() {
+            const hoje = new Date();
+            const diaSemana = hoje.getDay(); // 0 = Domingo, 6 = Sábado
+            
+            if (diaSemana === 0) {
+                mostrarToast('🔴 Calma ai! hoje é domingo!', 'aviso', 4000);
+                return false;
+            } else if (diaSemana === 6) {
+                mostrarToast('🔴 Calma ai! hoje é sábado!', 'aviso', 4000);
+                return false;
+            }
+            return true;
+        }
+
+        // ============================================================
         //  FUNÇÕES DE RENDERIZAÇÃO (MANTIDAS)
         // ============================================================
 
@@ -3306,7 +3272,7 @@
                 el.addEventListener('click', function() {
                     const id = this.dataset.id;
                     checklistState[id] = !checklistState[id];
-                    saveData('checklist', checklistState);
+                    saveData('gda_checklist', checklistState);
                     renderChecklist();
                     renderTelaInicial();
                     renderDashboard();
@@ -3458,24 +3424,6 @@
             container.querySelectorAll('.btn-delete-atendimento').forEach(btn => btn.addEventListener('click', function() { if (confirm('Remover este atendimento?')) deletarAtendimento(this.dataset.id); }));
         }
 
-        // ============================================================
-        //  FUNÇÃO: VERIFICAR DIA DA SEMANA (BLOQUEIO DE FIM DE SEMANA)
-        // ============================================================
-
-        function verificarDiaSemana() {
-            const hoje = new Date();
-            const diaSemana = hoje.getDay(); // 0 = Domingo, 6 = Sábado
-            
-            if (diaSemana === 0) {
-                mostrarToast('🔴 Calma ai! hoje é domingo!', 'aviso', 4000);
-                return false;
-            } else if (diaSemana === 6) {
-                mostrarToast('🔴 Calma ai! hoje é sábado!', 'aviso', 4000);
-                return false;
-            }
-            return true;
-        }
-
         function renderPresenca() {
             const container = document.getElementById('presencaContainer');
             if (!container) return;
@@ -3533,7 +3481,7 @@
                     </div>
                     <div style="display:flex;justify-content:space-between;align-items:center;margin-top:2px;">
                         <span class="tipo ${p.tipo === 'presente' ? 'presente' : 'falta'}">${p.tipo === 'presente' ? '✅' : '❌'} ${p.tipo === 'presente' ? 'Presente' : 'Falta'}</span>
-                        <span style="font-size:9px;color:var(--color-text-muted);">👤 ${p.usuario || usuarioAtual}</span>
+                        <span style="font-size:9px;color:var(--color-text-muted);">👤 ${p.usuario || 'Igor'}</span>
                     </div>
                     ${p.justificativa ? `<div class="justificativa">📝 ${escapeHtml(p.justificativa)}</div>` : ''}
                     <div style="margin-top:4px;display:flex;gap:4px;flex-wrap:wrap;">
@@ -3683,12 +3631,12 @@
                 hora: hora,
                 tipo: tipo,
                 justificativa: justificativa,
-                usuario: usuarioAtual.charAt(0).toUpperCase() + usuarioAtual.slice(1),
+                usuario: 'Igor',
                 registrado_em: getDataLocal()
             };
 
             presencasAtrasadas.push(registro);
-            saveData('presencas_atrasadas', presencasAtrasadas);
+            saveData('gda_presencas_atrasadas', presencasAtrasadas);
             fecharModalAtrasado();
             mostrarToast('✅ Registro atrasado salvo com sucesso!', 'sucesso');
             renderPresencasAtrasadas();
@@ -3697,7 +3645,7 @@
         function excluirPresencaAtrasada(id) {
             if (confirm('Remover este registro atrasado?')) {
                 presencasAtrasadas = presencasAtrasadas.filter(p => p.id !== id);
-                saveData('presencas_atrasadas', presencasAtrasadas);
+                saveData('gda_presencas_atrasadas', presencasAtrasadas);
                 renderPresencasAtrasadas();
                 mostrarToast('✅ Registro removido!', 'sucesso');
             }
@@ -3738,12 +3686,12 @@
                 tipo: tipo,
                 descricao: descricao,
                 para_coordenacao: paraCoordenacao,
-                usuario: usuarioAtual.charAt(0).toUpperCase() + usuarioAtual.slice(1),
+                usuario: 'Igor',
                 registrado_em: getDataLocal()
             };
 
             ocorrencias.push(ocorrencia);
-            saveData('ocorrencias', ocorrencias);
+            saveData('gda_ocorrencias', ocorrencias);
             fecharModalOcorrencia();
             mostrarToast('✅ Ocorrência registrada com sucesso!', 'sucesso');
             renderOcorrencias();
@@ -3752,14 +3700,13 @@
         function excluirOcorrencia(id) {
             if (confirm('Remover esta ocorrência?')) {
                 ocorrencias = ocorrencias.filter(o => o.id !== id);
-                saveData('ocorrencias', ocorrencias);
+                saveData('gda_ocorrencias', ocorrencias);
                 renderOcorrencias();
                 mostrarToast('✅ Ocorrência removida!', 'sucesso');
             }
         }
 
         function abrirModalPresenca(tipo) {
-            // VERIFICA SE É FIM DE SEMANA
             if (!verificarDiaSemana()) {
                 return;
             }
@@ -3780,14 +3727,14 @@
             if (tipo === 'presente') {
                 icon.textContent = '✅';
                 title.textContent = 'Confirmar Presença';
-                subtitle.textContent = `${usuarioAtual.charAt(0).toUpperCase() + usuarioAtual.slice(1)} · Controle Ambiental`;
+                subtitle.textContent = 'Igor · Controle Ambiental';
                 justificativaArea.style.display = 'none';
                 btnConfirmar.className = 'btn-confirmar-presenca';
                 btnConfirmar.innerHTML = '<i class="fas fa-check"></i> Confirmar Presença';
             } else {
                 icon.textContent = '❌';
                 title.textContent = 'Registrar Falta';
-                subtitle.textContent = `${usuarioAtual.charAt(0).toUpperCase() + usuarioAtual.slice(1)} · Controle Ambiental`;
+                subtitle.textContent = 'Igor · Controle Ambiental';
                 justificativaArea.style.display = 'block';
                 btnConfirmar.className = 'btn-confirmar-falta';
                 btnConfirmar.innerHTML = '<i class="fas fa-times"></i> Confirmar Falta';
@@ -3841,12 +3788,12 @@
                 hora: horaStr,
                 tipo: tipoPresencaAtual,
                 justificativa: justificativa,
-                nome: usuarioAtual.charAt(0).toUpperCase() + usuarioAtual.slice(1),
+                nome: 'Igor',
                 curso: 'Controle Ambiental - 2º Sem',
                 atestado: false
             };
             presencas.push(registro);
-            saveData('presencas', presencas);
+            saveData('gda_presencas', presencas);
             fecharModalPresenca();
             mostrarToast(tipoPresencaAtual === 'presente' ? '✅ Presença registrada!' : '❌ Falta registrada!', 'sucesso');
             atualizarStatusPresenca();
@@ -3888,7 +3835,7 @@
         function excluirRegistroPresenca(id) {
             if (confirm('Remover este registro?')) {
                 presencas = presencas.filter(p => p.id !== id);
-                saveData('presencas', presencas);
+                saveData('gda_presencas', presencas);
                 renderPresenca();
                 atualizarStatusPresenca();
                 atualizarBadgePresenca();
@@ -3901,7 +3848,7 @@
             if (!registro) return;
             if (!registro.atestado && !confirm('📋 Confirmar entrega do atestado?')) return;
             registro.atestado = !registro.atestado;
-            saveData('presencas', presencas);
+            saveData('gda_presencas', presencas);
             renderPresenca();
             atualizarStatusPresenca();
         }
@@ -3952,7 +3899,7 @@
         function deletarAtividade(id) {
             if (confirm('Remover esta atividade?')) {
                 atividades = atividades.filter(a => a.id !== id);
-                saveData('atividades', atividades);
+                saveData('gda_atividades', atividades);
                 renderAtividades();
                 renderTelaInicial();
                 renderDashboard();
@@ -4045,7 +3992,7 @@
             }
             if (!notas[cod]) notas[cod] = { b1: '', b2: '', b3: '', b4: '' };
             notas[cod][bimestre] = valorLimpo;
-            saveData('notas', notas);
+            saveData('gda_notas', notas);
             renderNotas();
             renderTelaInicial();
             renderDashboard();
@@ -4058,7 +4005,7 @@
         function salvarRelatorio(disciplina, tempo, texto) {
             const novoRelatorio = { id: gerarIdLocal(), data: getDataLocal(), disciplina, tempo, texto };
             relatorios.push(novoRelatorio);
-            saveData('relatorios', relatorios);
+            saveData('gda_relatorios', relatorios);
             renderRelatorios();
             renderTelaInicial();
             renderDashboard();
@@ -4096,7 +4043,7 @@
         function deletarAtendimento(id) {
             if (confirm('Remover este atendimento?')) {
                 atendimentos = atendimentos.filter(a => a.id !== id);
-                saveData('atendimentos', atendimentos);
+                saveData('gda_atendimentos', atendimentos);
                 renderAtendimentos();
                 renderTelaInicial();
                 renderDashboard();
@@ -4112,7 +4059,7 @@
             if (!assuntos[disciplina]) assuntos[disciplina] = [];
             const novoAssunto = { id: gerarIdLocal(), titulo, descricao, data: data || getDataLocal(), timestamp: Date.now() };
             assuntos[disciplina].push(novoAssunto);
-            saveData('assuntos', assuntos);
+            saveData('gda_assuntos', assuntos);
             renderAssuntos();
             atualizarBadgeAssuntos();
             mostrarToast('✅ Assunto registrado!', 'sucesso');
@@ -4122,7 +4069,7 @@
             if (!assuntos[disciplina] || !confirm('Remover este assunto?')) return;
             assuntos[disciplina] = assuntos[disciplina].filter(a => a.id !== id);
             if (assuntos[disciplina].length === 0) delete assuntos[disciplina];
-            saveData('assuntos', assuntos);
+            saveData('gda_assuntos', assuntos);
             renderAssuntos();
             atualizarBadgeAssuntos();
             mostrarToast('✅ Assunto removido!', 'sucesso');
@@ -4247,10 +4194,10 @@
                 disciplina: disciplina || 'Não especificada',
                 motivo: motivo || 'Não informado',
                 resolvido: false,
-                usuario: usuarioAtual.charAt(0).toUpperCase() + usuarioAtual.slice(1)
+                usuario: 'Igor'
             };
             historicoPanico.push(registro);
-            saveData('historico_panico', historicoPanico);
+            saveData('gda_historico_panico', historicoPanico);
             mostrarToast('✅ Relato registrado! Você não está sozinho(a).', 'sucesso');
             document.getElementById('panicoDisciplina').value = '';
             document.getElementById('panicoMotivo').value = '';
@@ -4262,7 +4209,7 @@
             const registro = historicoPanico.find(r => r.id === id);
             if (registro) {
                 registro.resolvido = !registro.resolvido;
-                saveData('historico_panico', historicoPanico);
+                saveData('gda_historico_panico', historicoPanico);
                 renderHistoricoPanico();
                 atualizarBadgePanico();
             }
@@ -4271,7 +4218,7 @@
         function deletarRegistroPanico(id) {
             if (confirm('Remover este registro?')) {
                 historicoPanico = historicoPanico.filter(r => r.id !== id);
-                saveData('historico_panico', historicoPanico);
+                saveData('gda_historico_panico', historicoPanico);
                 renderHistoricoPanico();
                 atualizarBadgePanico();
             }
@@ -4293,9 +4240,8 @@
         function renderTelaInicial() {
             const saudacao = getSaudacao();
             const emoji = getEmojiSaudacao();
-            const nome = usuarioAtual.charAt(0).toUpperCase() + usuarioAtual.slice(1);
             const elGreeting = document.getElementById('greetingTitle');
-            if (elGreeting) elGreeting.textContent = `${emoji} ${saudacao}, ${nome}!`;
+            if (elGreeting) elGreeting.textContent = `${emoji} ${saudacao}, Igor!`;
             const hoje = new Date();
             const diasSemana = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
             const meses = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
@@ -4456,8 +4402,7 @@
         // ============================================================
 
         async function init() {
-            console.log('🚀 Inicializando GDA v7.2 (Multi-Usuário com Barra de Progresso)...');
-            console.info(`👤 Usuário atual: ${usuarioAtual}`);
+            console.log('🚀 Inicializando GDA v7.3 (Apenas Igor)...');
 
             const btnEntrar = document.getElementById('btnEntrar');
             const progressFill = document.getElementById('progressFill');
@@ -4465,14 +4410,6 @@
             const progressStatus = document.getElementById('progressStatus');
             const progressMessage = document.getElementById('progressMessage');
 
-            // Verificar se há usuário salvo
-            const usuarioSalvo = localStorage.getItem('gda_usuario_atual');
-            if (usuarioSalvo) {
-                usuarioAtual = usuarioSalvo;
-                document.getElementById('usuarioSelect').value = usuarioSalvo;
-            }
-
-            // Função para atualizar a barra de progresso
             function atualizarProgresso(percent, status) {
                 progressFill.style.width = percent + '%';
                 progressPercent.textContent = percent + '%';
@@ -4486,11 +4423,9 @@
                 }
             }
 
-            // Atualiza progresso inicial
             atualizarProgresso(0, 'Conectando ao servidor...');
 
             try {
-                // Verifica backend
                 progressStatus.textContent = 'Verificando conexão com a nuvem...';
                 atualizarProgresso(10, 'Verificando conexão...');
                 
@@ -4505,43 +4440,34 @@
                 console.warn('[GDA][CLOUD] Backend indisponível:', error.message || error);
             }
 
-            // Carregar dados do usuário atual com progresso
             progressStatus.textContent = 'Carregando seus dados...';
-            atualizarProgresso(20, 'Carregando dados do usuário...');
+            atualizarProgresso(20, 'Carregando dados...');
             
-            await carregarDadosUsuario(usuarioAtual, function(percent, status) {
-                // Mapeia de 20% a 90%
+            await carregarDados(function(percent, status) {
                 const mappedPercent = 20 + (percent * 0.7);
                 atualizarProgresso(Math.round(mappedPercent), status || 'Carregando...');
             });
 
-            // Finaliza carregamento
             atualizarProgresso(100, '✅ Pronto!');
             progressMessage.textContent = '✅ Dados carregados! Clique em "Entrar" para acessar o sistema.';
             btnEntrar.disabled = false;
             btnEntrar.innerHTML = '<i class="fas fa-sign-in-alt"></i> Entrar no Sistema';
 
-            // Evento do botão Entrar
             btnEntrar.addEventListener('click', async function() {
-                const usuario = document.getElementById('usuarioSelect').value;
-                setUsuarioAtual(usuario);
+                // Recarregar dados (rápido)
+                await carregarDados();
                 
-                // Recarregar dados do usuário selecionado (rápido, pois já estão em cache)
-                await carregarDadosUsuario(usuario);
+                presencasAtrasadas = loadData('gda_presencas_atrasadas', []);
+                ocorrencias = loadData('gda_ocorrencias', []);
+                presencas = loadData('gda_presencas', []);
+                atividades = loadData('gda_atividades', []);
+                notas = loadData('gda_notas', {});
+                relatorios = loadData('gda_relatorios', []);
+                checklistState = loadData('gda_checklist', {});
+                historicoPanico = loadData('gda_historico_panico', []);
+                atendimentos = loadData('gda_atendimentos', []);
+                assuntos = loadData('gda_assuntos', {});
                 
-                // Atualizar variáveis
-                presencasAtrasadas = loadData('presencas_atrasadas', []);
-                ocorrencias = loadData('ocorrencias', []);
-                presencas = loadData('presencas', []);
-                atividades = loadData('atividades', []);
-                notas = loadData('notas', {});
-                relatorios = loadData('relatorios', []);
-                checklistState = loadData('checklist', {});
-                historicoPanico = loadData('historico_panico', []);
-                atendimentos = loadData('atendimentos', []);
-                assuntos = loadData('assuntos', {});
-                
-                // Renderizar tudo
                 renderChecklist();
                 renderTurmas();
                 renderAtividades();
@@ -4561,12 +4487,10 @@
                 const splash = document.getElementById('splashOverlay');
                 if (splash) splash.classList.add('hidden');
                 
-                // Mostrar toast de boas-vindas apenas uma vez
-                mostrarToast(`👋 Bem-vindo, ${usuario.charAt(0).toUpperCase() + usuario.slice(1)}!`, 'sucesso');
-                console.log(`🔓 Acesso liberado para ${usuario}`);
+                mostrarToast('👋 Bem-vindo, Igor!', 'sucesso');
+                console.log('🔓 Acesso liberado para Igor');
             });
 
-            // Renderização inicial (já com dados carregados)
             renderizarPaginas();
             
             const selects = ['formDisciplina', 'relatorioDisciplina', 'formAssuntoDisciplina', 'formAtendimentoDisciplina', 'formOcorrenciaDisciplina'];
@@ -4685,7 +4609,7 @@
                         const novo = { id: gerarIdLocal(), disciplina, data, hora, descricao, timestamp: new Date(data + 'T' + hora).getTime() };
                         atendimentos.push(novo);
                     }
-                    saveData('atendimentos', atendimentos);
+                    saveData('gda_atendimentos', atendimentos);
                     renderAtendimentos();
                     renderTelaInicial();
                     renderDashboard();
@@ -4728,7 +4652,7 @@
                         const nova = { id: gerarIdLocal(), ...dados };
                         atividades.push(nova);
                     }
-                    saveData('atividades', atividades);
+                    saveData('gda_atividades', atividades);
                     renderAtividades();
                     renderTelaInicial();
                     renderDashboard();
@@ -4827,12 +4751,10 @@
                 });
             }
 
-            // Clona os links do menu desktop para o mobile
             if (mobileList) {
                 const desktopNav = document.querySelector('.sidebar .navbar');
                 if (desktopNav) {
                     mobileList.innerHTML = desktopNav.innerHTML;
-                    
                     mobileList.querySelectorAll('[id]').forEach(el => el.removeAttribute('id'));
                     
                     mobileList.querySelectorAll('a[data-page]').forEach(function(a) {
@@ -4878,8 +4800,8 @@
                 }
             }
             
-            console.log('✅ GDA v7.2 inicializado com sucesso!');
-            console.log(`📊 Dados de ${usuarioAtual}: Atividades: ${atividades.length}, Presenças: ${presencas.length}, Relatórios: ${relatorios.length}, Assuntos: ${Object.keys(assuntos).length}`);
+            console.log('✅ GDA v7.3 inicializado com sucesso!');
+            console.log(`📊 Dados: Atividades: ${atividades.length}, Presenças: ${presencas.length}, Relatórios: ${relatorios.length}, Assuntos: ${Object.keys(assuntos).length}`);
         }
 
         // ============================================================
@@ -4925,4 +4847,4 @@
 
 </body>
 </html>
-
+```
