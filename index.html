@@ -1,3 +1,15 @@
+Aqui está o código completo com as alterações solicitadas:
+
+## ✅ Alterações realizadas:
+
+1. **Barra de progresso** - Adicionada no splash screen enquanto os dados carregam
+2. **Mensagem personalizada** - "Aguarde! em instantes você poderá gerir sua vida no IFPA"
+3. **Toast de boas-vindas** - Agora aparece apenas UMA Vez, não várias
+4. **Dados do Igor** - Mantidos na nuvem e localmente
+5. **Samuel** - Começa sem dados (fresco)
+6. **Backend/Nuvem** - Mantidos intactos e conectados
+
+```html
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -11,7 +23,7 @@
 
     <style>
         /* ============================================================
-           CSS COMPLETO - VERSÃO 7.1 (MULTI-USUÁRIO)
+           CSS COMPLETO - VERSÃO 7.2 (COM BARRA DE PROGRESSO)
            ============================================================ */
         
         :root {
@@ -150,6 +162,40 @@
             color: var(--color-text);
         }
 
+        /* BARRA DE PROGRESSO */
+        .splash-content .progress-container {
+            margin: 16px 0 12px;
+            width: 100%;
+        }
+        .splash-content .progress-container .progress-label {
+            font-size: 12px;
+            color: var(--color-text-muted);
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .splash-content .progress-container .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .splash-content .progress-container .progress-bar .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--color-accent), var(--color-accent-hover));
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+        .splash-content .progress-container .progress-message {
+            font-size: 13px;
+            color: var(--color-text-muted);
+            margin-top: 8px;
+            font-weight: 500;
+            min-height: 20px;
+        }
+
         .splash-content .btn-entrar {
             background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
             color: var(--color-primary);
@@ -163,8 +209,13 @@
             font-family: 'Inter', sans-serif;
             width: 100%;
             min-height: var(--toque-min);
+            margin-top: 4px;
         }
         .splash-content .btn-entrar:active { transform: scale(0.97); }
+        .splash-content .btn-entrar:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
         .splash-content .versao {
             font-size: 11px;
             color: var(--color-text-muted);
@@ -2341,10 +2392,22 @@
                 </select>
             </div>
             
-            <button class="btn-entrar" id="btnEntrar">
-                <i class="fas fa-sign-in-alt"></i> Entrar no Sistema
+            <!-- BARRA DE PROGRESSO -->
+            <div class="progress-container" id="progressContainer">
+                <div class="progress-label">
+                    <span id="progressStatus">Iniciando...</span>
+                    <span id="progressPercent">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width:0%;"></div>
+                </div>
+                <div class="progress-message" id="progressMessage">Aguarde! em instantes você poderá gerir sua vida no IFPA</div>
+            </div>
+            
+            <button class="btn-entrar" id="btnEntrar" disabled>
+                <i class="fas fa-spinner fa-spin"></i> Carregando...
             </button>
-            <div class="versao">v7.1 · Multi-Usuário</div>
+            <div class="versao">v7.2 · Multi-Usuário</div>
         </div>
     </div>
 
@@ -2730,19 +2793,20 @@
     </div>
 
     <!-- ============================================================
-    SCRIPTS - VERSÃO 7.1 (MULTI-USUÁRIO)
+    SCRIPTS - VERSÃO 7.2 (COM BARRA DE PROGRESSO)
     ============================================================ -->
     <script>
     (function() {
         'use strict';
 
-        console.log('🚀 GDA v7.1 - Multi-Usuário');
+        console.log('🚀 GDA v7.2 - Multi-Usuário com Barra de Progresso');
 
         // ============================================================
         //  USUÁRIO ATUAL
         // ============================================================
 
         let usuarioAtual = localStorage.getItem('gda_usuario_atual') || 'igor';
+        let toastBoasVindasExibido = false;
 
         function getUsuarioAtual() {
             return usuarioAtual;
@@ -2818,7 +2882,6 @@
         async function saveData(key, data) {
             const chave = getChaveUsuario(key);
             try { localStorage.setItem(chave, JSON.stringify(data)); } catch(e) { return false; }
-            // Sincronizar com a nuvem usando a chave com usuário
             try {
                 await syncDataToCloud(chave, data);
             } catch(e) {}
@@ -2871,12 +2934,15 @@
             }
         }
 
-        async function carregarDadosUsuario(usuario) {
+        async function carregarDadosUsuario(usuario, onProgress) {
             const chaves = [
                 'presencas_atrasadas', 'ocorrencias', 'presencas', 'atividades',
                 'notas', 'relatorios', 'checklist', 'historico_panico',
                 'atendimentos', 'assuntos'
             ];
+            
+            let total = chaves.length;
+            let concluidas = 0;
             
             for (const chave of chaves) {
                 const chaveComUsuario = `gda_${usuario}_${chave}`;
@@ -2885,19 +2951,27 @@
                     const cloudValue = await loadDataFromCloud(chaveComUsuario, null);
                     
                     if (cloudValue !== null && cloudValue !== undefined) {
-                        // Salva localmente e atualiza variáveis
                         localStorage.setItem(chaveComUsuario, JSON.stringify(cloudValue));
                         atualizarVariavel(chave, cloudValue);
                     } else if (localValue !== null && localValue !== undefined) {
-                        // Publica dados locais na nuvem
                         await syncDataToCloud(chaveComUsuario, localValue);
+                    }
+                    
+                    concluidas++;
+                    if (onProgress) {
+                        const percent = Math.round((concluidas / total) * 100);
+                        onProgress(percent, `Carregando ${chave.replace('_', ' ')}...`);
                     }
                 } catch (error) {
                     console.warn(`⚠️ Falha ao carregar ${chave} para ${usuario}:`, error);
+                    concluidas++;
+                    if (onProgress) {
+                        const percent = Math.round((concluidas / total) * 100);
+                        onProgress(percent, `Carregando ${chave.replace('_', ' ')}...`);
+                    }
                 }
             }
             
-            // Recarregar variáveis
             presencasAtrasadas = loadData('presencas_atrasadas', []);
             ocorrencias = loadData('ocorrencias', []);
             presencas = loadData('presencas', []);
@@ -2908,6 +2982,10 @@
             historicoPanico = loadData('historico_panico', []);
             atendimentos = loadData('atendimentos', []);
             assuntos = loadData('assuntos', {});
+            
+            if (onProgress) {
+                onProgress(100, '✅ Pronto!');
+            }
         }
 
         function atualizarVariavel(chave, valor) {
@@ -2931,6 +3009,14 @@
         // ============================================================
 
         function mostrarToast(msg, tipo = 'info', duracao = 3000) {
+            // Evita múltiplos toasts de boas-vindas
+            if (msg.includes('Bem-vindo') && toastBoasVindasExibido) {
+                return;
+            }
+            if (msg.includes('Bem-vindo')) {
+                toastBoasVindasExibido = true;
+            }
+            
             const container = document.getElementById('toastContainer');
             if (!container) return;
             const toast = document.createElement('div');
@@ -2948,7 +3034,7 @@
         function getEmojiSaudacao() { const h = new Date().getHours(); if (h < 12) return '🌅'; if (h < 18) return '☀️'; return '🌙'; }
 
         // ============================================================
-        //  DADOS ESTÁTICOS
+        //  DADOS ESTÁTICOS (MANTIDOS)
         // ============================================================
 
         const turmas = [
@@ -3213,7 +3299,7 @@
         }
 
         // ============================================================
-        //  FUNÇÕES DE RENDERIZAÇÃO
+        //  FUNÇÕES DE RENDERIZAÇÃO (MANTIDAS)
         // ============================================================
 
         function renderChecklist() {
@@ -3567,7 +3653,7 @@
         }
 
         // ============================================================
-        //  FUNÇÕES - MODAIS
+        //  FUNÇÕES - MODAIS (MANTIDAS)
         // ============================================================
 
         function abrirModalAtrasado() {
@@ -3833,7 +3919,7 @@
         }
 
         // ============================================================
-        //  FUNÇÕES - ATIVIDADES
+        //  FUNÇÕES - ATIVIDADES (MANTIDAS)
         // ============================================================
 
         function openModal() {
@@ -3948,7 +4034,7 @@
         function removerSubtarefa(index) { subtarefasTemp.splice(index, 1); renderSubtarefas(); }
 
         // ============================================================
-        //  FUNÇÕES - NOTAS
+        //  FUNÇÕES - NOTAS (MANTIDAS)
         // ============================================================
 
         function validarNota(input) {
@@ -3978,7 +4064,7 @@
         }
 
         // ============================================================
-        //  FUNÇÕES - RELATÓRIOS
+        //  FUNÇÕES - RELATÓRIOS (MANTIDAS)
         // ============================================================
 
         function salvarRelatorio(disciplina, tempo, texto) {
@@ -3992,7 +4078,7 @@
         }
 
         // ============================================================
-        //  FUNÇÕES - ATENDIMENTOS
+        //  FUNÇÕES - ATENDIMENTOS (MANTIDAS)
         // ============================================================
 
         function openModalAtendimento() {
@@ -4031,7 +4117,7 @@
         }
 
         // ============================================================
-        //  FUNÇÕES - ASSUNTOS
+        //  FUNÇÕES - ASSUNTOS (MANTIDAS)
         // ============================================================
 
         function adicionarAssunto(disciplina, titulo, descricao, data) {
@@ -4064,7 +4150,7 @@
         }
 
         // ============================================================
-        //  FUNÇÕES - HISTÓRICO PÂNICO
+        //  FUNÇÕES - HISTÓRICO PÂNICO (MANTIDAS)
         // ============================================================
 
         function abrirPanico() {
@@ -4213,7 +4299,7 @@
         }
 
         // ============================================================
-        //  FUNÇÕES - TELA INICIAL, DASHBOARD, RELÓGIO
+        //  FUNÇÕES - TELA INICIAL, DASHBOARD, RELÓGIO (MANTIDAS)
         // ============================================================
 
         function renderTelaInicial() {
@@ -4347,7 +4433,7 @@
         }
 
         // ============================================================
-        //  ROTEAMENTO
+        //  ROTEAMENTO (MANTIDO)
         // ============================================================
 
         function showPage(pageId) {
@@ -4360,7 +4446,6 @@
             document.querySelectorAll('.bottom-nav .nav-item').forEach(link => {
                 link.classList.toggle('active', link.dataset.page === pageId);
             });
-            // Atualizar badges de navegação
             if (pageId === 'atividades') {
                 const badge = document.getElementById('navAtividadeBadge');
                 if (badge) badge.textContent = atividades.length;
@@ -4383,17 +4468,44 @@
         // ============================================================
 
         async function init() {
-            console.log('🚀 Inicializando GDA v7.1 (Multi-Usuário)...');
+            console.log('🚀 Inicializando GDA v7.2 (Multi-Usuário com Barra de Progresso)...');
             console.info(`👤 Usuário atual: ${usuarioAtual}`);
 
-            // Verificar se há usuário salvo, senão usa 'igor'
+            const btnEntrar = document.getElementById('btnEntrar');
+            const progressFill = document.getElementById('progressFill');
+            const progressPercent = document.getElementById('progressPercent');
+            const progressStatus = document.getElementById('progressStatus');
+            const progressMessage = document.getElementById('progressMessage');
+
+            // Verificar se há usuário salvo
             const usuarioSalvo = localStorage.getItem('gda_usuario_atual');
             if (usuarioSalvo) {
                 usuarioAtual = usuarioSalvo;
                 document.getElementById('usuarioSelect').value = usuarioSalvo;
             }
 
+            // Função para atualizar a barra de progresso
+            function atualizarProgresso(percent, status) {
+                progressFill.style.width = percent + '%';
+                progressPercent.textContent = percent + '%';
+                if (status) {
+                    progressStatus.textContent = status;
+                }
+                if (percent === 100) {
+                    progressMessage.textContent = '✅ Pronto! Clique em "Entrar" para acessar o sistema.';
+                    btnEntrar.disabled = false;
+                    btnEntrar.innerHTML = '<i class="fas fa-sign-in-alt"></i> Entrar no Sistema';
+                }
+            }
+
+            // Atualiza progresso inicial
+            atualizarProgresso(0, 'Conectando ao servidor...');
+
             try {
+                // Verifica backend
+                progressStatus.textContent = 'Verificando conexão com a nuvem...';
+                atualizarProgresso(10, 'Verificando conexão...');
+                
                 const health = await fetch('/api');
                 if (health.ok) {
                     const data = await health.json();
@@ -4405,9 +4517,68 @@
                 console.warn('[GDA][CLOUD] Backend indisponível:', error.message || error);
             }
 
-            // Carregar dados do usuário atual
-            await carregarDadosUsuario(usuarioAtual);
+            // Carregar dados do usuário atual com progresso
+            progressStatus.textContent = 'Carregando seus dados...';
+            atualizarProgresso(20, 'Carregando dados do usuário...');
+            
+            await carregarDadosUsuario(usuarioAtual, function(percent, status) {
+                // Mapeia de 20% a 90%
+                const mappedPercent = 20 + (percent * 0.7);
+                atualizarProgresso(Math.round(mappedPercent), status || 'Carregando...');
+            });
 
+            // Finaliza carregamento
+            atualizarProgresso(100, '✅ Pronto!');
+            progressMessage.textContent = '✅ Dados carregados! Clique em "Entrar" para acessar o sistema.';
+            btnEntrar.disabled = false;
+            btnEntrar.innerHTML = '<i class="fas fa-sign-in-alt"></i> Entrar no Sistema';
+
+            // Evento do botão Entrar
+            btnEntrar.addEventListener('click', async function() {
+                const usuario = document.getElementById('usuarioSelect').value;
+                setUsuarioAtual(usuario);
+                
+                // Recarregar dados do usuário selecionado (rápido, pois já estão em cache)
+                await carregarDadosUsuario(usuario);
+                
+                // Atualizar variáveis
+                presencasAtrasadas = loadData('presencas_atrasadas', []);
+                ocorrencias = loadData('ocorrencias', []);
+                presencas = loadData('presencas', []);
+                atividades = loadData('atividades', []);
+                notas = loadData('notas', {});
+                relatorios = loadData('relatorios', []);
+                checklistState = loadData('checklist', {});
+                historicoPanico = loadData('historico_panico', []);
+                atendimentos = loadData('atendimentos', []);
+                assuntos = loadData('assuntos', {});
+                
+                // Renderizar tudo
+                renderChecklist();
+                renderTurmas();
+                renderAtividades();
+                renderNotas();
+                renderRelatorios();
+                renderTelaInicial();
+                renderDashboard();
+                renderHistoricoPanico();
+                renderAtendimentos();
+                renderPresenca();
+                renderAssuntos();
+                renderOcorrencias();
+                atualizarBadgePanico();
+                atualizarBadgePresenca();
+                atualizarBadgeAssuntos();
+                
+                const splash = document.getElementById('splashOverlay');
+                if (splash) splash.classList.add('hidden');
+                
+                // Mostrar toast de boas-vindas apenas uma vez
+                mostrarToast(`👋 Bem-vindo, ${usuario.charAt(0).toUpperCase() + usuario.slice(1)}!`, 'sucesso');
+                console.log(`🔓 Acesso liberado para ${usuario}`);
+            });
+
+            // Renderização inicial (já com dados carregados)
             renderizarPaginas();
             
             const selects = ['formDisciplina', 'relatorioDisciplina', 'formAssuntoDisciplina', 'formAtendimentoDisciplina', 'formOcorrenciaDisciplina'];
@@ -4617,52 +4788,6 @@
                 });
             }
             
-            // Splash - com seletor de usuário
-            const btnEntrar = document.getElementById('btnEntrar');
-            if (btnEntrar) {
-                btnEntrar.addEventListener('click', async function() {
-                    const usuario = document.getElementById('usuarioSelect').value;
-                    setUsuarioAtual(usuario);
-                    
-                    // Recarregar dados do usuário selecionado
-                    await carregarDadosUsuario(usuario);
-                    
-                    // Atualizar variáveis
-                    presencasAtrasadas = loadData('presencas_atrasadas', []);
-                    ocorrencias = loadData('ocorrencias', []);
-                    presencas = loadData('presencas', []);
-                    atividades = loadData('atividades', []);
-                    notas = loadData('notas', {});
-                    relatorios = loadData('relatorios', []);
-                    checklistState = loadData('checklist', {});
-                    historicoPanico = loadData('historico_panico', []);
-                    atendimentos = loadData('atendimentos', []);
-                    assuntos = loadData('assuntos', {});
-                    
-                    // Re-renderizar tudo
-                    renderChecklist();
-                    renderTurmas();
-                    renderAtividades();
-                    renderNotas();
-                    renderRelatorios();
-                    renderTelaInicial();
-                    renderDashboard();
-                    renderHistoricoPanico();
-                    renderAtendimentos();
-                    renderPresenca();
-                    renderAssuntos();
-                    renderOcorrencias();
-                    atualizarBadgePanico();
-                    atualizarBadgePresenca();
-                    atualizarBadgeAssuntos();
-                    
-                    const splash = document.getElementById('splashOverlay');
-                    if (splash) splash.classList.add('hidden');
-                    mostrarToast(`👋 Bem-vindo, ${usuario.charAt(0).toUpperCase() + usuario.slice(1)}!`, 'sucesso');
-                    console.log(`🔓 Acesso liberado para ${usuario}`);
-                });
-            }
-            
             // Fechar modais
             const modalOverlay = document.getElementById('modalOverlay');
             if (modalOverlay) modalOverlay.addEventListener('click', function(e) { if (e.target === this) closeModal(); });
@@ -4720,10 +4845,8 @@
                 if (desktopNav) {
                     mobileList.innerHTML = desktopNav.innerHTML;
                     
-                    // Remove IDs duplicados
                     mobileList.querySelectorAll('[id]').forEach(el => el.removeAttribute('id'));
                     
-                    // Adiciona listeners para navegação
                     mobileList.querySelectorAll('a[data-page]').forEach(function(a) {
                         a.addEventListener('click', function(e) {
                             e.preventDefault();
@@ -4739,7 +4862,6 @@
                         });
                     });
                     
-                    // Botão pânico no mobile
                     const panicoLink = mobileList.querySelector('#btnPanico');
                     if (panicoLink) {
                         panicoLink.addEventListener('click', function(e) {
@@ -4755,7 +4877,6 @@
                         });
                     }
                     
-                    // Sistemas toggle no mobile
                     const sistemasToggleMobile = mobileList.querySelector('#sistemasToggle');
                     if (sistemasToggleMobile) {
                         sistemasToggleMobile.addEventListener('click', function(e) {
@@ -4769,12 +4890,12 @@
                 }
             }
             
-            console.log('✅ GDA v7.1 inicializado com sucesso!');
+            console.log('✅ GDA v7.2 inicializado com sucesso!');
             console.log(`📊 Dados de ${usuarioAtual}: Atividades: ${atividades.length}, Presenças: ${presencas.length}, Relatórios: ${relatorios.length}, Assuntos: ${Object.keys(assuntos).length}`);
         }
 
         // ============================================================
-        //  EXPORTAÇÃO
+        //  EXPORTAÇÃO (MANTIDA)
         // ============================================================
 
         window.abrirModalPresenca = abrirModalPresenca;
@@ -4816,3 +4937,4 @@
 
 </body>
 </html>
+```
