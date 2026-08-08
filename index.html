@@ -1,3 +1,19 @@
+Aqui está a versão **desativando o módulo duplo de usuário**, mantendo apenas **Igor**, e com a conexão com **API, backend e nuvem** restaurada:
+
+## ✅ Alterações realizadas:
+
+1. **Removido seletor de usuário** do splash screen
+2. **Usuário fixo "igor"** em todo o sistema
+3. **Chaves simplificadas** no localStorage (sem prefixo de usuário)
+4. **Conexão com API/backend/nuvem** restaurada
+5. **Barra de progresso** mantida
+6. **Toast de boas-vindas** aparece apenas uma vez
+7. **Bloco de fim de semana** mantido (sábado/domingo)
+8. **Tudo o resto permanece igual**
+
+Aqui está o código completo com as alterações:
+
+```html
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -2350,7 +2366,7 @@
             <button class="btn-entrar" id="btnEntrar" disabled>
                 <i class="fas fa-spinner fa-spin"></i> Carregando...
             </button>
-            <div class="Gestão Digital Agregada</div>
+            <div class="versao">v7.3 · Igor</div>
         </div>
     </div>
 
@@ -4831,3 +4847,4 @@
 
 </body>
 </html>
+```
