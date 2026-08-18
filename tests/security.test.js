@@ -54,6 +54,39 @@ test('serve arquivos estáticos sem cair na página inicial', async () => {
   }
 });
 
+test('expõe saúde, ping e versão para monitoramento', async () => {
+  const { server, port } = await startServer();
+
+  try {
+    const health = await fetch(`http://127.0.0.1:${port}/api/health`);
+    assert.equal(health.status, 200);
+    assert.equal((await health.json()).status, 'ok');
+
+    const ping = await fetch(`http://127.0.0.1:${port}/api/ping`);
+    assert.equal(ping.status, 200);
+    assert.equal((await ping.json()).pong, true);
+
+    const version = await fetch(`http://127.0.0.1:${port}/api/version`);
+    assert.equal(version.status, 200);
+    assert.ok((await version.json()).version);
+  } finally {
+    server.close();
+  }
+});
+
+test('protege os diagnósticos de Turso e autenticação', async () => {
+  const { server, port } = await startServer();
+
+  try {
+    const turso = await fetch(`http://127.0.0.1:${port}/api/turso/status`);
+    assert.equal(turso.status, 401);
+    const verify = await fetch(`http://127.0.0.1:${port}/api/auth/verify`);
+    assert.equal(verify.status, 401);
+  } finally {
+    server.close();
+  }
+});
+
 test('exige JWT no endpoint raiz da API', async () => {
   const { server, port } = await startServer();
 

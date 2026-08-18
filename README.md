@@ -141,6 +141,8 @@ Após uma gravação, o campo `integrity` informa os hashes do registro. Consult
 
 Para emitir hashes dos registros que já existiam antes da implantação, faça uma única chamada autenticada a `POST /api/integridade/migrar-legado`. A operação é idempotente, marca esses eventos como `legacy_import` e não modifica os dados acadêmicos.
 
+Monitoramento: `GET /api/health`, `GET /api/ping` e `GET /api/version` são públicos. `GET /api/turso/status`, `GET /api/auth/verify` e `GET /api/integridade/status` exigem JWT.
+
 ---
 
 ## 📄 Licença

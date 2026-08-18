@@ -547,7 +547,7 @@ async function authenticateApi(req, res, next) {
             logSecurityEvent('authentication_failed', { ip: req.ip, path: req.path, reason: 'inactive_session' });
             return res.status(401).json({ error: 'Sessão inválida ou expirada.' });
         }
-        req.user = { username: payload.sub, sessionId: payload.sid };
+        req.user = { username: payload.sub, sessionId: payload.sid, expiresAt: new Date(payload.exp * 1000).toISOString() };
         return next();
     } catch (err) {
         logSecurityEvent('authentication_failed', { ip: req.ip, path: req.path, reason: err.name || 'invalid_token' });
@@ -558,7 +558,75 @@ async function authenticateApi(req, res, next) {
     }
 }
 
+app.get('/api/health', (req, res) => {
+    res.json({ status: 'ok', version: require('../package.json').version, environment: process.env.NODE_ENV || 'production' });
+});
+
+app.get('/api/ping', (req, res) => {
+    res.json({ pong: true, timestamp: new Date().toISOString() });
+});
+
+app.get('/api/version', (req, res) => {
+    res.json({
+        version: require('../package.json').version,
+        commit: process.env.VERCEL_GIT_COMMIT_SHA || 'local',
+        buildDate: process.env.VERCEL_GIT_COMMIT_AUTHOR_LOGIN ? new Date().toISOString() : 'local'
+    });
+});
+
 app.use('/api', authenticateApi);
+
+app.get('/api/auth/verify', (req, res) => {
+    res.json({
+        valid: true,
+        user: { username: req.user.username },
+        expiresIn: req.user.expiresAt
+    });
+});
+
+app.get('/api/turso/status', async (req, res) => {
+    try {
+        const result = await queryTurso("SELECT name FROM sqlite_master WHERE type = 'table' ORDER BY name");
+        const rows = result.results[0]?.response?.result?.rows || [];
+        const tables = rows.map((row) => row[0]?.value ?? row[0]).filter(Boolean);
+        return res.json({
+            status: 'online',
+            database: normalizeTursoUrl(TURSO_URL) || 'configured',
+            connections: 'serverless',
+            tables
+        });
+    } catch (err) {
+        return res.status(503).json({ status: 'offline', error: 'Banco de dados indisponível.' });
+    }
+});
+
+app.get('/api/integridade/status', async (req, res) => {
+    try {
+        await ensureIntegrityTable();
+        const result = await queryTurso(`
+            SELECT integrity_id, record_type, record_id, content_hash, integrity_hash,
+                   previous_hash, payload, event_type, created_at
+            FROM gda_integrity_records ORDER BY created_at ASC, integrity_id ASC
+        `);
+        const rows = result.results[0]?.response?.result?.rows || [];
+        let chainValid = true;
+        let previousByRecord = new Map();
+        let ultimoHash = null;
+        for (const row of rows) {
+            const values = row.map((cell) => cell?.value ?? cell);
+            const [integrityId, recordType, recordId, contentHash, integrityHash, previousHash, payload, eventType, createdAt] = values;
+            const key = `${recordType}:${recordId}`;
+            const expectedPrevious = previousByRecord.get(key) || null;
+            const expectedIntegrity = sha256({ recordType, recordId: String(recordId), contentHash, previousHash, eventType, createdAt });
+            if (previousHash !== expectedPrevious || integrityHash !== expectedIntegrity) chainValid = false;
+            previousByRecord.set(key, integrityHash);
+            ultimoHash = integrityHash;
+        }
+        return res.json({ status: 'online', total: rows.length, ultimoHash, chainValid });
+    } catch (err) {
+        return res.status(503).json({ status: 'offline', error: 'Integridade indisponível.' });
+    }
+});
 
 app.post('/api/auth/logout', async (req, res) => {
     try {
