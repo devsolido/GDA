@@ -54,14 +54,39 @@ test('serve arquivos estáticos sem cair na página inicial', async () => {
   }
 });
 
-test('bloqueia o endpoint raiz da API para não expor detalhes internos', async () => {
+test('exige JWT no endpoint raiz da API', async () => {
   const { server, port } = await startServer();
 
   try {
     const res = await fetch(`http://127.0.0.1:${port}/api`);
-    assert.equal(res.status, 404);
+    assert.equal(res.status, 401);
     const body = await res.json();
-    assert.equal(body.error, 'Not found');
+    assert.match(body.error, /Token/i);
+  } finally {
+    server.close();
+  }
+});
+
+test('restringe CORS a origens configuradas', async () => {
+  const { server, port } = await startServer();
+
+  try {
+    const res = await fetch(`http://127.0.0.1:${port}/api/turmas`, {
+      headers: { Origin: 'https://dominio-nao-autorizado.example' }
+    });
+    assert.equal(res.status, 403);
+    assert.equal(res.headers.get('access-control-allow-origin'), null);
+  } finally {
+    server.close();
+  }
+});
+
+test('protege a consulta e a certidão de integridade com JWT', async () => {
+  const { server, port } = await startServer();
+
+  try {
+    const res = await fetch(`http://127.0.0.1:${port}/api/integridade/relatorios/1`);
+    assert.equal(res.status, 401);
   } finally {
     server.close();
   }

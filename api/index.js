@@ -1,13 +1,18 @@
 // api/index.js
 // Servidor completo para Vercel com conexão ao Turso
 
+require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
+const crypto = require('crypto');
+const helmet = require('helmet');
+const jwt = require('jsonwebtoken');
+const rateLimit = require('express-rate-limit');
+const PDFDocument = require('pdfkit');
 const path = require('path');
 const app = express();
 const ROOT_DIR = path.resolve(__dirname, '..');
-const RATE_LIMIT_WINDOW_MS = 60 * 1000;
-const RATE_LIMIT_MAX_REQUESTS = 100;
-const rateLimitStore = new Map();
+const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '8h';
 const DEFAULT_ALLOWED_ORIGINS = [
     'https://gda-kappa.vercel.app',
     'http://localhost:3000',
@@ -50,6 +55,14 @@ function isSensitivePath(requestPath) {
     return SENSITIVE_PATHS.some((pattern) => pattern.test(requestPath));
 }
 
+function logSecurityEvent(event, details = {}) {
+    console.warn(JSON.stringify({
+        event,
+        timestamp: new Date().toISOString(),
+        ...details
+    }));
+}
+
 function applySecurityHeaders(req, res, next) {
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('X-Frame-Options', 'DENY');
@@ -57,26 +70,10 @@ function applySecurityHeaders(req, res, next) {
     res.setHeader('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
     res.setHeader('X-XSS-Protection', '0');
     res.setHeader('Cache-Control', 'no-store');
-    res.setHeader('Content-Security-Policy', "default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https:; frame-ancestors 'none'; upgrade-insecure-requests");
-
     if (req.secure || req.headers['x-forwarded-proto'] === 'https') {
         res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
     }
 
-    next();
-}
-
-function applyRateLimit(req, res, next) {
-    const clientIp = req.ip || req.socket?.remoteAddress || 'unknown';
-    const now = Date.now();
-    const recentRequests = (rateLimitStore.get(clientIp) || []).filter((timestamp) => now - timestamp < RATE_LIMIT_WINDOW_MS);
-
-    if (recentRequests.length >= RATE_LIMIT_MAX_REQUESTS) {
-        return res.status(429).json({ error: 'Too Many Requests' });
-    }
-
-    recentRequests.push(now);
-    rateLimitStore.set(clientIp, recentRequests);
     next();
 }
 
@@ -103,6 +100,173 @@ function isAllowedOrigin(origin) {
 // ============================================================
 const TURSO_URL = process.env.TURSO_URL;
 const TURSO_TOKEN = process.env.TURSO_TOKEN;
+
+function getJwtSecret() {
+    if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32) {
+        throw new Error('JWT_SECRET deve ter pelo menos 32 caracteres.');
+    }
+    return process.env.JWT_SECRET;
+}
+
+function hashToken(token) {
+    return crypto.createHash('sha256').update(token).digest('hex');
+}
+
+function safeEqual(left, right) {
+    const leftBuffer = Buffer.from(String(left || ''));
+    const rightBuffer = Buffer.from(String(right || ''));
+    return leftBuffer.length === rightBuffer.length && crypto.timingSafeEqual(leftBuffer, rightBuffer);
+}
+
+async function ensureSessionsTable() {
+    await queryTurso(`
+        CREATE TABLE IF NOT EXISTS gda_sessions (
+            session_id TEXT PRIMARY KEY,
+            token_hash TEXT UNIQUE NOT NULL,
+            username TEXT NOT NULL,
+            expires_at TEXT NOT NULL,
+            revoked_at TEXT
+        )
+    `);
+}
+
+async function storeSession(token, username, sessionId, expiresAt) {
+    await ensureSessionsTable();
+    await queryTurso(`
+        INSERT INTO gda_sessions (session_id, token_hash, username, expires_at)
+        VALUES (${sqlValue(sessionId)}, ${sqlValue(hashToken(token))}, ${sqlValue(username)}, ${sqlValue(expiresAt)})
+    `);
+}
+
+async function isActiveSession(token, sessionId) {
+    await ensureSessionsTable();
+    const result = await queryTurso(`
+        SELECT session_id FROM gda_sessions
+        WHERE session_id = ${sqlValue(sessionId)}
+          AND token_hash = ${sqlValue(hashToken(token))}
+          AND revoked_at IS NULL
+          AND expires_at > CURRENT_TIMESTAMP
+        LIMIT 1
+    `);
+    return (result.results[0]?.response?.result?.rows || []).length > 0;
+}
+
+function canonicalJson(value) {
+    if (Array.isArray(value)) {
+        return value.map(canonicalJson);
+    }
+    if (value && typeof value === 'object') {
+        return Object.keys(value).sort().reduce((result, key) => {
+            result[key] = canonicalJson(value[key]);
+            return result;
+        }, {});
+    }
+    return value;
+}
+
+function sha256(value) {
+    return crypto.createHash('sha256').update(JSON.stringify(canonicalJson(value))).digest('hex');
+}
+
+async function ensureIntegrityTable() {
+    await queryTurso(`
+        CREATE TABLE IF NOT EXISTS gda_integrity_records (
+            integrity_id TEXT PRIMARY KEY,
+            record_type TEXT NOT NULL,
+            record_id TEXT NOT NULL,
+            content_hash TEXT NOT NULL,
+            integrity_hash TEXT NOT NULL,
+            previous_hash TEXT,
+            payload TEXT NOT NULL,
+            event_type TEXT NOT NULL,
+            issued_by TEXT NOT NULL,
+            created_at TEXT NOT NULL
+        )
+    `);
+}
+
+async function registerIntegrityRecord(recordType, recordId, payload, eventType, username) {
+    try {
+        await ensureIntegrityTable();
+        const previousResult = await queryTurso(`
+            SELECT integrity_hash FROM gda_integrity_records
+            WHERE record_type = ${sqlValue(recordType)} AND record_id = ${sqlValue(String(recordId))}
+            ORDER BY created_at DESC, integrity_id DESC LIMIT 1
+        `);
+        const previousHash = previousResult.results[0]?.response?.result?.rows?.[0]?.[0]?.value || null;
+        const createdAt = new Date().toISOString();
+        const contentHash = sha256(payload);
+        const integrityHash = sha256({ recordType, recordId: String(recordId), contentHash, previousHash, eventType, createdAt });
+        const integrityId = crypto.randomUUID();
+
+        await queryTurso(`
+            INSERT INTO gda_integrity_records
+                (integrity_id, record_type, record_id, content_hash, integrity_hash, previous_hash, payload, event_type, issued_by, created_at)
+            VALUES (${sqlValue(integrityId)}, ${sqlValue(recordType)}, ${sqlValue(String(recordId))},
+                ${sqlValue(contentHash)}, ${sqlValue(integrityHash)}, ${sqlValue(previousHash)},
+                ${sqlValue(JSON.stringify(canonicalJson(payload)))}, ${sqlValue(eventType)},
+                ${sqlValue(username || 'sistema')}, ${sqlValue(createdAt)})
+        `);
+        return { integrity_id: integrityId, content_hash: contentHash, integrity_hash: integrityHash, created_at: createdAt };
+    } catch (err) {
+        logSecurityEvent('integrity_record_error', { recordType, recordId: String(recordId), error: err.message });
+        return null;
+    }
+}
+
+async function getLatestIntegrityRecord(recordType, recordId) {
+    await ensureIntegrityTable();
+    const result = await queryTurso(`
+        SELECT integrity_id, record_type, record_id, content_hash, integrity_hash, previous_hash,
+               payload, event_type, issued_by, created_at
+        FROM gda_integrity_records
+        WHERE record_type = ${sqlValue(recordType)} AND record_id = ${sqlValue(String(recordId))}
+        ORDER BY created_at DESC, integrity_id DESC LIMIT 1
+    `);
+    const row = result.results[0]?.response?.result?.rows?.[0];
+    if (!row) return null;
+    const values = row.map((cell) => cell?.value ?? cell);
+    const [integrityId, type, id, contentHash, integrityHash, previousHash, payload, eventType, issuedBy, createdAt] = values;
+    return {
+        integrity_id: integrityId,
+        record_type: type,
+        record_id: id,
+        content_hash: contentHash,
+        integrity_hash: integrityHash,
+        previous_hash: previousHash,
+        payload: JSON.parse(payload),
+        event_type: eventType,
+        issued_by: issuedBy,
+        created_at: createdAt
+    };
+}
+
+function sendIntegrityPdf(res, record) {
+    const document = new PDFDocument({ margin: 50 });
+    const safeType = String(record.record_type).replace(/[^a-z0-9_-]/gi, '_');
+    const safeId = String(record.record_id).replace(/[^a-z0-9_-]/gi, '_');
+    res.type('application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="gda-certidao-${safeType}-${safeId}.pdf"`);
+    document.pipe(res);
+    document.fontSize(18).text('GDA - CERTIDAO DE INTEGRIDADE', { align: 'center' });
+    document.moveDown();
+    document.fontSize(11).text('Documento de verificacao de integridade de registro academico');
+    document.moveDown();
+    document.text(`Tipo: ${record.record_type}`);
+    document.text(`Identificador: ${record.record_id}`);
+    document.text(`Evento: ${record.event_type}`);
+    document.text(`Emitido por: ${record.issued_by}`);
+    document.text(`Data UTC: ${record.created_at}`);
+    document.moveDown();
+    document.font('Courier').fontSize(9).text(`Hash do conteudo (SHA-256): ${record.content_hash}`);
+    document.text(`Hash de integridade: ${record.integrity_hash}`);
+    document.text(`Hash anterior: ${record.previous_hash || 'GENESIS'}`);
+    document.font('Helvetica').fontSize(9).moveDown();
+    document.text('Verificacao: recalcule o SHA-256 do JSON canonico do registro e confira a cadeia de hashes no endpoint de integridade.', { align: 'justify' });
+    document.moveDown();
+    document.text('Esta certidao comprova a integridade e a origem registrada no sistema GDA. Nao constitui, por si so, assinatura digital ICP-Brasil ou declaracao juridica de fe publica.', { align: 'justify' });
+    document.end();
+}
 
 function normalizeTursoUrl(value) {
     if (!value) return '';
@@ -182,8 +346,44 @@ async function queryTurso(sql) {
 // MIDDLEWARE
 // ============================================================
 app.disable('x-powered-by');
+app.set('trust proxy', 1);
+const apiRateLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    limit: 300,
+    standardHeaders: 'draft-8',
+    legacyHeaders: false,
+    handler: (req, res) => {
+        logSecurityEvent('rate_limit_exceeded', { ip: req.ip, path: req.path });
+        res.status(429).json({ error: 'Too Many Requests' });
+    }
+});
+const loginRateLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    limit: 10,
+    standardHeaders: 'draft-8',
+    legacyHeaders: false,
+    handler: (req, res) => {
+        logSecurityEvent('login_rate_limit_exceeded', { ip: req.ip });
+        res.status(429).json({ error: 'Too Many Requests' });
+    }
+});
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            baseUri: ["'self'"],
+            objectSrc: ["'none'"],
+            scriptSrc: ["'self'", "'unsafe-inline'"],
+            styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com', 'https://cdnjs.cloudflare.com'],
+            fontSrc: ["'self'", 'https://fonts.gstatic.com', 'https://cdnjs.cloudflare.com'],
+            imgSrc: ["'self'", 'data:', 'https:'],
+            frameAncestors: ["'none'"],
+            upgradeInsecureRequests: []
+        }
+    }
+}));
 app.use(applySecurityHeaders);
-app.use(applyRateLimit);
+app.use(apiRateLimiter);
 app.use((req, res, next) => {
     if (isSensitivePath(req.path)) {
         return res.status(404).json({ error: 'Not found' });
@@ -232,6 +432,7 @@ app.use((req, res, next) => {
 
     if (origin) {
         if (!isAllowedOrigin(origin)) {
+            logSecurityEvent('cors_rejected', { ip: req.ip, origin, path: req.path });
             return res.status(403).json({ error: 'Origin not allowed' });
         }
 
@@ -258,11 +459,102 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use('/api', (req, res, next) => {
-    if (req.method === 'HEAD') {
-        return res.status(200).end();
+app.use(cors({
+    origin: (origin, callback) => callback(null, !origin || isAllowedOrigin(origin)),
+    credentials: true,
+    methods: ['GET', 'POST', 'DELETE', 'OPTIONS', 'HEAD'],
+    allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization']
+}));
+
+app.post('/api/auth/login', loginRateLimiter, async (req, res) => {
+    const { username, password } = req.body || {};
+    const configuredUsername = process.env.GDA_AUTH_USERNAME;
+    const configuredPassword = process.env.GDA_AUTH_PASSWORD;
+
+    if (!configuredUsername || !configuredPassword || !process.env.JWT_SECRET) {
+        logSecurityEvent('login_unavailable', { ip: req.ip });
+        return res.status(503).json({ error: 'Autenticação não configurada.' });
     }
-    next();
+
+    if (!safeEqual(username, configuredUsername) || !safeEqual(password, configuredPassword)) {
+        logSecurityEvent('login_failed', { ip: req.ip, username: String(username || '').slice(0, 80) });
+        return res.status(401).json({ error: 'Credenciais inválidas.' });
+    }
+
+    try {
+        const sessionId = crypto.randomUUID();
+        const token = jwt.sign({ sub: configuredUsername, sid: sessionId }, getJwtSecret(), { expiresIn: JWT_EXPIRES_IN });
+        const payload = jwt.decode(token);
+        await storeSession(token, configuredUsername, sessionId, new Date(payload.exp * 1000).toISOString());
+        logSecurityEvent('login_succeeded', { ip: req.ip, username: configuredUsername });
+        return res.json({ token, expires_at: new Date(payload.exp * 1000).toISOString() });
+    } catch (err) {
+        logSecurityEvent('login_error', { ip: req.ip, error: err.message });
+        return res.status(503).json({ error: 'Serviço de autenticação indisponível.' });
+    }
+});
+
+async function authenticateApi(req, res, next) {
+    const authorization = req.headers.authorization || '';
+    const match = authorization.match(/^Bearer\s+(.+)$/i);
+    if (!match) {
+        logSecurityEvent('authentication_failed', { ip: req.ip, path: req.path, reason: 'missing_token' });
+        return res.status(401).json({ error: 'Token de autenticação obrigatório.' });
+    }
+
+    try {
+        const token = match[1];
+        const payload = jwt.verify(token, getJwtSecret());
+        if (!payload.sid || !(await isActiveSession(token, payload.sid))) {
+            logSecurityEvent('authentication_failed', { ip: req.ip, path: req.path, reason: 'inactive_session' });
+            return res.status(401).json({ error: 'Sessão inválida ou expirada.' });
+        }
+        req.user = { username: payload.sub, sessionId: payload.sid };
+        return next();
+    } catch (err) {
+        logSecurityEvent('authentication_failed', { ip: req.ip, path: req.path, reason: err.name || 'invalid_token' });
+        if (/TURSO|fetch|pipeline|JWT_SECRET/i.test(err.message || '')) {
+            return res.status(503).json({ error: 'Serviço de autenticação indisponível.' });
+        }
+        return res.status(401).json({ error: 'Token inválido ou expirado.' });
+    }
+}
+
+app.use('/api', authenticateApi);
+
+app.post('/api/auth/logout', async (req, res) => {
+    try {
+        await queryTurso(`
+            UPDATE gda_sessions
+            SET revoked_at = CURRENT_TIMESTAMP
+            WHERE session_id = ${sqlValue(req.user.sessionId)}
+        `);
+        logSecurityEvent('logout_succeeded', { ip: req.ip, username: req.user.username });
+        return res.status(204).end();
+    } catch (err) {
+        logSecurityEvent('logout_error', { ip: req.ip, error: err.message });
+        return res.status(503).json({ error: 'Serviço de autenticação indisponível.' });
+    }
+});
+
+app.get('/api/integridade/:tipo/:id', async (req, res) => {
+    try {
+        const record = await getLatestIntegrityRecord(req.params.tipo, req.params.id);
+        if (!record) return res.status(404).json({ error: 'Registro de integridade não encontrado.' });
+        return res.json(record);
+    } catch (err) {
+        return res.status(503).json({ error: 'Serviço de integridade indisponível.' });
+    }
+});
+
+app.get('/api/integridade/:tipo/:id/pdf', async (req, res) => {
+    try {
+        const record = await getLatestIntegrityRecord(req.params.tipo, req.params.id);
+        if (!record) return res.status(404).json({ error: 'Registro de integridade não encontrado.' });
+        return sendIntegrityPdf(res, record);
+    } catch (err) {
+        return res.status(503).json({ error: 'Serviço de integridade indisponível.' });
+    }
 });
 
 app.use((err, req, res, next) => {
@@ -327,7 +619,8 @@ app.post('/api/presencas', async (req, res) => {
                     ${sqlValue(nome)}, ${sqlValue(curso || '')}, ${sqlValue(atestado ? 1 : 0)})
         `;
         await queryTurso(sql);
-        res.json({ success: true, id });
+        const integrity = await registerIntegrityRecord('presencas', id, req.body, 'upsert', req.user.username);
+        res.json({ success: true, id, integrity });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -337,7 +630,8 @@ app.delete('/api/presencas/:id', async (req, res) => {
     try {
         const { id } = req.params;
         await queryTurso(`DELETE FROM presencas WHERE id = ${sqlValue(id)}`);
-        res.json({ success: true });
+        const integrity = await registerIntegrityRecord('presencas', id, { id }, 'delete', req.user.username);
+        res.json({ success: true, integrity });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -372,7 +666,8 @@ app.post('/api/presencas-atrasadas', async (req, res) => {
                     ${sqlValue(usuario || 'Igor Veras Morais')}, ${sqlValue(new Date().toISOString().split('T')[0])})
         `;
         await queryTurso(sql);
-        res.json({ success: true, id });
+        const integrity = await registerIntegrityRecord('presencas-atrasadas', id, req.body, 'upsert', req.user.username);
+        res.json({ success: true, id, integrity });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -408,7 +703,8 @@ app.post('/api/ocorrencias', async (req, res) => {
                     ${sqlValue(new Date().toISOString().split('T')[0])})
         `;
         await queryTurso(sql);
-        res.json({ success: true, id });
+        const integrity = await registerIntegrityRecord('ocorrencias', id, req.body, 'upsert', req.user.username);
+        res.json({ success: true, id, integrity });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -450,7 +746,8 @@ app.post('/api/atividades', async (req, res) => {
                     ${sqlValue(progresso || 0)})
         `;
         await queryTurso(sql);
-        res.json({ success: true, id });
+        const integrity = await registerIntegrityRecord('atividades', id, req.body, 'upsert', req.user.username);
+        res.json({ success: true, id, integrity });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -460,7 +757,8 @@ app.delete('/api/atividades/:id', async (req, res) => {
     try {
         const { id } = req.params;
         await queryTurso(`DELETE FROM atividades WHERE id = ${sqlValue(id)}`);
-        res.json({ success: true });
+        const integrity = await registerIntegrityRecord('atividades', id, { id }, 'delete', req.user.username);
+        res.json({ success: true, integrity });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -496,7 +794,8 @@ app.post('/api/notas', async (req, res) => {
                     ${sqlValue(parseFloat(b3) || 0)}, ${sqlValue(parseFloat(b4) || 0)})
         `;
         await queryTurso(sql);
-        res.json({ success: true });
+        const integrity = await registerIntegrityRecord('notas', disciplina_cod, req.body, 'upsert', req.user.username);
+        res.json({ success: true, integrity });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -529,7 +828,8 @@ app.post('/api/relatorios', async (req, res) => {
             VALUES (${sqlValue(id)}, ${sqlValue(data)}, ${sqlValue(disciplina)}, ${sqlValue(tempo)}, ${sqlValue(texto)})
         `;
         await queryTurso(sql);
-        res.json({ success: true, id });
+        const integrity = await registerIntegrityRecord('relatorios', id, req.body, 'upsert', req.user.username);
+        res.json({ success: true, id, integrity });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -559,7 +859,8 @@ app.post('/api/checklist/:id', async (req, res) => {
         const { id } = req.params;
         const { concluido } = req.body;
         await queryTurso(`UPDATE checklist SET concluido = ${sqlValue(concluido ? 1 : 0)} WHERE id = ${sqlValue(id)}`);
-        res.json({ success: true });
+        const integrity = await registerIntegrityRecord('checklist', id, req.body, 'upsert', req.user.username);
+        res.json({ success: true, integrity });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -594,7 +895,8 @@ app.post('/api/panico', async (req, res) => {
                     ${sqlValue(resolvido ? 1 : 0)})
         `;
         await queryTurso(sql);
-        res.json({ success: true, id });
+        const integrity = await registerIntegrityRecord('panico', id, req.body, 'upsert', req.user.username);
+        res.json({ success: true, id, integrity });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -629,7 +931,8 @@ app.post('/api/atendimentos', async (req, res) => {
                     ${sqlValue(timestamp || Date.now())})
         `;
         await queryTurso(sql);
-        res.json({ success: true, id });
+        const integrity = await registerIntegrityRecord('atendimentos', id, req.body, 'upsert', req.user.username);
+        res.json({ success: true, id, integrity });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -664,7 +967,8 @@ app.post('/api/assuntos', async (req, res) => {
                     ${sqlValue(timestamp || Date.now())})
         `;
         await queryTurso(sql);
-        res.json({ success: true, id });
+        const integrity = await registerIntegrityRecord('assuntos', id, req.body, 'upsert', req.user.username);
+        res.json({ success: true, id, integrity });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -698,7 +1002,8 @@ app.post('/api/sync/:key', async (req, res) => {
             ON CONFLICT(data_key) DO UPDATE SET payload = excluded.payload, updated_at = excluded.updated_at
         `;
         await queryTurso(sql);
-        return res.json({ ok: true, key, updated_at: now });
+        const integrity = await registerIntegrityRecord('sync', key, req.body, 'upsert', req.user.username);
+        return res.json({ ok: true, key, updated_at: now, integrity });
     } catch (err) {
         return res.status(500).json(buildTursoError(err));
     }

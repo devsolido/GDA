@@ -115,10 +115,29 @@ http://localhost:8000
 
 ## 🔒 Segurança
 
-- ✅ Sanitização XSS
-- ✅ Rate limiting (50 req/min)
-- ✅ Validação de inputs
-- ✅ Detecção de DevTools
+- ✅ JWT obrigatório em todos os endpoints `/api/*`, exceto `/api/auth/login`
+- ✅ Sessões persistidas no Turso com hash SHA-256 do token e expiração
+- ✅ Hash SHA-256 encadeado dos registros acadêmicos, com histórico append-only
+- ✅ Certidão PDF estilo registro acadêmico para conferência independente dos hashes
+- ✅ Rate limiting com `express-rate-limit` (300 requisições/15 min e 10 logins/15 min por IP)
+- ✅ CORS restrito por `CORS_ALLOWED_ORIGINS`
+- ✅ Headers Helmet com CSP, HSTS e proteção contra MIME sniffing
+- ✅ Logs estruturados de login, autenticação, CORS e rate limiting
+
+### Variáveis de ambiente da API
+
+```env
+TURSO_URL=seu-banco.turso.io
+TURSO_TOKEN=seu-token-do-turso
+JWT_SECRET=uma-chave-aleatoria-com-no-minimo-32-caracteres
+GDA_AUTH_USERNAME=usuario-da-aplicacao
+GDA_AUTH_PASSWORD=senha-da-aplicacao
+CORS_ALLOWED_ORIGINS=https://seu-dominio.example,https://gda-kappa.vercel.app
+```
+
+Faça login com `POST /api/auth/login` enviando `{"username":"...","password":"..."}`. Envie o token retornado nas demais requisições como `Authorization: Bearer <token>`.
+
+Após uma gravação, o campo `integrity` informa os hashes do registro. Consulte `GET /api/integridade/:tipo/:id` ou baixe `GET /api/integridade/:tipo/:id/pdf`. A certidão comprova a integridade e a origem registrada no GDA; para ter validade jurídica como assinatura digital, ela deve ser associada a um certificado digital reconhecido.
 
 ---
 
