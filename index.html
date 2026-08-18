@@ -147,6 +147,25 @@
             font-weight: 500;
             min-height: 20px;
         }
+        .splash-content .auth-fields {
+            display: grid;
+            gap: 8px;
+            margin: 12px 0 4px;
+        }
+        .splash-content .auth-fields input {
+            width: 100%;
+            min-height: 42px;
+            padding: 10px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--color-text);
+            font: inherit;
+        }
+        .splash-content .auth-fields input:focus {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 1px;
+        }
 
         .splash-content .btn-entrar {
             background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
@@ -2438,6 +2457,11 @@
                 </div>
                 <div class="progress-message" id="progressMessage">Aguarde! em instantes você poderá gerir sua vida no IFPA</div>
             </div>
+
+            <div class="auth-fields">
+                <input id="authUsername" type="text" autocomplete="username" placeholder="Usuário" aria-label="Usuário">
+                <input id="authPassword" type="password" autocomplete="current-password" placeholder="Senha" aria-label="Senha">
+            </div>
             
             <button class="btn-entrar" id="btnEntrar" disabled>
                 <i class="fas fa-spinner fa-spin"></i> Carregando...
@@ -2957,6 +2981,40 @@
             try { const d = localStorage.getItem(key); return d ? JSON.parse(d) : def; } catch(e) { return def; }
         }
 
+        function getAuthToken() {
+            return localStorage.getItem('gda_auth_token');
+        }
+
+        function authHeaders(headers = {}) {
+            const token = getAuthToken();
+            return token ? { ...headers, Authorization: `Bearer ${token}` } : headers;
+        }
+
+        async function authenticate() {
+            const username = document.getElementById('authUsername').value.trim();
+            const password = document.getElementById('authPassword').value;
+            if (!username || !password) throw new Error('Informe usuário e senha.');
+
+            const response = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok) throw new Error(data.error || 'Não foi possível autenticar.');
+            localStorage.setItem('gda_auth_token', data.token);
+            document.getElementById('authPassword').value = '';
+            return data.token;
+        }
+
+        async function verifyStoredToken() {
+            if (!getAuthToken()) return false;
+            const response = await fetch('/api/auth/verify', { headers: authHeaders({ 'Cache-Control': 'no-cache' }) });
+            if (response.ok) return true;
+            localStorage.removeItem('gda_auth_token');
+            return false;
+        }
+
         async function saveData(key, data) {
             try { localStorage.setItem(key, JSON.stringify(data)); } catch(e) { return false; }
             try { await syncDataToCloud(key, data); } catch(e) {}
@@ -2971,7 +3029,9 @@
             if (!window.fetch) return fallback;
             try {
                 console.info(`[GDA][SYNC] Buscando ${key} na nuvem...`);
-                const response = await fetch(`/api/sync/${encodeURIComponent(key)}`);
+                const response = await fetch(`/api/sync/${encodeURIComponent(key)}`, {
+                    headers: authHeaders()
+                });
                 if (!response.ok) {
                     console.warn(`[GDA][SYNC] Falha ao buscar ${key}. Status: ${response.status}`);
                     return fallback;
@@ -2995,7 +3055,7 @@
                 console.info(`[GDA][SYNC] Enviando ${key} para a nuvem...`);
                 const response = await fetch(`/api/sync/${encodeURIComponent(key)}`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: authHeaders({ 'Content-Type': 'application/json' }),
                     body: JSON.stringify({ value: data })
                 });
                 if (!response.ok) {
@@ -4680,7 +4740,7 @@
                 progressStatus.textContent = 'Verificando conexão com a nuvem...';
                 atualizarProgresso(10, 'Verificando conexão...');
                 
-                const health = await fetch('/api');
+                const health = await fetch('/api/health', { headers: { 'Cache-Control': 'no-cache' } });
                 if (health.ok) {
                     const data = await health.json();
                     console.info('[GDA][CLOUD] Nuvem ON:', data);
@@ -4691,55 +4751,59 @@
                 console.warn('[GDA][CLOUD] Backend indisponível:', error.message || error);
             }
 
-            progressStatus.textContent = 'Carregando seus dados...';
-            atualizarProgresso(20, 'Carregando dados...');
-            
-            await carregarDados(function(percent, status) {
-                const mappedPercent = 20 + (percent * 0.7);
-                atualizarProgresso(Math.round(mappedPercent), status || 'Carregando...');
-            });
-
-            atualizarProgresso(100, '✅ Pronto!');
-            progressMessage.textContent = '✅ Dados carregados! Clique em "Entrar" para acessar o sistema.';
+            atualizarProgresso(100, '✅ Servidor disponível');
+            progressMessage.textContent = 'Informe suas credenciais para carregar os dados da nuvem.';
             btnEntrar.disabled = false;
             btnEntrar.innerHTML = '<i class="fas fa-sign-in-alt"></i> Entrar no Sistema';
 
             btnEntrar.addEventListener('click', async function() {
-                // Recarregar dados (rápido)
-                await carregarDados();
-                
-                presencasAtrasadas = loadData('gda_presencas_atrasadas', []);
-                ocorrencias = loadData('gda_ocorrencias', []);
-                presencas = loadData('gda_presencas', []);
-                atividades = loadData('gda_atividades', []);
-                notas = loadData('gda_notas', {});
-                relatorios = loadData('gda_relatorios', []);
-                checklistState = loadData('gda_checklist', {});
-                historicoPanico = loadData('gda_historico_panico', []);
-                atendimentos = loadData('gda_atendimentos', []);
-                assuntos = loadData('gda_assuntos', {});
-                
-                renderChecklist();
-                renderTurmas();
-                renderAtividades();
-                renderNotas();
-                renderRelatorios();
-                renderTelaInicial();
-                renderDashboard();
-                renderHistoricoPanico();
-                renderAtendimentos();
-                renderPresenca();
-                renderAssuntos();
-                renderOcorrencias();
-                atualizarBadgePanico();
-                atualizarBadgePresenca();
-                atualizarBadgeAssuntos();
-                
-                const splash = document.getElementById('splashOverlay');
-                if (splash) splash.classList.add('hidden');
-                
-                mostrarToast('👋 Bem-vindo, Igor!', 'sucesso');
-                console.log('🔓 Acesso liberado para Igor');
+                btnEntrar.disabled = true;
+                progressMessage.textContent = 'Autenticando...';
+                try {
+                    if (!await verifyStoredToken()) await authenticate();
+                    progressStatus.textContent = 'Carregando seus dados...';
+                    await carregarDados(function(percent, status) {
+                        progressFill.style.width = `${20 + Math.round(percent * 0.8)}%`;
+                        progressPercent.textContent = `${20 + Math.round(percent * 0.8)}%`;
+                        progressStatus.textContent = status || 'Carregando...';
+                    });
+
+                    presencasAtrasadas = loadData('gda_presencas_atrasadas', []);
+                    ocorrencias = loadData('gda_ocorrencias', []);
+                    presencas = loadData('gda_presencas', []);
+                    atividades = loadData('gda_atividades', []);
+                    notas = loadData('gda_notas', {});
+                    relatorios = loadData('gda_relatorios', []);
+                    checklistState = loadData('gda_checklist', {});
+                    historicoPanico = loadData('gda_historico_panico', []);
+                    atendimentos = loadData('gda_atendimentos', []);
+                    assuntos = loadData('gda_assuntos', {});
+
+                    renderChecklist();
+                    renderTurmas();
+                    renderAtividades();
+                    renderNotas();
+                    renderRelatorios();
+                    renderTelaInicial();
+                    renderDashboard();
+                    renderHistoricoPanico();
+                    renderAtendimentos();
+                    renderPresenca();
+                    renderAssuntos();
+                    renderOcorrencias();
+                    atualizarBadgePanico();
+                    atualizarBadgePresenca();
+                    atualizarBadgeAssuntos();
+
+                    const splash = document.getElementById('splashOverlay');
+                    if (splash) splash.classList.add('hidden');
+                    mostrarToast('👋 Bem-vindo, Igor!', 'sucesso');
+                    console.log('🔓 Acesso liberado para Igor');
+                } catch (error) {
+                    btnEntrar.disabled = false;
+                    progressMessage.textContent = error.message || 'Falha ao autenticar.';
+                    mostrarToast(error.message || 'Falha ao autenticar.', 'erro');
+                }
             });
 
             renderizarPaginas();
