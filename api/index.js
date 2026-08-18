@@ -241,6 +241,44 @@ async function getLatestIntegrityRecord(recordType, recordId) {
     };
 }
 
+async function migrateLegacyIntegrity(username) {
+    const sources = [
+        ['turmas', 'cod'],
+        ['presencas', 'id'],
+        ['presencas-atrasadas', 'id'],
+        ['ocorrencias', 'id'],
+        ['atividades', 'id'],
+        ['notas', 'disciplina_cod'],
+        ['relatorios', 'id'],
+        ['checklist', 'id'],
+        ['historico_panico', 'id'],
+        ['atendimentos', 'id'],
+        ['assuntos', 'id'],
+        ['gda_sync', 'data_key']
+    ];
+    await ensureIntegrityTable();
+    let migrated = 0;
+    for (const [table, idColumn] of sources) {
+        const result = await queryTurso(`SELECT * FROM ${table}`);
+        const rows = result.results[0]?.response?.result?.rows || [];
+        const cols = result.results[0]?.response?.result?.cols || [];
+        for (const row of rows) {
+            const record = {};
+            row.forEach((cell, index) => { record[cols[index].name] = cell?.value ?? cell; });
+            const recordId = record[idColumn];
+            if (recordId === null || typeof recordId === 'undefined') continue;
+            const existing = await queryTurso(`
+                SELECT integrity_id FROM gda_integrity_records
+                WHERE record_type = ${sqlValue(table)} AND record_id = ${sqlValue(String(recordId))}
+                LIMIT 1
+            `);
+            if ((existing.results[0]?.response?.result?.rows || []).length) continue;
+            if (await registerIntegrityRecord(table, recordId, record, 'legacy_import', username)) migrated += 1;
+        }
+    }
+    return migrated;
+}
+
 function sendIntegrityPdf(res, record) {
     const document = new PDFDocument({ margin: 50 });
     const safeType = String(record.record_type).replace(/[^a-z0-9_-]/gi, '_');
@@ -544,6 +582,17 @@ app.get('/api/integridade/:tipo/:id', async (req, res) => {
         return res.json(record);
     } catch (err) {
         return res.status(503).json({ error: 'Serviço de integridade indisponível.' });
+    }
+});
+
+app.post('/api/integridade/migrar-legado', async (req, res) => {
+    try {
+        const migrated = await migrateLegacyIntegrity(req.user.username);
+        logSecurityEvent('legacy_integrity_migration', { ip: req.ip, username: req.user.username, migrated });
+        return res.json({ ok: true, migrated });
+    } catch (err) {
+        logSecurityEvent('legacy_integrity_migration_error', { ip: req.ip, error: err.message });
+        return res.status(503).json({ error: 'Migração de integridade indisponível.' });
     }
 });
 

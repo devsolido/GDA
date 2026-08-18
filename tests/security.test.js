@@ -91,3 +91,14 @@ test('protege a consulta e a certidão de integridade com JWT', async () => {
     server.close();
   }
 });
+
+test('protege a migração de registros legados com JWT', async () => {
+  const { server, port } = await startServer();
+
+  try {
+    const res = await fetch(`http://127.0.0.1:${port}/api/integridade/migrar-legado`, { method: 'POST' });
+    assert.equal(res.status, 401);
+  } finally {
+    server.close();
+  }
+});

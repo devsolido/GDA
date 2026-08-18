@@ -139,6 +139,8 @@ Faça login com `POST /api/auth/login` enviando `{"username":"...","password":".
 
 Após uma gravação, o campo `integrity` informa os hashes do registro. Consulte `GET /api/integridade/:tipo/:id` ou baixe `GET /api/integridade/:tipo/:id/pdf`. A certidão comprova a integridade e a origem registrada no GDA; para ter validade jurídica como assinatura digital, ela deve ser associada a um certificado digital reconhecido.
 
+Para emitir hashes dos registros que já existiam antes da implantação, faça uma única chamada autenticada a `POST /api/integridade/migrar-legado`. A operação é idempotente, marca esses eventos como `legacy_import` e não modifica os dados acadêmicos.
+
 ---
 
 ## 📄 Licença
