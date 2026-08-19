@@ -199,3 +199,5 @@ assets/videos/
 *.old
 *.orig
 *~
+.vercel
+.env*
