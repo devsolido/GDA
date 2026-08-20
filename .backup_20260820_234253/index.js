@@ -8,12 +8,12 @@ const helmet = require('helmet');
 const jwt = require('jsonwebtoken');
 const { createClient } = require('@libsql/client');
 
-// console.log("🔍 DIAGNÓSTICO DE VARIÁVEIS:");
-// console.log("  TURSO_URL:", process.env.TURSO_URL || "❌ INDEFINIDO");
-// console.log("  TURSO_TOKEN:", process.env.TURSO_TOKEN ? "✅ DEFINIDO (oculto)" : "❌ INDEFINIDO");
-// console.log("  JWT_SECRET:", process.env.JWT_SECRET ? "✅ DEFINIDO" : "❌ INDEFINIDO");
-// console.log("  GDA_AUTH_USERNAME:", process.env.GDA_AUTH_USERNAME || "❌ INDEFINIDO");
-// console.log("  GDA_AUTH_PASSWORD:", process.env.GDA_AUTH_PASSWORD ? "✅ DEFINIDO" : "❌ INDEFINIDO");
+console.log("🔍 DIAGNÓSTICO DE VARIÁVEIS:");
+console.log("  TURSO_URL:", process.env.TURSO_URL || "❌ INDEFINIDO");
+console.log("  TURSO_TOKEN:", process.env.TURSO_TOKEN ? "✅ DEFINIDO (oculto)" : "❌ INDEFINIDO");
+console.log("  JWT_SECRET:", process.env.JWT_SECRET ? "✅ DEFINIDO" : "❌ INDEFINIDO");
+console.log("  GDA_AUTH_USERNAME:", process.env.GDA_AUTH_USERNAME || "❌ INDEFINIDO");
+console.log("  GDA_AUTH_PASSWORD:", process.env.GDA_AUTH_PASSWORD ? "✅ DEFINIDO" : "❌ INDEFINIDO");
 
 const app = express();
 app.use(express.json());
@@ -41,7 +41,7 @@ const turso = createClient({
 app.post('/api/auth/login', async (req, res) => {
     try {
         const { username, password } = req.body;
-        // console.log("📌 Tentativa de login:", username);
+        console.log("📌 Tentativa de login:", username);
 
         // Pega as credenciais das variáveis de ambiente
         const validUser = process.env.GDA_AUTH_USERNAME || 'igor';
@@ -53,7 +53,7 @@ app.post('/api/auth/login', async (req, res) => {
                 process.env.JWT_SECRET || 'fallback-secret',
                 { expiresIn: '24h' }
             );
-            // console.log("✅ Login bem-sucedido!");
+            console.log("✅ Login bem-sucedido!");
             return res.json({
                 success: true,
                 token,
@@ -61,7 +61,7 @@ app.post('/api/auth/login', async (req, res) => {
             });
         }
 
-        // console.log("❌ Credenciais inválidas");
+        console.log("❌ Credenciais inválidas");
         res.status(401).json({ error: 'Credenciais inválidas' });
     } catch (error) {
         console.error("❌ Erro no login:", error);

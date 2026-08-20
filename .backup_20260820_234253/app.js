@@ -1,7 +1,3 @@
-// ============================================
-// SEGURANÇA: Sistema de validação integrado
-// ============================================
-
 ﻿// ===== CONFIGURAÇÃO PRINCIPAL =====
 import { turmas, checklistItems } from './data.js';
 import { loadData, saveData } from './storage.js';
@@ -64,36 +60,3 @@ window.saveData = saveData;
 console.log('🚀 GDA Acadêmico v3.0 carregado!');
 console.log('📋 Usuário:', USUARIO);
 console.log('📊 Dados carregados com sucesso!');
-
-// ============================================
-// FUNÇÃO DE MENSAGEM SEGURA (PREVINE XSS)
-// ============================================
-function mostrarMensagemSegura(mensagem, tipo = 'info') {
-    // Sanitiza a mensagem antes de exibir
-    const mensagemSegura = sanitizeHTML ? sanitizeHTML(String(mensagem)) : String(mensagem);
-    
-    // Remove alertas nativos (perigosos)
-    if (typeof alert !== 'undefined') {
-        console.log(`[${tipo}] ${mensagemSegura}`);
-        return;
-    }
-    
-    // Criar elemento de mensagem seguro
-    const div = document.createElement('div');
-    div.textContent = mensagemSegura; // textContent previne XSS
-    div.style.cssText = `
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        padding: 15px 25px;
-        background: ${tipo === 'erro' ? '#dc3545' : tipo === 'sucesso' ? '#28a745' : '#17a2b8'};
-        color: white;
-        border-radius: 8px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        z-index: 9999;
-        max-width: 400px;
-        font-family: system-ui, sans-serif;
-    `;
-    document.body.appendChild(div);
-    setTimeout(() => div.remove(), 5000);
-}
