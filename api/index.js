@@ -22,7 +22,7 @@ app.use(express.json());
 // CORS CONFIG
 // ============================================================
 app.use(cors({
-    origin: '*',
+    origin: 'https://gda-kappa.vercel.app',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
@@ -44,8 +44,8 @@ app.post('/api/auth/login', async (req, res) => {
         // console.log("📌 Tentativa de login:", username);
 
         // Pega as credenciais das variáveis de ambiente
-        const validUser = process.env.GDA_AUTH_USERNAME || 'igor';
-        const validPass = process.env.GDA_AUTH_PASSWORD || '202623700357';
+        const validUser = process.env.GDA_AUTH_USERNAME;
+        const validPass = process.env.GDA_AUTH_PASSWORD;
 
         if (username === validUser && password === validPass) {
             const token = jwt.sign(
@@ -111,3 +111,31 @@ app.get('/api/health', (req, res) => {
 // EXPORTAÇÃO
 // ============================================================
 module.exports = app;
+
+// Rate limiting simples
+const loginAttempts = new Map();
+const rateLimit = (req, res, next) => {
+    const ip = req.ip || req.connection.remoteAddress;
+    const now = Date.now();
+    
+    if (!loginAttempts.has(ip)) {
+        loginAttempts.set(ip, { count: 1, firstAttempt: now });
+        return next();
+    }
+    
+    const data = loginAttempts.get(ip);
+    if (now - data.firstAttempt > 15 * 60 * 1000) {
+        loginAttempts.set(ip, { count: 1, firstAttempt: now });
+        return next();
+    }
+    
+    if (data.count >= 5) {
+        return res.status(429).json({ error: 'Muitas tentativas. Aguarde 15 minutos.' });
+    }
+    
+    data.count++;
+    next();
+};
+
+// Aplicar no login
+// app.post('/api/auth/login', rateLimit, async (req, res) => {
