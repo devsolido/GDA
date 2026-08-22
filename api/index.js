@@ -138,3 +138,16 @@ app.get('/api', (req, res) => {
 // EXPORTAÇÃO PARA VERCEL
 // ============================================================
 module.exports = app;
+
+// ROTA DASHBOARD
+app.get('/api/dashboard', authenticate, (req, res) => {
+    res.json({
+        success: true,
+        data: {
+            turmas: 14,
+            atividades: 0,
+            checklist: 0,
+            media_geral: 0.0
+        }
+    });
+});
