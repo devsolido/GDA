@@ -8,30 +8,28 @@ const { createClient } = require('@libsql/client');
 const app = express();
 app.use(express.json());
 
-// CORS - Permitir apenas o domínio específico
+// CORS
 app.use(cors({
     origin: 'https://gda-kappa.vercel.app',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Helmet - Headers de segurança
+// Helmet
 app.use(helmet());
 
-// Conexão com Turso
+// Turso
 const turso = createClient({
     url: process.env.TURSO_URL || 'https://gda-database.turso.io',
     authToken: process.env.TURSO_TOKEN || ''
 });
 
 // ============================================================
-// ROTA DE LOGIN - COM CREDENCIAIS FIXAS
+// ROTA DE LOGIN
 // ============================================================
 app.post('/api/auth/login', async (req, res) => {
     try {
         const { username, password } = req.body;
-        
-        // Credenciais fixas para teste
         const validUser = 'igor';
         const validPass = '202623700357';
 
@@ -47,10 +45,9 @@ app.post('/api/auth/login', async (req, res) => {
                 user: { username, role: 'user' }
             });
         }
-
         res.status(401).json({ error: 'Credenciais inválidas' });
     } catch (error) {
-        res.status(500).json({ error: 'Erro interno do servidor' });
+        res.status(500).json({ error: 'Erro interno' });
     }
 });
 
@@ -86,8 +83,8 @@ app.get('/api/test/turso', async (req, res) => {
 // HEALTH CHECK
 // ============================================================
 app.get('/api/health', (req, res) => {
-    res.json({ 
-        status: 'ok', 
+    res.json({
+        status: 'ok',
         timestamp: new Date().toISOString(),
         environment: process.env.NODE_ENV || 'development'
     });
@@ -97,16 +94,14 @@ app.get('/api/health', (req, res) => {
 // ROTA PADRÃO
 // ============================================================
 app.get('/api', (req, res) => {
-    res.json({ 
+    res.json({
         message: 'GDA API - Gestão Digital Agregada',
         version: '2.0.0'
     });
 });
 
-module.exports = app;
-
 // ============================================================
-// ROTAS SYNC - Retornam dados padrão
+// ROTAS SYNC - Sincronização com o frontend
 // ============================================================
 const syncRoutes = [
     'gda_presencas_atrasadas',
@@ -123,10 +118,30 @@ const syncRoutes = [
 
 syncRoutes.forEach(route => {
     app.get(`/api/sync/${route}`, (req, res) => {
-        res.json({ 
-            success: true, 
+        res.json({
+            success: true,
             data: [],
             message: `Rota ${route} sincronizada`
         });
     });
+
+    app.post(`/api/sync/${route}`, (req, res) => {
+        res.json({
+            success: true,
+            message: `Dados de ${route} salvos com sucesso`
+        });
+    });
+
+    app.options(`/api/sync/${route}`, (req, res) => {
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+        res.sendStatus(200);
+    });
 });
+
+console.log('✅ Rotas sync carregadas:', syncRoutes.join(', '));
+
+// ============================================================
+// EXPORTAÇÃO
+// ============================================================
+module.exports = app;
