@@ -1,16 +1,16 @@
-// ============================================================
-// ESCONDER ARQUIVOS DA SEÇÃO FONTES (SEM BLOQUEAR)
-// ============================================================
+
+
+
 
 (function() {
     'use strict';
 
-    // 1. REMOVER REFERÊNCIAS A ARQUIVOS
+    
     try {
-        // Limpar stack traces
+        
         Error.stackTraceLimit = 0;
         
-        // Remover referências a arquivos
+        
         const originalError = Error;
         Error = function() {
             const error = new originalError();
@@ -20,7 +20,7 @@
         Error.prototype = originalError.prototype;
     } catch(e) {}
 
-    // 2. SOBRESCREVER CONSOLE PARA NÃO MOSTRAR ARQUIVOS
+    
     const originalLog = console.log;
     const originalWarn = console.warn;
     const originalError = console.error;
@@ -66,7 +66,7 @@
         originalInfo.apply(console, args);
     };
 
-    // 3. OFUSCAR NOMES DE FUNÇÕES
+    
     const originalFunction = Function;
     Function = function() {
         const args = Array.from(arguments);
@@ -80,7 +80,7 @@
     };
     Function.prototype = originalFunction.prototype;
 
-    // 4. REMOVER ARQUIVOS DO CACHE
+    
     if (window.performance && window.performance.clearResourceTimings) {
         window.performance.clearResourceTimings();
     }

@@ -1,16 +1,22 @@
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover" />
     <title>GDA - Gestão Digital Agregada</title>
+
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet" />
+
     <style>
+        /* ============================================================
            CSS COMPLETO - VERSÃO 7.3 (APENAS IGOR)
            ============================================================ */
+        
         :root {
             --color-primary: #0b0f15;
             --color-secondary: #121820;
@@ -35,8 +41,10 @@
             --header-height: 56px;
             --bottom-nav-height: 60px;
         }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
+
         body {
             font-family: 'Inter', sans-serif;
             background: var(--color-primary);
@@ -48,15 +56,20 @@
             padding-top: var(--header-height);
             padding-bottom: calc(var(--bottom-nav-height) + 8px);
         }
+
         ::-webkit-scrollbar { width: 3px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: rgba(255, 179, 0, 0.2); border-radius: 10px; }
+
         button, .check-item, .navbar a, .nav-item, .clickable {
             -webkit-tap-highlight-color: transparent;
             touch-action: manipulation;
             cursor: pointer;
         }
+
         input, select, textarea { font-size: 16px !important; }
+
+        /* ===== SPLASH ===== */
         .splash-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -103,6 +116,8 @@
             margin-bottom: 16px;
             line-height: 1.6;
         }
+
+        /* BARRA DE PROGRESSO */
         .splash-content .progress-container {
             margin: 16px 0 12px;
             width: 100%;
@@ -154,6 +169,7 @@
             outline: 2px solid var(--color-accent);
             outline-offset: 1px;
         }
+
         .splash-content .btn-entrar {
             background: linear-gradient(135deg, var(--color-accent), var(--color-accent-hover));
             color: var(--color-primary);
@@ -180,6 +196,8 @@
             margin-top: 12px;
             opacity: 0.4;
         }
+
+        /* ===== TOAST ===== */
         @keyframes slideUpToast {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -212,6 +230,8 @@
         .toast.erro { background: var(--color-danger); color: #fff; }
         .toast.aviso { background: var(--color-warning); color: #fff; }
         .toast.info { background: var(--color-secondary); color: var(--color-text); border-color: var(--color-border); }
+
+        /* ============================================================
            HEADER MOBILE FIXO
            ============================================================ */
         .app-header {
@@ -231,12 +251,14 @@
             -webkit-backdrop-filter: blur(12px);
             gap: 4px;
         }
+
         .app-header .logo {
             display: flex;
             align-items: center;
             gap: 6px;
             flex-shrink: 0;
         }
+
         .app-header .logo .icon {
             width: 28px;
             height: 28px;
@@ -249,18 +271,22 @@
             font-size: 11px;
             color: var(--color-primary);
         }
+
         .app-header .logo h1 {
             font-size: 14px;
             font-weight: 700;
             color: var(--color-text);
         }
         .app-header .logo h1 span { color: var(--color-accent); }
+
+        /* ===== CONTAGEM REGRESSIVA NO HEADER ===== */
         .countdown-container {
             display: flex;
             gap: 4px;
             align-items: center;
             flex-shrink: 0;
         }
+
         .countdown-item {
             display: flex;
             flex-direction: column;
@@ -270,6 +296,7 @@
             border-radius: 4px;
             min-width: 30px;
         }
+
         .countdown-number {
             font-size: 13px;
             font-weight: 700;
@@ -277,6 +304,7 @@
             line-height: 1.1;
             font-variant-numeric: tabular-nums;
         }
+
         .countdown-label {
             font-size: 6px;
             color: rgba(255, 255, 255, 0.5);
@@ -284,6 +312,7 @@
             letter-spacing: 0.5px;
             line-height: 1.2;
         }
+
         .countdown-label-prova {
             font-size: 7px;
             color: var(--color-accent);
@@ -294,6 +323,7 @@
             white-space: nowrap;
             display: none;
         }
+
         @media (min-width: 480px) {
             .countdown-item {
                 padding: 3px 8px;
@@ -310,6 +340,7 @@
                 font-size: 8px;
             }
         }
+
         @media (max-width: 400px) {
             .countdown-item {
                 padding: 1px 3px;
@@ -322,12 +353,14 @@
                 font-size: 5px;
             }
         }
+
         .app-header .header-actions {
             display: flex;
             align-items: center;
             gap: 3px;
             flex-shrink: 0;
         }
+
         .app-header .header-actions .status-badge {
             font-size: 8px;
             padding: 2px 6px;
@@ -353,6 +386,7 @@
             background: rgba(229, 57, 53, 0.15);
             color: var(--color-danger);
         }
+
         .app-header .header-actions .presenca-btn {
             padding: 2px 8px;
             border-radius: 14px;
@@ -385,6 +419,8 @@
                 min-height: 26px;
             }
         }
+
+        /* ============================================================
            SIDEBAR (Desktop)
            ============================================================ */
         .sidebar {
@@ -404,6 +440,7 @@
         }
         .sidebar::-webkit-scrollbar { width: 3px; }
         .sidebar::-webkit-scrollbar-thumb { background: rgba(255, 179, 0, 0.15); border-radius: 10px; }
+
         .sidebar .nav-label {
             font-size: 9px;
             text-transform: uppercase;
@@ -413,6 +450,7 @@
             opacity: 0.4;
             font-weight: 600;
         }
+
         .sidebar a {
             display: flex;
             align-items: center;
@@ -446,6 +484,7 @@
             background: rgba(211, 47, 47, 0.15);
             color: var(--color-panico);
         }
+
         .sidebar .submenu-sistemas {
             display: none;
             flex-direction: column;
@@ -462,6 +501,7 @@
         }
         .sidebar .submenu-sistemas a i { width: 16px; color: var(--color-accent); font-size: 13px; }
         .sidebar .submenu-sistemas a .status-dot { margin-left: auto; font-size: 7px; color: var(--color-success); }
+
         .sidebar .user-info {
             padding: 10px 8px;
             border-top: 1px solid var(--color-border);
@@ -482,6 +522,7 @@
         .sidebar .user-info .name { font-size: 12px; font-weight: 700; color: var(--color-text); text-align: center; }
         .sidebar .user-info .role { font-size: 9px; color: var(--color-text-muted); text-align: center; }
         .sidebar .user-info .presenca-label { font-size: 8px; color: var(--color-text-muted); opacity: 0.5; margin-top: 2px; text-transform: uppercase; letter-spacing: 1px; }
+
         .presenca-buttons {
             display: flex;
             gap: 4px;
@@ -505,6 +546,7 @@
         .presenca-buttons .btn-presenca:active { background: rgba(76, 175, 80, 0.15); border-color: var(--color-success); color: var(--color-success); }
         .presenca-buttons .btn-falta:active { background: rgba(229, 57, 53, 0.15); border-color: var(--color-danger); color: var(--color-danger); }
         #statusPresencaDisplay { font-size: 9px; color: var(--color-text-muted); text-align: center; margin-top: 2px; width: 100%; }
+
         .status-presenca {
             display: inline-block;
             padding: 1px 8px;
@@ -517,11 +559,14 @@
         .status-presenca.presente { background: rgba(76, 175, 80, 0.15); color: var(--color-success); }
         .status-presenca.falta { background: rgba(229, 57, 53, 0.15); color: var(--color-danger); }
         .status-presenca.aguardando { background: rgba(255, 255, 255, 0.05); color: var(--color-text-muted); }
+
+        /* ============================================================
            BOTÃO HAMBÚRGUER (Mobile) - REMOVIDO
            ============================================================ */
         .mobile-menu-btn {
             display: none !important;
         }
+
         .mobile-nav-overlay {
             display: none;
             position: fixed;
@@ -602,6 +647,8 @@
             opacity: 0.4;
             font-weight: 600;
         }
+
+        /* ============================================================
            CONTAINER PRINCIPAL
            ============================================================ */
         .container {
@@ -613,6 +660,8 @@
             z-index: 1;
             max-width: calc(100% - 220px);
         }
+
+        /* ============================================================
            NAVEGAÇÃO INFERIOR (Mobile)
            ============================================================ */
         .bottom-nav {
@@ -673,6 +722,8 @@
         }
         .bottom-nav .nav-item .nav-badge.success { background: var(--color-success); }
         .bottom-nav .nav-item .nav-badge.warning { background: var(--color-warning); }
+
+        /* ============================================================
            PÁGINAS
            ============================================================ */
         .page {
@@ -684,6 +735,8 @@
             from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
+        /* ============================================================
            CARD SYSTEM
            ============================================================ */
         .card {
@@ -695,6 +748,7 @@
             transition: var(--transition);
         }
         .card:active { transform: scale(0.99); }
+
         .card-header {
             display: flex;
             justify-content: space-between;
@@ -711,6 +765,7 @@
         }
         .card-title i { color: var(--color-accent); }
         .card-subtitle { font-size: 11px; color: var(--color-text-muted); }
+
         .section-title {
             font-size: 16px;
             font-weight: 700;
@@ -729,6 +784,8 @@
             padding: 1px 10px;
             border-radius: 20px;
         }
+
+        /* ============================================================
            WELCOME / INÍCIO
            ============================================================ */
         .welcome-hero {
@@ -767,6 +824,7 @@
         .date-day { font-size: 14px; font-weight: 600; color: var(--color-accent); display: block; }
         .date-full { font-size: 11px; color: var(--color-text-muted); }
         .aulas-hoje { font-size: 11px; color: var(--color-text-muted); display: block; }
+
         .clock-hero {
             display: flex;
             align-items: center;
@@ -780,6 +838,7 @@
         }
         .clock-hero .time { font-size: 20px; font-weight: 700; color: var(--color-accent); font-variant-numeric: tabular-nums; }
         .clock-hero .seconds { font-size: 14px; color: var(--color-text-muted); font-weight: 400; min-width: 24px; }
+
         .quote-card {
             background: var(--color-card);
             border-radius: var(--radius);
@@ -814,6 +873,8 @@
             min-height: 32px;
         }
         .btn-new-quote:active { background: rgba(255, 179, 0, 0.1); color: var(--color-accent); }
+
+        /* ============================================================
            STATS GRID
            ============================================================ */
         .stats-grid {
@@ -836,6 +897,8 @@
         .stat-card .number.success { color: var(--color-success); }
         .stat-card .number.danger { color: var(--color-danger); }
         .stat-card .number.warning { color: var(--color-warning); }
+
+        /* ============================================================
            ACHIEVEMENTS
            ============================================================ */
         .achievement-grid {
@@ -871,6 +934,8 @@
             transition: width 0.8s ease;
             width: 0%;
         }
+
+        /* ============================================================
            PROGRESSO SEMESTRE
            ============================================================ */
         .progress-hero {
@@ -918,6 +983,7 @@
         }
         .progress-percent { font-size: 16px; font-weight: 700; color: var(--color-accent); display: block; }
         .progress-label { font-size: 7px; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
         .progress-info {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -934,6 +1000,7 @@
         .info-label { font-size: 10px; color: var(--color-text-muted); }
         .info-value { font-size: 11px; font-weight: 600; color: var(--color-text); }
         .info-value.highlight { color: var(--color-accent); font-size: 13px; }
+
         .progress-message {
             width: 100%;
             padding: 8px 12px;
@@ -944,6 +1011,8 @@
             color: var(--color-text);
             margin-top: 8px;
         }
+
+        /* ============================================================
            CHECKLIST
            ============================================================ */
         .checklist-grid {
@@ -980,6 +1049,8 @@
         .check-item .label.done { color: var(--color-text-muted); text-decoration: line-through; }
         .check-item .icon-status { color: var(--color-text-muted); font-size: 13px; }
         .check-item .icon-status.done { color: var(--color-success); }
+
+        /* ============================================================
            TABELAS
            ============================================================ */
         .table-wrapper {
@@ -1014,6 +1085,7 @@
         }
         .table-search input:focus { border-color: var(--color-accent); }
         .table-search .search-count { font-size: 10px; color: var(--color-text-muted); }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -1050,6 +1122,8 @@
             color: var(--color-success);
             display: inline-block;
         }
+
+        /* ============================================================
            ATIVIDADES
            ============================================================ */
         .atividades-grid {
@@ -1129,6 +1203,7 @@
         }
         .atividade-card .acoes .btn-edit:active { border-color: var(--color-accent); color: var(--color-accent); }
         .atividade-card .acoes .btn-delete:active { border-color: var(--color-danger); color: var(--color-danger); }
+
         .btn-add-atividade {
             background: rgba(255, 255, 255, 0.02);
             border: 1px dashed var(--color-border);
@@ -1147,6 +1222,7 @@
             min-height: var(--toque-min);
         }
         .btn-add-atividade:active { border-color: var(--color-accent); color: var(--color-accent); }
+
         .filtros-atividades {
             display: flex;
             gap: 4px;
@@ -1171,6 +1247,8 @@
             color: var(--color-accent);
             border-color: rgba(255, 179, 0, 0.1);
         }
+
+        /* ============================================================
            NOTAS
            ============================================================ */
         .notas-grid {
@@ -1229,6 +1307,7 @@
         }
         .nota-bimestre input:focus { border-bottom: 2px solid var(--color-accent); }
         .nota-bimestre input::placeholder { color: var(--color-text-muted); font-weight: 400; font-size: 12px; }
+
         .notas-resultado {
             padding: 8px 10px;
             background: rgba(255, 255, 255, 0.02);
@@ -1248,6 +1327,8 @@
         .notas-resultado .media.reprovado { color: var(--color-danger); }
         .notas-resultado .media.recuperacao { color: var(--color-warning); }
         .notas-resultado .media.aguardando { color: var(--color-text-muted); }
+
+        /* ============================================================
            PRESENÇA
            ============================================================ */
         .presenca-stats {
@@ -1268,6 +1349,7 @@
         .presenca-stat .number.falta { color: var(--color-danger); }
         .presenca-stat .number.total { color: var(--color-accent); }
         .presenca-stat .label { font-size: 9px; color: var(--color-text-muted); margin-top: 2px; }
+
         .presenca-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -1319,6 +1401,8 @@
             min-height: 32px;
         }
         .presenca-card .btn-excluir-presenca:active { background: rgba(229, 57, 53, 0.2); }
+
+        /* ============================================================
            RELATÓRIOS
            ============================================================ */
         .relatorio-section {
@@ -1339,6 +1423,7 @@
         .relatorio-header h3 { font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 6px; color: var(--color-text); }
         .relatorio-header h3 i { color: var(--color-accent); }
         .relatorio-header .badge { font-size: 10px; background: rgba(255, 179, 0, 0.08); color: var(--color-accent); padding: 2px 12px; border-radius: 20px; }
+
         .relatorio-form {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -1383,6 +1468,7 @@
         }
         .relatorio-form .btn-salvar-relatorio:active { transform: scale(0.97); }
         .relatorio-form .form-actions { display: flex; gap: 8px; flex-wrap: wrap; grid-column: span 2; }
+
         .relatorios-lista { margin-top: 10px; max-height: 300px; overflow-y: auto; }
         .relatorios-lista .empty-state { text-align: center; padding: 20px; color: var(--color-text-muted); font-size: 12px; border: 1px dashed var(--color-border); border-radius: 10px; }
         .relatorio-dia {
@@ -1417,6 +1503,8 @@
         .relatorio-dia-itens .relatorio-item .disciplina { font-weight: 600; color: var(--color-text); min-width: 80px; font-size: 11px; }
         .relatorio-dia-itens .relatorio-item .horas { color: var(--color-success); font-weight: 600; font-size: 10px; }
         .relatorio-dia-itens .relatorio-item .texto { flex: 1; color: var(--color-text-muted); font-size: 11px; }
+
+        /* ============================================================
            ATENDIMENTOS
            ============================================================ */
         .atendimentos-grid {
@@ -1470,6 +1558,8 @@
         }
         .atendimento-card .acoes .btn-edit:active { border-color: var(--color-accent); color: var(--color-accent); }
         .atendimento-card .acoes .btn-delete:active { border-color: var(--color-danger); color: var(--color-danger); }
+
+        /* ============================================================
            OCORRÊNCIAS
            ============================================================ */
         .ocorrencia-card {
@@ -1508,6 +1598,7 @@
             border-left: 2px solid var(--color-ocorrencia);
         }
         .ocorrencia-card .para-coordenacao { font-size: 10px; color: var(--color-success); margin-top: 4px; }
+
         .presenca-atrasada-card {
             background: var(--color-card);
             border-radius: var(--radius);
@@ -1550,6 +1641,8 @@
             padding: 1px 8px;
             border-radius: 16px;
         }
+
+        /* ============================================================
            ASSUNTOS
            ============================================================ */
         .assuntos-grid {
@@ -1602,6 +1695,8 @@
             min-height: 32px;
         }
         .assunto-card .acoes .btn-delete:active { border-color: var(--color-danger); color: var(--color-danger); }
+
+        /* ============================================================
            HISTÓRICO PÂNICO
            ============================================================ */
         .panico-registro {
@@ -1637,6 +1732,7 @@
         }
         .panico-registro .status.resolvido { background: rgba(76, 175, 80, 0.12); color: var(--color-success); }
         .panico-registro .status.pendente { background: rgba(255, 179, 0, 0.12); color: var(--color-warning); }
+
         .participantes-list {
             display: flex;
             flex-wrap: wrap;
@@ -1656,6 +1752,8 @@
         .participante-tag .prazo-individual { font-size: 8px; color: var(--color-text-muted); background: rgba(255,255,255,0.05); padding: 0 4px; border-radius: 8px; }
         .participante-tag .prazo-individual.urgente { color: var(--color-danger); }
         .participante-tag .prazo-individual.ok { color: var(--color-success); }
+
+        /* ============================================================
            MODAIS
            ============================================================ */
         .modal-overlay, .modal-presenca-overlay, .modal-atrasado-overlay, .modal-ocorrencia-overlay {
@@ -1671,6 +1769,7 @@
             padding: 16px;
         }
         .modal-overlay.open, .modal-presenca-overlay.open, .modal-atrasado-overlay.open, .modal-ocorrencia-overlay.open { display: flex; }
+
         .modal {
             background: var(--color-secondary);
             border-radius: 16px;
@@ -1684,6 +1783,7 @@
         }
         .modal::-webkit-scrollbar { width: 3px; }
         .modal::-webkit-scrollbar-thumb { background: rgba(255, 179, 0, 0.2); border-radius: 10px; }
+
         .modal h2 {
             font-size: 17px;
             margin-bottom: 16px;
@@ -1721,6 +1821,7 @@
         .modal select option { background: var(--color-secondary); }
         .modal input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
         .modal textarea { resize: vertical; min-height: 50px; }
+
         .modal .modal-actions {
             display: flex;
             gap: 8px;
@@ -1750,8 +1851,11 @@
             color: var(--color-text-muted);
         }
         .modal .modal-actions .btn-secondary:active { background: rgba(255, 255, 255, 0.08); }
+
         .modal .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 6px; }
         .modal .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px; }
+
+        /* MODAL PRESENÇA */
         .modal-presenca {
             background: var(--color-secondary);
             border-radius: 16px;
@@ -1834,6 +1938,8 @@
             flex: 0.5;
         }
         .modal-presenca .modal-actions .btn-cancelar:active { background: rgba(255, 255, 255, 0.1); }
+
+        /* MODAL ATRASADO / OCORRÊNCIA */
         .modal-atrasado, .modal-ocorrencia {
             background: var(--color-secondary);
             border-radius: 16px;
@@ -1909,6 +2015,7 @@
             background: rgba(255, 255, 255, 0.05);
             color: var(--color-text-muted);
         }
+
         .btn-registro-atrasado {
             background: linear-gradient(135deg, var(--color-warning), #e65100);
             color: #fff;
@@ -1926,6 +2033,7 @@
             gap: 4px;
         }
         .btn-registro-atrasado:active { transform: scale(0.97); }
+
         .btn-ocorrencia {
             background: linear-gradient(135deg, var(--color-ocorrencia), var(--color-ocorrencia-hover));
             color: #fff;
@@ -1943,6 +2051,8 @@
             gap: 4px;
         }
         .btn-ocorrencia:active { transform: scale(0.97); }
+
+        /* ============================================================
            MODO PÂNICO
            ============================================================ */
         .panico-overlay {
@@ -1973,15 +2083,19 @@
         }
         .panico-container::-webkit-scrollbar { width: 3px; }
         .panico-container::-webkit-scrollbar-thumb { background: rgba(211, 47, 47, 0.5); border-radius: 10px; }
+
         .panico-header { text-align: center; border-bottom: 2px solid rgba(211, 47, 47, 0.2); padding-bottom: 10px; margin-bottom: 12px; }
         .panico-icone { font-size: 10px; color: var(--color-panico); letter-spacing: 3px; }
         .panico-titulo { font-size: 15px; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 2px; margin: 2px 0; }
         .panico-status { display: inline-block; background: var(--color-panico); color: #fff; padding: 2px 14px; border-radius: 20px; font-size: 10px; font-weight: 700; letter-spacing: 1px; animation: pulseStatus 1.5s infinite; }
         @keyframes pulseStatus { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+
         .panico-calma { text-align: center; padding: 10px 0; }
         .panico-frase-principal { font-size: 18px; font-weight: 700; color: #fff; }
         .panico-subfrase { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+
         .panico-divider { border: none; border-top: 1px solid rgba(211, 47, 47, 0.2); margin: 10px 0; }
+
         .panico-respiracao { text-align: center; padding: 10px 0; }
         .panico-respiracao h2 { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; }
         .respiracao-circulo { position: relative; width: 100px; height: 100px; margin: 0 auto 10px; }
@@ -2010,6 +2124,7 @@
         }
         .respiracao-texto .frase { font-size: 14px; font-weight: 700; color: #fff; display: block; letter-spacing: 1px; }
         .respiracao-texto .timer { font-size: 28px; font-weight: 700; color: var(--color-panico); display: block; line-height: 1; }
+
         .btn-respirar {
             background: rgba(211, 47, 47, 0.25);
             border: 1px solid rgba(211, 47, 47, 0.4);
@@ -2024,6 +2139,7 @@
             min-height: var(--toque-min);
         }
         .btn-respirar:active { transform: scale(0.95); background: rgba(211, 47, 47, 0.4); }
+
         .panico-motivacao { text-align: center; padding: 8px 0; background: rgba(255,255,255,0.03); border-radius: 10px; margin: 4px 0; }
         .panico-motivacao .frase { font-size: 14px; font-style: italic; color: #fff; line-height: 1.5; }
         .panico-motivacao .autor { font-size: 10px; color: rgba(255,255,255,0.3); display: block; margin-top: 2px; }
@@ -2041,6 +2157,7 @@
             min-height: 32px;
         }
         .btn-nova-frase:active { border-color: rgba(255,255,255,0.2); color: #fff; }
+
         .panico-relato { padding: 8px 0; }
         .panico-relato h2 { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
         .relato-disciplina { margin-bottom: 8px; }
@@ -2067,6 +2184,7 @@
         .relato-motivo textarea:focus { border-color: var(--color-panico); }
         .relato-motivo textarea::placeholder { color: rgba(255,255,255,0.2); }
         .relato-data { display: flex; gap: 10px; font-size: 11px; color: rgba(255,255,255,0.3); margin-bottom: 8px; }
+
         .relato-acoes { display: flex; gap: 8px; flex-wrap: wrap; }
         .btn-registrar {
             background: var(--color-panico);
@@ -2090,6 +2208,7 @@
             min-height: var(--toque-min);
         }
         .btn-sair-panico:active { background: rgba(255,255,255,0.1); color: #fff; }
+
         .panico-recursos {
             display: flex; gap: 6px; flex-wrap: wrap; justify-content: center;
             padding: 8px 0; border-top: 1px solid rgba(211, 47, 47, 0.15); margin-top: 4px;
@@ -2111,6 +2230,7 @@
             color: #fff;
         }
         .panico-recursos button.primary-rec:active { background: rgba(211, 47, 47, 0.35); }
+
         .avatar-fallback {
             width: 100%; height: 100%;
             background: var(--color-card);
@@ -2119,8 +2239,12 @@
             color: var(--color-accent);
             font-family: 'Inter', sans-serif;
         }
+
+        /* ============================================================
            RESPONSIVIDADE
            ============================================================ */
+
+        /* Tablets e telas médias */
         @media (max-width: 1024px) {
             .sidebar { width: 60px; padding: 10px 6px; }
             .sidebar a { justify-content: center; padding: 10px 4px; }
@@ -2136,19 +2260,27 @@
             .submenu-sistemas.open { display: flex !important; }
             .container { margin-left: 60px; padding: 10px 12px; max-width: calc(100% - 60px); }
         }
+
+        /* Mobile */
         @media (max-width: 768px) {
             body { padding-top: var(--header-height); padding-bottom: calc(var(--bottom-nav-height) + 8px); }
+
             .sidebar { display: none !important; }
+
             .container {
                 margin-left: 0 !important;
                 padding: 10px 12px;
                 max-width: 100%;
             }
+
             .bottom-nav { display: block; }
+
             .app-header .logo h1 { font-size: 14px; }
+
             .stats-grid { grid-template-columns: repeat(4, 1fr); gap: 6px; }
             .stat-card .number { font-size: 15px; }
             .stat-card .label { font-size: 7px; }
+
             .achievement-grid { grid-template-columns: 1fr 1fr; gap: 6px; }
             .atividades-grid { grid-template-columns: 1fr; }
             .presenca-grid { grid-template-columns: 1fr; }
@@ -2156,45 +2288,59 @@
             .assuntos-grid { grid-template-columns: 1fr; }
             .notas-grid { grid-template-columns: 1fr; }
             .checklist-grid { grid-template-columns: 1fr; }
+
             .progress-container { flex-direction: column; align-items: center; gap: 10px; }
             .progress-circle-container { width: 70px; height: 70px; }
             .progress-circle { width: 70px; height: 70px; }
             .progress-percent { font-size: 14px; }
             .progress-info { grid-template-columns: 1fr 1fr; width: 100%; }
+
             .welcome-hero { padding: 14px 12px; }
             .greeting-title { font-size: 17px; }
             .greeting-subtitle { font-size: 11px; }
             .date-day { font-size: 12px; }
+
             .clock-hero .time { font-size: 17px; }
             .clock-hero .seconds { font-size: 12px; }
+
             .quote-card blockquote { font-size: 12px; padding-right: 50px; }
             .btn-new-quote { top: 8px; right: 8px; font-size: 9px; padding: 3px 8px; min-height: 28px; }
+
             .relatorio-form { grid-template-columns: 1fr; }
             .relatorio-form .full-width { grid-column: span 1; }
             .relatorio-form .form-actions { grid-column: span 1; flex-direction: column; }
+
             .modal .grid-3 { grid-template-columns: 1fr; }
             .modal .grid-2 { grid-template-columns: 1fr; }
             .modal .modal-actions { flex-direction: column; }
             .modal .modal-actions button { width: 100%; }
+
             .modal-presenca .modal-actions { flex-direction: column; }
             .modal-presenca .modal-actions .btn-cancelar { flex: 1; order: 2; }
             .modal-presenca .modal-actions .btn-confirmar-presenca,
             .modal-presenca .modal-actions .btn-confirmar-falta { order: 1; }
+
             .modal-atrasado .modal-actions, .modal-ocorrencia .modal-actions { flex-direction: column; }
+
             .presenca-stats { grid-template-columns: 1fr 1fr; }
             .notas-bimestres { grid-template-columns: repeat(2, 1fr); }
             .nota-bimestre input { font-size: 14px; }
+
             .panico-container { padding: 14px 12px; }
             .panico-frase-principal { font-size: 15px; }
             .respiracao-circulo { width: 80px; height: 80px; }
             .respiracao-circulo .circulo { width: 80px; height: 80px; }
             .respiracao-texto .timer { font-size: 22px; }
             .respiracao-texto .frase { font-size: 12px; }
+
             .relato-acoes { flex-direction: column; }
             .panico-recursos { gap: 4px; }
             .panico-recursos button { font-size: 10px; padding: 4px 12px; min-height: 28px; }
+
             .btn-registro-atrasado, .btn-ocorrencia { font-size: 10px; padding: 4px 12px; }
+
             .filtros-atividades button { font-size: 9px; padding: 3px 10px; min-height: 28px; }
+
             .table-wrapper { overflow-x: visible; background: transparent; border: none; }
             table thead { display: none; }
             table tbody tr {
@@ -2230,42 +2376,53 @@
             .table-search { background: var(--color-card); border-radius: var(--radius); border: 1px solid var(--color-border); margin-bottom: 8px; padding: 6px 10px; }
             .table-search input { font-size: 13px; min-height: 32px; }
         }
+
         @media (max-width: 480px) {
             .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 4px; }
             .stat-card { padding: 6px 4px; }
             .stat-card .number { font-size: 14px; }
             .stat-card .label { font-size: 7px; }
+
             .app-header .header-actions .status-badge { display: none; }
             .app-header .header-actions .presenca-btn { font-size: 8px; padding: 2px 8px; min-height: 28px; }
             .app-header .logo .icon { width: 28px; height: 28px; font-size: 11px; }
             .app-header .logo h1 { font-size: 13px; }
+
             .greeting-title { font-size: 15px; }
             .greeting-icon { font-size: 20px; }
             .clock-hero .time { font-size: 15px; }
+
             .splash-content { padding: 24px 16px; }
             .splash-content .logo-icon { width: 48px; height: 48px; font-size: 20px; }
             .splash-content h1 { font-size: 20px; }
+
             .modal { padding: 16px 12px; }
             .modal h2 { font-size: 15px; }
             .modal input, .modal select, .modal textarea { font-size: 14px; }
+
             .presenca-stats { grid-template-columns: 1fr; }
             .notas-bimestres { grid-template-columns: 1fr 1fr; }
             .nota-bimestre input { font-size: 13px; }
+
             .panico-container { padding: 10px 8px; }
             .panico-frase-principal { font-size: 13px; }
             .respiracao-circulo { width: 60px; height: 60px; }
             .respiracao-circulo .circulo { width: 60px; height: 60px; }
             .respiracao-texto .timer { font-size: 18px; }
             .respiracao-texto .frase { font-size: 10px; }
+
             .bottom-nav .nav-item { font-size: 7px; }
             .bottom-nav .nav-item .material-icons-sharp { font-size: 17px; }
             .bottom-nav .nav-item .nav-badge { font-size: 6px; min-width: 12px; line-height: 12px; transform: translateX(calc(50% + 10px)); }
+
             .mobile-nav-content { max-width: 260px; padding: 12px 10px; }
             .mobile-nav-list a { font-size: 12px; padding: 8px 10px; min-height: 36px; }
             .mobile-nav-list a .material-icons-sharp { font-size: 18px; }
+
             input, select, textarea { font-size: 14px !important; }
             .modal input, .modal select, .modal textarea { font-size: 14px !important; }
         }
+
         @media (max-width: 380px) {
             .stats-grid { grid-template-columns: 1fr 1fr; gap: 4px; }
             .app-header .header-actions .presenca-btn { display: none; }
@@ -2281,6 +2438,8 @@
     </style>
 </head>
 <body>
+
+    
     <div class="splash-overlay" id="splashOverlay">
         <div class="splash-content">
             <div class="logo-icon">GDA</div>
@@ -2289,6 +2448,8 @@
                 Bem-vindo(a)!<br />
                 <strong>Bora sobreviver a mais um semestre?</strong> 💪📚
             </div>
+            
+            
             <div class="progress-container" id="progressContainer">
                 <div class="progress-label">
                     <span id="progressStatus">Iniciando...</span>
@@ -2299,22 +2460,30 @@
                 </div>
                 <div class="progress-message" id="progressMessage">Aguarde! em instantes você poderá gerir sua vida no IFPA</div>
             </div>
+
             <div class="auth-fields">
                 <input id="authUsername" type="text" autocomplete="username" placeholder="Usuário" aria-label="Usuário">
                 <input id="authPassword" type="password" autocomplete="current-password" placeholder="Senha" aria-label="Senha">
             </div>
+            
             <button class="btn-entrar" id="btnEntrar" disabled>
                 <i class="fas fa-spinner fa-spin"></i> Carregando...
             </button>
             <div class="versao">GDA · Gestão Digital Agregada — UI</div>
         </div>
     </div>
+
+    
     <div class="toast-container" id="toastContainer"></div>
+
+    
     <header class="app-header">
         <div class="logo">
             <div class="icon">GDA</div>
             <h1>GDA<span>.</span></h1>
         </div>
+        
+        
         <div class="countdown-container" id="countdownContainer">
             <div class="countdown-item">
                 <span class="countdown-number" id="countdownDays">00</span>
@@ -2334,6 +2503,7 @@
             </div>
             <span class="countdown-label-prova">📐 Prova 3º BI</span>
         </div>
+        
         <div class="header-actions">
             <span class="status-badge" id="statusBadge">não te esquece da presença 👉</span>
             <button class="presenca-btn presente-btn" id="btnPresencaPresente" title="Marcar presença">
@@ -2344,6 +2514,8 @@
             </button>
         </div>
     </header>
+
+    
     <nav class="sidebar" id="sidebar">
         <div class="nav-label">Menu</div>
         <a href="#" data-page="inicial" class="active" id="navInicial">
@@ -2383,6 +2555,7 @@
             📋<h3>Ocorrências</h3>
             <span class="badge-link" id="ocorrenciasBadge">0</span>
         </a>
+
         <div class="nav-label" style="margin-top:4px;">Pânico</div>
         <a href="#" id="btnPanico" style="border-left: 3px solid var(--color-panico);">
             🆘
@@ -2393,6 +2566,7 @@
             <h3>Histórico</h3>
             <span class="badge-link danger" id="panicoBadge">0</span>
         </a>
+
         <div class="nav-label" style="margin-top:4px;">Sistemas</div>
         <a href="#" id="sistemasToggle" style="cursor:pointer;">
             📱<h3>Sistemas</h3><span class="badge-link">4</span>
@@ -2415,6 +2589,7 @@
                 <span class="status-dot"><i class="fas fa-circle" style="color:var(--color-accent);"></i></span>
             </a>
         </div>
+
         <div class="user-info">
             <div class="avatar">
                 <img src="https://images.iimg.live/images/prime-memory-4768.webp" alt="Igor Veras Morais"
@@ -2436,15 +2611,21 @@
             </div>
         </div>
     </nav>
+
+    
     <div class="mobile-nav-overlay" id="mobileNavOverlay" aria-hidden="true">
         <div class="mobile-nav-content">
             <button class="mobile-nav-close" id="mobileNavClose" aria-label="Fechar menu">✕</button>
             <nav class="mobile-nav-list" id="mobileNavList"></nav>
         </div>
     </div>
+
+    
     <div class="container" id="mainContainer">
         <div id="pageContainer"></div>
     </div>
+
+    
     <nav class="bottom-nav" id="bottomNav">
         <div class="nav-items">
             <button class="nav-item active" data-page="inicial">
@@ -2472,6 +2653,8 @@
             </button>
         </div>
     </nav>
+
+    
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal">
             <h2 id="modalTitle"><i class="fas fa-plus-circle"></i> Nova Atividade</h2>
@@ -2514,6 +2697,8 @@
             </form>
         </div>
     </div>
+
+    
     <div class="modal-overlay" id="modalAtendimentoOverlay">
         <div class="modal">
             <h2 id="modalAtendimentoTitle"><i class="fas fa-handshake"></i> Nova Participação em Atendimento</h2>
@@ -2533,6 +2718,8 @@
             </form>
         </div>
     </div>
+
+    
     <div class="modal-presenca-overlay" id="modalPresencaOverlay">
         <div class="modal-presenca">
             <div class="modal-icon" id="presencaModalIcon">✅</div>
@@ -2557,42 +2744,56 @@
             </div>
         </div>
     </div>
+
+    
     <div class="modal-atrasado-overlay" id="modalAtrasadoOverlay">
         <div class="modal-atrasado">
             <div class="modal-icon">⏰</div>
             <h2>Registro de Presença Atrasada</h2>
             <p class="subtitle">Registre presença ou falta de dias anteriores ou horários alternativos</p>
+            
             <div class="info-row"><span class="label">👤 Aluno</span><span class="value">Igor Veras Morais</span></div>
             <div class="info-row"><span class="label">📚 Curso</span><span class="value">Controle Ambiental - 2º Sem</span></div>
+            
             <label>📅 Data do Registro *</label>
             <input type="date" id="formAtrasadoData" />
+            
             <label>⏰ Hora *</label>
             <input type="time" id="formAtrasadoHora" />
+            
             <label>📋 Tipo *</label>
             <select id="formAtrasadoTipo">
                 <option value="presente">✅ Presente</option>
                 <option value="falta">❌ Falta</option>
             </select>
+            
             <label>📝 Justificativa *</label>
             <textarea id="formAtrasadoJustificativa" placeholder="Descreva o motivo do registro atrasado..." rows="3"></textarea>
+            
             <div style="margin-top:6px;font-size:10px;color:var(--color-text-muted);">
                 ⚠️ Registros permitidos a partir de 03/08/2026
             </div>
+            
             <div class="modal-actions">
                 <button class="btn-cancelar" onclick="fecharModalAtrasado()">Cancelar</button>
                 <button class="btn-confirmar" id="btnConfirmarAtrasado">Registrar</button>
             </div>
         </div>
     </div>
+
+    
     <div class="modal-ocorrencia-overlay" id="modalOcorrenciaOverlay">
         <div class="modal-ocorrencia">
             <div class="modal-icon">📋</div>
             <h2>Registrar Ocorrência do Dia</h2>
             <p class="subtitle">Registre situações importantes que ocorreram (briga, falta de professor, etc.)</p>
+            
             <label>📅 Data *</label>
             <input type="date" id="formOcorrenciaData" />
+            
             <label>📚 Disciplina *</label>
             <select id="formOcorrenciaDisciplina"><option value="">Selecione uma disciplina</option></select>
+            
             <label>📋 Tipo de Ocorrência *</label>
             <select id="formOcorrenciaTipo">
                 <option value="briga">🔴 Briga/Conflito</option>
@@ -2601,19 +2802,24 @@
                 <option value="intercorrencia">🟡 Intercorrência</option>
                 <option value="outros">⚪ Outros</option>
             </select>
+            
             <label>📝 Descrição Detalhada *</label>
             <textarea id="formOcorrenciaDescricao" placeholder="Descreva detalhadamente o que aconteceu..." rows="3"></textarea>
+            
             <label>📋 Para Coordenação/Administração?</label>
             <select id="formOcorrenciaCoordenacao">
                 <option value="nao">❌ Não</option>
                 <option value="sim">✅ Sim, encaminhar</option>
             </select>
+            
             <div class="modal-actions">
                 <button class="btn-cancelar" onclick="fecharModalOcorrencia()">Cancelar</button>
                 <button class="btn-confirmar" id="btnConfirmarOcorrencia">Registrar Ocorrência</button>
             </div>
         </div>
     </div>
+
+    
     <div class="panico-overlay" id="panicoOverlay">
         <div class="panico-container">
             <div class="panico-header">
@@ -2669,24 +2875,31 @@
             </div>
         </div>
     </div>
+
     <script>
     (function() {
         'use strict';
+
         console.log('🚀 GDA v7.3 - Apenas Igor');
+
         // ============================================================
         //  CONTAGEM REGRESSIVA - PROVA 3º BI MATEMÁTICA
         //  Data alvo: 3 de outubro de 2026 às 7:30 AM (horário de Brasília)
         // ============================================================
         function iniciarContagemRegressiva() {
             const targetDate = new Date('2026-10-03T07:30:00-03:00').getTime();
+
             function updateCountdown() {
                 const now = new Date().getTime();
                 const difference = targetDate - now;
+
                 const daysEl = document.getElementById('countdownDays');
                 const hoursEl = document.getElementById('countdownHours');
                 const minutesEl = document.getElementById('countdownMinutes');
                 const secondsEl = document.getElementById('countdownSeconds');
+
                 if (!daysEl || !hoursEl || !minutesEl || !secondsEl) return;
+
                 if (difference <= 0) {
                     daysEl.textContent = '00';
                     hoursEl.textContent = '00';
@@ -2694,21 +2907,26 @@
                     secondsEl.textContent = '00';
                     return;
                 }
+
                 const days = Math.floor(difference / (1000 * 60 * 60 * 24));
                 const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
                 const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
                 daysEl.textContent = String(days).padStart(2, '0');
                 hoursEl.textContent = String(hours).padStart(2, '0');
                 minutesEl.textContent = String(minutes).padStart(2, '0');
                 secondsEl.textContent = String(seconds).padStart(2, '0');
             }
+
             updateCountdown();
             setInterval(updateCountdown, 1000);
         }
+
         // ============================================================
         //  DADOS - localStorage (Chaves simples, sem usuário)
         // ============================================================
+
         let presencasAtrasadas = loadData('gda_presencas_atrasadas', []);
         let ocorrencias = loadData('gda_ocorrencias', []);
         let presencas = loadData('gda_presencas', []);
@@ -2729,9 +2947,11 @@
         let filtroAtividadesAtual = 'todas';
         let timeoutRespirar = null;
         let toastBoasVindasExibido = false;
+
         // ============================================================
         //  FUNÇÕES AUXILIARES
         // ============================================================
+
         function getDataLocal() {
             const hoje = new Date();
             const ano = hoje.getFullYear();
@@ -2739,33 +2959,42 @@
             const dia = String(hoje.getDate()).padStart(2, '0');
             return `${ano}-${mes}-${dia}`;
         }
+
         function getHoraLocal() {
             const agora = new Date();
             return `${String(agora.getHours()).padStart(2, '0')}:${String(agora.getMinutes()).padStart(2, '0')}`;
         }
+
         function getDiaSemanaLocal() {
             const dias = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
             return dias[new Date().getDay()];
         }
+
         function gerarIdLocal() { return 'local_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6); }
         function escapeHtml(t) { if (!t) return ''; const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+
         // ============================================================
         //  FUNÇÕES DE CARREGAMENTO/SALVAMENTO (Chaves simples)
         // ============================================================
+
         function loadData(key, def) {
             try { const d = localStorage.getItem(key); return d ? JSON.parse(d) : def; } catch(e) { return def; }
         }
+
         function getAuthToken() {
             return localStorage.getItem('gda_auth_token');
         }
+
         function authHeaders(headers = {}) {
             const token = getAuthToken();
             return token ? { ...headers, Authorization: `Bearer ${token}` } : headers;
         }
+
         async function authenticate() {
             const username = document.getElementById('authUsername').value.trim();
             const password = document.getElementById('authPassword').value;
             if (!username || !password) throw new Error('Informe usuário e senha.');
+
             const response = await fetch('/api/auth/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -2777,6 +3006,7 @@
             document.getElementById('authPassword').value = '';
             return data.token;
         }
+
         async function verifyStoredToken() {
             if (!getAuthToken()) return false;
             const response = await fetch('/api/auth/verify', { headers: authHeaders({ 'Cache-Control': 'no-cache' }) });
@@ -2784,14 +3014,17 @@
             localStorage.removeItem('gda_auth_token');
             return false;
         }
+
         async function saveData(key, data) {
             try { localStorage.setItem(key, JSON.stringify(data)); } catch(e) { return false; }
             try { await syncDataToCloud(key, data); } catch(e) {}
             return true;
         }
+
         // ============================================================
         //  SINCRONIZAÇÃO COM NUVEM
         // ============================================================
+
         async function loadDataFromCloud(key, fallback) {
             if (!window.fetch) return fallback;
             try {
@@ -2815,6 +3048,7 @@
             }
             return fallback;
         }
+
         async function syncDataToCloud(key, data) {
             if (!window.fetch) return;
             try {
@@ -2834,24 +3068,29 @@
                 console.warn(`[GDA][SYNC] Falha ao sincronizar ${key} com a nuvem:`, error.message || error);
             }
         }
+
         async function carregarDados(onProgress) {
             const chaves = [
                 'gda_presencas_atrasadas', 'gda_ocorrencias', 'gda_presencas', 'gda_atividades',
                 'gda_notas', 'gda_relatorios', 'gda_checklist', 'gda_historico_panico',
                 'gda_atendimentos', 'gda_assuntos'
             ];
+            
             let total = chaves.length;
             let concluidas = 0;
+            
             for (const chave of chaves) {
                 try {
                     const localValue = loadData(chave, null);
                     const cloudValue = await loadDataFromCloud(chave, null);
+                    
                     if (cloudValue !== null && cloudValue !== undefined) {
                         localStorage.setItem(chave, JSON.stringify(cloudValue));
                         atualizarVariavel(chave, cloudValue);
                     } else if (localValue !== null && localValue !== undefined) {
                         await syncDataToCloud(chave, localValue);
                     }
+                    
                     concluidas++;
                     if (onProgress) {
                         const percent = Math.round((concluidas / total) * 100);
@@ -2866,6 +3105,7 @@
                     }
                 }
             }
+            
             // Recarregar variáveis
             presencasAtrasadas = loadData('gda_presencas_atrasadas', []);
             ocorrencias = loadData('gda_ocorrencias', []);
@@ -2877,10 +3117,12 @@
             historicoPanico = loadData('gda_historico_panico', []);
             atendimentos = loadData('gda_atendimentos', []);
             assuntos = loadData('gda_assuntos', {});
+            
             if (onProgress) {
                 onProgress(100, '✅ Pronto!');
             }
         }
+
         function atualizarVariavel(chave, valor) {
             const mapa = {
                 'gda_presencas_atrasadas': () => presencasAtrasadas = valor,
@@ -2896,9 +3138,11 @@
             };
             if (mapa[chave]) mapa[chave]();
         }
+
         // ============================================================
         //  FUNÇÕES DE TOAST
         // ============================================================
+
         function mostrarToast(msg, tipo = 'info', duracao = 3000) {
             // Evita múltiplos toasts de boas-vindas
             if (msg.includes('Bem-vindo') && toastBoasVindasExibido) {
@@ -2907,6 +3151,7 @@
             if (msg.includes('Bem-vindo')) {
                 toastBoasVindasExibido = true;
             }
+            
             const container = document.getElementById('toastContainer');
             if (!container) return;
             const toast = document.createElement('div');
@@ -2915,14 +3160,18 @@
             container.appendChild(toast);
             setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, duracao);
         }
+
         // ============================================================
         //  FUNÇÕES DE SAUDAÇÃO
         // ============================================================
+
         function getSaudacao() { const h = new Date().getHours(); if (h < 12) return 'Bom dia'; if (h < 18) return 'Boa tarde'; return 'Boa noite'; }
         function getEmojiSaudacao() { const h = new Date().getHours(); if (h < 12) return '🌅'; if (h < 18) return '☀️'; return '🌙'; }
+
         // ============================================================
         //  DADOS ESTÁTICOS (MANTIDOS)
         // ============================================================
+
         const turmas = [
             { cod: 'TICAM0147', nome: 'ARTES', professor: 'THAYS ALVES COSTA', turma: 'B2371M', horario: '6M34' },
             { cod: 'TICAM0152', nome: 'FILOSOFIA', professor: 'JESSIKA CURTINAZ DA SILVA', turma: 'B2371M', horario: '4M56' },
@@ -2939,6 +3188,7 @@
             { cod: 'TICAM0150', nome: 'SOCIOLOGIA', professor: 'MARCELO MELO DOS SANTOS', turma: 'B2371M', horario: '5M56' },
             { cod: 'TICAM0158', nome: 'TÉCNICAS EM EDUCAÇÃO AMBIENTAL', professor: 'DANIELLE IVANA PEREIRA DOS SANTOS', turma: 'B2371M', horario: '4M34' }
         ];
+
         const checklistItems = [
             { id: 'linkedin', label: 'Verificar LinkedIn', icon: 'fab fa-linkedin' },
             { id: 'gupy', label: 'Gupy - Vaga Aprendiz Home Office', icon: 'fas fa-briefcase' },
@@ -2947,6 +3197,7 @@
             { id: 'intercambios', label: 'Intercâmbios - Oportunidades', icon: 'fas fa-globe-americas' },
             { id: 'ingles', label: 'Estudar Inglês (30 min)', icon: 'fas fa-language' }
         ];
+
         const frasesMotivacionais = [
             { frase: '"Você já superou desafios maiores. Isso também vai passar."', autor: 'Desconhecido' },
             { frase: '"Não precisa resolver tudo agora. Um passo de cada vez."', autor: 'Desconhecido' },
@@ -2957,6 +3208,7 @@
             { frase: '"Acalme sua mente e foque no que você pode fazer agora."', autor: 'Desconhecido' },
             { frase: '"Você tem tudo o que precisa para resolver isso."', autor: 'Desconhecido' }
         ];
+
         const frasesTelaInicial = [
             { frase: '"Acredite em si mesmo e todo o resto virá naturalmente."', autor: 'The Rock' },
             { frase: '"O sucesso é a soma de pequenos esforços repetidos dia após dia."', autor: 'Robert Collier' },
@@ -2967,12 +3219,15 @@
             { frase: '"Não importa o quão devagar você vá, desde que não pare."', autor: 'Confúcio' },
             { frase: '"A educação é a arma mais poderosa que você pode usar para mudar o mundo."', autor: 'Nelson Mandela' }
         ];
+
         // ============================================================
         //  FUNÇÕES DE RENDERIZAÇÃO (MANTIDAS - COM NOME IGOR FIXO)
         // ============================================================
+
         function renderizarPaginas() {
             const container = document.getElementById('pageContainer');
             container.innerHTML = `
+                
                 <div class="page active" id="page-inicial">
                     <div class="welcome-hero">
                         <div class="greeting-section">
@@ -3044,6 +3299,8 @@
                         </div>
                     </div>
                 </div>
+
+                
                 <div class="page" id="page-dashboard">
                     <div class="dashboard-header" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
                         <h1 style="font-size:18px;font-weight:700;">📊 Dashboard <small style="font-size:11px;font-weight:400;color:var(--color-text-muted);">Controle Ambiental · 2026.2</small></h1>
@@ -3056,12 +3313,16 @@
                         <div class="stat-card"><div class="number" id="mediaGeralDashboard">0.0</div><div class="label">Média Geral</div></div>
                     </div>
                 </div>
+
+                
                 <div class="page" id="page-checklist">
                     <div class="section-title"><i class="fas fa-clipboard-list"></i> Checklist Diário <span class="badge" id="checkPct">0%</span></div>
                     <div class="card" style="padding:10px 12px;">
                         <div class="checklist-grid" id="checklistContainer"></div>
                     </div>
                 </div>
+
+                
                 <div class="page" id="page-turmas">
                     <div class="section-title"><i class="fas fa-class"></i> Turmas Matriculadas <span class="badge">14 disciplinas</span></div>
                     <div class="table-wrapper">
@@ -3072,6 +3333,8 @@
                         </table>
                     </div>
                 </div>
+
+                
                 <div class="page" id="page-atividades">
                     <div class="section-title">
                         <i class="fas fa-tasks"></i> Atividades <span class="badge" id="atividadeBadge">0</span>
@@ -3086,10 +3349,14 @@
                     </div>
                     <div class="atividades-grid" id="atividadesContainer"></div>
                 </div>
+
+                
                 <div class="page" id="page-notas">
                     <div class="section-title"><i class="fas fa-graduation-cap"></i> Módulo de Notas <span class="badge">📊 Média ≥ 7.0 = Aprovado</span></div>
                     <div class="notas-grid" id="notasContainer"></div>
                 </div>
+
+                
                 <div class="page" id="page-relatorios">
                     <div class="relatorio-section">
                         <div class="relatorio-header"><h3><i class="fas fa-pen-alt"></i> Relatório Diário de Estudos</h3><span class="badge">📝 Registre seu progresso</span></div>
@@ -3102,6 +3369,8 @@
                         <div class="relatorios-lista" id="relatoriosLista"></div>
                     </div>
                 </div>
+
+                
                 <div class="page" id="page-atendimentos">
                     <div class="section-title">
                         <i class="fas fa-handshake"></i> Participações em Atendimento
@@ -3109,6 +3378,8 @@
                     </div>
                     <div class="atendimentos-grid" id="atendimentosContainer"></div>
                 </div>
+
+                
                 <div class="page" id="page-presenca">
                     <div class="section-title">
                         <i class="fas fa-calendar-check"></i> Registro de Presença <span class="badge" id="presencaTotalBadge">${presencas.length} registros</span>
@@ -3117,11 +3388,15 @@
                         <button onclick="abrirModalAtrasado()" class="btn-registro-atrasado" style="margin-left:auto;"><i class="fas fa-clock"></i> Atrasado</button>
                     </div>
                     <div id="presencaStats" class="presenca-stats"></div>
+                    
                     <h4 style="margin-top:12px;margin-bottom:6px;color:var(--color-text);font-size:12px;">📋 Registros do Dia</h4>
                     <div class="presenca-grid" id="presencaContainer"></div>
+                    
                     <h4 style="margin-top:12px;margin-bottom:6px;color:var(--color-warning);font-size:12px;">⏰ Registros Atrasados</h4>
                     <div id="presencaAtrasadaContainer"></div>
                 </div>
+
+                
                 <div class="page" id="page-assuntos">
                     <div class="section-title"><i class="fas fa-subject"></i> Assuntos por Disciplina <span class="badge" id="assuntosTotalBadge">0</span></div>
                     <div style="background:var(--color-card);border-radius:var(--radius);padding:12px 14px;border:1px solid var(--color-border);margin-bottom:12px;">
@@ -3138,10 +3413,14 @@
                     </div>
                     <div id="assuntosContainer" class="assuntos-grid"></div>
                 </div>
+
+                
                 <div class="page" id="page-historicopanico">
                     <div class="section-title"><i class="fas fa-history"></i> Histórico do Pânico <span class="badge" id="historicoBadge">0</span></div>
                     <div id="historicoPanicoContainer"></div>
                 </div>
+
+                
                 <div class="page" id="page-ocorrencias">
                     <div class="section-title">
                         <i class="fas fa-report"></i> Ocorrências do Dia a Dia
@@ -3153,12 +3432,15 @@
             `;
             console.log('✅ Páginas renderizadas');
         }
+
         // ============================================================
         //  FUNÇÃO: VERIFICAR DIA DA SEMANA (BLOQUEIO DE FIM DE SEMANA)
         // ============================================================
+
         function verificarDiaSemana() {
             const hoje = new Date();
             const diaSemana = hoje.getDay(); // 0 = Domingo, 6 = Sábado
+            
             if (diaSemana === 0) {
                 mostrarToast('🔴 Calma ai! hoje é domingo!', 'aviso', 4000);
                 return false;
@@ -3168,11 +3450,13 @@
             }
             return true;
         }
+
         // ============================================================
         //  FUNÇÃO: UNIFICAR REGISTROS ATRASADOS COM REGISTROS DO DIA
         // ============================================================
         function unificarRegistrosAtrasados() {
             const hoje = getDataLocal();
+            
             // Verifica se há registro atrasado para hoje
             const atrasadoHoje = presencasAtrasadas.find(p => p.data === hoje);
             if (atrasadoHoje) {
@@ -3210,22 +3494,28 @@
             }
             return false;
         }
+
         // ============================================================
         //  FUNÇÃO: VERIFICAR SE JÁ TEM REGISTRO NO DIA (INCLUINDO ATRASADOS)
         // ============================================================
         function verificarRegistroHoje() {
             const hoje = getDataLocal();
+            
             // Verifica se tem registro normal hoje
             const normalHoje = presencas.find(p => p.data === hoje);
             if (normalHoje) return true;
+            
             // Verifica se tem registro atrasado hoje
             const atrasadoHoje = presencasAtrasadas.find(p => p.data === hoje);
             if (atrasadoHoje) return true;
+            
             return false;
         }
+
         // ============================================================
         //  FUNÇÕES DE RENDERIZAÇÃO (MANTIDAS)
         // ============================================================
+
         function renderChecklist() {
             const container = document.getElementById('checklistContainer');
             if (!container) return;
@@ -3256,6 +3546,7 @@
             const navBadge = document.getElementById('navChecklistBadge');
             if (navBadge) navBadge.textContent = `${pct}%`;
         }
+
         function renderTurmas() {
             const tbody = document.getElementById('turmasTableBody');
             if (!tbody) return;
@@ -3282,6 +3573,7 @@
                 });
             }
         }
+
         function renderAtividades() {
             const container = document.getElementById('atividadesContainer');
             if (!container) return;
@@ -3326,6 +3618,7 @@
             const navBadge = document.getElementById('navAtividadeBadge');
             if (navBadge) navBadge.textContent = atividades.length;
         }
+
         function renderNotas() {
             const container = document.getElementById('notasContainer');
             if (!container) return;
@@ -3342,6 +3635,7 @@
                 </div>`;
             }).join('');
         }
+
         function renderRelatorios() {
             const container = document.getElementById('relatoriosLista');
             if (!container) return;
@@ -3368,6 +3662,7 @@
                 </div>`;
             }).join('');
         }
+
         function renderAtendimentos() {
             const container = document.getElementById('atendimentosContainer');
             if (!container) return;
@@ -3388,11 +3683,14 @@
             container.querySelectorAll('.btn-edit-atendimento').forEach(btn => btn.addEventListener('click', function() { editarAtendimento(this.dataset.id); }));
             container.querySelectorAll('.btn-delete-atendimento').forEach(btn => btn.addEventListener('click', function() { if (confirm('Remover este atendimento?')) deletarAtendimento(this.dataset.id); }));
         }
+
         function renderPresenca() {
             const container = document.getElementById('presencaContainer');
             if (!container) return;
+            
             // Unificar registros atrasados antes de renderizar
             unificarRegistrosAtrasados();
+            
             const total = presencas.length;
             const presentes = presencas.filter(p => p.tipo === 'presente').length;
             const faltas = presencas.filter(p => p.tipo === 'falta').length;
@@ -3425,8 +3723,10 @@
             const badge = document.getElementById('presencaTotalBadge');
             if (badge) badge.textContent = presencas.length + ' registros';
             atualizarBadgePresenca();
+
             renderPresencasAtrasadas();
         }
+
         function renderPresencasAtrasadas() {
             const container = document.getElementById('presencaAtrasadaContainer');
             if (!container) return;
@@ -3455,6 +3755,7 @@
             }).join('');
             document.querySelectorAll('.btn-excluir-atrasado').forEach(btn => btn.addEventListener('click', function() { excluirPresencaAtrasada(this.dataset.id); }));
         }
+
         function renderOcorrencias() {
             const container = document.getElementById('ocorrenciasContainer');
             if (!container) return;
@@ -3491,6 +3792,7 @@
             const badgeMenu = document.getElementById('ocorrenciasBadge');
             if (badgeMenu) { badgeMenu.textContent = ocorrencias.length; badgeMenu.style.display = ocorrencias.length > 0 ? 'inline-block' : 'none'; }
         }
+
         function renderAssuntos() {
             const container = document.getElementById('assuntosContainer');
             if (!container) return;
@@ -3526,6 +3828,7 @@
             if (badge) badge.textContent = total;
             atualizarBadgeAssuntos();
         }
+
         function renderHistoricoPanico() {
             const container = document.getElementById('historicoPanicoContainer');
             if (!container) return;
@@ -3548,9 +3851,11 @@
             if (badge) badge.textContent = historicoPanico.length;
             atualizarBadgePanico();
         }
+
         // ============================================================
         //  FUNÇÕES - MODAIS (MANTIDAS)
         // ============================================================
+
         function abrirModalAtrasado() {
             const modal = document.getElementById('modalAtrasadoOverlay');
             modal.classList.add('open');
@@ -3560,31 +3865,37 @@
             document.getElementById('formAtrasadoTipo').value = 'presente';
             document.getElementById('formAtrasadoJustificativa').value = '';
         }
+
         function fecharModalAtrasado() {
             document.getElementById('modalAtrasadoOverlay').classList.remove('open');
             document.body.style.overflow = '';
         }
+
         function confirmarAtrasado() {
             const data = document.getElementById('formAtrasadoData').value;
             const hora = document.getElementById('formAtrasadoHora').value;
             const tipo = document.getElementById('formAtrasadoTipo').value;
             const justificativa = document.getElementById('formAtrasadoJustificativa').value.trim();
+
             if (!data || !hora || !justificativa) {
                 mostrarToast('⚠️ Preencha todos os campos!', 'aviso');
                 return;
             }
+
             const dataRegistro = new Date(data + 'T00:00:00');
             const dataLimite = new Date('2026-08-03T00:00:00');
             if (dataRegistro < dataLimite) {
                 mostrarToast('⚠️ Registros permitidos apenas a partir de 03/08/2026.', 'aviso');
                 return;
             }
+
             // Verifica se já tem registro para esta data (normal ou atrasado)
             const hoje = getDataLocal();
             if (data === hoje && verificarRegistroHoje()) {
                 mostrarToast('⚠️ Você já tem um registro para hoje!', 'aviso');
                 return;
             }
+
             const registro = {
                 id: gerarIdLocal(),
                 data: data,
@@ -3594,10 +3905,12 @@
                 usuario: 'Igor',
                 registrado_em: getDataLocal()
             };
+
             presencasAtrasadas.push(registro);
             saveData('gda_presencas_atrasadas', presencasAtrasadas);
             fecharModalAtrasado();
             mostrarToast('✅ Registro atrasado salvo com sucesso!', 'sucesso');
+            
             // Tenta unificar automaticamente se for do dia atual
             if (data === hoje) {
                 unificarRegistrosAtrasados();
@@ -3606,6 +3919,7 @@
             renderPresenca();
             atualizarStatusPresenca();
         }
+
         function excluirPresencaAtrasada(id) {
             if (confirm('Remover este registro atrasado?')) {
                 presencasAtrasadas = presencasAtrasadas.filter(p => p.id !== id);
@@ -3614,6 +3928,7 @@
                 mostrarToast('✅ Registro removido!', 'sucesso');
             }
         }
+
         function abrirModalOcorrencia() {
             const modal = document.getElementById('modalOcorrenciaOverlay');
             modal.classList.add('open');
@@ -3624,20 +3939,24 @@
             document.getElementById('formOcorrenciaDescricao').value = '';
             document.getElementById('formOcorrenciaCoordenacao').value = 'nao';
         }
+
         function fecharModalOcorrencia() {
             document.getElementById('modalOcorrenciaOverlay').classList.remove('open');
             document.body.style.overflow = '';
         }
+
         function confirmarOcorrencia() {
             const data = document.getElementById('formOcorrenciaData').value;
             const disciplina = document.getElementById('formOcorrenciaDisciplina').value;
             const tipo = document.getElementById('formOcorrenciaTipo').value;
             const descricao = document.getElementById('formOcorrenciaDescricao').value.trim();
             const paraCoordenacao = document.getElementById('formOcorrenciaCoordenacao').value === 'sim';
+
             if (!data || !disciplina || !descricao) {
                 mostrarToast('⚠️ Preencha todos os campos obrigatórios!', 'aviso');
                 return;
             }
+
             const ocorrencia = {
                 id: gerarIdLocal(),
                 data: data,
@@ -3648,12 +3967,14 @@
                 usuario: 'Igor',
                 registrado_em: getDataLocal()
             };
+
             ocorrencias.push(ocorrencia);
             saveData('gda_ocorrencias', ocorrencias);
             fecharModalOcorrencia();
             mostrarToast('✅ Ocorrência registrada com sucesso!', 'sucesso');
             renderOcorrencias();
         }
+
         function excluirOcorrencia(id) {
             if (confirm('Remover esta ocorrência?')) {
                 ocorrencias = ocorrencias.filter(o => o.id !== id);
@@ -3662,15 +3983,18 @@
                 mostrarToast('✅ Ocorrência removida!', 'sucesso');
             }
         }
+
         function abrirModalPresenca(tipo) {
             if (!verificarDiaSemana()) {
                 return;
             }
+            
             // Verifica se já tem registro para hoje (normal ou atrasado)
             if (verificarRegistroHoje()) {
                 mostrarToast('⚠️ Você já tem um registro de presença para hoje!', 'aviso');
                 return;
             }
+            
             tipoPresencaAtual = tipo;
             const hoje = new Date();
             const dataStr = getDataLocal();
@@ -3703,6 +4027,7 @@
             if (window.relogioModalInterval) clearInterval(window.relogioModalInterval);
             window.relogioModalInterval = setInterval(atualizarRelogioModal, 1000);
         }
+
         function atualizarRelogioModal() {
             const agora = new Date();
             const h = String(agora.getHours()).padStart(2, '0');
@@ -3713,6 +4038,7 @@
             if (timeEl) timeEl.textContent = `${h}:${m}`;
             if (secEl) secEl.textContent = s;
         }
+
         function fecharModalPresenca() {
             document.getElementById('modalPresencaOverlay').classList.remove('open');
             document.body.style.overflow = '';
@@ -3721,16 +4047,19 @@
                 window.relogioModalInterval = null;
             }
         }
+
         function confirmarPresenca() {
             const hoje = new Date();
             const dataStr = getDataLocal();
             const horaStr = getHoraLocal();
+            
             // Verifica novamente se já tem registro para hoje
             if (verificarRegistroHoje()) {
                 mostrarToast('⚠️ Você já tem um registro de presença para hoje!', 'aviso');
                 fecharModalPresenca();
                 return;
             }
+            
             let justificativa = '';
             if (tipoPresencaAtual === 'falta') {
                 justificativa = document.getElementById('justificativaFalta').value.trim();
@@ -3750,13 +4079,16 @@
             saveData('gda_presencas', presencas);
             fecharModalPresenca();
             mostrarToast(tipoPresencaAtual === 'presente' ? '✅ Presença registrada!' : '❌ Falta registrada!', 'sucesso');
+            
             // Remove qualquer registro atrasado para hoje que possa existir
             presencasAtrasadas = presencasAtrasadas.filter(p => p.data !== dataStr);
             saveData('gda_presencas_atrasadas', presencasAtrasadas);
+            
             atualizarStatusPresenca();
             atualizarBadgePresenca();
             renderPresenca();
         }
+
         function atualizarStatusPresenca() {
             const hoje = getDataLocal();
             // Verifica primeiro registro normal, depois atrasado
@@ -3774,6 +4106,7 @@
                     };
                 }
             }
+            
             const display = document.getElementById('statusPresencaDisplay');
             const headerBadge = document.getElementById('statusBadge');
             if (registroHoje) {
@@ -3795,6 +4128,7 @@
                 }
             }
         }
+
         function atualizarBadgePresenca() {
             const badge = document.getElementById('presencaBadge');
             if (badge) { 
@@ -3805,6 +4139,7 @@
             const navBadge = document.getElementById('navPresencaBadge');
             if (navBadge) navBadge.textContent = presencas.length;
         }
+
         function excluirRegistroPresenca(id) {
             if (confirm('Remover este registro?')) {
                 presencas = presencas.filter(p => p.id !== id);
@@ -3815,6 +4150,7 @@
                 mostrarToast('✅ Registro removido!', 'sucesso');
             }
         }
+
         function alternarAtestadoPresenca(id) {
             const registro = presencas.find(p => p.id === id);
             if (!registro) return;
@@ -3824,9 +4160,11 @@
             renderPresenca();
             atualizarStatusPresenca();
         }
+
         // ============================================================
         //  FUNÇÕES - ATIVIDADES (MANTIDAS)
         // ============================================================
+
         function openModal() {
             document.getElementById('atividadeForm').reset();
             document.getElementById('modalTitle').innerHTML = '<i class="fas fa-plus-circle"></i> Nova Atividade';
@@ -3843,7 +4181,9 @@
             document.getElementById('formPrazo').value = prazo.toISOString().split('T')[0];
             document.getElementById('formEntregaDocente').value = entrega.toISOString().split('T')[0];
         }
+
         function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); editandoId = null; }
+
         function editarAtividade(id) {
             const atividade = atividades.find(a => a.id === id);
             if (!atividade) return;
@@ -3863,6 +4203,7 @@
             document.getElementById('modalOverlay').classList.add('open');
             editandoId = id;
         }
+
         function deletarAtividade(id) {
             if (confirm('Remover esta atividade?')) {
                 atividades = atividades.filter(a => a.id !== id);
@@ -3873,6 +4214,7 @@
                 mostrarToast('✅ Atividade removida!', 'sucesso');
             }
         }
+
         function renderParticipantes() {
             const container = document.getElementById('participantesContainer');
             if (!container) return;
@@ -3890,6 +4232,7 @@
                 </div>`
             ).join('');
         }
+
         function removerParticipante(index) { participantesTemp.splice(index, 1); renderParticipantes(); }
         function adicionarParticipante() {
             const input = document.getElementById('novoParticipante');
@@ -3902,6 +4245,7 @@
             prazoInput.value = '';
             renderParticipantes();
         }
+
         function renderSubtarefas() {
             const container = document.getElementById('subtarefasContainer');
             if (!container) return;
@@ -3919,6 +4263,7 @@
                 </div>`
             ).join('');
         }
+
         function adicionarSubtarefa() {
             const input = document.getElementById('novaSubtarefa');
             const descricao = input.value.trim();
@@ -3927,11 +4272,14 @@
             input.value = '';
             renderSubtarefas();
         }
+
         function toggleSubtarefa(index) { subtarefasTemp[index].concluido = !subtarefasTemp[index].concluido; renderSubtarefas(); }
         function removerSubtarefa(index) { subtarefasTemp.splice(index, 1); renderSubtarefas(); }
+
         // ============================================================
         //  FUNÇÕES - NOTAS (MANTIDAS)
         // ============================================================
+
         function validarNota(input) {
             let valor = input.value.replace(',', '.').replace(/[^0-9.]/g, '');
             const num = parseFloat(valor);
@@ -3939,6 +4287,7 @@
             else if (num < 0 && valor !== '') valor = '0';
             input.value = valor;
         }
+
         function atualizarNota(cod, bimestre, valor) {
             let valorLimpo = valor.replace(',', '.').replace(/[^0-9.]/g, '');
             const num = parseFloat(valorLimpo);
@@ -3956,9 +4305,11 @@
             renderTelaInicial();
             renderDashboard();
         }
+
         // ============================================================
         //  FUNÇÕES - RELATÓRIOS (MANTIDAS)
         // ============================================================
+
         function salvarRelatorio(disciplina, tempo, texto) {
             const novoRelatorio = { id: gerarIdLocal(), data: getDataLocal(), disciplina, tempo, texto };
             relatorios.push(novoRelatorio);
@@ -3968,9 +4319,11 @@
             renderDashboard();
             mostrarToast('✅ Relatório salvo!', 'sucesso');
         }
+
         // ============================================================
         //  FUNÇÕES - ATENDIMENTOS (MANTIDAS)
         // ============================================================
+
         function openModalAtendimento() {
             document.getElementById('atendimentoForm').reset();
             document.getElementById('modalAtendimentoTitle').innerHTML = '<i class="fas fa-handshake"></i> Nova Participação em Atendimento';
@@ -3980,7 +4333,9 @@
             const agora = new Date();
             document.getElementById('formAtendimentoHora').value = `${String(agora.getHours()).padStart(2,'0')}:${String(agora.getMinutes()).padStart(2,'0')}`;
         }
+
         function closeModalAtendimento() { document.getElementById('modalAtendimentoOverlay').classList.remove('open'); editandoAtendimentoId = null; }
+
         function editarAtendimento(id) {
             const atendimento = atendimentos.find(a => a.id === id);
             if (!atendimento) return;
@@ -3992,6 +4347,7 @@
             document.getElementById('modalAtendimentoOverlay').classList.add('open');
             editandoAtendimentoId = id;
         }
+
         function deletarAtendimento(id) {
             if (confirm('Remover este atendimento?')) {
                 atendimentos = atendimentos.filter(a => a.id !== id);
@@ -4002,9 +4358,11 @@
                 mostrarToast('✅ Atendimento removido!', 'sucesso');
             }
         }
+
         // ============================================================
         //  FUNÇÕES - ASSUNTOS (MANTIDAS)
         // ============================================================
+
         function adicionarAssunto(disciplina, titulo, descricao, data) {
             if (!assuntos[disciplina]) assuntos[disciplina] = [];
             const novoAssunto = { id: gerarIdLocal(), titulo, descricao, data: data || getDataLocal(), timestamp: Date.now() };
@@ -4014,6 +4372,7 @@
             atualizarBadgeAssuntos();
             mostrarToast('✅ Assunto registrado!', 'sucesso');
         }
+
         function excluirAssunto(disciplina, id) {
             if (!assuntos[disciplina] || !confirm('Remover este assunto?')) return;
             assuntos[disciplina] = assuntos[disciplina].filter(a => a.id !== id);
@@ -4023,6 +4382,7 @@
             atualizarBadgeAssuntos();
             mostrarToast('✅ Assunto removido!', 'sucesso');
         }
+
         function atualizarBadgeAssuntos() {
             const badge = document.getElementById('assuntosBadge');
             if (badge) {
@@ -4031,9 +4391,11 @@
                 badge.style.display = total > 0 ? 'inline-block' : 'none';
             }
         }
+
         // ============================================================
         //  FUNÇÕES - HISTÓRICO PÂNICO (MANTIDAS)
         // ============================================================
+
         function abrirPanico() {
             document.getElementById('panicoOverlay').classList.add('open');
             document.body.style.overflow = 'hidden';
@@ -4055,6 +4417,7 @@
             if (respiracaoInterval) { clearInterval(respiracaoInterval); respiracaoInterval = null; }
             if (timeoutRespirar) { clearTimeout(timeoutRespirar); timeoutRespirar = null; }
         }
+
         function sairPanico() {
             document.getElementById('panicoOverlay').classList.remove('open');
             document.body.style.overflow = '';
@@ -4063,6 +4426,7 @@
             respiracaoAtiva = false;
             atualizarBadgePanico();
         }
+
         function iniciarRespiração() {
             if (respiracaoAtiva) return;
             respiracaoAtiva = true;
@@ -4120,11 +4484,13 @@
             atualizarFase();
             timeoutRespirar = setTimeout(proximoPasso, 1000);
         }
+
         function novaFrasePanico() {
             const random = frasesMotivacionais[Math.floor(Math.random() * frasesMotivacionais.length)];
             document.getElementById('motivacaoFrase').textContent = random.frase;
             document.getElementById('motivacaoAutor').textContent = `— ${random.autor}`;
         }
+
         function registrarPanico() {
             const disciplina = document.getElementById('panicoDisciplina').value;
             const motivo = document.getElementById('panicoMotivo').value.trim();
@@ -4146,6 +4512,7 @@
             atualizarBadgePanico();
             setTimeout(() => sairPanico(), 1500);
         }
+
         function marcarPanicoResolvido(id) {
             const registro = historicoPanico.find(r => r.id === id);
             if (registro) {
@@ -4155,6 +4522,7 @@
                 atualizarBadgePanico();
             }
         }
+
         function deletarRegistroPanico(id) {
             if (confirm('Remover este registro?')) {
                 historicoPanico = historicoPanico.filter(r => r.id !== id);
@@ -4163,6 +4531,7 @@
                 atualizarBadgePanico();
             }
         }
+
         function atualizarBadgePanico() {
             const badge = document.getElementById('panicoBadge');
             if (badge) {
@@ -4171,9 +4540,11 @@
                 badge.style.display = pendentes > 0 ? 'inline-block' : 'none';
             }
         }
+
         // ============================================================
         //  FUNÇÕES - TELA INICIAL, DASHBOARD, RELÓGIO (MANTIDAS)
         // ============================================================
+
         function renderTelaInicial() {
             const saudacao = getSaudacao();
             const emoji = getEmojiSaudacao();
@@ -4257,6 +4628,7 @@
             atualizarBadgePresenca();
             atualizarBadgeAssuntos();
         }
+
         function renderDashboard() {
             const totalAtiv = atividades.length;
             const total = checklistItems.length;
@@ -4277,6 +4649,7 @@
             if (elMediaGeral) elMediaGeral.textContent = mediaGeral.toFixed(1);
             updateClockDisplay();
         }
+
         function updateClockDisplay() {
             const now = new Date();
             const h = String(now.getHours()).padStart(2, '0');
@@ -4292,6 +4665,7 @@
             if (secEl) secEl.textContent = s;
             if (document.getElementById('modalPresencaOverlay').classList.contains('open')) atualizarRelogioModal();
         }
+
         function novaFrase() {
             const random = frasesTelaInicial[Math.floor(Math.random() * frasesTelaInicial.length)];
             const elQuote = document.getElementById('dailyQuote');
@@ -4299,9 +4673,11 @@
             if (elQuote) elQuote.textContent = random.frase;
             if (elAuthor) elAuthor.textContent = random.autor;
         }
+
         // ============================================================
         //  ROTEAMENTO (MANTIDO)
         // ============================================================
+
         function showPage(pageId) {
             document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
             const target = document.getElementById(`page-${pageId}`);
@@ -4328,18 +4704,23 @@
                 if (badge) badge.textContent = `${pct}%`;
             }
         }
+
         // ============================================================
         //  INICIALIZAÇÃO
         // ============================================================
+
         async function init() {
             console.log('🚀 Inicializando GDA v7.3 (Apenas Igor)...');
+
             // Iniciar contagem regressiva
             iniciarContagemRegressiva();
+
             const btnEntrar = document.getElementById('btnEntrar');
             const progressFill = document.getElementById('progressFill');
             const progressPercent = document.getElementById('progressPercent');
             const progressStatus = document.getElementById('progressStatus');
             const progressMessage = document.getElementById('progressMessage');
+
             function atualizarProgresso(percent, status) {
                 progressFill.style.width = percent + '%';
                 progressPercent.textContent = percent + '%';
@@ -4352,10 +4733,13 @@
                     btnEntrar.innerHTML = '<i class="fas fa-sign-in-alt"></i> Entrar no Sistema';
                 }
             }
+
             atualizarProgresso(0, 'Conectando ao servidor...');
+
             try {
                 progressStatus.textContent = 'Verificando conexão com a nuvem...';
                 atualizarProgresso(10, 'Verificando conexão...');
+                
                 const health = await fetch('/api/health', { headers: { 'Cache-Control': 'no-cache' } });
                 if (health.ok) {
                     const data = await health.json();
@@ -4366,10 +4750,12 @@
             } catch (error) {
                 console.warn('[GDA][CLOUD] Backend indisponível:', error.message || error);
             }
+
             atualizarProgresso(100, '✅ Servidor disponível');
             progressMessage.textContent = 'Informe suas credenciais para carregar os dados da nuvem.';
             btnEntrar.disabled = false;
             btnEntrar.innerHTML = '<i class="fas fa-sign-in-alt"></i> Entrar no Sistema';
+
             btnEntrar.addEventListener('click', async function() {
                 btnEntrar.disabled = true;
                 progressMessage.textContent = 'Autenticando...';
@@ -4381,6 +4767,7 @@
                         progressPercent.textContent = `${20 + Math.round(percent * 0.8)}%`;
                         progressStatus.textContent = status || 'Carregando...';
                     });
+
                     presencasAtrasadas = loadData('gda_presencas_atrasadas', []);
                     ocorrencias = loadData('gda_ocorrencias', []);
                     presencas = loadData('gda_presencas', []);
@@ -4391,6 +4778,7 @@
                     historicoPanico = loadData('gda_historico_panico', []);
                     atendimentos = loadData('gda_atendimentos', []);
                     assuntos = loadData('gda_assuntos', {});
+
                     renderChecklist();
                     renderTurmas();
                     renderAtividades();
@@ -4406,6 +4794,7 @@
                     atualizarBadgePanico();
                     atualizarBadgePresenca();
                     atualizarBadgeAssuntos();
+
                     const splash = document.getElementById('splashOverlay');
                     if (splash) splash.classList.add('hidden');
                     mostrarToast('👋 Bem-vindo, Igor!', 'sucesso');
@@ -4416,7 +4805,9 @@
                     mostrarToast(error.message || 'Falha ao autenticar.', 'erro');
                 }
             });
+
             renderizarPaginas();
+            
             const selects = ['formDisciplina', 'relatorioDisciplina', 'formAssuntoDisciplina', 'formAtendimentoDisciplina', 'formOcorrenciaDisciplina'];
             selects.forEach(id => {
                 const select = document.getElementById(id);
@@ -4424,6 +4815,7 @@
                     select.innerHTML = '<option value="">Selecione uma disciplina</option>' + turmas.map(t => `<option value="${t.nome}">${t.nome}</option>`).join('');
                 }
             });
+            
             renderChecklist();
             renderTurmas();
             renderAtividades();
@@ -4439,11 +4831,14 @@
             atualizarBadgePanico();
             atualizarBadgePresenca();
             atualizarBadgeAssuntos();
+            
             // Eventos - Botões
             const btnConfirmarAtrasado = document.getElementById('btnConfirmarAtrasado');
             if (btnConfirmarAtrasado) btnConfirmarAtrasado.addEventListener('click', confirmarAtrasado);
+            
             const btnConfirmarOcorrencia = document.getElementById('btnConfirmarOcorrencia');
             if (btnConfirmarOcorrencia) btnConfirmarOcorrencia.addEventListener('click', confirmarOcorrencia);
+            
             // Eventos - Navegação Desktop
             document.querySelectorAll('.sidebar a[data-page]').forEach(link => {
                 link.addEventListener('click', function(e) {
@@ -4452,6 +4847,7 @@
                     if (page) showPage(page);
                 });
             });
+            
             // Eventos - Navegação Mobile (Bottom Nav)
             document.querySelectorAll('.bottom-nav .nav-item').forEach(link => {
                 link.addEventListener('click', function(e) {
@@ -4460,6 +4856,7 @@
                     if (page) showPage(page);
                 });
             });
+            
             // Eventos - Filtros
             document.querySelectorAll('.filtros-atividades button').forEach(btn => {
                 btn.addEventListener('click', function() {
@@ -4469,9 +4866,11 @@
                     renderAtividades();
                 });
             });
+            
             // Relógio
             updateClockDisplay();
             setInterval(updateClockDisplay, 1000);
+            
             // Formulários
             const relatorioForm = document.getElementById('relatorioForm');
             if (relatorioForm) {
@@ -4487,6 +4886,7 @@
                     document.getElementById('relatorioDisciplina').value = '';
                 });
             }
+            
             const assuntoForm = document.getElementById('assuntoForm');
             if (assuntoForm) {
                 assuntoForm.addEventListener('submit', function(e) {
@@ -4502,6 +4902,7 @@
                     document.getElementById('formAssuntoData').value = getDataLocal();
                 });
             }
+            
             const atendimentoForm = document.getElementById('atendimentoForm');
             if (atendimentoForm) {
                 atendimentoForm.addEventListener('submit', function(e) {
@@ -4532,6 +4933,7 @@
                     editandoAtendimentoId = null;
                 });
             }
+            
             const atividadeForm = document.getElementById('atividadeForm');
             if (atividadeForm) {
                 atividadeForm.addEventListener('submit', function(e) {
@@ -4576,24 +4978,33 @@
                     subtarefasTemp = [];
                 });
             }
+            
             // Botões presença
             const btnPresencaPresente = document.getElementById('btnPresencaPresente');
             if (btnPresencaPresente) btnPresencaPresente.addEventListener('click', () => abrirModalPresenca('presente'));
+            
             const btnPresencaFalta = document.getElementById('btnPresencaFalta');
             if (btnPresencaFalta) btnPresencaFalta.addEventListener('click', () => abrirModalPresenca('falta'));
+            
             const btnPresencaPresenteSidebar = document.getElementById('btnPresencaPresenteSidebar');
             if (btnPresencaPresenteSidebar) btnPresencaPresenteSidebar.addEventListener('click', () => abrirModalPresenca('presente'));
+            
             const btnPresencaFaltaSidebar = document.getElementById('btnPresencaFaltaSidebar');
             if (btnPresencaFaltaSidebar) btnPresencaFaltaSidebar.addEventListener('click', () => abrirModalPresenca('falta'));
+            
             // Botões pânico
             const btnPanico = document.getElementById('btnPanico');
             if (btnPanico) btnPanico.addEventListener('click', (e) => { e.preventDefault(); abrirPanico(); });
+            
             const btnSairPanico = document.getElementById('btnSairPanico');
             if (btnSairPanico) btnSairPanico.addEventListener('click', sairPanico);
+            
             const btnRegistrarPanico = document.getElementById('btnRegistrarPanico');
             if (btnRegistrarPanico) btnRegistrarPanico.addEventListener('click', registrarPanico);
+            
             const btnNovaFrasePanico = document.getElementById('btnNovaFrasePanico');
             if (btnNovaFrasePanico) btnNovaFrasePanico.addEventListener('click', novaFrasePanico);
+            
             // Submenu
             const sistemasToggle = document.getElementById('sistemasToggle');
             if (sistemasToggle) {
@@ -4603,24 +5014,32 @@
                     if (submenu) submenu.classList.toggle('open');
                 });
             }
+            
             // Fechar modais
             const modalOverlay = document.getElementById('modalOverlay');
             if (modalOverlay) modalOverlay.addEventListener('click', function(e) { if (e.target === this) closeModal(); });
+            
             const modalAtendimentoOverlay = document.getElementById('modalAtendimentoOverlay');
             if (modalAtendimentoOverlay) modalAtendimentoOverlay.addEventListener('click', function(e) { if (e.target === this) closeModalAtendimento(); });
+            
             const modalPresencaOverlay = document.getElementById('modalPresencaOverlay');
             if (modalPresencaOverlay) modalPresencaOverlay.addEventListener('click', function(e) { if (e.target === this) fecharModalPresenca(); });
+            
             const modalAtrasadoOverlay = document.getElementById('modalAtrasadoOverlay');
             if (modalAtrasadoOverlay) modalAtrasadoOverlay.addEventListener('click', function(e) { if (e.target === this) fecharModalAtrasado(); });
+            
             const modalOcorrenciaOverlay = document.getElementById('modalOcorrenciaOverlay');
             if (modalOcorrenciaOverlay) modalOcorrenciaOverlay.addEventListener('click', function(e) { if (e.target === this) fecharModalOcorrencia(); });
+            
             const panicoOverlay = document.getElementById('panicoOverlay');
             if (panicoOverlay) panicoOverlay.addEventListener('click', function(e) { if (e.target === this) sairPanico(); });
+
             // ===== MENU MOBILE =====
             const mobileBtn = document.getElementById('mobileMenuBtn');
             const mobileOverlay = document.getElementById('mobileNavOverlay');
             const mobileClose = document.getElementById('mobileNavClose');
             const mobileList = document.getElementById('mobileNavList');
+
             if (mobileBtn && mobileOverlay) {
                 mobileBtn.addEventListener('click', function() {
                     mobileOverlay.classList.add('open');
@@ -4628,6 +5047,7 @@
                     document.body.style.overflow = 'hidden';
                 });
             }
+
             if (mobileClose && mobileOverlay) {
                 mobileClose.addEventListener('click', function() {
                     mobileOverlay.classList.remove('open');
@@ -4635,6 +5055,7 @@
                     document.body.style.overflow = '';
                 });
             }
+
             if (mobileOverlay) {
                 mobileOverlay.addEventListener('click', function(e) {
                     if (e.target === this) {
@@ -4644,11 +5065,13 @@
                     }
                 });
             }
+
             if (mobileList) {
                 const desktopNav = document.querySelector('.sidebar .navbar');
                 if (desktopNav) {
                     mobileList.innerHTML = desktopNav.innerHTML;
                     mobileList.querySelectorAll('[id]').forEach(el => el.removeAttribute('id'));
+                    
                     mobileList.querySelectorAll('a[data-page]').forEach(function(a) {
                         a.addEventListener('click', function(e) {
                             e.preventDefault();
@@ -4663,6 +5086,7 @@
                             }
                         });
                     });
+                    
                     const panicoLink = mobileList.querySelector('#btnPanico');
                     if (panicoLink) {
                         panicoLink.addEventListener('click', function(e) {
@@ -4677,6 +5101,7 @@
                             }
                         });
                     }
+                    
                     const sistemasToggleMobile = mobileList.querySelector('#sistemasToggle');
                     if (sistemasToggleMobile) {
                         sistemasToggleMobile.addEventListener('click', function(e) {
@@ -4689,12 +5114,15 @@
                     }
                 }
             }
+            
             console.log('✅ GDA v7.3 inicializado com sucesso!');
             console.log(`📊 Dados: Atividades: ${atividades.length}, Presenças: ${presencas.length}, Relatórios: ${relatorios.length}, Assuntos: ${Object.keys(assuntos).length}`);
         }
+
         // ============================================================
         //  EXPORTAÇÃO (MANTIDA)
         // ============================================================
+
         window.abrirModalPresenca = abrirModalPresenca;
         window.confirmarPresenca = confirmarPresenca;
         window.fecharModalPresenca = fecharModalPresenca;
@@ -4721,14 +5149,18 @@
         window.iniciarRespiração = iniciarRespiração;
         window.novaFrasePanico = novaFrasePanico;
         window.registrarPanico = registrarPanico;
+
         // Iniciar
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', init);
         } else {
             init();
         }
+
     })();
     </script>
+
+    
     <script src="js/security/validator.min.js"></script>
 </body>
 </html>
