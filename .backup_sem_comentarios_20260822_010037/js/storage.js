@@ -1,4 +1,4 @@
-﻿
+﻿// ===== GERENCIAMENTO DE STORAGE =====
 export function loadData(key, defaultValue = null) {
     try {
         const data = localStorage.getItem(key);
@@ -8,6 +8,7 @@ export function loadData(key, defaultValue = null) {
         return defaultValue;
     }
 }
+
 export function saveData(key, data) {
     try {
         localStorage.setItem(key, JSON.stringify(data));
@@ -17,6 +18,7 @@ export function saveData(key, data) {
         return false;
     }
 }
+
 export function clearData(key) {
     try {
         localStorage.removeItem(key);

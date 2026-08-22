@@ -2439,7 +2439,7 @@
 </head>
 <body>
 
-    
+    <!-- ===== SPLASH ===== -->
     <div class="splash-overlay" id="splashOverlay">
         <div class="splash-content">
             <div class="logo-icon">GDA</div>
@@ -2449,7 +2449,7 @@
                 <strong>Bora sobreviver a mais um semestre?</strong> 💪📚
             </div>
             
-            
+            <!-- BARRA DE PROGRESSO -->
             <div class="progress-container" id="progressContainer">
                 <div class="progress-label">
                     <span id="progressStatus">Iniciando...</span>
@@ -2473,17 +2473,17 @@
         </div>
     </div>
 
-    
+    <!-- ===== TOAST ===== -->
     <div class="toast-container" id="toastContainer"></div>
 
-    
+    <!-- ===== HEADER MOBILE COM CONTAGEM REGRESSIVA ===== -->
     <header class="app-header">
         <div class="logo">
             <div class="icon">GDA</div>
             <h1>GDA<span>.</span></h1>
         </div>
         
-        
+        <!-- CONTAGEM REGRESSIVA - PROVA 3º BI MATEMÁTICA -->
         <div class="countdown-container" id="countdownContainer">
             <div class="countdown-item">
                 <span class="countdown-number" id="countdownDays">00</span>
@@ -2515,7 +2515,7 @@
         </div>
     </header>
 
-    
+    <!-- ===== SIDEBAR (Desktop) ===== -->
     <nav class="sidebar" id="sidebar">
         <div class="nav-label">Menu</div>
         <a href="#" data-page="inicial" class="active" id="navInicial">
@@ -2612,7 +2612,7 @@
         </div>
     </nav>
 
-    
+    <!-- ===== MOBILE NAV OVERLAY ===== -->
     <div class="mobile-nav-overlay" id="mobileNavOverlay" aria-hidden="true">
         <div class="mobile-nav-content">
             <button class="mobile-nav-close" id="mobileNavClose" aria-label="Fechar menu">✕</button>
@@ -2620,12 +2620,12 @@
         </div>
     </div>
 
-    
+    <!-- ===== CONTAINER PRINCIPAL ===== -->
     <div class="container" id="mainContainer">
         <div id="pageContainer"></div>
     </div>
 
-    
+    <!-- ===== NAVEGAÇÃO INFERIOR (Mobile) ===== -->
     <nav class="bottom-nav" id="bottomNav">
         <div class="nav-items">
             <button class="nav-item active" data-page="inicial">
@@ -2654,7 +2654,7 @@
         </div>
     </nav>
 
-    
+    <!-- ===== MODAL ATIVIDADES ===== -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal">
             <h2 id="modalTitle"><i class="fas fa-plus-circle"></i> Nova Atividade</h2>
@@ -2698,7 +2698,7 @@
         </div>
     </div>
 
-    
+    <!-- ===== MODAL ATENDIMENTO ===== -->
     <div class="modal-overlay" id="modalAtendimentoOverlay">
         <div class="modal">
             <h2 id="modalAtendimentoTitle"><i class="fas fa-handshake"></i> Nova Participação em Atendimento</h2>
@@ -2719,7 +2719,7 @@
         </div>
     </div>
 
-    
+    <!-- ===== MODAL PRESENÇA ===== -->
     <div class="modal-presenca-overlay" id="modalPresencaOverlay">
         <div class="modal-presenca">
             <div class="modal-icon" id="presencaModalIcon">✅</div>
@@ -2745,7 +2745,7 @@
         </div>
     </div>
 
-    
+    <!-- ===== MODAL REGISTRO ATRASADO ===== -->
     <div class="modal-atrasado-overlay" id="modalAtrasadoOverlay">
         <div class="modal-atrasado">
             <div class="modal-icon">⏰</div>
@@ -2781,7 +2781,7 @@
         </div>
     </div>
 
-    
+    <!-- ===== MODAL OCORRÊNCIA ===== -->
     <div class="modal-ocorrencia-overlay" id="modalOcorrenciaOverlay">
         <div class="modal-ocorrencia">
             <div class="modal-icon">📋</div>
@@ -2819,7 +2819,7 @@
         </div>
     </div>
 
-    
+    <!-- ===== PANICO OVERLAY ===== -->
     <div class="panico-overlay" id="panicoOverlay">
         <div class="panico-container">
             <div class="panico-header">
@@ -2876,6 +2876,9 @@
         </div>
     </div>
 
+    <!-- ============================================================
+    SCRIPTS - VERSÃO 7.3 (APENAS IGOR)
+    ============================================================ -->
     <script>
     (function() {
         'use strict';
@@ -3227,7 +3230,7 @@
         function renderizarPaginas() {
             const container = document.getElementById('pageContainer');
             container.innerHTML = `
-                
+                <!-- INICIAL -->
                 <div class="page active" id="page-inicial">
                     <div class="welcome-hero">
                         <div class="greeting-section">
@@ -3300,7 +3303,7 @@
                     </div>
                 </div>
 
-                
+                <!-- DASHBOARD -->
                 <div class="page" id="page-dashboard">
                     <div class="dashboard-header" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
                         <h1 style="font-size:18px;font-weight:700;">📊 Dashboard <small style="font-size:11px;font-weight:400;color:var(--color-text-muted);">Controle Ambiental · 2026.2</small></h1>
@@ -3314,7 +3317,7 @@
                     </div>
                 </div>
 
-                
+                <!-- CHECKLIST -->
                 <div class="page" id="page-checklist">
                     <div class="section-title"><i class="fas fa-clipboard-list"></i> Checklist Diário <span class="badge" id="checkPct">0%</span></div>
                     <div class="card" style="padding:10px 12px;">
@@ -3322,7 +3325,7 @@
                     </div>
                 </div>
 
-                
+                <!-- TURMAS -->
                 <div class="page" id="page-turmas">
                     <div class="section-title"><i class="fas fa-class"></i> Turmas Matriculadas <span class="badge">14 disciplinas</span></div>
                     <div class="table-wrapper">
@@ -3334,7 +3337,7 @@
                     </div>
                 </div>
 
-                
+                <!-- ATIVIDADES -->
                 <div class="page" id="page-atividades">
                     <div class="section-title">
                         <i class="fas fa-tasks"></i> Atividades <span class="badge" id="atividadeBadge">0</span>
@@ -3350,13 +3353,13 @@
                     <div class="atividades-grid" id="atividadesContainer"></div>
                 </div>
 
-                
+                <!-- NOTAS -->
                 <div class="page" id="page-notas">
                     <div class="section-title"><i class="fas fa-graduation-cap"></i> Módulo de Notas <span class="badge">📊 Média ≥ 7.0 = Aprovado</span></div>
                     <div class="notas-grid" id="notasContainer"></div>
                 </div>
 
-                
+                <!-- RELATÓRIOS -->
                 <div class="page" id="page-relatorios">
                     <div class="relatorio-section">
                         <div class="relatorio-header"><h3><i class="fas fa-pen-alt"></i> Relatório Diário de Estudos</h3><span class="badge">📝 Registre seu progresso</span></div>
@@ -3370,7 +3373,7 @@
                     </div>
                 </div>
 
-                
+                <!-- ATENDIMENTOS -->
                 <div class="page" id="page-atendimentos">
                     <div class="section-title">
                         <i class="fas fa-handshake"></i> Participações em Atendimento
@@ -3379,7 +3382,7 @@
                     <div class="atendimentos-grid" id="atendimentosContainer"></div>
                 </div>
 
-                
+                <!-- PRESENÇA -->
                 <div class="page" id="page-presenca">
                     <div class="section-title">
                         <i class="fas fa-calendar-check"></i> Registro de Presença <span class="badge" id="presencaTotalBadge">${presencas.length} registros</span>
@@ -3396,7 +3399,7 @@
                     <div id="presencaAtrasadaContainer"></div>
                 </div>
 
-                
+                <!-- ASSUNTOS -->
                 <div class="page" id="page-assuntos">
                     <div class="section-title"><i class="fas fa-subject"></i> Assuntos por Disciplina <span class="badge" id="assuntosTotalBadge">0</span></div>
                     <div style="background:var(--color-card);border-radius:var(--radius);padding:12px 14px;border:1px solid var(--color-border);margin-bottom:12px;">
@@ -3414,13 +3417,13 @@
                     <div id="assuntosContainer" class="assuntos-grid"></div>
                 </div>
 
-                
+                <!-- HISTÓRICO PÂNICO -->
                 <div class="page" id="page-historicopanico">
                     <div class="section-title"><i class="fas fa-history"></i> Histórico do Pânico <span class="badge" id="historicoBadge">0</span></div>
                     <div id="historicoPanicoContainer"></div>
                 </div>
 
-                
+                <!-- OCORRÊNCIAS -->
                 <div class="page" id="page-ocorrencias">
                     <div class="section-title">
                         <i class="fas fa-report"></i> Ocorrências do Dia a Dia
@@ -5160,7 +5163,7 @@
     })();
     </script>
 
-    
+    <!-- SEGURANÇA: Validação de entrada -->
     <script src="js/security/validator.js"></script>
 </body>
 </html>

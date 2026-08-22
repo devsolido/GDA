@@ -1,4 +1,4 @@
-﻿
+﻿// ===== DADOS DAS TURMAS =====
 export const turmas = [
     { cod: 'TICAM0147', nome: 'ARTES', professor: 'THAYS ALVES COSTA', turma: 'B2371M', horario: '6M34' },
     { cod: 'TICAM0152', nome: 'FILOSOFIA', professor: 'JESSIKA CURTINAZ DA SILVA', turma: 'B2371M', horario: '4M56' },
@@ -15,6 +15,8 @@ export const turmas = [
     { cod: 'TICAM0150', nome: 'SOCIOLOGIA', professor: 'MARCELO MELO DOS SANTOS', turma: 'B2371M', horario: '5M56' },
     { cod: 'TICAM0158', nome: 'TÉCNICAS EM EDUCAÇÃO AMBIENTAL', professor: 'DANIELLE IVANA PEREIRA DOS SANTOS', turma: 'B2371M', horario: '4M34' }
 ];
+
+// ===== CHECKLIST ITEMS =====
 export const checklistItems = [
     { id: 'linkedin', label: 'Verificar LinkedIn', icon: 'fab fa-linkedin' },
     { id: 'gupy', label: 'Gupy - Vaga Aprendiz Home Office', icon: 'fas fa-briefcase' },

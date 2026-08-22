@@ -1,14 +1,24 @@
-﻿
+// ============================================
+// SEGURANÇA: Sistema de validação integrado
+// ============================================
+
+﻿// ===== CONFIGURAÇÃO PRINCIPAL =====
 import { turmas, checklistItems } from './data.js';
 import { loadData, saveData } from './storage.js';
+
 const APP_ID = '1BF3914F-116E-4BD6-BA55-D9720E1219C7';
 const API_KEY = 'C3CEF6C4-9697-49FC-BFF2-F99A95A9855A';
 const USUARIO = 'igor_veras';
+
 Backendless.initApp(APP_ID, API_KEY);
+
+// ===== ESTADO GLOBAL =====
 let atividades = loadData('gda_atividades', []);
 let notas = loadData('gda_notas', {});
 let relatorios = loadData('gda_relatorios', []);
 let checklistState = loadData('gda_checklist', {});
+
+// ===== FUNÇÕES DE INICIALIZAÇÃO =====
 function initChecklist() {
     checklistItems.forEach(item => {
         if (checklistState[item.id] === undefined) {
@@ -17,6 +27,7 @@ function initChecklist() {
     });
     saveData('gda_checklist', checklistState);
 }
+
 function initAtividades() {
     if (atividades.length === 0) {
         atividades = [{
@@ -39,6 +50,8 @@ function initAtividades() {
         saveData('gda_atividades', atividades);
     }
 }
+
+// ===== EXPORTA FUNÇÕES GLOBAIS =====
 window.atividades = atividades;
 window.notas = notas;
 window.relatorios = relatorios;
@@ -47,17 +60,27 @@ window.turmas = turmas;
 window.checklistItems = checklistItems;
 window.loadData = loadData;
 window.saveData = saveData;
+
 console.log('🚀 GDA Acadêmico v3.0 carregado!');
 console.log('📋 Usuário:', USUARIO);
 console.log('📊 Dados carregados com sucesso!');
+
+// ============================================
+// FUNÇÃO DE MENSAGEM SEGURA (PREVINE XSS)
+// ============================================
 function mostrarMensagemSegura(mensagem, tipo = 'info') {
+    // Sanitiza a mensagem antes de exibir
     const mensagemSegura = sanitizeHTML ? sanitizeHTML(String(mensagem)) : String(mensagem);
+    
+    // Remove alertas nativos (perigosos)
     if (typeof alert !== 'undefined') {
         console.log(`[${tipo}] ${mensagemSegura}`);
         return;
     }
+    
+    // Criar elemento de mensagem seguro
     const div = document.createElement('div');
-    div.textContent = mensagemSegura; 
+    div.textContent = mensagemSegura; // textContent previne XSS
     div.style.cssText = `
         position: fixed;
         bottom: 20px;

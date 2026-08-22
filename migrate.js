@@ -1,41 +1,32 @@
 const Database = require('better-sqlite3');
 const fs = require('fs');
 const path = require('path');
-
 // ============================================================
 // CONFIGURAÇÃO
 // ============================================================
 const db = new Database('database/gda.db');
-
 // ============================================================
 // FUNÇÕES PARA LER DO localStorage (via arquivo JSON)
 // ============================================================
-
 // Função para ler dados do arquivo de exportação do localStorage
 function lerDadosLocalStorage() {
     // Se você exportou os dados do localStorage para um arquivo JSON
     const arquivoExport = 'localstorage-export.json';
-    
     if (fs.existsSync(arquivoExport)) {
         console.log('📂 Lendo arquivo de exportação...');
         return JSON.parse(fs.readFileSync(arquivoExport, 'utf8'));
     }
-    
     // Caso contrário, dados padrão (vazio)
     console.log('⚠️ Arquivo localstorage-export.json não encontrado. Usando dados vazios.');
     return {};
 }
-
 // ============================================================
 // MIGRAÇÃO
 // ============================================================
-
 function migrarDados() {
     console.log('🔄 Iniciando migração...\n');
-    
     // Ler dados
     const dados = lerDadosLocalStorage();
-    
     // ============================================================
     // 1. MIGRAR PRESENÇAS
     // ============================================================
@@ -46,7 +37,6 @@ function migrarDados() {
         (id, data, hora, tipo, justificativa, nome, curso, atestado)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `);
-    
     const insertManyPresencas = db.transaction((items) => {
         for (const p of items) {
             insertPresenca.run(
@@ -61,14 +51,12 @@ function migrarDados() {
             );
         }
     });
-    
     if (presencas.length > 0) {
         insertManyPresencas(presencas);
         console.log(`✅ ${presencas.length} presenças migradas`);
     } else {
         console.log('ℹ️ Nenhuma presença para migrar');
     }
-    
     // ============================================================
     // 2. MIGRAR PRESENÇAS ATRASADAS
     // ============================================================
@@ -79,7 +67,6 @@ function migrarDados() {
         (id, data, hora, tipo, justificativa, usuario, registrado_em)
         VALUES (?, ?, ?, ?, ?, ?, ?)
     `);
-    
     const insertManyAtrasadas = db.transaction((items) => {
         for (const p of items) {
             insertAtrasada.run(
@@ -93,14 +80,12 @@ function migrarDados() {
             );
         }
     });
-    
     if (presencasAtrasadas.length > 0) {
         insertManyAtrasadas(presencasAtrasadas);
         console.log(`✅ ${presencasAtrasadas.length} presenças atrasadas migradas`);
     } else {
         console.log('ℹ️ Nenhuma presença atrasada para migrar');
     }
-    
     // ============================================================
     // 3. MIGRAR OCORRÊNCIAS
     // ============================================================
@@ -111,7 +96,6 @@ function migrarDados() {
         (id, data, disciplina, tipo, descricao, para_coordenacao, usuario, registrado_em)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `);
-    
     const insertManyOcorrencias = db.transaction((items) => {
         for (const o of items) {
             insertOcorrencia.run(
@@ -126,14 +110,12 @@ function migrarDados() {
             );
         }
     });
-    
     if (ocorrencias.length > 0) {
         insertManyOcorrencias(ocorrencias);
         console.log(`✅ ${ocorrencias.length} ocorrências migradas`);
     } else {
         console.log('ℹ️ Nenhuma ocorrência para migrar');
     }
-    
     // ============================================================
     // 4. MIGRAR ATIVIDADES
     // ============================================================
@@ -145,7 +127,6 @@ function migrarDados() {
          observacoes, participantes, subtarefas, progresso)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
-    
     const insertManyAtividades = db.transaction((items) => {
         for (const a of items) {
             insertAtividade.run(
@@ -164,14 +145,12 @@ function migrarDados() {
             );
         }
     });
-    
     if (atividades.length > 0) {
         insertManyAtividades(atividades);
         console.log(`✅ ${atividades.length} atividades migradas`);
     } else {
         console.log('ℹ️ Nenhuma atividade para migrar');
     }
-    
     // ============================================================
     // 5. MIGRAR NOTAS
     // ============================================================
@@ -182,7 +161,6 @@ function migrarDados() {
         (disciplina_cod, disciplina_nome, b1, b2, b3, b4)
         VALUES (?, ?, ?, ?, ?, ?)
     `);
-    
     const insertManyNotas = db.transaction((items) => {
         for (const [cod, nota] of Object.entries(items)) {
             // Buscar nome da disciplina
@@ -197,14 +175,12 @@ function migrarDados() {
             );
         }
     });
-    
     if (Object.keys(notas).length > 0) {
         insertManyNotas(notas);
         console.log(`✅ ${Object.keys(notas).length} notas migradas`);
     } else {
         console.log('ℹ️ Nenhuma nota para migrar');
     }
-    
     // ============================================================
     // 6. MIGRAR RELATÓRIOS
     // ============================================================
@@ -215,7 +191,6 @@ function migrarDados() {
         (id, data, disciplina, tempo, texto)
         VALUES (?, ?, ?, ?, ?)
     `);
-    
     const insertManyRelatorios = db.transaction((items) => {
         for (const r of items) {
             insertRelatorio.run(
@@ -227,14 +202,12 @@ function migrarDados() {
             );
         }
     });
-    
     if (relatorios.length > 0) {
         insertManyRelatorios(relatorios);
         console.log(`✅ ${relatorios.length} relatórios migrados`);
     } else {
         console.log('ℹ️ Nenhum relatório para migrar');
     }
-    
     // ============================================================
     // 7. MIGRAR CHECKLIST
     // ============================================================
@@ -245,7 +218,6 @@ function migrarDados() {
         (id, label, icon, concluido)
         VALUES (?, ?, ?, ?)
     `);
-    
     const itemsChecklist = [
         { id: 'linkedin', label: 'Verificar LinkedIn', icon: 'fab fa-linkedin' },
         { id: 'gupy', label: 'Gupy - Vaga Aprendiz Home Office', icon: 'fas fa-briefcase' },
@@ -254,17 +226,14 @@ function migrarDados() {
         { id: 'intercambios', label: 'Intercâmbios - Oportunidades', icon: 'fas fa-globe-americas' },
         { id: 'ingles', label: 'Estudar Inglês (30 min)', icon: 'fas fa-language' }
     ];
-    
     const insertManyChecklist = db.transaction((items) => {
         for (const item of items) {
             const concluido = checklist[item.id] === true ? 1 : 0;
             insertChecklist.run(item.id, item.label, item.icon, concluido);
         }
     });
-    
     insertManyChecklist(itemsChecklist);
     console.log(`✅ ${itemsChecklist.length} itens do checklist migrados`);
-    
     // ============================================================
     // 8. MIGRAR HISTÓRICO PÂNICO
     // ============================================================
@@ -275,7 +244,6 @@ function migrarDados() {
         (id, data, hora, disciplina, motivo, resolvido)
         VALUES (?, ?, ?, ?, ?, ?)
     `);
-    
     const insertManyPanico = db.transaction((items) => {
         for (const h of items) {
             insertPanico.run(
@@ -288,14 +256,12 @@ function migrarDados() {
             );
         }
     });
-    
     if (historicoPanico.length > 0) {
         insertManyPanico(historicoPanico);
         console.log(`✅ ${historicoPanico.length} registros de pânico migrados`);
     } else {
         console.log('ℹ️ Nenhum registro de pânico para migrar');
     }
-    
     // ============================================================
     // 9. MIGRAR ATENDIMENTOS
     // ============================================================
@@ -306,7 +272,6 @@ function migrarDados() {
         (id, disciplina, data, hora, descricao, timestamp)
         VALUES (?, ?, ?, ?, ?, ?)
     `);
-    
     const insertManyAtendimentos = db.transaction((items) => {
         for (const a of items) {
             insertAtendimento.run(
@@ -319,14 +284,12 @@ function migrarDados() {
             );
         }
     });
-    
     if (atendimentos.length > 0) {
         insertManyAtendimentos(atendimentos);
         console.log(`✅ ${atendimentos.length} atendimentos migrados`);
     } else {
         console.log('ℹ️ Nenhum atendimento para migrar');
     }
-    
     // ============================================================
     // 10. MIGRAR ASSUNTOS
     // ============================================================
@@ -337,7 +300,6 @@ function migrarDados() {
         (id, disciplina, titulo, descricao, data, timestamp)
         VALUES (?, ?, ?, ?, ?, ?)
     `);
-    
     const insertManyAssuntos = db.transaction((items) => {
         for (const item of items) {
             insertAssunto.run(
@@ -350,7 +312,6 @@ function migrarDados() {
             );
         }
     });
-    
     const todosAssuntos = [];
     for (const [disciplina, items] of Object.entries(assuntos)) {
         for (const item of items) {
@@ -360,35 +321,29 @@ function migrarDados() {
             });
         }
     }
-    
     if (todosAssuntos.length > 0) {
         insertManyAssuntos(todosAssuntos);
         console.log(`✅ ${todosAssuntos.length} assuntos migrados`);
     } else {
         console.log('ℹ️ Nenhum assunto para migrar');
     }
-    
     console.log('\n🎉 Migração concluída com sucesso!');
 }
-
 // ============================================================
 // EXECUTAR MIGRAÇÃO
 // ============================================================
 try {
     migrarDados();
     console.log('\n📊 Verificando dados migrados...');
-    
     // Mostrar resumo
     const tables = ['presencas', 'presencas_atrasadas', 'ocorrencias', 'atividades', 
                     'notas', 'relatorios', 'checklist', 'historico_panico', 
                     'atendimentos', 'assuntos', 'turmas'];
-    
     console.log('\n📈 Resumo da migração:');
     for (const table of tables) {
         const count = db.prepare(`SELECT COUNT(*) as total FROM ${table}`).get();
         console.log(`  📊 ${table}: ${count.total} registros`);
     }
-    
 } catch (error) {
     console.error('❌ Erro durante a migração:', error.message);
     console.error(error.stack);
