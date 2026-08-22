@@ -104,3 +104,29 @@ app.get('/api', (req, res) => {
 });
 
 module.exports = app;
+
+// ============================================================
+// ROTAS SYNC - Retornam dados padrão
+// ============================================================
+const syncRoutes = [
+    'gda_presencas_atrasadas',
+    'gda_ocorrencias',
+    'gda_presencas',
+    'gda_atividades',
+    'gda_notas',
+    'gda_relatorios',
+    'gda_checklist',
+    'gda_historico_panico',
+    'gda_atendimentos',
+    'gda_assuntos'
+];
+
+syncRoutes.forEach(route => {
+    app.get(`/api/sync/${route}`, (req, res) => {
+        res.json({ 
+            success: true, 
+            data: [],
+            message: `Rota ${route} sincronizada`
+        });
+    });
+});
