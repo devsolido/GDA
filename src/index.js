@@ -1,21 +1,18 @@
 const express = require('express');
-const cors = require('cors');
-const helmet = require('helmet');
-const rateLimit = require('express-rate-limit');
-const authRoutes = require('./routes/authRoutes');
-const syncRoutes = require('./routes/syncRoutes');
-
+const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(helmet());
-app.use(cors());
+app.set('trust proxy', 1);
 app.use(express.json());
-app.use(rateLimit({ windowMs: 15*60*1000, max: 100 }));
+app.use(express.static(path.join(__dirname, '../')));
 
-app.use('/api/auth', authRoutes);
-app.use('/api/sync', syncRoutes);
-app.get('/api/health', (req, res) => res.json({ status: 'ok', version: '7.3' }));
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../index.html'));
+});
 
-app.listen(PORT, () => console.log(`🚀 GDA rodando na porta ${PORT}`));
-module.exports = app;
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok', version: '7.3.0', timestamp: new Date().toISOString() });
+});
+
+app.listen(PORT, () => console.log(`🚀 GDA rodando em http://localhost:${PORT}`));
