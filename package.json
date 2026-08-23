@@ -4,10 +4,13 @@
   "description": "GDA - Gestão Digital Agregada | Sistema de gerenciamento acadêmico com banco de dados na nuvem (Turso)",
   "main": "api/index.js",
   "scripts": {
-    "start": "node api/index.js",
-    "dev": "node api/index.js",
-    "test": "node --test",
-    "vercel-build": "echo 'Build concluído'"
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "test": "jest",
+    "vercel-build": "echo 'Build concluído'",
+    "lint": "eslint src/**/*.js",
+    "format": "prettier --write src/**/*.js",
+    "security": "npm audit fix"
   },
   "repository": {
     "type": "git",
@@ -34,15 +37,26 @@
   "dependencies": {
     "@libsql/client": "^0.17.4",
     "better-sqlite3": "^13.0.2",
-    "cors": "^2.8.6",
-    "dotenv": "^16.4.5",
     "express": "^5.2.1",
-    "express-rate-limit": "^8.6.2",
-    "helmet": "^8.3.0",
-    "jsonwebtoken": "^9.0.3",
     "pdfkit": "^0.19.1"
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "eslint": "^10.9.0",
+    "express-rate-limit": "^8.6.2",
+    "helmet": "^8.3.0",
+    "husky": "^9.1.7",
+    "jest": "^30.4.2",
+    "joi": "^18.2.5",
+    "jsonwebtoken": "^9.0.3",
+    "lint-staged": "^17.3.0",
+    "nodemon": "^3.1.14",
+    "prettier": "^3.9.6",
+    "supertest": "^7.2.2"
   }
 }
