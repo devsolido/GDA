@@ -1,14 +1,47 @@
-﻿
 import { turmas, checklistItems } from './data.js';
-import { loadData, saveData } from './storage.js';
-const APP_ID = '1BF3914F-116E-4BD6-BA55-D9720E1219C7';
-const API_KEY = 'C3CEF6C4-9697-49FC-BFF2-F99A95A9855A';
+import { loadData, saveData, syncAllData } from './storage.js';
+
+// Usuário fixo (depois pode vir do login)
 const USUARIO = 'igor_veras';
-Backendless.initApp(APP_ID, API_KEY);
-let atividades = loadData('gda_atividades', []);
-let notas = loadData('gda_notas', {});
-let relatorios = loadData('gda_relatorios', []);
-let checklistState = loadData('gda_checklist', {});
+
+// Dados globais
+let atividades = [];
+let notas = {};
+let relatorios = [];
+let checklistState = {};
+
+// Inicialização assíncrona
+async function initApp() {
+    console.log('🚀 Carregando dados...');
+    
+    // Carregar dados
+    atividades = await loadData('gda_atividades', []);
+    notas = await loadData('gda_notas', {});
+    relatorios = await loadData('gda_relatorios', []);
+    checklistState = await loadData('gda_checklist', {});
+    
+    // Inicializar checklist
+    initChecklist();
+    
+    // Inicializar atividades padrão
+    initAtividades();
+    
+    // Expor no window
+    window.atividades = atividades;
+    window.notas = notas;
+    window.relatorios = relatorios;
+    window.checklistState = checklistState;
+    window.turmas = turmas;
+    window.checklistItems = checklistItems;
+    window.loadData = loadData;
+    window.saveData = saveData;
+    window.syncAllData = syncAllData;
+    
+    console.log('🚀 GDA Acadêmico v3.0 carregado!');
+    console.log('📋 Usuário:', USUARIO);
+    console.log('📊 Dados carregados com sucesso!');
+}
+
 function initChecklist() {
     checklistItems.forEach(item => {
         if (checklistState[item.id] === undefined) {
@@ -17,6 +50,7 @@ function initChecklist() {
     });
     saveData('gda_checklist', checklistState);
 }
+
 function initAtividades() {
     if (atividades.length === 0) {
         atividades = [{
@@ -39,17 +73,11 @@ function initAtividades() {
         saveData('gda_atividades', atividades);
     }
 }
-window.atividades = atividades;
-window.notas = notas;
-window.relatorios = relatorios;
-window.checklistState = checklistState;
-window.turmas = turmas;
-window.checklistItems = checklistItems;
-window.loadData = loadData;
-window.saveData = saveData;
-console.log('🚀 GDA Acadêmico v3.0 carregado!');
-console.log('📋 Usuário:', USUARIO);
-console.log('📊 Dados carregados com sucesso!');
+
+// Iniciar
+initApp();
+
+// Função auxiliar para mostrar mensagens (mantida)
 function mostrarMensagemSegura(mensagem, tipo = 'info') {
     const mensagemSegura = sanitizeHTML ? sanitizeHTML(String(mensagem)) : String(mensagem);
     if (typeof alert !== 'undefined') {
@@ -57,7 +85,7 @@ function mostrarMensagemSegura(mensagem, tipo = 'info') {
         return;
     }
     const div = document.createElement('div');
-    div.textContent = mensagemSegura; 
+    div.textContent = mensagemSegura;
     div.style.cssText = `
         position: fixed;
         bottom: 20px;

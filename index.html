@@ -9,8 +9,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet" />
     <style>
-           CSS COMPLETO - VERSÃO 7.3 (APENAS IGOR)
-           ============================================================ */
         :root {
             --color-primary: #0b0f15;
             --color-secondary: #121820;
@@ -212,8 +210,6 @@
         .toast.erro { background: var(--color-danger); color: #fff; }
         .toast.aviso { background: var(--color-warning); color: #fff; }
         .toast.info { background: var(--color-secondary); color: var(--color-text); border-color: var(--color-border); }
-           HEADER MOBILE FIXO
-           ============================================================ */
         .app-header {
             position: fixed;
             top: 0;
@@ -385,8 +381,6 @@
                 min-height: 26px;
             }
         }
-           SIDEBAR (Desktop)
-           ============================================================ */
         .sidebar {
             position: fixed;
             left: 0;
@@ -517,8 +511,6 @@
         .status-presenca.presente { background: rgba(76, 175, 80, 0.15); color: var(--color-success); }
         .status-presenca.falta { background: rgba(229, 57, 53, 0.15); color: var(--color-danger); }
         .status-presenca.aguardando { background: rgba(255, 255, 255, 0.05); color: var(--color-text-muted); }
-           BOTÃO HAMBÚRGUER (Mobile) - REMOVIDO
-           ============================================================ */
         .mobile-menu-btn {
             display: none !important;
         }
@@ -602,8 +594,6 @@
             opacity: 0.4;
             font-weight: 600;
         }
-           CONTAINER PRINCIPAL
-           ============================================================ */
         .container {
             margin-left: 220px;
             flex: 1;
@@ -613,8 +603,6 @@
             z-index: 1;
             max-width: calc(100% - 220px);
         }
-           NAVEGAÇÃO INFERIOR (Mobile)
-           ============================================================ */
         .bottom-nav {
             display: none;
             position: fixed;
@@ -673,8 +661,6 @@
         }
         .bottom-nav .nav-item .nav-badge.success { background: var(--color-success); }
         .bottom-nav .nav-item .nav-badge.warning { background: var(--color-warning); }
-           PÁGINAS
-           ============================================================ */
         .page {
             display: none;
             animation: fadePage 0.3s ease;
@@ -684,8 +670,6 @@
             from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
-           CARD SYSTEM
-           ============================================================ */
         .card {
             background: var(--color-card);
             border-radius: var(--radius);
@@ -729,8 +713,6 @@
             padding: 1px 10px;
             border-radius: 20px;
         }
-           WELCOME / INÍCIO
-           ============================================================ */
         .welcome-hero {
             background: linear-gradient(135deg, var(--color-card), var(--color-secondary));
             border-radius: var(--radius);
@@ -814,8 +796,6 @@
             min-height: 32px;
         }
         .btn-new-quote:active { background: rgba(255, 179, 0, 0.1); color: var(--color-accent); }
-           STATS GRID
-           ============================================================ */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -836,8 +816,6 @@
         .stat-card .number.success { color: var(--color-success); }
         .stat-card .number.danger { color: var(--color-danger); }
         .stat-card .number.warning { color: var(--color-warning); }
-           ACHIEVEMENTS
-           ============================================================ */
         .achievement-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -871,8 +849,6 @@
             transition: width 0.8s ease;
             width: 0%;
         }
-           PROGRESSO SEMESTRE
-           ============================================================ */
         .progress-hero {
             background: var(--color-card);
             border-radius: var(--radius);
@@ -944,8 +920,6 @@
             color: var(--color-text);
             margin-top: 8px;
         }
-           CHECKLIST
-           ============================================================ */
         .checklist-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -980,8 +954,6 @@
         .check-item .label.done { color: var(--color-text-muted); text-decoration: line-through; }
         .check-item .icon-status { color: var(--color-text-muted); font-size: 13px; }
         .check-item .icon-status.done { color: var(--color-success); }
-           TABELAS
-           ============================================================ */
         .table-wrapper {
             background: var(--color-card);
             border-radius: var(--radius);
@@ -1050,8 +1022,6 @@
             color: var(--color-success);
             display: inline-block;
         }
-           ATIVIDADES
-           ============================================================ */
         .atividades-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -1171,8 +1141,6 @@
             color: var(--color-accent);
             border-color: rgba(255, 179, 0, 0.1);
         }
-           NOTAS
-           ============================================================ */
         .notas-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -1248,8 +1216,6 @@
         .notas-resultado .media.reprovado { color: var(--color-danger); }
         .notas-resultado .media.recuperacao { color: var(--color-warning); }
         .notas-resultado .media.aguardando { color: var(--color-text-muted); }
-           PRESENÇA
-           ============================================================ */
         .presenca-stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -1319,8 +1285,6 @@
             min-height: 32px;
         }
         .presenca-card .btn-excluir-presenca:active { background: rgba(229, 57, 53, 0.2); }
-           RELATÓRIOS
-           ============================================================ */
         .relatorio-section {
             background: var(--color-card);
             border-radius: var(--radius);
@@ -1417,8 +1381,6 @@
         .relatorio-dia-itens .relatorio-item .disciplina { font-weight: 600; color: var(--color-text); min-width: 80px; font-size: 11px; }
         .relatorio-dia-itens .relatorio-item .horas { color: var(--color-success); font-weight: 600; font-size: 10px; }
         .relatorio-dia-itens .relatorio-item .texto { flex: 1; color: var(--color-text-muted); font-size: 11px; }
-           ATENDIMENTOS
-           ============================================================ */
         .atendimentos-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -1470,8 +1432,6 @@
         }
         .atendimento-card .acoes .btn-edit:active { border-color: var(--color-accent); color: var(--color-accent); }
         .atendimento-card .acoes .btn-delete:active { border-color: var(--color-danger); color: var(--color-danger); }
-           OCORRÊNCIAS
-           ============================================================ */
         .ocorrencia-card {
             background: var(--color-card);
             border-radius: var(--radius);
@@ -1550,8 +1510,6 @@
             padding: 1px 8px;
             border-radius: 16px;
         }
-           ASSUNTOS
-           ============================================================ */
         .assuntos-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -1602,8 +1560,6 @@
             min-height: 32px;
         }
         .assunto-card .acoes .btn-delete:active { border-color: var(--color-danger); color: var(--color-danger); }
-           HISTÓRICO PÂNICO
-           ============================================================ */
         .panico-registro {
             background: rgba(255, 255, 255, 0.02);
             border-radius: 10px;
@@ -1656,8 +1612,6 @@
         .participante-tag .prazo-individual { font-size: 8px; color: var(--color-text-muted); background: rgba(255,255,255,0.05); padding: 0 4px; border-radius: 8px; }
         .participante-tag .prazo-individual.urgente { color: var(--color-danger); }
         .participante-tag .prazo-individual.ok { color: var(--color-success); }
-           MODAIS
-           ============================================================ */
         .modal-overlay, .modal-presenca-overlay, .modal-atrasado-overlay, .modal-ocorrencia-overlay {
             display: none;
             position: fixed;
@@ -1943,8 +1897,6 @@
             gap: 4px;
         }
         .btn-ocorrencia:active { transform: scale(0.97); }
-           MODO PÂNICO
-           ============================================================ */
         .panico-overlay {
             display: none;
             position: fixed;
@@ -2119,8 +2071,6 @@
             color: var(--color-accent);
             font-family: 'Inter', sans-serif;
         }
-           RESPONSIVIDADE
-           ============================================================ */
         @media (max-width: 1024px) {
             .sidebar { width: 60px; padding: 10px 6px; }
             .sidebar a { justify-content: center; padding: 10px 4px; }
@@ -2673,10 +2623,6 @@
     (function() {
         'use strict';
         console.log('🚀 GDA v7.3 - Apenas Igor');
-        // ============================================================
-        //  CONTAGEM REGRESSIVA - PROVA 3º BI MATEMÁTICA
-        //  Data alvo: 3 de outubro de 2026 às 7:30 AM (horário de Brasília)
-        // ============================================================
         function iniciarContagemRegressiva() {
             const targetDate = new Date('2026-10-03T07:30:00-03:00').getTime();
             function updateCountdown() {
@@ -2706,9 +2652,6 @@
             updateCountdown();
             setInterval(updateCountdown, 1000);
         }
-        // ============================================================
-        //  DADOS - localStorage (Chaves simples, sem usuário)
-        // ============================================================
         let presencasAtrasadas = loadData('gda_presencas_atrasadas', []);
         let ocorrencias = loadData('gda_ocorrencias', []);
         let presencas = loadData('gda_presencas', []);
@@ -2729,9 +2672,6 @@
         let filtroAtividadesAtual = 'todas';
         let timeoutRespirar = null;
         let toastBoasVindasExibido = false;
-        // ============================================================
-        //  FUNÇÕES AUXILIARES
-        // ============================================================
         function getDataLocal() {
             const hoje = new Date();
             const ano = hoje.getFullYear();
@@ -2749,9 +2689,6 @@
         }
         function gerarIdLocal() { return 'local_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6); }
         function escapeHtml(t) { if (!t) return ''; const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
-        // ============================================================
-        //  FUNÇÕES DE CARREGAMENTO/SALVAMENTO (Chaves simples)
-        // ============================================================
         function loadData(key, def) {
             try { const d = localStorage.getItem(key); return d ? JSON.parse(d) : def; } catch(e) { return def; }
         }
@@ -2789,9 +2726,6 @@
             try { await syncDataToCloud(key, data); } catch(e) {}
             return true;
         }
-        // ============================================================
-        //  SINCRONIZAÇÃO COM NUVEM
-        // ============================================================
         async function loadDataFromCloud(key, fallback) {
             if (!window.fetch) return fallback;
             try {
@@ -2866,7 +2800,6 @@
                     }
                 }
             }
-            // Recarregar variáveis
             presencasAtrasadas = loadData('gda_presencas_atrasadas', []);
             ocorrencias = loadData('gda_ocorrencias', []);
             presencas = loadData('gda_presencas', []);
@@ -2896,11 +2829,7 @@
             };
             if (mapa[chave]) mapa[chave]();
         }
-        // ============================================================
-        //  FUNÇÕES DE TOAST
-        // ============================================================
         function mostrarToast(msg, tipo = 'info', duracao = 3000) {
-            // Evita múltiplos toasts de boas-vindas
             if (msg.includes('Bem-vindo') && toastBoasVindasExibido) {
                 return;
             }
@@ -2915,14 +2844,8 @@
             container.appendChild(toast);
             setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, duracao);
         }
-        // ============================================================
-        //  FUNÇÕES DE SAUDAÇÃO
-        // ============================================================
         function getSaudacao() { const h = new Date().getHours(); if (h < 12) return 'Bom dia'; if (h < 18) return 'Boa tarde'; return 'Boa noite'; }
         function getEmojiSaudacao() { const h = new Date().getHours(); if (h < 12) return '🌅'; if (h < 18) return '☀️'; return '🌙'; }
-        // ============================================================
-        //  DADOS ESTÁTICOS (MANTIDOS)
-        // ============================================================
         const turmas = [
             { cod: 'TICAM0147', nome: 'ARTES', professor: 'THAYS ALVES COSTA', turma: 'B2371M', horario: '6M34' },
             { cod: 'TICAM0152', nome: 'FILOSOFIA', professor: 'JESSIKA CURTINAZ DA SILVA', turma: 'B2371M', horario: '4M56' },
@@ -2967,9 +2890,6 @@
             { frase: '"Não importa o quão devagar você vá, desde que não pare."', autor: 'Confúcio' },
             { frase: '"A educação é a arma mais poderosa que você pode usar para mudar o mundo."', autor: 'Nelson Mandela' }
         ];
-        // ============================================================
-        //  FUNÇÕES DE RENDERIZAÇÃO (MANTIDAS - COM NOME IGOR FIXO)
-        // ============================================================
         function renderizarPaginas() {
             const container = document.getElementById('pageContainer');
             container.innerHTML = `
@@ -3153,12 +3073,9 @@
             `;
             console.log('✅ Páginas renderizadas');
         }
-        // ============================================================
-        //  FUNÇÃO: VERIFICAR DIA DA SEMANA (BLOQUEIO DE FIM DE SEMANA)
-        // ============================================================
         function verificarDiaSemana() {
             const hoje = new Date();
-            const diaSemana = hoje.getDay(); // 0 = Domingo, 6 = Sábado
+            const diaSemana = hoje.getDay();
             if (diaSemana === 0) {
                 mostrarToast('🔴 Calma ai! hoje é domingo!', 'aviso', 4000);
                 return false;
@@ -3168,25 +3085,18 @@
             }
             return true;
         }
-        // ============================================================
-        //  FUNÇÃO: UNIFICAR REGISTROS ATRASADOS COM REGISTROS DO DIA
-        // ============================================================
         function unificarRegistrosAtrasados() {
             const hoje = getDataLocal();
-            // Verifica se há registro atrasado para hoje
             const atrasadoHoje = presencasAtrasadas.find(p => p.data === hoje);
             if (atrasadoHoje) {
-                // Verifica se já existe registro normal para hoje
                 const registroNormal = presencas.find(p => p.data === hoje);
                 if (registroNormal) {
-                    // Se já tem registro normal, remove o atrasado
                     presencasAtrasadas = presencasAtrasadas.filter(p => p.id !== atrasadoHoje.id);
                     saveData('gda_presencas_atrasadas', presencasAtrasadas);
                     mostrarToast('🔄 Registro atrasado unificado com o registro do dia.', 'info');
                     renderPresencasAtrasadas();
                     return true;
                 } else {
-                    // Se não tem registro normal, converte o atrasado para normal
                     const convertido = {
                         id: atrasadoHoje.id,
                         data: atrasadoHoje.data,
@@ -3210,22 +3120,14 @@
             }
             return false;
         }
-        // ============================================================
-        //  FUNÇÃO: VERIFICAR SE JÁ TEM REGISTRO NO DIA (INCLUINDO ATRASADOS)
-        // ============================================================
         function verificarRegistroHoje() {
             const hoje = getDataLocal();
-            // Verifica se tem registro normal hoje
             const normalHoje = presencas.find(p => p.data === hoje);
             if (normalHoje) return true;
-            // Verifica se tem registro atrasado hoje
             const atrasadoHoje = presencasAtrasadas.find(p => p.data === hoje);
             if (atrasadoHoje) return true;
             return false;
         }
-        // ============================================================
-        //  FUNÇÕES DE RENDERIZAÇÃO (MANTIDAS)
-        // ============================================================
         function renderChecklist() {
             const container = document.getElementById('checklistContainer');
             if (!container) return;
@@ -3391,7 +3293,6 @@
         function renderPresenca() {
             const container = document.getElementById('presencaContainer');
             if (!container) return;
-            // Unificar registros atrasados antes de renderizar
             unificarRegistrosAtrasados();
             const total = presencas.length;
             const presentes = presencas.filter(p => p.tipo === 'presente').length;
@@ -3548,9 +3449,6 @@
             if (badge) badge.textContent = historicoPanico.length;
             atualizarBadgePanico();
         }
-        // ============================================================
-        //  FUNÇÕES - MODAIS (MANTIDAS)
-        // ============================================================
         function abrirModalAtrasado() {
             const modal = document.getElementById('modalAtrasadoOverlay');
             modal.classList.add('open');
@@ -3579,7 +3477,6 @@
                 mostrarToast('⚠️ Registros permitidos apenas a partir de 03/08/2026.', 'aviso');
                 return;
             }
-            // Verifica se já tem registro para esta data (normal ou atrasado)
             const hoje = getDataLocal();
             if (data === hoje && verificarRegistroHoje()) {
                 mostrarToast('⚠️ Você já tem um registro para hoje!', 'aviso');
@@ -3598,7 +3495,6 @@
             saveData('gda_presencas_atrasadas', presencasAtrasadas);
             fecharModalAtrasado();
             mostrarToast('✅ Registro atrasado salvo com sucesso!', 'sucesso');
-            // Tenta unificar automaticamente se for do dia atual
             if (data === hoje) {
                 unificarRegistrosAtrasados();
             }
@@ -3666,7 +3562,6 @@
             if (!verificarDiaSemana()) {
                 return;
             }
-            // Verifica se já tem registro para hoje (normal ou atrasado)
             if (verificarRegistroHoje()) {
                 mostrarToast('⚠️ Você já tem um registro de presença para hoje!', 'aviso');
                 return;
@@ -3725,7 +3620,6 @@
             const hoje = new Date();
             const dataStr = getDataLocal();
             const horaStr = getHoraLocal();
-            // Verifica novamente se já tem registro para hoje
             if (verificarRegistroHoje()) {
                 mostrarToast('⚠️ Você já tem um registro de presença para hoje!', 'aviso');
                 fecharModalPresenca();
@@ -3750,7 +3644,6 @@
             saveData('gda_presencas', presencas);
             fecharModalPresenca();
             mostrarToast(tipoPresencaAtual === 'presente' ? '✅ Presença registrada!' : '❌ Falta registrada!', 'sucesso');
-            // Remove qualquer registro atrasado para hoje que possa existir
             presencasAtrasadas = presencasAtrasadas.filter(p => p.data !== dataStr);
             saveData('gda_presencas_atrasadas', presencasAtrasadas);
             atualizarStatusPresenca();
@@ -3759,10 +3652,8 @@
         }
         function atualizarStatusPresenca() {
             const hoje = getDataLocal();
-            // Verifica primeiro registro normal, depois atrasado
             let registroHoje = presencas.find(p => p.data === hoje);
             if (!registroHoje) {
-                // Verifica se tem atrasado para hoje
                 const atrasadoHoje = presencasAtrasadas.find(p => p.data === hoje);
                 if (atrasadoHoje) {
                     registroHoje = {
@@ -3824,9 +3715,6 @@
             renderPresenca();
             atualizarStatusPresenca();
         }
-        // ============================================================
-        //  FUNÇÕES - ATIVIDADES (MANTIDAS)
-        // ============================================================
         function openModal() {
             document.getElementById('atividadeForm').reset();
             document.getElementById('modalTitle').innerHTML = '<i class="fas fa-plus-circle"></i> Nova Atividade';
@@ -3929,9 +3817,6 @@
         }
         function toggleSubtarefa(index) { subtarefasTemp[index].concluido = !subtarefasTemp[index].concluido; renderSubtarefas(); }
         function removerSubtarefa(index) { subtarefasTemp.splice(index, 1); renderSubtarefas(); }
-        // ============================================================
-        //  FUNÇÕES - NOTAS (MANTIDAS)
-        // ============================================================
         function validarNota(input) {
             let valor = input.value.replace(',', '.').replace(/[^0-9.]/g, '');
             const num = parseFloat(valor);
@@ -3956,9 +3841,6 @@
             renderTelaInicial();
             renderDashboard();
         }
-        // ============================================================
-        //  FUNÇÕES - RELATÓRIOS (MANTIDAS)
-        // ============================================================
         function salvarRelatorio(disciplina, tempo, texto) {
             const novoRelatorio = { id: gerarIdLocal(), data: getDataLocal(), disciplina, tempo, texto };
             relatorios.push(novoRelatorio);
@@ -3968,9 +3850,6 @@
             renderDashboard();
             mostrarToast('✅ Relatório salvo!', 'sucesso');
         }
-        // ============================================================
-        //  FUNÇÕES - ATENDIMENTOS (MANTIDAS)
-        // ============================================================
         function openModalAtendimento() {
             document.getElementById('atendimentoForm').reset();
             document.getElementById('modalAtendimentoTitle').innerHTML = '<i class="fas fa-handshake"></i> Nova Participação em Atendimento';
@@ -4002,9 +3881,6 @@
                 mostrarToast('✅ Atendimento removido!', 'sucesso');
             }
         }
-        // ============================================================
-        //  FUNÇÕES - ASSUNTOS (MANTIDAS)
-        // ============================================================
         function adicionarAssunto(disciplina, titulo, descricao, data) {
             if (!assuntos[disciplina]) assuntos[disciplina] = [];
             const novoAssunto = { id: gerarIdLocal(), titulo, descricao, data: data || getDataLocal(), timestamp: Date.now() };
@@ -4031,9 +3907,6 @@
                 badge.style.display = total > 0 ? 'inline-block' : 'none';
             }
         }
-        // ============================================================
-        //  FUNÇÕES - HISTÓRICO PÂNICO (MANTIDAS)
-        // ============================================================
         function abrirPanico() {
             document.getElementById('panicoOverlay').classList.add('open');
             document.body.style.overflow = 'hidden';
@@ -4171,9 +4044,6 @@
                 badge.style.display = pendentes > 0 ? 'inline-block' : 'none';
             }
         }
-        // ============================================================
-        //  FUNÇÕES - TELA INICIAL, DASHBOARD, RELÓGIO (MANTIDAS)
-        // ============================================================
         function renderTelaInicial() {
             const saudacao = getSaudacao();
             const emoji = getEmojiSaudacao();
@@ -4299,9 +4169,6 @@
             if (elQuote) elQuote.textContent = random.frase;
             if (elAuthor) elAuthor.textContent = random.autor;
         }
-        // ============================================================
-        //  ROTEAMENTO (MANTIDO)
-        // ============================================================
         function showPage(pageId) {
             document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
             const target = document.getElementById(`page-${pageId}`);
@@ -4328,12 +4195,8 @@
                 if (badge) badge.textContent = `${pct}%`;
             }
         }
-        // ============================================================
-        //  INICIALIZAÇÃO
-        // ============================================================
         async function init() {
             console.log('🚀 Inicializando GDA v7.3 (Apenas Igor)...');
-            // Iniciar contagem regressiva
             iniciarContagemRegressiva();
             const btnEntrar = document.getElementById('btnEntrar');
             const progressFill = document.getElementById('progressFill');
@@ -4439,12 +4302,10 @@
             atualizarBadgePanico();
             atualizarBadgePresenca();
             atualizarBadgeAssuntos();
-            // Eventos - Botões
             const btnConfirmarAtrasado = document.getElementById('btnConfirmarAtrasado');
             if (btnConfirmarAtrasado) btnConfirmarAtrasado.addEventListener('click', confirmarAtrasado);
             const btnConfirmarOcorrencia = document.getElementById('btnConfirmarOcorrencia');
             if (btnConfirmarOcorrencia) btnConfirmarOcorrencia.addEventListener('click', confirmarOcorrencia);
-            // Eventos - Navegação Desktop
             document.querySelectorAll('.sidebar a[data-page]').forEach(link => {
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -4452,7 +4313,6 @@
                     if (page) showPage(page);
                 });
             });
-            // Eventos - Navegação Mobile (Bottom Nav)
             document.querySelectorAll('.bottom-nav .nav-item').forEach(link => {
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -4460,7 +4320,6 @@
                     if (page) showPage(page);
                 });
             });
-            // Eventos - Filtros
             document.querySelectorAll('.filtros-atividades button').forEach(btn => {
                 btn.addEventListener('click', function() {
                     document.querySelectorAll('.filtros-atividades button').forEach(b => b.classList.remove('active'));
@@ -4469,10 +4328,8 @@
                     renderAtividades();
                 });
             });
-            // Relógio
             updateClockDisplay();
             setInterval(updateClockDisplay, 1000);
-            // Formulários
             const relatorioForm = document.getElementById('relatorioForm');
             if (relatorioForm) {
                 relatorioForm.addEventListener('submit', function(e) {
@@ -4576,7 +4433,6 @@
                     subtarefasTemp = [];
                 });
             }
-            // Botões presença
             const btnPresencaPresente = document.getElementById('btnPresencaPresente');
             if (btnPresencaPresente) btnPresencaPresente.addEventListener('click', () => abrirModalPresenca('presente'));
             const btnPresencaFalta = document.getElementById('btnPresencaFalta');
@@ -4585,7 +4441,6 @@
             if (btnPresencaPresenteSidebar) btnPresencaPresenteSidebar.addEventListener('click', () => abrirModalPresenca('presente'));
             const btnPresencaFaltaSidebar = document.getElementById('btnPresencaFaltaSidebar');
             if (btnPresencaFaltaSidebar) btnPresencaFaltaSidebar.addEventListener('click', () => abrirModalPresenca('falta'));
-            // Botões pânico
             const btnPanico = document.getElementById('btnPanico');
             if (btnPanico) btnPanico.addEventListener('click', (e) => { e.preventDefault(); abrirPanico(); });
             const btnSairPanico = document.getElementById('btnSairPanico');
@@ -4594,7 +4449,6 @@
             if (btnRegistrarPanico) btnRegistrarPanico.addEventListener('click', registrarPanico);
             const btnNovaFrasePanico = document.getElementById('btnNovaFrasePanico');
             if (btnNovaFrasePanico) btnNovaFrasePanico.addEventListener('click', novaFrasePanico);
-            // Submenu
             const sistemasToggle = document.getElementById('sistemasToggle');
             if (sistemasToggle) {
                 sistemasToggle.addEventListener('click', function(e) {
@@ -4603,7 +4457,6 @@
                     if (submenu) submenu.classList.toggle('open');
                 });
             }
-            // Fechar modais
             const modalOverlay = document.getElementById('modalOverlay');
             if (modalOverlay) modalOverlay.addEventListener('click', function(e) { if (e.target === this) closeModal(); });
             const modalAtendimentoOverlay = document.getElementById('modalAtendimentoOverlay');
@@ -4616,7 +4469,6 @@
             if (modalOcorrenciaOverlay) modalOcorrenciaOverlay.addEventListener('click', function(e) { if (e.target === this) fecharModalOcorrencia(); });
             const panicoOverlay = document.getElementById('panicoOverlay');
             if (panicoOverlay) panicoOverlay.addEventListener('click', function(e) { if (e.target === this) sairPanico(); });
-            // ===== MENU MOBILE =====
             const mobileBtn = document.getElementById('mobileMenuBtn');
             const mobileOverlay = document.getElementById('mobileNavOverlay');
             const mobileClose = document.getElementById('mobileNavClose');
@@ -4692,9 +4544,6 @@
             console.log('✅ GDA v7.3 inicializado com sucesso!');
             console.log(`📊 Dados: Atividades: ${atividades.length}, Presenças: ${presencas.length}, Relatórios: ${relatorios.length}, Assuntos: ${Object.keys(assuntos).length}`);
         }
-        // ============================================================
-        //  EXPORTAÇÃO (MANTIDA)
-        // ============================================================
         window.abrirModalPresenca = abrirModalPresenca;
         window.confirmarPresenca = confirmarPresenca;
         window.fecharModalPresenca = fecharModalPresenca;
@@ -4721,7 +4570,6 @@
         window.iniciarRespiração = iniciarRespiração;
         window.novaFrasePanico = novaFrasePanico;
         window.registrarPanico = registrarPanico;
-        // Iniciar
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', init);
         } else {

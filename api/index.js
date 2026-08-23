@@ -7,13 +7,13 @@ const { createClient } = require('@libsql/client');
 const app = express();
 app.use(express.json());
 app.use(cors({
-    origin: 'https:
+    origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(helmet());
 const turso = createClient({
-    url: process.env.TURSO_URL || 'https:
+    url: process.env.TURSO_URL || 'https://gda-gb-devsolido.aws-us-east-2.turso.io',
     authToken: process.env.TURSO_TOKEN || ''
 });
 app.post('/api/auth/login', async (req, res) => {
@@ -105,3 +105,10 @@ syncRoutes.forEach(route => {
 });
 console.log('✅ Rotas sync carregadas:', syncRoutes.join(', '));
 module.exports = app;
+
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
+    console.log(`📋 Rotas sync carregadas: ${syncRoutes.join(", ")}`);
+});

@@ -13,12 +13,12 @@ class GDAApp {
     }
     showPage(pageId) {
         document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
-        const target = document.getElementById(page-);
+        const target = document.getElementById(`page-${pageId}`);
         if (target) target.classList.add('active');
         document.querySelectorAll('.navbar a[data-page]').forEach(link => {
             link.classList.toggle('active', link.dataset.page === pageId);
         });
-        window.history.pushState({ page: pageId }, '', #);
+        window.history.pushState({ page: pageId }, '', '#${pageId}');
     }
     init() {
         window.addEventListener('hashchange', () => {
