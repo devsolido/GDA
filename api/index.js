@@ -1,1 +1,24 @@
-const express = require('express');const cors = require('cors');const path = require('path');const app = express();app.set('trust proxy',1);app.use(cors());app.use(express.json());app.get('/api/health',(req,res)=>res.json({status:'ok',version:'7.3.0'}));app.post('/api/auth/login',(req,res)=>{const{username,password}=req.body;if(username==='admin'&&password==='admin'){res.json({token:'test',user:{username:'admin',role:'admin'}});}else{res.status(401).json({error:'Credenciais inválidas'});}});app.get('/api/auth/verify',(req,res)=>res.json({valid:true,user:{username:'admin'}}));app.get('/api/sync/:key',(req,res)=>res.json({key:req.params.key,value:{}}));app.post('/api/sync/:key',(req,res)=>res.json({success:true,key:req.params.key,value:req.body.value}));app.get('/',(req,res)=>res.sendFile(path.join(__dirname,'../index.html')));app.use('/api/*',(req,res)=>res.status(404).json({error:'Rota não encontrada'}));module.exports=app;
+const express = require('express');
+const cors = require('cors');
+const path = require('path');
+const config = require('../src/config');
+const authRoutes = require('../src/routes/authRoutes');
+const syncRoutes = require('../src/routes/syncRoutes');
+
+const app = express();
+app.set('trust proxy', 1);
+app.use(cors({ origin: config.corsOrigin }));
+app.use(express.json());
+app.use(express.static(path.join(__dirname, '..')));
+app.use('/api/auth', authRoutes);
+app.use('/api/sync', syncRoutes);
+app.get('/api/health', (req, res) => res.json({
+	status: 'ok',
+	version: '7.3.0',
+	storage: 'memory',
+	cloudConfigured: Boolean(process.env.DATABASE_URL)
+}));
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, '../index.html')));
+app.use('/api/*', (req, res) => res.status(404).json({ error: 'Rota não encontrada' }));
+
+module.exports = app;

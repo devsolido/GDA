@@ -1071,7 +1071,7 @@
             overflow: hidden;
         }
         .atividade-card .progresso-area .bar .fill {
-            height: 100%;
+                height: 100%;
             border-radius: 10px;
             background: linear-gradient(90deg, var(--color-accent), var(--color-accent-hover));
             transition: 0.6s ease;
@@ -2652,16 +2652,16 @@
             updateCountdown();
             setInterval(updateCountdown, 1000);
         }
-        let presencasAtrasadas = loadData('gda_presencas_atrasadas', []);
-        let ocorrencias = loadData('gda_ocorrencias', []);
-        let presencas = loadData('gda_presencas', []);
-        let atividades = loadData('gda_atividades', []);
-        let notas = loadData('gda_notas', {});
-        let relatorios = loadData('gda_relatorios', []);
-        let checklistState = loadData('gda_checklist', {});
-        let historicoPanico = loadData('gda_historico_panico', []);
-        let atendimentos = loadData('gda_atendimentos', []);
-        let assuntos = loadData('gda_assuntos', {});
+        let presencasAtrasadas = normalizarColecao(loadData('gda_presencas_atrasadas', []));
+        let ocorrencias = normalizarColecao(loadData('gda_ocorrencias', []));
+        let presencas = normalizarColecao(loadData('gda_presencas', []));
+        let atividades = normalizarColecao(loadData('gda_atividades', []));
+        let notas = normalizarMapa(loadData('gda_notas', {}));
+        let relatorios = normalizarColecao(loadData('gda_relatorios', []));
+        let checklistState = normalizarMapa(loadData('gda_checklist', {}));
+        let historicoPanico = normalizarColecao(loadData('gda_historico_panico', []));
+        let atendimentos = normalizarColecao(loadData('gda_atendimentos', []));
+        let assuntos = normalizarMapa(loadData('gda_assuntos', {}));
         let participantesTemp = [];
         let subtarefasTemp = [];
         let editandoId = null;
@@ -2691,6 +2691,23 @@
         function escapeHtml(t) { if (!t) return ''; const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
         function loadData(key, def) {
             try { const d = localStorage.getItem(key); return d ? JSON.parse(d) : def; } catch(e) { return def; }
+        }
+        function extrairValorSincronizado(valor) {
+            if (valor && Object.prototype.hasOwnProperty.call(valor, 'value')) return valor.value;
+            if (valor && valor.data && Object.prototype.hasOwnProperty.call(valor.data, 'value')) return valor.data.value;
+            return valor;
+        }
+        function normalizarColecao(valor, fallback = []) {
+            valor = extrairValorSincronizado(valor);
+            if (Array.isArray(valor)) return valor;
+            if (valor && Array.isArray(valor.value)) return valor.value;
+            if (valor && Array.isArray(valor.data)) return valor.data;
+            if (valor && valor.data && Array.isArray(valor.data.value)) return valor.data.value;
+            return fallback;
+        }
+        function normalizarMapa(valor, fallback = {}) {
+            valor = extrairValorSincronizado(valor);
+            return valor && typeof valor === 'object' && !Array.isArray(valor) ? valor : fallback;
         }
         function getAuthToken() {
             return localStorage.getItem('gda_auth_token');
@@ -2737,7 +2754,7 @@
                     console.warn(`[GDA][SYNC] Falha ao buscar ${key}. Status: ${response.status}`);
                     return fallback;
                 }
-                const data = await response.json();
+                const data = extrairValorSincronizado(await response.json());
                 if (data === null || data === undefined) {
                     console.info(`[GDA][SYNC] ${key} não possui dados na nuvem.`);
                     return fallback;
@@ -2800,32 +2817,32 @@
                     }
                 }
             }
-            presencasAtrasadas = loadData('gda_presencas_atrasadas', []);
-            ocorrencias = loadData('gda_ocorrencias', []);
-            presencas = loadData('gda_presencas', []);
-            atividades = loadData('gda_atividades', []);
-            notas = loadData('gda_notas', {});
-            relatorios = loadData('gda_relatorios', []);
-            checklistState = loadData('gda_checklist', {});
-            historicoPanico = loadData('gda_historico_panico', []);
-            atendimentos = loadData('gda_atendimentos', []);
-            assuntos = loadData('gda_assuntos', {});
+            presencasAtrasadas = normalizarColecao(loadData('gda_presencas_atrasadas', []));
+            ocorrencias = normalizarColecao(loadData('gda_ocorrencias', []));
+            presencas = normalizarColecao(loadData('gda_presencas', []));
+            atividades = normalizarColecao(loadData('gda_atividades', []));
+            notas = normalizarMapa(loadData('gda_notas', {}));
+            relatorios = normalizarColecao(loadData('gda_relatorios', []));
+            checklistState = normalizarMapa(loadData('gda_checklist', {}));
+            historicoPanico = normalizarColecao(loadData('gda_historico_panico', []));
+            atendimentos = normalizarColecao(loadData('gda_atendimentos', []));
+            assuntos = normalizarMapa(loadData('gda_assuntos', {}));
             if (onProgress) {
                 onProgress(100, '✅ Pronto!');
             }
         }
         function atualizarVariavel(chave, valor) {
             const mapa = {
-                'gda_presencas_atrasadas': () => presencasAtrasadas = valor,
-                'gda_ocorrencias': () => ocorrencias = valor,
-                'gda_presencas': () => presencas = valor,
-                'gda_atividades': () => atividades = valor,
-                'gda_notas': () => notas = valor,
-                'gda_relatorios': () => relatorios = valor,
-                'gda_checklist': () => checklistState = valor,
-                'gda_historico_panico': () => historicoPanico = valor,
-                'gda_atendimentos': () => atendimentos = valor,
-                'gda_assuntos': () => assuntos = valor
+                'gda_presencas_atrasadas': () => presencasAtrasadas = normalizarColecao(valor),
+                'gda_ocorrencias': () => ocorrencias = normalizarColecao(valor),
+                'gda_presencas': () => presencas = normalizarColecao(valor),
+                'gda_atividades': () => atividades = normalizarColecao(valor),
+                'gda_notas': () => notas = normalizarMapa(valor),
+                'gda_relatorios': () => relatorios = normalizarColecao(valor),
+                'gda_checklist': () => checklistState = normalizarMapa(valor),
+                'gda_historico_panico': () => historicoPanico = normalizarColecao(valor),
+                'gda_atendimentos': () => atendimentos = normalizarColecao(valor),
+                'gda_assuntos': () => assuntos = normalizarMapa(valor)
             };
             if (mapa[chave]) mapa[chave]();
         }
@@ -3187,6 +3204,9 @@
         function renderAtividades() {
             const container = document.getElementById('atividadesContainer');
             if (!container) return;
+            
+            atividades = normalizarColecao(atividades);
+            
             let filtradas = atividades;
             if (filtroAtividadesAtual === 'individual') filtradas = atividades.filter(a => a.tipo === 'individual');
             else if (filtroAtividadesAtual === 'grupo') filtradas = atividades.filter(a => a.tipo === 'grupo');
@@ -3198,10 +3218,18 @@
                 const p = a.subtarefas && a.subtarefas.length > 0 ? Math.round((a.subtarefas.filter(st => st.concluido).length / a.subtarefas.length) * 100) : (a.progresso || 0);
                 return p === 100;
             });
+            
+            // Garantir que filtradas seja um array
+            if (!Array.isArray(filtradas)) {
+                console.warn('filtradas não é um array, usando []');
+                filtradas = [];
+            }
+            
             if (filtradas.length === 0) {
                 container.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:20px 12px;color:var(--color-text-muted);background:var(--color-card);border-radius:var(--radius);border:1px solid var(--color-border);font-size:12px;"><i class="fas fa-inbox" style="font-size:24px;display:block;margin-bottom:8px;color:rgba(255,179,0,0.1);"></i>Nenhuma atividade encontrada.</div>`;
                 return;
             }
+            
             container.innerHTML = filtradas.map(a => {
                 const progresso = a.subtarefas && a.subtarefas.length > 0 ? Math.round((a.subtarefas.filter(st => st.concluido).length / a.subtarefas.length) * 100) : (a.progresso || 0);
                 let participantesHtml = '';
@@ -3221,8 +3249,9 @@
                     <div class="acoes"><button class="btn-edit" data-id="${a.id}"><i class="fas fa-edit"></i> Editar</button><button class="btn-delete" data-id="${a.id}"><i class="fas fa-trash-alt"></i> Remover</button></div>
                 </div>`;
             }).join('');
+            
             container.querySelectorAll('.btn-edit').forEach(btn => btn.addEventListener('click', function() { editarAtividade(this.dataset.id); }));
-            container.querySelectorAll('.btn-delete').forEach(btn => btn.addEventListener('click', function() { if (confirm('Remover esta atividade?')) deletarAtividade(this.dataset.id); }));
+            container.querySelectorAll('.btn-delete').forEach(btn => btn.addEventListener('click', function() { excluirAtividade(this.dataset.id); }));
             const badge = document.getElementById('atividadeBadge');
             if (badge) badge.textContent = atividades.length;
             const navBadge = document.getElementById('navAtividadeBadge');
@@ -3247,6 +3276,7 @@
         function renderRelatorios() {
             const container = document.getElementById('relatoriosLista');
             if (!container) return;
+            relatorios = normalizarColecao(relatorios);
             const select = document.getElementById('relatorioDisciplina');
             if (select && select.options.length <= 1) {
                 select.innerHTML = '<option value="">Selecione uma disciplina</option>' + turmas.map(t => `<option value="${t.nome}">${t.nome}</option>`).join('');
@@ -4244,16 +4274,16 @@
                         progressPercent.textContent = `${20 + Math.round(percent * 0.8)}%`;
                         progressStatus.textContent = status || 'Carregando...';
                     });
-                    presencasAtrasadas = loadData('gda_presencas_atrasadas', []);
-                    ocorrencias = loadData('gda_ocorrencias', []);
-                    presencas = loadData('gda_presencas', []);
-                    atividades = loadData('gda_atividades', []);
-                    notas = loadData('gda_notas', {});
-                    relatorios = loadData('gda_relatorios', []);
-                    checklistState = loadData('gda_checklist', {});
-                    historicoPanico = loadData('gda_historico_panico', []);
-                    atendimentos = loadData('gda_atendimentos', []);
-                    assuntos = loadData('gda_assuntos', {});
+                    presencasAtrasadas = normalizarColecao(loadData('gda_presencas_atrasadas', []));
+                    ocorrencias = normalizarColecao(loadData('gda_ocorrencias', []));
+                    presencas = normalizarColecao(loadData('gda_presencas', []));
+                    atividades = normalizarColecao(loadData('gda_atividades', []));
+                    notas = normalizarMapa(loadData('gda_notas', {}));
+                    relatorios = normalizarColecao(loadData('gda_relatorios', []));
+                    checklistState = normalizarMapa(loadData('gda_checklist', {}));
+                    historicoPanico = normalizarColecao(loadData('gda_historico_panico', []));
+                    atendimentos = normalizarColecao(loadData('gda_atendimentos', []));
+                    assuntos = normalizarMapa(loadData('gda_assuntos', {}));
                     renderChecklist();
                     renderTurmas();
                     renderAtividades();
@@ -4577,6 +4607,5 @@
         }
     })();
     </script>
-    <script src="js/security/validator.min.js"></script>
 </body>
 </html>

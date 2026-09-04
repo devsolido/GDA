@@ -1,11 +1,16 @@
+const cloudData = new Map();
+
 const syncController = {
   sync: async (req, res) => {
     try {
       const { key } = req.params;
-      const { value } = req.body;
+      if (req.method === 'POST') {
+        const { value } = req.body || {};
+        cloudData.set(key, value);
+      }
       const data = {
         key,
-        value,
+        value: cloudData.has(key) ? cloudData.get(key) : null,
         timestamp: new Date().toISOString(),
         synced: true
       };
