@@ -11,6 +11,7 @@ app.use(express.static(path.join(__dirname, '../')));
 // Importar rotas
 const authRoutes = require('./routes/authRoutes');
 const syncRoutes = require('./routes/syncRoutes');
+const { checkConnection } = require('./services/turso');
 
 // Registrar rotas da API
 app.use('/api/auth', authRoutes);
@@ -22,12 +23,19 @@ app.get('/', (req, res) => {
 });
 
 // Health check
-app.get('/api/health', (req, res) => {
-  res.json({
-    status: 'ok',
+app.get('/api/health', async (req, res) => {
+  let cloudConnected = false;
+  try {
+    cloudConnected = await checkConnection();
+  } catch (error) {
+    console.error('Health check Turso falhou:', error.message);
+  }
+  return res.status(cloudConnected ? 200 : 503).json({
+    status: cloudConnected ? 'ok' : 'degraded',
     version: '7.3.0',
-    storage: 'memory',
+    storage: cloudConnected ? 'turso' : 'unavailable',
     cloudConfigured: Boolean(process.env.TURSO_URL && process.env.TURSO_TOKEN),
+    cloudConnected,
     timestamp: new Date().toISOString()
   });
 });

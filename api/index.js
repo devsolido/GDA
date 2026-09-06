@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const config = require('../src/config');
+const { checkConnection } = require('../src/services/turso');
 const authRoutes = require('../src/routes/authRoutes');
 const syncRoutes = require('../src/routes/syncRoutes');
 
@@ -12,12 +13,21 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, '..')));
 app.use('/api/auth', authRoutes);
 app.use('/api/sync', syncRoutes);
-app.get('/api/health', (req, res) => res.json({
-	status: 'ok',
-	version: '7.3.0',
-	storage: 'memory',
-	cloudConfigured: Boolean(process.env.TURSO_URL && process.env.TURSO_TOKEN)
-}));
+app.get('/api/health', async (req, res) => {
+	let cloudConnected = false;
+	try {
+		cloudConnected = await checkConnection();
+	} catch (error) {
+		console.error('Health check Turso falhou:', error.message);
+	}
+	return res.status(cloudConnected ? 200 : 503).json({
+		status: cloudConnected ? 'ok' : 'degraded',
+		version: '7.3.0',
+		storage: cloudConnected ? 'turso' : 'unavailable',
+		cloudConfigured: Boolean(process.env.TURSO_URL && process.env.TURSO_TOKEN),
+		cloudConnected
+	});
+});
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, '../index.html')));
 app.use('/api/*', (req, res) => res.status(404).json({ error: 'Rota não encontrada' }));
 

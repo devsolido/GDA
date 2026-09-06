@@ -1,4 +1,4 @@
-const cloudData = new Map();
+const { getValue, setValue } = require('../services/turso');
 
 const syncController = {
   sync: async (req, res) => {
@@ -6,11 +6,11 @@ const syncController = {
       const { key } = req.params;
       if (req.method === 'POST') {
         const { value } = req.body || {};
-        cloudData.set(key, value);
+        await setValue(key, value);
       }
       const data = {
         key,
-        value: cloudData.has(key) ? cloudData.get(key) : null,
+        value: await getValue(key),
         timestamp: new Date().toISOString(),
         synced: true
       };
