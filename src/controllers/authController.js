@@ -8,7 +8,7 @@ const authController = {
       if (!username || !password) {
         return res.status(400).json({ error: 'Usuário e senha obrigatórios' });
       }
-      if (username === 'admin' && password === 'admin') {
+      if (username === config.authUsername && password === config.authPassword) {
         const token = jwt.sign({ username, role: 'admin' }, config.jwtSecret, { expiresIn: '7d' });
         return res.json({ token, user: { username, role: 'admin' } });
       }

@@ -27,7 +27,7 @@ app.get('/api/health', (req, res) => {
     status: 'ok',
     version: '7.3.0',
     storage: 'memory',
-    cloudConfigured: Boolean(process.env.DATABASE_URL),
+    cloudConfigured: Boolean(process.env.TURSO_URL && process.env.TURSO_TOKEN),
     timestamp: new Date().toISOString()
   });
 });

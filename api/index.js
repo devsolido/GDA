@@ -16,7 +16,7 @@ app.get('/api/health', (req, res) => res.json({
 	status: 'ok',
 	version: '7.3.0',
 	storage: 'memory',
-	cloudConfigured: Boolean(process.env.DATABASE_URL)
+	cloudConfigured: Boolean(process.env.TURSO_URL && process.env.TURSO_TOKEN)
 }));
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, '../index.html')));
 app.use('/api/*', (req, res) => res.status(404).json({ error: 'Rota não encontrada' }));
