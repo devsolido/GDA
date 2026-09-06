@@ -5,6 +5,7 @@ const config = require('../src/config');
 const { checkConnection } = require('../src/services/turso');
 const authRoutes = require('../src/routes/authRoutes');
 const syncRoutes = require('../src/routes/syncRoutes');
+const notasRoutes = require('../src/routes/notasRoutes');
 
 const app = express();
 app.set('trust proxy', 1);
@@ -13,6 +14,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, '..')));
 app.use('/api/auth', authRoutes);
 app.use('/api/sync', syncRoutes);
+app.use('/api/notas', notasRoutes);
 app.get('/api/health', async (req, res) => {
 	let cloudConnected = false;
 	try {

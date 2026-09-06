@@ -2749,7 +2749,8 @@
             if (!window.fetch) return fallback;
             try {
                 console.info(`[GDA][SYNC] Buscando ${key} na nuvem...`);
-                const response = await fetch(`/api/sync/${encodeURIComponent(key)}`, {
+                const endpoint = key === 'gda_notas' ? '/api/notas' : `/api/sync/${encodeURIComponent(key)}`;
+                const response = await fetch(endpoint, {
                     headers: authHeaders()
                 });
                 if (!response.ok) {
@@ -2772,7 +2773,8 @@
             if (!window.fetch) return;
             try {
                 console.info(`[GDA][SYNC] Enviando ${key} para a nuvem...`);
-                const response = await fetch(`/api/sync/${encodeURIComponent(key)}`, {
+                const endpoint = key === 'gda_notas' ? '/api/notas' : `/api/sync/${encodeURIComponent(key)}`;
+                const response = await fetch(endpoint, {
                     method: 'POST',
                     headers: authHeaders({ 'Content-Type': 'application/json' }),
                     body: JSON.stringify({ value: data })
