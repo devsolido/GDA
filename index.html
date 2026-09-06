@@ -2883,6 +2883,31 @@
             { cod: 'TICAM0150', nome: 'SOCIOLOGIA', professor: 'MARCELO MELO DOS SANTOS', turma: 'B2371M', horario: '5M56' },
             { cod: 'TICAM0158', nome: 'TÉCNICAS EM EDUCAÇÃO AMBIENTAL', professor: 'DANIELLE IVANA PEREIRA DOS SANTOS', turma: 'B2371M', horario: '4M34' }
         ];
+        const notasTerceiroBimestre = {
+            TICAM0147: '3.00',
+            TICAM0152: '7.50',
+            TICAM0159: '8.60',
+            TICAM0153: '8.00',
+            TICAM0157: '10.00',
+            TICAM0154: '8.30',
+            TICAM0146: '3.00',
+            TICAM0145: '8.00',
+            TICAM0148: '8.00',
+            TICAM0156: '9.30',
+            TICAM0149: '7.10',
+            TICAM0155: '10.00',
+            TICAM0150: '8.50',
+            TICAM0158: '9.00'
+        };
+        let notasAtualizadas = false;
+        Object.entries(notasTerceiroBimestre).forEach(([cod, valor]) => {
+            if (!notas[cod]) notas[cod] = { b1: '', b2: '', b3: '', b4: '' };
+            if (notas[cod].b3 === '' || notas[cod].b3 === undefined || notas[cod].b3 === null) {
+                notas[cod].b3 = valor;
+                notasAtualizadas = true;
+            }
+        });
+        if (notasAtualizadas) saveData('gda_notas', notas);
         const checklistItems = [
             { id: 'linkedin', label: 'Verificar LinkedIn', icon: 'fab fa-linkedin' },
             { id: 'gupy', label: 'Gupy - Vaga Aprendiz Home Office', icon: 'fas fa-briefcase' },
