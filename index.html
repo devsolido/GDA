@@ -3,6 +3,7 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
     <title>GDA - Gestão Digital Agregada</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet" />
@@ -2656,6 +2657,7 @@
         let ocorrencias = normalizarColecao(loadData('gda_ocorrencias', []));
         let presencas = normalizarColecao(loadData('gda_presencas', []));
         let atividades = normalizarColecao(loadData('gda_atividades', []));
+        let frequencias = normalizarColecao(loadData('gda_frequencias', []));
         let notas = normalizarMapa(loadData('gda_notas', {}));
         let relatorios = normalizarColecao(loadData('gda_relatorios', []));
         let checklistState = normalizarMapa(loadData('gda_checklist', {}));
@@ -2788,7 +2790,7 @@
         async function carregarDados(onProgress) {
             const chaves = [
                 'gda_presencas_atrasadas', 'gda_ocorrencias', 'gda_presencas', 'gda_atividades',
-                'gda_notas', 'gda_relatorios', 'gda_checklist', 'gda_historico_panico',
+                'gda_frequencias', 'gda_notas', 'gda_relatorios', 'gda_checklist', 'gda_historico_panico',
                 'gda_atendimentos', 'gda_assuntos'
             ];
             let total = chaves.length;
@@ -2821,6 +2823,7 @@
             ocorrencias = normalizarColecao(loadData('gda_ocorrencias', []));
             presencas = normalizarColecao(loadData('gda_presencas', []));
             atividades = normalizarColecao(loadData('gda_atividades', []));
+            frequencias = normalizarColecao(loadData('gda_frequencias', []));
             notas = normalizarMapa(loadData('gda_notas', {}));
             relatorios = normalizarColecao(loadData('gda_relatorios', []));
             checklistState = normalizarMapa(loadData('gda_checklist', {}));
@@ -2837,6 +2840,7 @@
                 'gda_ocorrencias': () => ocorrencias = normalizarColecao(valor),
                 'gda_presencas': () => presencas = normalizarColecao(valor),
                 'gda_atividades': () => atividades = normalizarColecao(valor),
+                'gda_frequencias': () => frequencias = normalizarColecao(valor),
                 'gda_notas': () => notas = normalizarMapa(valor),
                 'gda_relatorios': () => relatorios = normalizarColecao(valor),
                 'gda_checklist': () => checklistState = normalizarMapa(valor),
@@ -3178,13 +3182,17 @@
         function renderTurmas() {
             const tbody = document.getElementById('turmasTableBody');
             if (!tbody) return;
-            tbody.innerHTML = turmas.map(t => `<tr>
+            tbody.innerHTML = turmas.map(t => {
+                const frequencia = frequencias.find(item => item.codigo === t.cod);
+                const resumo = frequencia ? `<br><small style="color:var(--color-accent);">📊 ${frequencia.presencas} presenças · ${frequencia.faltas} faltas · ${frequencia.percentual}%</small>` : '';
+                return `<tr>
                 <td class="cod" data-label="Cód.">${t.cod}</td>
-                <td data-label="Componente / Docente"><strong>${t.nome}</strong><br><span class="prof">${t.professor}</span></td>
+                <td data-label="Componente / Docente"><strong>${t.nome}</strong>${resumo}<br><span class="prof">${t.professor}</span></td>
                 <td class="turma" data-label="Turma">${t.turma}</td>
                 <td data-label="Status"><span class="status"><i class="fas fa-check-circle"></i> Matriculado</span></td>
                 <td class="horario" data-label="Horário">${t.horario}</td>
-            </tr>`).join('');
+            </tr>`;
+            }).join('');
             const searchInput = document.getElementById('searchTurma');
             if (searchInput) {
                 searchInput.addEventListener('input', function() {
