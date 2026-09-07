@@ -114,7 +114,11 @@
         .splash-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: var(--color-primary);
+            background-color: var(--color-primary);
+            background-image: linear-gradient(90deg, rgba(11, 15, 21, 0.98) 0%, rgba(11, 15, 21, 0.82) 42%, rgba(11, 15, 21, 0.42) 100%), url('/FUNDO.webp');
+            background-position: center, right center;
+            background-repeat: no-repeat;
+            background-size: cover, min(72vw, 900px) auto;
             z-index: 9999;
             display: flex;
             align-items: center;
@@ -135,6 +139,17 @@
             border: 1px solid var(--color-border);
             box-shadow: var(--shadow);
             animation: fadeInUp 0.6s ease;
+        }
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
         }
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(30px) scale(0.95); }
@@ -2297,6 +2312,7 @@
 </head>
 <body>
     <div class="splash-overlay" id="splashOverlay">
+        <span class="visually-hidden">Imagem de fundo fornecida pelo usuário.</span>
         <div class="splash-content">
             <div class="logo-icon">GDA</div>
             <h1>GDA<span>.</span></h1>
