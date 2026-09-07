@@ -56,6 +56,61 @@
             cursor: pointer;
         }
         input, select, textarea { font-size: 16px !important; }
+        button, select, input, textarea {
+            font-family: 'Inter', sans-serif;
+        }
+        button {
+            color: var(--color-text);
+            background: linear-gradient(135deg, rgba(255, 179, 0, 0.16), rgba(245, 127, 23, 0.08));
+            border: 1px solid rgba(255, 179, 0, 0.32);
+            border-radius: 8px;
+            min-height: 36px;
+            padding: 7px 14px;
+            font-weight: 600;
+            transition: background var(--transition), border-color var(--transition), color var(--transition), transform var(--transition), box-shadow var(--transition);
+        }
+        button:hover:not(:disabled) {
+            color: var(--color-accent);
+            background: linear-gradient(135deg, rgba(255, 179, 0, 0.28), rgba(245, 127, 23, 0.16));
+            border-color: rgba(255, 179, 0, 0.65);
+            box-shadow: 0 4px 16px rgba(255, 179, 0, 0.12);
+        }
+        button:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+        button:active:not(:disabled) { transform: translateY(1px); }
+        button:disabled { opacity: 0.48; cursor: not-allowed; filter: saturate(0.45); }
+        select {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 100%;
+            min-height: 38px;
+            padding: 8px 36px 8px 12px;
+            color: var(--color-text);
+            background-color: var(--color-secondary);
+            background-image: linear-gradient(45deg, transparent 50%, var(--color-accent) 50%), linear-gradient(135deg, var(--color-accent) 50%, transparent 50%);
+            background-position: calc(100% - 17px) 16px, calc(100% - 12px) 16px;
+            background-size: 5px 5px, 5px 5px;
+            background-repeat: no-repeat;
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color var(--transition), border-color var(--transition), box-shadow var(--transition);
+        }
+        select:hover { border-color: rgba(255, 179, 0, 0.55); background-color: var(--color-card); }
+        select:focus { border-color: var(--color-accent); box-shadow: 0 0 0 3px rgba(255, 179, 0, 0.12); }
+        select:disabled { opacity: 0.5; cursor: not-allowed; }
+        select option { color: var(--color-text); background: var(--color-secondary); }
+        input, textarea {
+            color: var(--color-text);
+            background: rgba(255, 255, 255, 0.045);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+        }
+        input:hover, textarea:hover { border-color: rgba(255, 179, 0, 0.35); }
+        input:focus, textarea:focus { border-color: var(--color-accent); box-shadow: 0 0 0 3px rgba(255, 179, 0, 0.1); outline: none; }
+        input::placeholder, textarea::placeholder { color: var(--color-text-muted); }
         .splash-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -497,6 +552,9 @@
             font-family: 'Inter', sans-serif;
             min-height: 36px;
         }
+        .presenca-buttons button:hover { background: rgba(255, 255, 255, 0.08); color: var(--color-text); }
+        .presenca-buttons .btn-presenca:hover { background: rgba(76, 175, 80, 0.2); border-color: var(--color-success); color: var(--color-success); }
+        .presenca-buttons .btn-falta:hover { background: rgba(229, 57, 53, 0.2); border-color: var(--color-danger); color: var(--color-danger); }
         .presenca-buttons .btn-presenca:active { background: rgba(76, 175, 80, 0.15); border-color: var(--color-success); color: var(--color-success); }
         .presenca-buttons .btn-falta:active { background: rgba(229, 57, 53, 0.15); border-color: var(--color-danger); color: var(--color-danger); }
         #statusPresencaDisplay { font-size: 9px; color: var(--color-text-muted); text-align: center; margin-top: 2px; width: 100%; }
@@ -1094,10 +1152,12 @@
             font-family: 'Inter', sans-serif;
             transition: var(--transition);
             border: 1px solid var(--color-border);
-            background: rgba(255, 255, 255, 0.02);
+            background: rgba(255, 179, 0, 0.08);
             color: var(--color-text-muted);
             min-height: 32px;
         }
+        .atividade-card .acoes button:hover { background: rgba(255, 179, 0, 0.18); border-color: rgba(255, 179, 0, 0.55); color: var(--color-accent); }
+        .atividade-card .acoes .btn-delete:hover { background: rgba(229, 57, 53, 0.16); border-color: var(--color-danger); color: var(--color-danger); }
         .atividade-card .acoes .btn-edit:active { border-color: var(--color-accent); color: var(--color-accent); }
         .atividade-card .acoes .btn-delete:active { border-color: var(--color-danger); color: var(--color-danger); }
         .btn-add-atividade {
@@ -1128,7 +1188,7 @@
             padding: 4px 12px;
             border-radius: 20px;
             border: 1px solid var(--color-border);
-            background: transparent;
+            background: rgba(255, 255, 255, 0.04);
             color: var(--color-text-muted);
             font-size: 10px;
             font-family: 'Inter', sans-serif;
@@ -1136,6 +1196,7 @@
             transition: var(--transition);
             min-height: 32px;
         }
+        .filtros-atividades button:hover { background: rgba(255, 179, 0, 0.16); border-color: rgba(255, 179, 0, 0.5); color: var(--color-accent); }
         .filtros-atividades button:active { background: rgba(255, 255, 255, 0.03); }
         .filtros-atividades button.active {
             background: rgba(255, 179, 0, 0.08);
@@ -1427,10 +1488,12 @@
             cursor: pointer;
             font-family: 'Inter', sans-serif;
             border: 1px solid var(--color-border);
-            background: rgba(255, 255, 255, 0.02);
+            background: rgba(255, 179, 0, 0.08);
             color: var(--color-text-muted);
             min-height: 32px;
         }
+        .atendimento-card .acoes button:hover { background: rgba(255, 179, 0, 0.18); border-color: rgba(255, 179, 0, 0.55); color: var(--color-accent); }
+        .atendimento-card .acoes .btn-delete-atendimento:hover { background: rgba(229, 57, 53, 0.16); border-color: var(--color-danger); color: var(--color-danger); }
         .atendimento-card .acoes .btn-edit:active { border-color: var(--color-accent); color: var(--color-accent); }
         .atendimento-card .acoes .btn-delete:active { border-color: var(--color-danger); color: var(--color-danger); }
         .ocorrencia-card {
@@ -1556,10 +1619,11 @@
             cursor: pointer;
             font-family: 'Inter', sans-serif;
             border: 1px solid var(--color-border);
-            background: rgba(255, 255, 255, 0.02);
+            background: rgba(255, 179, 0, 0.08);
             color: var(--color-text-muted);
             min-height: 32px;
         }
+        .assunto-card .acoes button:hover { background: rgba(229, 57, 53, 0.16); border-color: var(--color-danger); color: var(--color-danger); }
         .assunto-card .acoes .btn-delete:active { border-color: var(--color-danger); color: var(--color-danger); }
         .panico-registro {
             background: rgba(255, 255, 255, 0.02);
@@ -3042,7 +3106,7 @@
                 <div class="page" id="page-atividades">
                     <div class="section-title">
                         <i class="fas fa-tasks"></i> Atividades <span class="badge" id="atividadeBadge">0</span>
-                        <button onclick="openModal()" title="Adicionar atividade" aria-label="Adicionar atividade" style="margin-left:auto;padding:4px 14px;border-radius:30px;border:1px dashed var(--color-border);background:transparent;color:var(--color-text-muted);cursor:pointer;font-family:'Inter',sans-serif;font-size:11px;min-height:36px;"><i class="fas fa-plus"></i> Adicionar atividade</button>
+                        <button onclick="openModal()" title="Adicionar atividade" aria-label="Adicionar atividade" style="margin-left:auto;padding:4px 14px;border-radius:30px;border:1px solid rgba(255,179,0,0.4);background:rgba(255,179,0,0.12);color:var(--color-accent);cursor:pointer;font-family:'Inter',sans-serif;font-size:11px;min-height:36px;"><i class="fas fa-plus"></i> Adicionar atividade</button>
                     </div>
                     <div class="filtros-atividades">
                         <button class="active" data-filtro="todas">📋 Todas</button>
@@ -3072,7 +3136,7 @@
                 <div class="page" id="page-atendimentos">
                     <div class="section-title">
                         <i class="fas fa-handshake"></i> Participações em Atendimento
-                        <button onclick="openModalAtendimento()" style="margin-left:auto;padding:4px 14px;border-radius:30px;border:1px dashed var(--color-border);background:transparent;color:var(--color-text-muted);cursor:pointer;font-family:'Inter',sans-serif;font-size:11px;min-height:36px;"><i class="fas fa-plus"></i> Novo</button>
+                        <button onclick="openModalAtendimento()" style="margin-left:auto;padding:4px 14px;border-radius:30px;border:1px solid rgba(255,179,0,0.4);background:rgba(255,179,0,0.12);color:var(--color-accent);cursor:pointer;font-family:'Inter',sans-serif;font-size:11px;min-height:36px;"><i class="fas fa-plus"></i> Novo</button>
                     </div>
                     <div class="atendimentos-grid" id="atendimentosContainer"></div>
                 </div>
