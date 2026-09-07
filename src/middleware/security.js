@@ -22,7 +22,10 @@ const security = {
   }),
   
   cors: cors({
-    origin: config.corsOrigin,
+    origin: (origin, callback) => {
+      if (!origin || config.corsOrigins.includes(origin)) return callback(null, true);
+      return callback(new Error('Origem não autorizada'));
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
@@ -32,6 +35,14 @@ const security = {
     windowMs: 15 * 60 * 1000,
     max: 100,
     message: 'Muitas requisições, tente novamente em 15 minutos'
+  }),
+
+  loginRateLimit: rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 10,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: 'Muitas tentativas de login, tente novamente em 15 minutos'
   })
 };
 

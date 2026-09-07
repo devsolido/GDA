@@ -1,21 +1,27 @@
 const express = require('express');
 const path = require('path');
+const security = require('./middleware/security');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Configurações
 app.set('trust proxy', 1);
-app.use(express.json());
+app.use(security.helmet);
+app.use(security.cors);
+app.use(security.rateLimit);
+app.use(express.json({ limit: '256kb' }));
 app.use(express.static(path.join(__dirname, '../')));
 
 // Importar rotas
 const authRoutes = require('./routes/authRoutes');
 const syncRoutes = require('./routes/syncRoutes');
+const notasRoutes = require('./routes/notasRoutes');
 const { checkConnection } = require('./services/turso');
 
 // Registrar rotas da API
 app.use('/api/auth', authRoutes);
 app.use('/api/sync', syncRoutes);
+app.use('/api/notas', notasRoutes);
 
 // Rota principal
 app.get('/', (req, res) => {

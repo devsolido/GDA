@@ -2250,13 +2250,13 @@
                 </div>
                 <div class="progress-message" id="progressMessage">Aguarde! em instantes você poderá gerir sua vida no IFPA</div>
             </div>
-            <div class="auth-fields">
-                <input id="authUsername" type="text" autocomplete="username" placeholder="Usuário" aria-label="Usuário">
-                <input id="authPassword" type="password" autocomplete="current-password" placeholder="Senha" aria-label="Senha">
-            </div>
-            <button class="btn-entrar" id="btnEntrar" disabled>
-                <i class="fas fa-spinner fa-spin"></i> Carregando...
-            </button>
+            <form class="auth-fields" id="authForm">
+                <input id="authUsername" type="text" autocomplete="username" placeholder="Usuário" aria-label="Usuário" required>
+                <input id="authPassword" type="password" autocomplete="current-password" placeholder="Senha" aria-label="Senha" required>
+                <button type="submit" class="btn-entrar" id="btnEntrar" disabled>
+                    <i class="fas fa-spinner fa-spin"></i> Carregando...
+                </button>
+            </form>
             <div class="versao">GDA · Gestão Digital Agregada — UI</div>
         </div>
     </div>
@@ -2733,12 +2733,8 @@
             valor = extrairValorSincronizado(valor);
             return valor && typeof valor === 'object' && !Array.isArray(valor) ? valor : fallback;
         }
-        function getAuthToken() {
-            return localStorage.getItem('gda_auth_token');
-        }
         function authHeaders(headers = {}) {
-            const token = getAuthToken();
-            return token ? { ...headers, Authorization: `Bearer ${token}` } : headers;
+            return headers;
         }
         async function authenticate() {
             const username = document.getElementById('authUsername').value.trim();
@@ -2751,21 +2747,15 @@
             });
             const data = await response.json().catch(() => ({}));
             if (!response.ok) throw new Error(data.error || 'Não foi possível autenticar.');
-            localStorage.setItem('gda_auth_token', data.token);
-            document.getElementById('authPassword').value = '';
-            return data.token;
-        }
-        async function verifyStoredToken() {
-            if (!getAuthToken()) return false;
-            const response = await fetch('/api/auth/verify', { headers: authHeaders({ 'Cache-Control': 'no-cache' }) });
-            if (response.ok) return true;
             localStorage.removeItem('gda_auth_token');
-            return false;
+            document.getElementById('authPassword').value = '';
+            return true;
         }
         async function saveData(key, data) {
             try { localStorage.setItem(key, JSON.stringify(data)); } catch(e) { return false; }
-            try { await syncDataToCloud(key, data); } catch(e) {}
-            return true;
+            const synced = await syncDataToCloud(key, data);
+            if (!synced) mostrarToast('Salvo apenas neste dispositivo. Não foi possível sincronizar com a nuvem.', 'aviso', 5000);
+            return synced;
         }
         async function loadDataFromCloud(key, fallback) {
             if (!window.fetch) return fallback;
@@ -2787,7 +2777,7 @@
             return fallback;
         }
         async function syncDataToCloud(key, data) {
-            if (!window.fetch) return;
+            if (!window.fetch) return false;
             try {
                 const endpoint = key === 'gda_notas' ? '/api/notas' : `/api/sync/${encodeURIComponent(key)}`;
                 const response = await fetch(endpoint, {
@@ -2796,10 +2786,12 @@
                     body: JSON.stringify({ value: data })
                 });
                 if (!response.ok) {
-                    return;
+                    return false;
                 }
                 await response.json();
+                return true;
             } catch (error) {
+                return false;
             }
         }
         async function incorporarFrequenciasImportadas() {
@@ -2837,7 +2829,8 @@
                         localStorage.setItem(chave, JSON.stringify(cloudValue));
                         atualizarVariavel(chave, cloudValue);
                     } else if (localValue !== null && localValue !== undefined) {
-                        await syncDataToCloud(chave, localValue);
+                        const synced = await syncDataToCloud(chave, localValue);
+                        if (!synced) mostrarToast('Alguns dados ficaram apenas neste dispositivo. Verifique sua conexão para sincronizar.', 'aviso', 5000);
                     }
                     concluidas++;
                     if (onProgress) {
@@ -4268,6 +4261,7 @@
         async function init() {
             iniciarContagemRegressiva();
             const btnEntrar = document.getElementById('btnEntrar');
+            const authForm = document.getElementById('authForm');
             const progressFill = document.getElementById('progressFill');
             const progressPercent = document.getElementById('progressPercent');
             const progressStatus = document.getElementById('progressStatus');
@@ -4299,11 +4293,12 @@
             progressMessage.textContent = 'Informe suas credenciais para carregar os dados da nuvem.';
             btnEntrar.disabled = false;
             btnEntrar.innerHTML = '<i class="fas fa-sign-in-alt"></i> Entrar no Sistema';
-            btnEntrar.addEventListener('click', async function() {
+            authForm.addEventListener('submit', async function(event) {
+                event.preventDefault();
                 btnEntrar.disabled = true;
                 progressMessage.textContent = 'Autenticando...';
                 try {
-                    if (!await verifyStoredToken()) await authenticate();
+                    await authenticate();
                     progressStatus.textContent = 'Carregando seus dados...';
                     await carregarDados(function(percent, status) {
                         progressFill.style.width = `${20 + Math.round(percent * 0.8)}%`;

@@ -7,13 +7,14 @@
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
     "test": "jest",
-    "build": "echo 'Build concluído'"
+    "build": "node --check api/index.js && node --check src/index.js && node --check src/middleware/auth.js && node --check src/middleware/security.js && node --check src/controllers/authController.js && node --check src/controllers/notasController.js && node --check src/controllers/syncController.js"
   },
   "dependencies": {
     "@libsql/client": "^0.18.0",
+    "cookie": "^1.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
-    "express": "^4.18.2",
+    "express": "^5.2.1",
     "express-rate-limit": "^6.7.0",
     "helmet": "^7.0.0",
     "jsonwebtoken": "^9.0.0"
