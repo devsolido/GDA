@@ -19,9 +19,7 @@ app.get('/api/health', async (req, res) => {
 	let cloudConnected = false;
 	try {
 		cloudConnected = await checkConnection();
-	} catch (error) {
-		console.error('Health check Turso falhou:', error.message);
-	}
+	} catch (error) {}
 	return res.status(cloudConnected ? 200 : 503).json({
 		status: cloudConnected ? 'ok' : 'degraded',
 		version: '7.3.0',

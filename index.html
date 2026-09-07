@@ -2623,7 +2623,6 @@
     <script>
     (function() {
         'use strict';
-        console.log('🚀 GDA v7.3 - Apenas Igor');
         function iniciarContagemRegressiva() {
             const targetDate = new Date('2026-10-03T07:30:00-03:00').getTime();
             function updateCountdown() {
@@ -2771,31 +2770,25 @@
         async function loadDataFromCloud(key, fallback) {
             if (!window.fetch) return fallback;
             try {
-                console.info(`[GDA][SYNC] Buscando ${key} na nuvem...`);
                 const endpoint = key === 'gda_notas' ? '/api/notas' : `/api/sync/${encodeURIComponent(key)}`;
                 const response = await fetch(endpoint, {
                     headers: authHeaders()
                 });
                 if (!response.ok) {
-                    console.warn(`[GDA][SYNC] Falha ao buscar ${key}. Status: ${response.status}`);
                     return fallback;
                 }
                 const data = extrairValorSincronizado(await response.json());
                 if (data === null || data === undefined) {
-                    console.info(`[GDA][SYNC] ${key} não possui dados na nuvem.`);
                     return fallback;
                 }
-                console.info(`[GDA][SYNC] Dados recebidos da nuvem para ${key}:`, data);
                 return data;
             } catch (error) {
-                console.warn(`[GDA][SYNC] Não foi possível sincronizar ${key} com a nuvem:`, error.message || error);
             }
             return fallback;
         }
         async function syncDataToCloud(key, data) {
             if (!window.fetch) return;
             try {
-                console.info(`[GDA][SYNC] Enviando ${key} para a nuvem...`);
                 const endpoint = key === 'gda_notas' ? '/api/notas' : `/api/sync/${encodeURIComponent(key)}`;
                 const response = await fetch(endpoint, {
                     method: 'POST',
@@ -2803,13 +2796,10 @@
                     body: JSON.stringify({ value: data })
                 });
                 if (!response.ok) {
-                    console.warn(`[GDA][SYNC] Falha ao enviar ${key}. Status: ${response.status}`);
                     return;
                 }
-                const result = await response.json();
-                console.info(`[GDA][SYNC] ${key} sincronizado com sucesso:`, result);
+                await response.json();
             } catch (error) {
-                console.warn(`[GDA][SYNC] Falha ao sincronizar ${key} com a nuvem:`, error.message || error);
             }
         }
         async function incorporarFrequenciasImportadas() {
@@ -2830,7 +2820,6 @@
             if (novosRegistros.length === 0) return;
             presencas = [...presencas, ...novosRegistros];
             await saveData('gda_presencas', presencas);
-            console.info(`[GDA][PRESENÇA] ${novosRegistros.length} frequências importadas.`);
         }
         async function carregarDados(onProgress) {
             const chaves = [
@@ -2856,7 +2845,6 @@
                         onProgress(percent, `Carregando...`);
                     }
                 } catch (error) {
-                    console.warn(`⚠️ Falha ao carregar ${chave}:`, error);
                     concluidas++;
                     if (onProgress) {
                         const percent = Math.round((concluidas / total) * 100);
@@ -3062,7 +3050,7 @@
                 <div class="page" id="page-atividades">
                     <div class="section-title">
                         <i class="fas fa-tasks"></i> Atividades <span class="badge" id="atividadeBadge">0</span>
-                        <button onclick="openModal()" style="margin-left:auto;padding:4px 14px;border-radius:30px;border:1px dashed var(--color-border);background:transparent;color:var(--color-text-muted);cursor:pointer;font-family:'Inter',sans-serif;font-size:11px;min-height:36px;"><i class="fas fa-plus"></i> Nova</button>
+                        <button onclick="openModal()" title="Adicionar atividade" aria-label="Adicionar atividade" style="margin-left:auto;padding:4px 14px;border-radius:30px;border:1px dashed var(--color-border);background:transparent;color:var(--color-text-muted);cursor:pointer;font-family:'Inter',sans-serif;font-size:11px;min-height:36px;"><i class="fas fa-plus"></i> Adicionar atividade</button>
                     </div>
                     <div class="filtros-atividades">
                         <button class="active" data-filtro="todas">📋 Todas</button>
@@ -3138,7 +3126,6 @@
                     <div id="ocorrenciasContainer"></div>
                 </div>
             `;
-            console.log('✅ Páginas renderizadas');
         }
         function verificarDiaSemana() {
             const hoje = new Date();
@@ -3275,7 +3262,6 @@
             
             // Garantir que filtradas seja um array
             if (!Array.isArray(filtradas)) {
-                console.warn('filtradas não é um array, usando []');
                 filtradas = [];
             }
             
@@ -4280,7 +4266,6 @@
             }
         }
         async function init() {
-            console.log('🚀 Inicializando GDA v7.3 (Apenas Igor)...');
             iniciarContagemRegressiva();
             const btnEntrar = document.getElementById('btnEntrar');
             const progressFill = document.getElementById('progressFill');
@@ -4306,12 +4291,9 @@
                 const health = await fetch('/api/health', { headers: { 'Cache-Control': 'no-cache' } });
                 if (health.ok) {
                     const data = await health.json();
-                    console.info('[GDA][CLOUD] Nuvem ON:', data);
                 } else {
-                    console.warn('[GDA][CLOUD] Backend respondeu com erro:', health.status);
                 }
             } catch (error) {
-                console.warn('[GDA][CLOUD] Backend indisponível:', error.message || error);
             }
             atualizarProgresso(100, '✅ Servidor disponível');
             progressMessage.textContent = 'Informe suas credenciais para carregar os dados da nuvem.';
@@ -4356,11 +4338,10 @@
                     const splash = document.getElementById('splashOverlay');
                     if (splash) splash.classList.add('hidden');
                     mostrarToast('👋 Bem-vindo, Igor!', 'sucesso');
-                    console.log('🔓 Acesso liberado para Igor');
                 } catch (error) {
                     btnEntrar.disabled = false;
-                    progressMessage.textContent = error.message || 'Falha ao autenticar.';
-                    mostrarToast(error.message || 'Falha ao autenticar.', 'erro');
+                    progressMessage.textContent = 'Falha ao autenticar. Tente novamente.';
+                    mostrarToast('Falha ao autenticar. Tente novamente.', 'erro');
                 }
             });
             renderizarPaginas();
@@ -4625,8 +4606,6 @@
                     }
                 }
             }
-            console.log('✅ GDA v7.3 inicializado com sucesso!');
-            console.log(`📊 Dados: Atividades: ${atividades.length}, Presenças: ${presencas.length}, Relatórios: ${relatorios.length}, Assuntos: ${Object.keys(assuntos).length}`);
         }
         window.abrirModalPresenca = abrirModalPresenca;
         window.confirmarPresenca = confirmarPresenca;

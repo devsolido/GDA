@@ -16,7 +16,6 @@ const syncController = {
       };
       return res.json({ success: true, data });
     } catch (error) {
-      console.error('Erro na sincronização:', error);
       return res.status(500).json({ error: 'Falha na sincronização' });
     }
   }

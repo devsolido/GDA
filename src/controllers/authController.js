@@ -14,7 +14,6 @@ const authController = {
       }
       return res.status(401).json({ error: 'Credenciais inválidas' });
     } catch (error) {
-      console.error('Erro no login:', error);
       return res.status(500).json({ error: 'Erro interno do servidor' });
     }
   },
