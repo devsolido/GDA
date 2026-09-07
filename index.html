@@ -2304,16 +2304,6 @@
                 Bem-vindo(a)!<br />
                 <strong>Bora sobreviver a mais um semestre?</strong> 💪📚
             </div>
-            <div class="progress-container" id="progressContainer">
-                <div class="progress-label">
-                    <span id="progressStatus">Iniciando...</span>
-                    <span id="progressPercent">0%</span>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progressFill" style="width:0%;"></div>
-                </div>
-                <div class="progress-message" id="progressMessage">Aguarde! em instantes você poderá gerir sua vida no IFPA</div>
-            </div>
             <form class="auth-fields" id="authForm">
                 <input id="authUsername" type="text" autocomplete="username" placeholder="Usuário" aria-label="Usuário" required>
                 <input id="authPassword" type="password" autocomplete="current-password" placeholder="Senha" aria-label="Senha" required>
@@ -4331,26 +4321,7 @@
                     this.parentElement.innerHTML = '<div class="avatar-fallback">IV</div>';
                 });
             }
-            const progressFill = document.getElementById('progressFill');
-            const progressPercent = document.getElementById('progressPercent');
-            const progressStatus = document.getElementById('progressStatus');
-            const progressMessage = document.getElementById('progressMessage');
-            function atualizarProgresso(percent, status) {
-                progressFill.style.width = percent + '%';
-                progressPercent.textContent = percent + '%';
-                if (status) {
-                    progressStatus.textContent = status;
-                }
-                if (percent === 100) {
-                    progressMessage.textContent = '✅ Pronto! Clique em "Entrar" para acessar o sistema.';
-                    btnEntrar.disabled = false;
-                    btnEntrar.innerHTML = '<i class="fas fa-sign-in-alt"></i> Entrar no Sistema';
-                }
-            }
-            atualizarProgresso(0, 'Conectando ao servidor...');
             try {
-                progressStatus.textContent = 'Verificando conexão com a nuvem...';
-                atualizarProgresso(10, 'Verificando conexão...');
                 const health = await fetch('/api/health', { headers: { 'Cache-Control': 'no-cache' } });
                 if (health.ok) {
                     const data = await health.json();
@@ -4358,22 +4329,14 @@
                 }
             } catch (error) {
             }
-            atualizarProgresso(100, '✅ Servidor disponível');
-            progressMessage.textContent = 'Informe suas credenciais para carregar os dados da nuvem.';
             btnEntrar.disabled = false;
             btnEntrar.innerHTML = '<i class="fas fa-sign-in-alt"></i> Entrar no Sistema';
             authForm.addEventListener('submit', async function(event) {
                 event.preventDefault();
                 btnEntrar.disabled = true;
-                progressMessage.textContent = 'Autenticando...';
                 try {
                     await authenticate();
-                    progressStatus.textContent = 'Carregando seus dados...';
-                    await carregarDados(function(percent, status) {
-                        progressFill.style.width = `${20 + Math.round(percent * 0.8)}%`;
-                        progressPercent.textContent = `${20 + Math.round(percent * 0.8)}%`;
-                        progressStatus.textContent = status || 'Carregando...';
-                    });
+                    await carregarDados();
                     presencasAtrasadas = normalizarColecao(loadData('gda_presencas_atrasadas', []));
                     ocorrencias = normalizarColecao(loadData('gda_ocorrencias', []));
                     presencas = normalizarColecao(loadData('gda_presencas', []));
@@ -4404,7 +4367,6 @@
                     mostrarToast('👋 Bem-vindo, Igor!', 'sucesso');
                 } catch (error) {
                     btnEntrar.disabled = false;
-                    progressMessage.textContent = 'Falha ao autenticar. Tente novamente.';
                     mostrarToast('Falha ao autenticar. Tente novamente.', 'erro');
                 }
             });
