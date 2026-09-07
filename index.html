@@ -2368,8 +2368,7 @@
         </div>
         <div class="user-info">
             <div class="avatar">
-                <img src="https://images.iimg.live/images/prime-memory-4768.webp" alt="Igor Veras Morais"
-                onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'avatar-fallback\'>IV</div>'" />
+                <img src="https://images.iimg.live/images/prime-memory-4768.webp" alt="Igor Veras Morais" id="avatarImage" />
             </div>
             <div class="name">Igor Veras Morais</div>
             <div class="role">2º Sem · Controle Ambiental</div>
@@ -4262,6 +4261,12 @@
             iniciarContagemRegressiva();
             const btnEntrar = document.getElementById('btnEntrar');
             const authForm = document.getElementById('authForm');
+            const avatarImage = document.getElementById('avatarImage');
+            if (avatarImage) {
+                avatarImage.addEventListener('error', function() {
+                    this.parentElement.innerHTML = '<div class="avatar-fallback">IV</div>';
+                });
+            }
             const progressFill = document.getElementById('progressFill');
             const progressPercent = document.getElementById('progressPercent');
             const progressStatus = document.getElementById('progressStatus');
