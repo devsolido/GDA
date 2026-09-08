@@ -4,6 +4,13 @@ const config = require('../config');
 let client;
 let schemaPromise;
 
+const sectionKeys = [
+  'gda_presencas_atrasadas', 'gda_ocorrencias', 'gda_presencas', 'gda_atividades',
+  'gda_frequencias', 'gda_relatorios', 'gda_checklist', 'gda_historico_panico',
+  'gda_atendimentos', 'gda_assuntos'
+];
+const mapSectionKeys = new Set(['gda_checklist', 'gda_assuntos']);
+
 function getClient() {
   if (!config.dbUrl || !config.dbToken) return null;
   if (!client) {
@@ -64,6 +71,64 @@ async function deleteValue(key) {
   });
 }
 
+function getSectionTable(key) {
+  if (!sectionKeys.includes(key)) throw new Error('Seção inválida');
+  return key;
+}
+
+async function ensureSectionSchema(key) {
+  const database = getClient();
+  if (!database) throw new Error('Turso não configurado');
+  const table = getSectionTable(key);
+  await database.execute(`
+    CREATE TABLE IF NOT EXISTS ${table} (
+      record_id TEXT PRIMARY KEY NOT NULL,
+      value TEXT NOT NULL,
+      record_order INTEGER NOT NULL DEFAULT 0,
+      updated_at TEXT NOT NULL
+    )
+  `);
+  return database;
+}
+
+function parseRows(key, rows) {
+  if (mapSectionKeys.has(key)) {
+    return Object.fromEntries(rows.map((row) => [row.record_id, JSON.parse(row.value)]));
+  }
+  return rows.map((row) => JSON.parse(row.value));
+}
+
+async function getSectionValue(key) {
+  const database = await ensureSectionSchema(key);
+  const result = await database.execute({
+    sql: 'SELECT record_id, value FROM ' + getSectionTable(key) + ' ORDER BY record_order, record_id',
+    args: []
+  });
+  if (result.rows.length) return parseRows(key, result.rows);
+
+  const legacyValue = await getValue(key);
+  if (legacyValue === null) return null;
+  await setSectionValue(key, legacyValue, false);
+  return legacyValue;
+}
+
+async function setSectionValue(key, value, keepLegacy = true) {
+  const database = await ensureSectionSchema(key);
+  const table = getSectionTable(key);
+  const now = new Date().toISOString();
+  const entries = mapSectionKeys.has(key)
+    ? Object.entries(value || {})
+    : (Array.isArray(value) ? value : []).map((item, index) => [String(item?.id || index + 1), item]);
+  await database.batch([
+    { sql: 'DELETE FROM ' + table, args: [] },
+    ...entries.map(([recordId, recordValue], index) => ({
+      sql: `INSERT INTO ${table} (record_id, value, record_order, updated_at) VALUES (?, ?, ?, ?)`,
+      args: [String(recordId), JSON.stringify(recordValue), index, now]
+    }))
+  ], 'write');
+  if (keepLegacy) await setValue(key, value);
+}
+
 async function ensureNotasSchema() {
   const database = getClient();
   if (!database) throw new Error('Turso não configurado');
@@ -116,8 +181,13 @@ async function setNotas(notas) {
 
 async function checkConnection() {
   const database = await ensureSchema();
+  await Promise.all(sectionKeys.map((key) => ensureSectionSchema(key)));
+  await ensureNotasSchema();
   await database.execute('SELECT 1');
   return true;
 }
 
-module.exports = { checkConnection, getValue, setValue, deleteValue, getNotas, setNotas };
+module.exports = {
+  checkConnection, getValue, setValue, deleteValue, getSectionValue, setSectionValue,
+  getNotas, setNotas
+};

@@ -1,4 +1,4 @@
-const { getValue, setValue } = require('../services/turso');
+const { getSectionValue, setSectionValue } = require('../services/turso');
 
 const allowedKeys = new Set([
   'gda_presencas_atrasadas', 'gda_ocorrencias', 'gda_presencas', 'gda_atividades',
@@ -16,11 +16,11 @@ const syncController = {
         if (value === undefined || value === null || typeof value !== 'object') {
           return res.status(400).json({ error: 'Dados inválidos' });
         }
-        await setValue(key, value);
+        await setSectionValue(key, value);
       }
       const data = {
         key,
-        value: await getValue(key),
+        value: await getSectionValue(key),
         timestamp: new Date().toISOString(),
         synced: true
       };

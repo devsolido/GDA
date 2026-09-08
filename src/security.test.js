@@ -5,6 +5,8 @@ process.env.GDA_AUTH_PASSWORD = 'test-password';
 jest.mock('./services/turso', () => ({
   getValue: jest.fn(async () => []),
   setValue: jest.fn(async () => undefined),
+  getSectionValue: jest.fn(async () => []),
+  setSectionValue: jest.fn(async () => undefined),
   getNotas: jest.fn(async () => ({})),
   setNotas: jest.fn(async () => undefined)
 }));
