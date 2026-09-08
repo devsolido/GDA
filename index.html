@@ -3028,7 +3028,7 @@
                             <div class="date-info">
                                 <span class="date-day" id="currentDay">${getDiaSemanaLocal()}</span>
                                 <span class="date-full" id="currentDate">${new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })}</span>
-                                <span class="aulas-hoje">📚 <strong id="aulasHoje">0</strong> aulas hoje</span>
+                                <span class="aulas-hoje">📚 <strong id="aulasHoje">6</strong> <span id="aulasHojeLabel">aulas por dia</span></span>
                             </div>
                         </div>
                         <div class="clock-hero">
@@ -4194,13 +4194,11 @@
             if (elDay) elDay.textContent = diasSemana[hoje.getDay()];
             if (elDate) elDate.textContent = `${hoje.getDate()} de ${meses[hoje.getMonth()]} de ${hoje.getFullYear()}`;
             const diaSemana = hoje.getDay();
-            const aulasHoje = turmas.filter(t => {
-                if (diaSemana === 0 || diaSemana === 6) return false;
-                const diaMap = {2:'2',3:'3',4:'4',5:'5',1:'1'};
-                return t.horario.includes(diaMap[diaSemana] || '');
-            }).length;
+            const fimDeSemana = diaSemana === 0 || diaSemana === 6;
             const elAulas = document.getElementById('aulasHoje');
-            if (elAulas) elAulas.textContent = aulasHoje;
+            const elAulasLabel = document.getElementById('aulasHojeLabel');
+            if (elAulas) elAulas.textContent = fimDeSemana ? '0' : '6';
+            if (elAulasLabel) elAulasLabel.textContent = fimDeSemana ? 'aulas no fim de semana' : 'aulas por dia';
             updateClockDisplay();
             atualizarStatusPresenca();
             const total = checklistItems.length;
