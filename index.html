@@ -115,10 +115,10 @@
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
             background-color: var(--color-primary);
-            background-image: linear-gradient(90deg, rgba(11, 15, 21, 0.98) 0%, rgba(11, 15, 21, 0.82) 42%, rgba(11, 15, 21, 0.42) 100%), url('/FUNDO.webp');
+            background-image: linear-gradient(90deg, rgba(11, 15, 21, 0.98) 0%, rgba(11, 15, 21, 0.88) 34%, rgba(11, 15, 21, 0.48) 100%), url('/FUNDO.webp');
             background-position: center, right center;
             background-repeat: no-repeat;
-            background-size: cover, min(72vw, 900px) auto;
+            background-size: cover, min(78vw, 980px) auto;
             z-index: 9999;
             display: flex;
             align-items: center;
@@ -2261,6 +2261,11 @@
             .table-search input { font-size: 13px; min-height: 32px; }
         }
         @media (max-width: 480px) {
+            .splash-overlay {
+                background-image: linear-gradient(180deg, rgba(11, 15, 21, 0.7) 0%, rgba(11, 15, 21, 0.96) 58%), url('/FUNDO.webp');
+                background-position: center, center bottom;
+                background-size: cover, 115vw auto;
+            }
             .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 4px; }
             .stat-card { padding: 6px 4px; }
             .stat-card .number { font-size: 14px; }
