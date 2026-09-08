@@ -183,6 +183,7 @@ async function checkConnection() {
   const database = await ensureSchema();
   await Promise.all(sectionKeys.map((key) => ensureSectionSchema(key)));
   await ensureNotasSchema();
+  await Promise.all(sectionKeys.map((key) => getSectionValue(key)));
   await database.execute('SELECT 1');
   return true;
 }
