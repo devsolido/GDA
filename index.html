@@ -3754,9 +3754,8 @@
             }
         }
         function confirmarPresenca() {
-            const hoje = new Date();
             const dataStr = getDataLocal();
-            const horaStr = getHoraLocal();
+            const horaStr = '00:00';
             if (verificarRegistroHoje()) {
                 mostrarToast('⚠️ Você já tem um registro de presença para hoje!', 'aviso');
                 fecharModalPresenca();
