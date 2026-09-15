@@ -2454,16 +2454,6 @@
             📋<h3>Ocorrências</h3>
             <span class="badge-link" id="ocorrenciasBadge">0</span>
         </a>
-        <div class="nav-label" style="margin-top:4px;">Pânico</div>
-        <a href="#" id="btnPanico" style="border-left: 3px solid var(--color-panico);">
-            🆘
-            <h3 style="color:var(--color-panico);">Botão do Pânico</h3>
-        </a>
-        <a href="#" data-page="historicopanico" id="navHistoricoPanico">
-            📜
-            <h3>Histórico</h3>
-            <span class="badge-link danger" id="panicoBadge">0</span>
-        </a>
         <div class="nav-label" style="margin-top:4px;">Sistemas</div>
         <a href="#" id="sistemasToggle" style="cursor:pointer;">
             📱<h3>Sistemas</h3><span class="badge-link">4</span>
@@ -2488,7 +2478,7 @@
         </div>
         <div class="user-info">
             <div class="avatar">
-                <img src="https://images.iimg.live/images/prime-memory-4768.webp" alt="Igor Veras Morais" id="avatarImage" />
+                <div class="avatar-fallback">IV</div>
             </div>
             <div class="name">Igor Veras Morais</div>
             <div class="role">2º Sem · Controle Ambiental</div>
@@ -2688,61 +2678,6 @@
             </div>
         </div>
     </div>
-    <div class="panico-overlay" id="panicoOverlay">
-        <div class="panico-container">
-            <div class="panico-header">
-                <div class="panico-icone">🚨🚨🚨</div>
-                <div class="panico-titulo">Modo Pânico</div>
-                <div class="panico-status">⚠️ ATIVADO</div>
-            </div>
-            <div class="panico-calma">
-                <div class="panico-frase-principal" id="panicoFrasePrincipal">Respire fundo. Você vai ficar bem.</div>
-                <div class="panico-subfrase">Estamos aqui para te apoiar. 🤝</div>
-            </div>
-            <hr class="panico-divider" />
-            <div class="panico-respiracao">
-                <h2>🌬️ Respiração Guiada</h2>
-                <div class="respiracao-circulo">
-                    <div class="circulo" id="circuloRespirar"></div>
-                    <div class="respiracao-texto">
-                        <span class="frase" id="respirarFrase">INSPIRE</span>
-                        <span class="timer" id="respirarTimer">4</span>
-                    </div>
-                </div>
-                <button class="btn-respirar" id="btnIniciarRespirar">Iniciar Respiração</button>
-            </div>
-            <div class="panico-motivacao">
-                <div class="frase" id="motivacaoFrase">"Você já superou desafios maiores. Isso também vai passar."</div>
-                <div class="autor" id="motivacaoAutor">— Desconhecido</div>
-                <button class="btn-nova-frase" id="btnNovaFrasePanico"><i class="fas fa-sync"></i> Nova Frase</button>
-            </div>
-            <hr class="panico-divider" />
-            <div class="panico-relato">
-                <h2>📝 Relato do que aconteceu</h2>
-                <div class="relato-disciplina">
-                    <label>Disciplina (opcional)</label>
-                    <select id="panicoDisciplina"><option value="">Selecione...</option></select>
-                </div>
-                <div class="relato-motivo">
-                    <label>Descreva o que aconteceu</label>
-                    <textarea id="panicoMotivo" placeholder="Descreva o ocorrido (opcional)..." rows="3"></textarea>
-                </div>
-                <div class="relato-data">
-                    <span>📅 <span id="panicoData">--</span></span>
-                    <span>⏰ <span id="panicoHora">--</span></span>
-                </div>
-                <div class="relato-acoes">
-                    <button class="btn-registrar" id="btnRegistrarPanico"><i class="fas fa-save"></i> Registrar Relato</button>
-                    <button class="btn-sair-panico" id="btnSairPanico"><i class="fas fa-door-open"></i> Sair do Modo Pânico</button>
-                </div>
-            </div>
-            <div class="panico-recursos">
-                <button onclick="window.open('https://cvv.org.br/','_blank')" class="primary-rec"><i class="fas fa-phone"></i> CVV 188</button>
-                <button onclick="window.open('https://www.youtube.com/results?search_query=musica+relaxante','_blank')"><i class="fas fa-music"></i> Música Relaxante</button>
-                <button onclick="window.open('https://www.youtube.com/results?search_query=meditacao+guiada+ansiedade','_blank')"><i class="fas fa-brain"></i> Meditação</button>
-            </div>
-        </div>
-    </div>
     <script>
     (function() {
         'use strict';
@@ -2783,7 +2718,6 @@
         let notas = normalizarMapa(loadData('gda_notas', {}));
         let relatorios = normalizarColecao(loadData('gda_relatorios', []));
         let checklistState = normalizarMapa(loadData('gda_checklist', {}));
-        let historicoPanico = normalizarColecao(loadData('gda_historico_panico', []));
         let atendimentos = normalizarColecao(loadData('gda_atendimentos', []));
         let assuntos = normalizarMapa(loadData('gda_assuntos', {}));
         let avaliacoes = normalizarColecao(loadData('gda_avaliacoes', []));
@@ -2815,11 +2749,8 @@
         let subtarefasTemp = [];
         let editandoId = null;
         let editandoAtendimentoId = null;
-        let respiracaoAtiva = false;
-        let respiracaoInterval = null;
         let tipoPresencaAtual = 'presente';
         let filtroAtividadesAtual = 'todas';
-        let timeoutRespirar = null;
         let toastBoasVindasExibido = false;
         function getDataLocal() {
             const hoje = new Date();
@@ -2941,7 +2872,7 @@
         async function carregarDados(onProgress) {
             const chaves = [
                 'gda_presencas_atrasadas', 'gda_ocorrencias', 'gda_presencas', 'gda_atividades',
-                'gda_frequencias', 'gda_notas', 'gda_relatorios', 'gda_checklist', 'gda_historico_panico',
+                'gda_frequencias', 'gda_notas', 'gda_relatorios', 'gda_checklist',
                 'gda_atendimentos', 'gda_assuntos', 'gda_avaliacoes'
             ];
             let total = chaves.length;
@@ -2979,7 +2910,6 @@
             notas = normalizarMapa(loadData('gda_notas', {}));
             relatorios = normalizarColecao(loadData('gda_relatorios', []));
             checklistState = normalizarMapa(loadData('gda_checklist', {}));
-            historicoPanico = normalizarColecao(loadData('gda_historico_panico', []));
             atendimentos = normalizarColecao(loadData('gda_atendimentos', []));
             assuntos = normalizarMapa(loadData('gda_assuntos', {}));
             avaliacoes = normalizarColecao(loadData('gda_avaliacoes', []));
@@ -2997,7 +2927,6 @@
                 'gda_notas': () => notas = normalizarMapa(valor),
                 'gda_relatorios': () => relatorios = normalizarColecao(valor),
                 'gda_checklist': () => checklistState = normalizarMapa(valor),
-                'gda_historico_panico': () => historicoPanico = normalizarColecao(valor),
                 'gda_atendimentos': () => atendimentos = normalizarColecao(valor),
                 'gda_assuntos': () => assuntos = normalizarMapa(valor),
                 'gda_avaliacoes': () => avaliacoes = normalizarColecao(valor)
@@ -3045,16 +2974,6 @@
             { id: 'calendario', label: 'Verificar calendário e compromissos', icon: 'fas fa-calendar-alt' },
             { id: 'intercambios', label: 'Intercâmbios - Oportunidades', icon: 'fas fa-globe-americas' },
             { id: 'ingles', label: 'Estudar Inglês (30 min)', icon: 'fas fa-language' }
-        ];
-        const frasesMotivacionais = [
-            { frase: '"Você já superou desafios maiores. Isso também vai passar."', autor: 'Desconhecido' },
-            { frase: '"Não precisa resolver tudo agora. Um passo de cada vez."', autor: 'Desconhecido' },
-            { frase: '"Você não está sozinho(a). Peça ajuda quando precisar."', autor: 'Desconhecido' },
-            { frase: '"Errar faz parte. O importante é aprender e seguir em frente."', autor: 'Desconhecido' },
-            { frase: '"Cada dificuldade é uma oportunidade para crescer."', autor: 'Desconhecido' },
-            { frase: '"Respire. Você é capaz de superar isso."', autor: 'Desconhecido' },
-            { frase: '"Acalme sua mente e foque no que você pode fazer agora."', autor: 'Desconhecido' },
-            { frase: '"Você tem tudo o que precisa para resolver isso."', autor: 'Desconhecido' }
         ];
         const frasesTelaInicial = [
             { frase: '"Acredite em si mesmo e todo o resto virá naturalmente."', autor: 'The Rock' },
@@ -3246,10 +3165,6 @@
                         </form>
                     </div>
                     <div id="assuntosContainer" class="assuntos-grid"></div>
-                </div>
-                <div class="page" id="page-historicopanico">
-                    <div class="section-title"><i class="fas fa-history"></i> Histórico do Pânico <span class="badge" id="historicoBadge">0</span></div>
-                    <div id="historicoPanicoContainer"></div>
                 </div>
                 <div class="page" id="page-ocorrencias">
                     <div class="section-title">
@@ -3682,28 +3597,6 @@
             const badge = document.getElementById('assuntosTotalBadge');
             if (badge) badge.textContent = total;
             atualizarBadgeAssuntos();
-        }
-        function renderHistoricoPanico() {
-            const container = document.getElementById('historicoPanicoContainer');
-            if (!container) return;
-            if (historicoPanico.length === 0) {
-                container.innerHTML = `<div class="empty-state" style="text-align:center;padding:20px 12px;color:var(--color-text-muted);font-size:12px;border:1px dashed var(--color-border);border-radius:10px;"><i class="fas fa-inbox" style="font-size:24px;display:block;margin-bottom:8px;opacity:0.3;"></i>Nenhum registro de pânico ainda.</div>`;
-                return;
-            }
-            const sorted = [...historicoPanico].sort((a,b) => b.id.localeCompare(a.id));
-            container.innerHTML = sorted.map(r => `<div class="panico-registro" data-id="${r.id}">
-                <div class="header"><span class="disciplina">📚 ${escapeHtml(r.disciplina)}</span><span class="data-hora">${r.data} · ${r.hora}</span><span class="status ${r.resolvido ? 'resolvido' : 'pendente'}">${r.resolvido ? '✅ Resolvido' : '⏳ Pendente'}</span></div>
-                <div class="motivo">${escapeHtml(r.motivo)}</div>
-                <div style="margin-top:4px;display:flex;gap:4px;flex-wrap:wrap;">
-                    <button class="btn-resolver-panico" data-id="${r.id}" style="padding:3px 12px;border-radius:10px;border:1px solid var(--color-success);background:rgba(76,175,80,0.08);color:var(--color-success);cursor:pointer;font-size:9px;font-family:'Inter',sans-serif;min-height:28px;">${r.resolvido ? '🔄 Desmarcar' : '✅ Marcar como resolvido'}</button>
-                    <button class="btn-deletar-panico" data-id="${r.id}" style="padding:3px 12px;border-radius:10px;border:1px solid var(--color-danger);background:rgba(229,57,53,0.08);color:var(--color-danger);cursor:pointer;font-size:9px;font-family:'Inter',sans-serif;min-height:28px;">🗑️ Remover</button>
-                </div>
-            </div>`).join('');
-            document.querySelectorAll('.btn-resolver-panico').forEach(btn => btn.addEventListener('click', function() { marcarPanicoResolvido(this.dataset.id); }));
-            document.querySelectorAll('.btn-deletar-panico').forEach(btn => btn.addEventListener('click', function() { deletarRegistroPanico(this.dataset.id); }));
-            const badge = document.getElementById('historicoBadge');
-            if (badge) badge.textContent = historicoPanico.length;
-            atualizarBadgePanico();
         }
         function abrirModalAtrasado() {
             const modal = document.getElementById('modalAtrasadoOverlay');
@@ -4162,143 +4055,6 @@
                 badge.style.display = total > 0 ? 'inline-block' : 'none';
             }
         }
-        function abrirPanico() {
-            document.getElementById('panicoOverlay').classList.add('open');
-            document.body.style.overflow = 'hidden';
-            const agora = new Date();
-            document.getElementById('panicoData').textContent = agora.toLocaleDateString('pt-BR');
-            document.getElementById('panicoHora').textContent = agora.toLocaleTimeString('pt-BR');
-            const select = document.getElementById('panicoDisciplina');
-            select.innerHTML = '<option value="">Selecione...</option>' + turmas.map(t => `<option value="${t.nome}">${t.nome}</option>`).join('');
-            const circulo = document.getElementById('circuloRespirar');
-            circulo.className = 'circulo';
-            document.getElementById('respirarFrase').textContent = 'INSPIRE';
-            document.getElementById('respirarTimer').textContent = '4';
-            const random = frasesMotivacionais[Math.floor(Math.random() * frasesMotivacionais.length)];
-            document.getElementById('motivacaoFrase').textContent = random.frase;
-            document.getElementById('motivacaoAutor').textContent = `— ${random.autor}`;
-            document.getElementById('btnIniciarRespirar').textContent = 'Iniciar Respiração';
-            document.getElementById('btnIniciarRespirar').onclick = iniciarRespiração;
-            respiracaoAtiva = false;
-            if (respiracaoInterval) { clearInterval(respiracaoInterval); respiracaoInterval = null; }
-            if (timeoutRespirar) { clearTimeout(timeoutRespirar); timeoutRespirar = null; }
-        }
-        function sairPanico() {
-            document.getElementById('panicoOverlay').classList.remove('open');
-            document.body.style.overflow = '';
-            if (respiracaoInterval) { clearInterval(respiracaoInterval); respiracaoInterval = null; }
-            if (timeoutRespirar) { clearTimeout(timeoutRespirar); timeoutRespirar = null; }
-            respiracaoAtiva = false;
-            atualizarBadgePanico();
-        }
-        function iniciarRespiração() {
-            if (respiracaoAtiva) return;
-            respiracaoAtiva = true;
-            const btn = document.getElementById('btnIniciarRespirar');
-            btn.textContent = '⏳ Respirando...';
-            btn.disabled = true;
-            const circulo = document.getElementById('circuloRespirar');
-            const fraseEl = document.getElementById('respirarFrase');
-            const timerEl = document.getElementById('respirarTimer');
-            const fases = [
-                { frase: 'INSPIRE', duracao: 4, classe: 'inspirar' },
-                { frase: 'SEGURE', duracao: 4, classe: '' },
-                { frase: 'EXPIRE', duracao: 4, classe: 'expirar' },
-                { frase: 'SEGURE', duracao: 4, classe: '' }
-            ];
-            let faseAtual = 0, contador = fases[faseAtual].duracao;
-            function atualizarFase() {
-                const fase = fases[faseAtual];
-                fraseEl.textContent = fase.frase;
-                timerEl.textContent = contador;
-                circulo.className = 'circulo' + (fase.classe ? ' ' + fase.classe : '');
-            }
-            function proximoPasso() {
-                if (!respiracaoAtiva) return;
-                contador--;
-                if (contador < 0) {
-                    faseAtual = (faseAtual + 1) % fases.length;
-                    contador = fases[faseAtual].duracao;
-                    atualizarFase();
-                    if (faseAtual === 0) { ciclosCompletos++; if (ciclosCompletos >= 3) { finalizarRespiração(); return; } }
-                    timeoutRespirar = setTimeout(proximoPasso, 1000);
-                    return;
-                }
-                timerEl.textContent = contador;
-                timerEl.style.transform = 'scale(1.2)';
-                setTimeout(() => { timerEl.style.transform = 'scale(1)'; }, 200);
-                timeoutRespirar = setTimeout(proximoPasso, 1000);
-            }
-            let ciclosCompletos = 0;
-            function finalizarRespiração() {
-                respiracaoAtiva = false;
-                btn.textContent = '🔄 Repetir Respiração';
-                btn.disabled = false;
-                btn.onclick = function() {
-                    faseAtual = 0; contador = fases[0].duracao; ciclosCompletos = 0;
-                    respiracaoAtiva = false;
-                    if (respiracaoInterval) { clearInterval(respiracaoInterval); respiracaoInterval = null; }
-                    if (timeoutRespirar) { clearTimeout(timeoutRespirar); timeoutRespirar = null; }
-                    iniciarRespiração();
-                };
-                fraseEl.textContent = '✅ FINALIZADO';
-                timerEl.textContent = '✨';
-                circulo.className = 'circulo';
-            }
-            atualizarFase();
-            timeoutRespirar = setTimeout(proximoPasso, 1000);
-        }
-        function novaFrasePanico() {
-            const random = frasesMotivacionais[Math.floor(Math.random() * frasesMotivacionais.length)];
-            document.getElementById('motivacaoFrase').textContent = random.frase;
-            document.getElementById('motivacaoAutor').textContent = `— ${random.autor}`;
-        }
-        function registrarPanico() {
-            const disciplina = document.getElementById('panicoDisciplina').value;
-            const motivo = document.getElementById('panicoMotivo').value.trim();
-            if (!disciplina && !motivo) { mostrarToast('Descreva o aconteceu ou selecione a disciplina.', 'aviso'); return; }
-            const registro = {
-                id: gerarIdLocal(),
-                data: getDataLocal(),
-                hora: getHoraLocal(),
-                disciplina: disciplina || 'Não especificada',
-                motivo: motivo || 'Não informado',
-                resolvido: false,
-                usuario: 'Igor'
-            };
-            historicoPanico.push(registro);
-            saveData('gda_historico_panico', historicoPanico);
-            mostrarToast('✅ Relato registrado! Você não está sozinho(a).', 'sucesso');
-            document.getElementById('panicoDisciplina').value = '';
-            document.getElementById('panicoMotivo').value = '';
-            atualizarBadgePanico();
-            setTimeout(() => sairPanico(), 1500);
-        }
-        function marcarPanicoResolvido(id) {
-            const registro = historicoPanico.find(r => r.id === id);
-            if (registro) {
-                registro.resolvido = !registro.resolvido;
-                saveData('gda_historico_panico', historicoPanico);
-                renderHistoricoPanico();
-                atualizarBadgePanico();
-            }
-        }
-        function deletarRegistroPanico(id) {
-            if (confirm('Remover este registro?')) {
-                historicoPanico = historicoPanico.filter(r => r.id !== id);
-                saveData('gda_historico_panico', historicoPanico);
-                renderHistoricoPanico();
-                atualizarBadgePanico();
-            }
-        }
-        function atualizarBadgePanico() {
-            const badge = document.getElementById('panicoBadge');
-            if (badge) {
-                const pendentes = historicoPanico.filter(r => !r.resolvido).length;
-                badge.textContent = pendentes;
-                badge.style.display = pendentes > 0 ? 'inline-block' : 'none';
-            }
-        }
         function renderTelaInicial() {
             const saudacao = getSaudacao();
             const emoji = getEmojiSaudacao();
@@ -4376,7 +4132,6 @@
                 if (elAuthor) elAuthor.textContent = random.autor;
                 elQuote.dataset.loaded = 'true';
             }
-            atualizarBadgePanico();
             atualizarBadgePresenca();
             atualizarBadgeAssuntos();
         }
@@ -4452,12 +4207,6 @@
             iniciarContagemRegressiva();
             const btnEntrar = document.getElementById('btnEntrar');
             const authForm = document.getElementById('authForm');
-            const avatarImage = document.getElementById('avatarImage');
-            if (avatarImage) {
-                avatarImage.addEventListener('error', function() {
-                    this.parentElement.innerHTML = '<div class="avatar-fallback">IV</div>';
-                });
-            }
             try {
                 const health = await fetch('/api/health', { headers: { 'Cache-Control': 'no-cache' } });
                 if (health.ok) {
@@ -4481,7 +4230,6 @@
                     notas = normalizarMapa(loadData('gda_notas', {}));
                     relatorios = normalizarColecao(loadData('gda_relatorios', []));
                     checklistState = normalizarMapa(loadData('gda_checklist', {}));
-                    historicoPanico = normalizarColecao(loadData('gda_historico_panico', []));
                     atendimentos = normalizarColecao(loadData('gda_atendimentos', []));
                     assuntos = normalizarMapa(loadData('gda_assuntos', {}));
                     avaliacoes = normalizarColecao(loadData('gda_avaliacoes', []));
@@ -4493,12 +4241,10 @@
                     renderRelatorios();
                     renderTelaInicial();
                     renderDashboard();
-                    renderHistoricoPanico();
                     renderAtendimentos();
                     renderPresenca();
                     renderAssuntos();
                     renderOcorrencias();
-                    atualizarBadgePanico();
                     atualizarBadgePresenca();
                     atualizarBadgeAssuntos();
                     const splash = document.getElementById('splashOverlay');
@@ -4525,12 +4271,10 @@
             renderRelatorios();
             renderTelaInicial();
             renderDashboard();
-            renderHistoricoPanico();
             renderAtendimentos();
             renderPresenca();
             renderAssuntos();
             renderOcorrencias();
-            atualizarBadgePanico();
             atualizarBadgePresenca();
             atualizarBadgeAssuntos();
             const btnConfirmarAtrasado = document.getElementById('btnConfirmarAtrasado');
@@ -4695,14 +4439,6 @@
             if (btnPresencaPresenteSidebar) btnPresencaPresenteSidebar.addEventListener('click', () => abrirModalPresenca('presente'));
             const btnPresencaFaltaSidebar = document.getElementById('btnPresencaFaltaSidebar');
             if (btnPresencaFaltaSidebar) btnPresencaFaltaSidebar.addEventListener('click', () => abrirModalPresenca('falta'));
-            const btnPanico = document.getElementById('btnPanico');
-            if (btnPanico) btnPanico.addEventListener('click', (e) => { e.preventDefault(); abrirPanico(); });
-            const btnSairPanico = document.getElementById('btnSairPanico');
-            if (btnSairPanico) btnSairPanico.addEventListener('click', sairPanico);
-            const btnRegistrarPanico = document.getElementById('btnRegistrarPanico');
-            if (btnRegistrarPanico) btnRegistrarPanico.addEventListener('click', registrarPanico);
-            const btnNovaFrasePanico = document.getElementById('btnNovaFrasePanico');
-            if (btnNovaFrasePanico) btnNovaFrasePanico.addEventListener('click', novaFrasePanico);
             const sistemasToggle = document.getElementById('sistemasToggle');
             if (sistemasToggle) {
                 sistemasToggle.addEventListener('click', function(e) {
@@ -4721,8 +4457,6 @@
             if (modalAtrasadoOverlay) modalAtrasadoOverlay.addEventListener('click', function(e) { if (e.target === this) fecharModalAtrasado(); });
             const modalOcorrenciaOverlay = document.getElementById('modalOcorrenciaOverlay');
             if (modalOcorrenciaOverlay) modalOcorrenciaOverlay.addEventListener('click', function(e) { if (e.target === this) fecharModalOcorrencia(); });
-            const panicoOverlay = document.getElementById('panicoOverlay');
-            if (panicoOverlay) panicoOverlay.addEventListener('click', function(e) { if (e.target === this) sairPanico(); });
             const mobileBtn = document.getElementById('mobileMenuBtn');
             const mobileOverlay = document.getElementById('mobileNavOverlay');
             const mobileClose = document.getElementById('mobileNavClose');
@@ -4769,20 +4503,6 @@
                             }
                         });
                     });
-                    const panicoLink = mobileList.querySelector('#btnPanico');
-                    if (panicoLink) {
-                        panicoLink.addEventListener('click', function(e) {
-                            e.preventDefault();
-                            if (typeof abrirPanico === 'function') {
-                                abrirPanico();
-                            }
-                            if (mobileOverlay) {
-                                mobileOverlay.classList.remove('open');
-                                mobileOverlay.setAttribute('aria-hidden', 'true');
-                                document.body.style.overflow = '';
-                            }
-                        });
-                    }
                     const sistemasToggleMobile = mobileList.querySelector('#sistemasToggle');
                     if (sistemasToggleMobile) {
                         sistemasToggleMobile.addEventListener('click', function(e) {
@@ -4817,11 +4537,6 @@
         window.closeModal = closeModal;
         window.openModalAtendimento = openModalAtendimento;
         window.closeModalAtendimento = closeModalAtendimento;
-        window.abrirPanico = abrirPanico;
-        window.sairPanico = sairPanico;
-        window.iniciarRespiração = iniciarRespiração;
-        window.novaFrasePanico = novaFrasePanico;
-        window.registrarPanico = registrarPanico;
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', init);
         } else {
