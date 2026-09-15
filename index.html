@@ -1,8 +1,8 @@
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23f5b700'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-size='36' font-family='Arial' fill='%231b1b1b'%3EG%3C/text%3E%3C/svg%3E" type="image/svg+xml">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
     <title>GDA - Gestão Digital Agregada</title>
@@ -35,7 +35,7 @@
             --bottom-nav-height: 60px;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
+        html { scroll-behavior: smooth; overflow-x: hidden; }
         body {
             font-family: 'Inter', sans-serif;
             background: var(--color-primary);
@@ -2208,12 +2208,17 @@
             .container { margin-left: 60px; padding: 10px 12px; max-width: calc(100% - 60px); }
         }
         @media (max-width: 768px) {
-            body { padding-top: var(--header-height); padding-bottom: calc(var(--bottom-nav-height) + 8px); }
+            body {
+                padding-top: var(--header-height);
+                padding-bottom: calc(var(--bottom-nav-height) + 8px);
+                overflow-x: hidden;
+            }
             .sidebar { display: none !important; }
             .container {
                 margin-left: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
                 padding: 10px 12px;
-                max-width: 100%;
             }
             .bottom-nav { display: block; }
             .app-header .logo h1 { font-size: 14px; }
@@ -2340,7 +2345,7 @@
             .mobile-nav-content { max-width: 260px; padding: 12px 10px; }
             .mobile-nav-list a { font-size: 12px; padding: 8px 10px; min-height: 36px; }
             .mobile-nav-list a .material-icons-sharp { font-size: 18px; }
-            input, select, textarea { font-size: 14px !important; }
+            input, select, textarea { font-size: 16px !important; }
             .modal input, .modal select, .modal textarea { font-size: 14px !important; }
         }
         @media (max-width: 380px) {
