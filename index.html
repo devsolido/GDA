@@ -1594,6 +1594,46 @@
             grid-template-columns: 1fr 1fr;
             gap: 10px;
         }
+        .avaliacoes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 10px;
+        }
+        .avaliacao-card {
+            background: var(--color-card);
+            border-radius: var(--radius);
+            padding: 14px;
+            border: 1px solid var(--color-border);
+            border-left: 3px solid var(--color-accent);
+        }
+        .avaliacao-card .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .avaliacao-card .disciplina { font-size: 14px; font-weight: 700; color: var(--color-text); }
+        .avaliacao-card .data { font-size: 10px; color: var(--color-accent); margin-top: 3px; }
+        .avaliacao-card .duracao { font-size: 10px; color: var(--color-text-muted); margin-bottom: 10px; }
+        .avaliacao-card .cronometro {
+            display: block;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--color-accent);
+            font-size: 25px;
+            font-weight: 700;
+            text-align: center;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 1px;
+        }
+        .avaliacao-card .acoes { display: flex; gap: 6px; flex-wrap: wrap; }
+        .avaliacao-card .acoes button { flex: 1; min-width: 82px; font-size: 10px; min-height: 34px; }
+        .avaliacao-card .acoes .btn-delete-avaliacao { color: var(--color-danger); border-color: rgba(229, 57, 53, 0.35); background: rgba(229, 57, 53, 0.08); }
+        .avaliacao-empty { grid-column: 1 / -1; text-align: center; padding: 24px; color: var(--color-text-muted); border: 1px dashed var(--color-border); border-radius: var(--radius); }
         .assunto-card {
             background: var(--color-card);
             border-radius: var(--radius);
@@ -2184,6 +2224,7 @@
             .presenca-grid { grid-template-columns: 1fr; }
             .atendimentos-grid { grid-template-columns: 1fr; }
             .assuntos-grid { grid-template-columns: 1fr; }
+            .avaliacoes-grid { grid-template-columns: 1fr; }
             .notas-grid { grid-template-columns: 1fr; }
             .checklist-grid { grid-template-columns: 1fr; }
             .progress-container { flex-direction: column; align-items: center; gap: 10px; }
@@ -2391,6 +2432,9 @@
             📈<h3>Notas</h3>
             <span class="badge-link">4 bim</span>
         </a>
+        <a href="#" data-page="avaliacoes" id="navAvaliacoes">
+            🧭<h3>Avaliações</h3>
+        </a>
         <a href="#" data-page="relatorios" id="navRelatorios">
             📄<h3>Relatórios</h3>
         </a>
@@ -2489,6 +2533,10 @@
             <button class="nav-item" data-page="notas">
                 📈
                 Notas
+            </button>
+            <button class="nav-item" data-page="avaliacoes">
+                🧭
+                Avaliações
             </button>
             <button class="nav-item" data-page="checklist">
                 ✅
@@ -2737,6 +2785,8 @@
         let historicoPanico = normalizarColecao(loadData('gda_historico_panico', []));
         let atendimentos = normalizarColecao(loadData('gda_atendimentos', []));
         let assuntos = normalizarMapa(loadData('gda_assuntos', {}));
+        let avaliacoes = normalizarColecao(loadData('gda_avaliacoes', []));
+        let avaliacoesInterval = null;
         const frequenciasImportadas = [
             '2026-01-21','2026-01-22','2026-01-23','2026-01-26','2026-01-27','2026-01-28','2026-01-29','2026-01-30',
             '2026-02-02','2026-02-03','2026-02-04','2026-02-05','2026-02-06','2026-02-09','2026-02-10','2026-02-11',
@@ -2891,7 +2941,7 @@
             const chaves = [
                 'gda_presencas_atrasadas', 'gda_ocorrencias', 'gda_presencas', 'gda_atividades',
                 'gda_frequencias', 'gda_notas', 'gda_relatorios', 'gda_checklist', 'gda_historico_panico',
-                'gda_atendimentos', 'gda_assuntos'
+                'gda_atendimentos', 'gda_assuntos', 'gda_avaliacoes'
             ];
             let total = chaves.length;
             let concluidas = 0;
@@ -2931,6 +2981,7 @@
             historicoPanico = normalizarColecao(loadData('gda_historico_panico', []));
             atendimentos = normalizarColecao(loadData('gda_atendimentos', []));
             assuntos = normalizarMapa(loadData('gda_assuntos', {}));
+            avaliacoes = normalizarColecao(loadData('gda_avaliacoes', []));
             if (onProgress) {
                 onProgress(100, '✅ Pronto!');
             }
@@ -2947,7 +2998,8 @@
                 'gda_checklist': () => checklistState = normalizarMapa(valor),
                 'gda_historico_panico': () => historicoPanico = normalizarColecao(valor),
                 'gda_atendimentos': () => atendimentos = normalizarColecao(valor),
-                'gda_assuntos': () => assuntos = normalizarMapa(valor)
+                'gda_assuntos': () => assuntos = normalizarMapa(valor),
+                'gda_avaliacoes': () => avaliacoes = normalizarColecao(valor)
             };
             if (mapa[chave]) mapa[chave]();
         }
@@ -2970,7 +3022,7 @@
         function getEmojiSaudacao() { const h = new Date().getHours(); if (h < 12) return '🌅'; if (h < 18) return '☀️'; return '🌙'; }
         const turmas = [
             { cod: 'TICAM0147', nome: 'ARTES', professor: 'THAYS ALVES COSTA', turma: 'B2371M', horario: '6M34' },
-            { cod: 'TICAM0151', nome: 'EDUCAÇÃO FÍSICA', professor: 'ANA PAULA SIQUEIRA DA PONTE', turma: 'B2371M', horario: '5T2345', periodo: '2026.2', datas: '03/08/2026 - 18/12/2026' },
+            { cod: 'TICAM0151', nome: 'EDUCAÇÃO FÍSICA', professor: 'ANA PAULA SIQUEIRA DA PONTE', turma: 'B2371M', horario: '5T2345' },
             { cod: 'TICAM0152', nome: 'FILOSOFIA', professor: 'JESSIKA CURTINAZ DA SILVA', turma: 'B2371M', horario: '4M56' },
             { cod: 'TICAM0159', nome: 'FUNDAMENTOS DE SANEAMENTO E SAÚDE PÚBLICA', professor: 'DANIELLE IVANA PEREIRA DOS SANTOS', turma: 'B2371M', horario: '3M34' },
             { cod: 'TICAM0153', nome: 'GEOGRAFIA', professor: 'SILVANA DE SOUSA SILVA', turma: 'B2371M', horario: '5M12' },
@@ -3133,6 +3185,19 @@
                     <div class="section-title"><i class="fas fa-graduation-cap"></i> Módulo de Notas <span class="badge">📊 Média ≥ 7.0 = Aprovado</span></div>
                     <div class="notas-grid" id="notasContainer"></div>
                 </div>
+                <div class="page" id="page-avaliacoes">
+                    <div class="section-title"><i class="fas fa-stopwatch"></i> Avaliações <span class="badge" id="avaliacoesTotalBadge">0</span></div>
+                    <div class="relatorio-section">
+                        <div class="relatorio-header"><h3><i class="fas fa-plus-circle"></i> Nova avaliação</h3><span class="badge">⏱️ Cronômetro individual</span></div>
+                        <form class="relatorio-form" id="avaliacaoForm">
+                            <div><label>📚 Disciplina *</label><select id="formAvaliacaoDisciplina" required><option value="">Selecione uma disciplina</option></select></div>
+                            <div><label>📅 Data da prova *</label><input type="date" id="formAvaliacaoData" required /></div>
+                            <div><label>⏱️ Duração prevista (minutos)</label><input type="number" id="formAvaliacaoDuracao" min="1" max="1440" placeholder="Opcional" /></div>
+                            <div class="form-actions"><button type="submit" class="btn-salvar-relatorio"><i class="fas fa-save"></i> Salvar avaliação</button></div>
+                        </form>
+                    </div>
+                    <div class="avaliacoes-grid" id="avaliacoesContainer"></div>
+                </div>
                 <div class="page" id="page-relatorios">
                     <div class="relatorio-section">
                         <div class="relatorio-header"><h3><i class="fas fa-pen-alt"></i> Relatório Diário de Estudos</h3><span class="badge">📝 Registre seu progresso</span></div>
@@ -3291,7 +3356,7 @@
                 <td data-label="Componente / Docente"><strong>${t.nome}</strong>${resumo}<br><span class="prof">${t.professor}</span></td>
                 <td class="turma" data-label="Turma">${t.turma}</td>
                 <td data-label="Status"><span class="status"><i class="fas fa-check-circle"></i> Matriculado</span></td>
-                <td class="horario" data-label="Horário">${t.horario}${t.periodo ? `<br><small>${t.periodo} · ${t.datas}</small>` : ''}</td>
+                <td class="horario" data-label="Horário">${t.horario}</td>
             </tr>`;
             }).join('');
             const searchInput = document.getElementById('searchTurma');
@@ -3309,6 +3374,80 @@
                     if (countEl) countEl.textContent = `Mostrando ${count} de ${turmas.length}`;
                 });
             }
+        }
+        function formatarCronometro(totalSegundos) {
+            const segundos = Math.max(0, Math.floor(totalSegundos || 0));
+            const horas = Math.floor(segundos / 3600);
+            const minutos = Math.floor((segundos % 3600) / 60);
+            const resto = segundos % 60;
+            return [horas, minutos, resto].map(valor => String(valor).padStart(2, '0')).join(':');
+        }
+        function getSegundosAvaliacao(avaliacao) {
+            let segundos = Number(avaliacao.cronometroSegundos) || 0;
+            if (avaliacao.cronometroAtivo && avaliacao.cronometroIniciadoEm) {
+                segundos += Math.max(0, Math.floor((Date.now() - avaliacao.cronometroIniciadoEm) / 1000));
+            }
+            return segundos;
+        }
+        function formatarDataAvaliacao(data) {
+            if (!data) return 'Data não informada';
+            const [ano, mes, dia] = data.split('-');
+            return `${dia}/${mes}/${ano}`;
+        }
+        function renderAvaliacoes() {
+            const container = document.getElementById('avaliacoesContainer');
+            const badge = document.getElementById('avaliacoesTotalBadge');
+            if (badge) badge.textContent = `${avaliacoes.length}`;
+            if (!container) return;
+            if (avaliacoes.length === 0) {
+                container.innerHTML = '<div class="avaliacao-empty">Nenhuma avaliação cadastrada.</div>';
+                return;
+            }
+            container.innerHTML = avaliacoes
+                .slice()
+                .sort((a, b) => String(a.data).localeCompare(String(b.data)))
+                .map(avaliacao => {
+                    const segundos = getSegundosAvaliacao(avaliacao);
+                    const status = avaliacao.cronometroAtivo ? 'Em andamento' : 'Parado';
+                    const duracao = avaliacao.duracaoMinutos ? `Duração prevista: ${avaliacao.duracaoMinutos} min` : 'Sem duração prevista';
+                    return `<article class="avaliacao-card">
+                        <div class="header"><div><div class="disciplina">📚 ${escapeHtml(avaliacao.disciplina)}</div><div class="data">📅 ${formatarDataAvaliacao(avaliacao.data)}</div></div><span class="badge">${status}</span></div>
+                        <div class="duracao">${duracao}</div>
+                        <span class="cronometro">${formatarCronometro(segundos)}</span>
+                        <div class="acoes">
+                            <button type="button" data-avaliacao-acao="${avaliacao.cronometroAtivo ? 'pausar' : 'iniciar'}" data-avaliacao-id="${avaliacao.id}"><i class="fas fa-${avaliacao.cronometroAtivo ? 'pause' : 'play'}"></i> ${avaliacao.cronometroAtivo ? 'Pausar' : 'Iniciar'}</button>
+                            <button type="button" data-avaliacao-acao="zerar" data-avaliacao-id="${avaliacao.id}"><i class="fas fa-undo"></i> Zerar</button>
+                            <button type="button" class="btn-delete-avaliacao" data-avaliacao-acao="excluir" data-avaliacao-id="${avaliacao.id}"><i class="fas fa-trash"></i> Excluir</button>
+                        </div>
+                    </article>`;
+                }).join('');
+            container.querySelectorAll('[data-avaliacao-acao]').forEach(button => {
+                button.addEventListener('click', () => executarAcaoAvaliacao(button.dataset.avaliacaoAcao, button.dataset.avaliacaoId));
+            });
+        }
+        async function salvarAvaliacoes() {
+            await saveData('gda_avaliacoes', avaliacoes);
+            renderAvaliacoes();
+        }
+        async function executarAcaoAvaliacao(acao, id) {
+            const avaliacao = avaliacoes.find(item => item.id === id);
+            if (!avaliacao) return;
+            if (acao === 'iniciar') {
+                avaliacao.cronometroAtivo = true;
+                avaliacao.cronometroIniciadoEm = Date.now();
+            } else if (acao === 'pausar') {
+                avaliacao.cronometroSegundos = getSegundosAvaliacao(avaliacao);
+                avaliacao.cronometroAtivo = false;
+                avaliacao.cronometroIniciadoEm = null;
+            } else if (acao === 'zerar') {
+                avaliacao.cronometroSegundos = 0;
+                avaliacao.cronometroAtivo = false;
+                avaliacao.cronometroIniciadoEm = null;
+            } else if (acao === 'excluir') {
+                if (!confirm('Excluir esta avaliação?')) return;
+                avaliacoes = avaliacoes.filter(item => item.id !== id);
+            }
+            await salvarAvaliacoes();
         }
         function renderAtividades() {
             const container = document.getElementById('atividadesContainer');
@@ -4366,10 +4505,12 @@
                     historicoPanico = normalizarColecao(loadData('gda_historico_panico', []));
                     atendimentos = normalizarColecao(loadData('gda_atendimentos', []));
                     assuntos = normalizarMapa(loadData('gda_assuntos', {}));
+                    avaliacoes = normalizarColecao(loadData('gda_avaliacoes', []));
                     renderChecklist();
                     renderTurmas();
                     renderAtividades();
                     renderNotas();
+                    renderAvaliacoes();
                     renderRelatorios();
                     renderTelaInicial();
                     renderDashboard();
@@ -4390,7 +4531,7 @@
                 }
             });
             renderizarPaginas();
-            const selects = ['formDisciplina', 'relatorioDisciplina', 'formAssuntoDisciplina', 'formAtendimentoDisciplina', 'formOcorrenciaDisciplina'];
+            const selects = ['formDisciplina', 'formAvaliacaoDisciplina', 'relatorioDisciplina', 'formAssuntoDisciplina', 'formAtendimentoDisciplina', 'formOcorrenciaDisciplina'];
             selects.forEach(id => {
                 const select = document.getElementById(id);
                 if (select) {
@@ -4401,6 +4542,7 @@
             renderTurmas();
             renderAtividades();
             renderNotas();
+            renderAvaliacoes();
             renderRelatorios();
             renderTelaInicial();
             renderDashboard();
@@ -4440,6 +4582,32 @@
             });
             updateClockDisplay();
             setInterval(updateClockDisplay, 1000);
+            avaliacoesInterval = setInterval(renderAvaliacoes, 1000);
+            const avaliacaoForm = document.getElementById('avaliacaoForm');
+            if (avaliacaoForm) {
+                avaliacaoForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    const disciplina = document.getElementById('formAvaliacaoDisciplina').value;
+                    const data = document.getElementById('formAvaliacaoData').value;
+                    const duracaoMinutos = Number(document.getElementById('formAvaliacaoDuracao').value) || 0;
+                    if (!disciplina || !data) {
+                        mostrarToast('Informe a disciplina e a data da prova.', 'aviso');
+                        return;
+                    }
+                    avaliacoes.push({
+                        id: gerarIdLocal(),
+                        disciplina,
+                        data,
+                        duracaoMinutos,
+                        cronometroSegundos: 0,
+                        cronometroAtivo: false,
+                        cronometroIniciadoEm: null
+                    });
+                    await salvarAvaliacoes();
+                    avaliacaoForm.reset();
+                    mostrarToast('✅ Avaliação salva e sincronizada!', 'sucesso');
+                });
+            }
             const relatorioForm = document.getElementById('relatorioForm');
             if (relatorioForm) {
                 relatorioForm.addEventListener('submit', function(e) {

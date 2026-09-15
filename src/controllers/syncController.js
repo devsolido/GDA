@@ -3,7 +3,7 @@ const { getSectionValue, setSectionValue } = require('../services/turso');
 const allowedKeys = new Set([
   'gda_presencas_atrasadas', 'gda_ocorrencias', 'gda_presencas', 'gda_atividades',
   'gda_frequencias', 'gda_relatorios', 'gda_checklist', 'gda_historico_panico',
-  'gda_atendimentos', 'gda_assuntos'
+  'gda_atendimentos', 'gda_assuntos', 'gda_avaliacoes'
 ]);
 
 const syncController = {
