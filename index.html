@@ -116,7 +116,7 @@
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
             background-color: var(--color-primary);
-            background-image: linear-gradient(90deg, rgba(11, 15, 21, 0.98) 0%, rgba(11, 15, 21, 0.88) 34%, rgba(11, 15, 21, 0.48) 100%), url('/FUNDO.webp');
+            background-image: linear-gradient(90deg, rgba(11, 15, 21, 0.98) 0%, rgba(11, 15, 21, 0.88) 34%, rgba(11, 15, 21, 0.48) 100%), url('/FUNDO.png');
             background-position: center, right center;
             background-repeat: no-repeat;
             background-size: cover, min(78vw, 980px) auto;
@@ -368,6 +368,32 @@
                 min-width: 36px;
             }
             .countdown-number {
+        .login-meta {
+            margin-bottom: 18px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--color-border);
+        }
+        .login-meta-location {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            color: #c3d2c8;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .login-meta-location i { color: var(--color-accent); }
+        .login-meta-time {
+            margin-top: 7px;
+            color: #f2c45d;
+            font: 600 24px/1.2 'Space Grotesk', sans-serif;
+            font-variant-numeric: tabular-nums;
+        }
+        .login-meta-date { margin-top: 4px; color: var(--color-text-muted); font-size: 11px; }
+        @media (max-width: 480px) {
+            .login-meta { margin-bottom: 12px; padding-bottom: 10px; }
+            .login-meta-time { font-size: 21px; }
+        }
                 font-size: 16px;
             }
             .countdown-label {
@@ -2333,7 +2359,7 @@
         }
         @media (max-width: 480px) {
             .splash-overlay {
-                background-image: linear-gradient(180deg, rgba(11, 15, 21, 0.7) 0%, rgba(11, 15, 21, 0.96) 58%), url('/FUNDO.webp');
+                background-image: linear-gradient(180deg, rgba(11, 15, 21, 0.7) 0%, rgba(11, 15, 21, 0.96) 58%), url('/FUNDO.png');
                 background-position: center, center bottom;
                 background-size: cover, 115vw auto;
             }
@@ -2668,7 +2694,7 @@
         .mobile-nav-list a.active { background: #e5a929; color: #173b35; }
         .splash-overlay {
             background-color: #173b35;
-            background-image: linear-gradient(90deg, rgba(14, 43, 37, .94) 0%, rgba(14, 43, 37, .76) 40%, rgba(14, 43, 37, .2) 100%), url('/FUNDO.webp');
+            background-image: linear-gradient(90deg, rgba(14, 43, 37, .94) 0%, rgba(14, 43, 37, .76) 40%, rgba(14, 43, 37, .2) 100%), url('/FUNDO.png');
         }
         .splash-content {
             padding: 34px 30px;
@@ -2824,7 +2850,7 @@
             justify-content: flex-start;
             padding: clamp(24px, 7vw, 104px);
             background-color: #101813;
-            background-image: linear-gradient(90deg, rgba(13, 21, 16, .98) 0%, rgba(13, 21, 16, .93) 28%, rgba(13, 21, 16, .66) 48%, rgba(13, 21, 16, .08) 78%), url('/FUNDO.webp');
+            background-image: linear-gradient(90deg, rgba(13, 21, 16, .98) 0%, rgba(13, 21, 16, .93) 28%, rgba(13, 21, 16, .66) 48%, rgba(13, 21, 16, .08) 78%), url('/FUNDO.png');
             background-position: center, right center;
             background-repeat: no-repeat;
             background-size: cover, min(82vw, 1120px) auto;
@@ -2850,7 +2876,7 @@
             .splash-overlay {
                 justify-content: center;
                 padding: 20px;
-                background-image: linear-gradient(180deg, rgba(13, 21, 16, .18) 0%, rgba(13, 21, 16, .5) 36%, rgba(13, 21, 16, .94) 74%), url('/FUNDO.webp');
+                background-image: linear-gradient(180deg, rgba(13, 21, 16, .18) 0%, rgba(13, 21, 16, .5) 36%, rgba(13, 21, 16, .94) 74%), url('/FUNDO.png');
                 background-position: center, center 22%;
                 background-size: cover, min(112vw, 720px) auto;
             }
@@ -2858,11 +2884,23 @@
         }
         @media (max-width: 480px) {
             .splash-overlay {
-                background-image: linear-gradient(180deg, rgba(13, 21, 16, .12) 0%, rgba(13, 21, 16, .4) 32%, rgba(13, 21, 16, .96) 68%), url('/FUNDO.webp');
+                background-image: linear-gradient(180deg, rgba(13, 21, 16, .12) 0%, rgba(13, 21, 16, .4) 32%, rgba(13, 21, 16, .96) 68%), url('/FUNDO.png');
                 background-position: center, center 18%;
                 background-size: cover, 120vw auto;
             }
             .splash-content { padding: 24px 20px; }
+        }
+        @media (max-width: 768px) {
+            .splash-overlay {
+                background-image: linear-gradient(180deg, rgba(13, 21, 16, .08) 0%, rgba(13, 21, 16, .18) 34%, rgba(13, 21, 16, .9) 58%, #0d1510 78%), url('/FUNDO.png');
+                background-position: center, 70% top;
+                background-size: cover, max(100vw, 520px) auto;
+            }
+        }
+        @media (max-width: 480px) {
+            .splash-overlay {
+                background-size: cover, max(100vw, 540px) auto;
+            }
         }
     </style>
 </head>
@@ -2870,6 +2908,11 @@
     <div class="splash-overlay" id="splashOverlay">
         <span class="visually-hidden">Imagem de fundo fornecida pelo usuário.</span>
         <div class="splash-content">
+            <div class="login-meta" aria-label="Horário local e data de acesso">
+                <div class="login-meta-location"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Marabá, PA</div>
+                <div class="login-meta-time" id="loginClock" aria-label="Hora de Marabá">-- - -- - --</div>
+                <div class="login-meta-date">Data de acesso · <span id="loginAccessDate">--</span></div>
+            </div>
             <div class="logo-icon">GDA</div>
             <h1>GDA<span>.</span></h1>
             <div class="splash-message">
@@ -4669,6 +4712,26 @@
             const h = String(now.getHours()).padStart(2, '0');
             const m = String(now.getMinutes()).padStart(2, '0');
             const s = String(now.getSeconds()).padStart(2, '0');
+            const loginClock = document.getElementById('loginClock');
+            const loginAccessDate = document.getElementById('loginAccessDate');
+            if (loginClock) {
+                const marabaTime = new Intl.DateTimeFormat('pt-BR', {
+                    timeZone: 'America/Belem',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hourCycle: 'h23'
+                }).format(now);
+                loginClock.textContent = marabaTime.replace(/:/g, ' - ');
+            }
+            if (loginAccessDate) {
+                loginAccessDate.textContent = new Intl.DateTimeFormat('pt-BR', {
+                    timeZone: 'America/Belem',
+                    day: '2-digit',
+                    month: 'long',
+                    year: 'numeric'
+                }).format(now);
+            }
             const heroTime = document.getElementById('clockHeroTime');
             const heroSec = document.getElementById('clockHeroSeconds');
             if (heroTime) heroTime.textContent = `${h}:${m}`;
