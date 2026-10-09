@@ -2734,6 +2734,136 @@
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
         }
+        :root {
+            --color-primary: #111915;
+            --color-secondary: #19251f;
+            --color-card: #202e27;
+            --color-border: rgba(198, 219, 205, .12);
+            --color-text: #e8efe9;
+            --color-text-muted: #a0b1a6;
+            --color-accent: #e5a929;
+            --color-accent-hover: #f0bd4e;
+            --color-danger: #e2766d;
+            --color-success: #69bd91;
+            --color-warning: #e5a929;
+            --color-info: #75b2bd;
+            --color-panico: #dc665e;
+            --color-panico-hover: #ba4a44;
+            --color-ocorrencia: #75a88a;
+            --color-ocorrencia-hover: #55846b;
+            --shadow: 0 18px 44px rgba(0, 0, 0, .28);
+        }
+        body {
+            background-color: var(--color-primary);
+            background-image: linear-gradient(rgba(160, 190, 170, .025) 1px, transparent 1px), linear-gradient(90deg, rgba(160, 190, 170, .025) 1px, transparent 1px);
+            color: var(--color-text);
+        }
+        button:hover:not(:disabled) { color: var(--color-accent-hover); }
+        input, textarea, select, .table-search input, .splash-content .auth-fields input {
+            color: var(--color-text);
+            background-color: #18231e;
+            border-color: var(--color-border);
+        }
+        input::placeholder, textarea::placeholder, .splash-content .auth-fields input::placeholder { color: #91a398; }
+        select option { color: var(--color-text); background: var(--color-secondary); }
+        .app-header, .sidebar, .bottom-nav, .mobile-nav-content { background-color: #17231d; }
+        .app-header { background: rgba(23, 35, 29, .98); }
+        .sidebar { background: #17231d; }
+        .sidebar a.active {
+            background: rgba(229, 169, 41, .13);
+            color: #f2c45d;
+            box-shadow: inset 3px 0 #e5a929;
+        }
+        .sidebar a.active .badge-link { background: rgba(229, 169, 41, .16); color: #f2c45d; }
+        .container { color: var(--color-text); }
+        .section-title { border-color: var(--color-border); color: var(--color-text); }
+        .section-title i, .card-title i { color: var(--color-accent); }
+        .section-title .badge, .sidebar a .badge-link, .mobile-nav-list a .badge-link {
+            background: rgba(229, 169, 41, .14);
+            color: #f2c45d;
+        }
+        .card, .table-wrapper, .relatorio-section, .progress-hero, .achievements,
+        .stat-card, .achievement-card, .atividade-card, .avaliacao-card, .notas-card,
+        .atendimento-card, .presenca-card, .presenca-atrasada-card, .ocorrencia-card, .assunto-card {
+            background-color: var(--color-card);
+            border-color: var(--color-border);
+            box-shadow: 0 8px 22px rgba(0, 0, 0, .12);
+        }
+        .card-title, .section-label { color: var(--color-text); }
+        .welcome-hero { background: linear-gradient(112deg, #19352b 0%, #214536 72%, #285441 100%); }
+        .quote-card {
+            background: #252d23;
+            border-color: rgba(229, 169, 41, .24);
+            border-left-color: var(--color-accent);
+        }
+        .quote-card blockquote { color: var(--color-text); }
+        .quote-icon, .date-day, .clock-hero .time, .countdown-number, .countdown-label-prova { color: #f2c45d; }
+        .btn-new-quote, .clock-hero, .countdown-item, .achievement-card, .progress-message,
+        .table-search, .table-search input, .table tbody tr:hover {
+            background-color: rgba(255, 255, 255, .045);
+        }
+        .achievement-card { border-color: var(--color-border); }
+        .achievement-value, .stat-card .number, .progress-percent, .info-value.highlight { color: #78c69a; }
+        .achievement-label, .stat-card .label, .quote-author { color: var(--color-text-muted); }
+        .mini-progress, .progress-circle .progress-bg { background: rgba(255,255,255,.1); stroke: rgba(255,255,255,.1); }
+        .mini-bar, .progress-circle .progress-fg { background: var(--color-success); stroke: var(--color-success); }
+        .progress-message { border-left-color: var(--color-success); color: var(--color-text); }
+        .info-item, table td, .table-search, table th { border-color: var(--color-border); }
+        .table-search, table thead { background: #1b2821; }
+        table th, .table-search .search-count { color: var(--color-text-muted); }
+        table td { color: var(--color-text); }
+        table tbody tr:hover { background: rgba(255,255,255,.035); }
+        table .cod, .table .cod, .check-item .icon-status.done { color: var(--color-success); }
+        .check-item:hover, .check-item:active { background: rgba(255,255,255,.04); }
+        .check-item .box { border-color: rgba(198,219,205,.32); }
+        .check-item .box.done { background: var(--color-success); border-color: var(--color-success); color: #102017; }
+        .bottom-nav .nav-item.active, .mobile-nav-list a.active { color: #f2c45d; }
+        .mobile-nav-list a.active { background: rgba(229,169,41,.13); }
+        .splash-overlay {
+            align-items: center;
+            justify-content: flex-start;
+            padding: clamp(24px, 7vw, 104px);
+            background-color: #101813;
+            background-image: linear-gradient(90deg, rgba(13, 21, 16, .98) 0%, rgba(13, 21, 16, .93) 28%, rgba(13, 21, 16, .66) 48%, rgba(13, 21, 16, .08) 78%), url('/FUNDO.webp');
+            background-position: center, right center;
+            background-repeat: no-repeat;
+            background-size: cover, min(82vw, 1120px) auto;
+        }
+        .splash-content {
+            width: min(400px, 100%);
+            margin-left: 2vw;
+            padding: 34px 30px;
+            background: rgba(25, 37, 31, .95);
+            border: 1px solid rgba(198, 219, 205, .16);
+            border-top: 3px solid var(--color-accent);
+            border-radius: 10px;
+            box-shadow: 0 24px 70px rgba(0,0,0,.42);
+        }
+        .splash-content h1 { color: var(--color-text); }
+        .splash-content .splash-message { color: var(--color-text-muted); }
+        .splash-content .logo-icon { background: var(--color-accent); color: #17231d; }
+        .splash-content .auth-fields input { background: #111a15; color: var(--color-text); }
+        .splash-content .versao { color: var(--color-text-muted); }
+        .splash-content .btn-entrar { background: var(--color-accent); color: #17231d; }
+        .splash-content .btn-entrar:hover:not(:disabled) { background: var(--color-accent-hover); color: #17231d; }
+        @media (max-width: 768px) {
+            .splash-overlay {
+                justify-content: center;
+                padding: 20px;
+                background-image: linear-gradient(180deg, rgba(13, 21, 16, .18) 0%, rgba(13, 21, 16, .5) 36%, rgba(13, 21, 16, .94) 74%), url('/FUNDO.webp');
+                background-position: center, center 22%;
+                background-size: cover, min(112vw, 720px) auto;
+            }
+            .splash-content { margin: auto 0 4vh; }
+        }
+        @media (max-width: 480px) {
+            .splash-overlay {
+                background-image: linear-gradient(180deg, rgba(13, 21, 16, .12) 0%, rgba(13, 21, 16, .4) 32%, rgba(13, 21, 16, .96) 68%), url('/FUNDO.webp');
+                background-position: center, center 18%;
+                background-size: cover, 120vw auto;
+            }
+            .splash-content { padding: 24px 20px; }
+        }
     </style>
 </head>
 <body>
