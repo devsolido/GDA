@@ -368,6 +368,57 @@
                 min-width: 36px;
             }
             .countdown-number {
+        .splash-overlay {
+            isolation: isolate;
+            overflow: hidden;
+            background-image: none;
+        }
+        .splash-background {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+        .splash-overlay::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            background: linear-gradient(90deg, rgba(13, 21, 16, .38) 0%, rgba(13, 21, 16, .18) 48%, rgba(13, 21, 16, .02) 100%);
+            pointer-events: none;
+        }
+        .splash-content { position: relative; z-index: 2; }
+        .login-meta {
+            position: absolute;
+            top: clamp(18px, 3vh, 34px);
+            left: clamp(20px, 4vw, 64px);
+            z-index: 2;
+            margin: 0;
+            padding: 0;
+            border: 0;
+            text-shadow: 0 2px 12px rgba(0, 0, 0, .72);
+        }
+        .login-meta-location { color: #fff; }
+        .login-meta-time { font-size: 22px; }
+        .login-meta-date { color: #e1e9e3; }
+        @media (max-width: 768px) {
+            .splash-background {
+                height: clamp(260px, 42vh, 380px);
+                object-position: 72% 24%;
+            }
+            .splash-overlay::after {
+                background: linear-gradient(180deg, rgba(13, 21, 16, .4) 0%, rgba(13, 21, 16, .08) 30%, rgba(13, 21, 16, .72) 43%, #0d1510 62%);
+            }
+            .login-meta { top: max(16px, env(safe-area-inset-top)); left: 18px; }
+            .login-meta-time { font-size: 21px; }
+        }
+        @media (max-width: 480px) {
+            .splash-background { object-position: 76% 22%; }
+            .login-meta { left: 16px; }
+        }
         .login-meta {
             margin-bottom: 18px;
             padding-bottom: 14px;
@@ -2906,13 +2957,14 @@
 </head>
 <body>
     <div class="splash-overlay" id="splashOverlay">
+        <img class="splash-background" src="/FUNDO.png" alt="" aria-hidden="true">
         <span class="visually-hidden">Imagem de fundo fornecida pelo usuário.</span>
+        <div class="login-meta" aria-label="Horário local e data de acesso">
+            <div class="login-meta-location"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Marabá, PA</div>
+            <div class="login-meta-time" id="loginClock" aria-label="Hora de Marabá">-- - -- - --</div>
+            <div class="login-meta-date">Data de acesso · <span id="loginAccessDate">--</span></div>
+        </div>
         <div class="splash-content">
-            <div class="login-meta" aria-label="Horário local e data de acesso">
-                <div class="login-meta-location"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Marabá, PA</div>
-                <div class="login-meta-time" id="loginClock" aria-label="Hora de Marabá">-- - -- - --</div>
-                <div class="login-meta-date">Data de acesso · <span id="loginAccessDate">--</span></div>
-            </div>
             <div class="logo-icon">GDA</div>
             <h1>GDA<span>.</span></h1>
             <div class="splash-message">
