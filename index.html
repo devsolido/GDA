@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
     <style>
         :root {
             --color-primary: #0b0f15;
@@ -2382,6 +2383,356 @@
             .date-day { font-size: 10px; }
             .date-full { font-size: 9px; }
             .clock-hero .time { font-size: 13px; }
+        }
+
+        /* GDA visual refresh */
+        :root {
+            --color-primary: #f2f5f1;
+            --color-secondary: #173b35;
+            --color-card: #ffffff;
+            --color-border: #dce5df;
+            --color-text: #1b2925;
+            --color-text-muted: #687a73;
+            --color-accent: #e5a929;
+            --color-accent-hover: #c98717;
+            --color-danger: #c8544b;
+            --color-success: #34846a;
+            --color-warning: #c98717;
+            --color-info: #397c8a;
+            --color-panico: #b9433a;
+            --color-panico-hover: #96352f;
+            --color-ocorrencia: #397c8a;
+            --color-ocorrencia-hover: #285d68;
+            --shadow: 0 18px 44px rgba(23, 59, 53, 0.12);
+            --radius: 8px;
+            --header-height: 64px;
+            --bottom-nav-height: 68px;
+        }
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background-color: var(--color-primary);
+            background-image: linear-gradient(rgba(23, 59, 53, 0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(23, 59, 53, 0.025) 1px, transparent 1px);
+            background-size: 28px 28px;
+            color: var(--color-text);
+        }
+        h1, h2, h3, .section-title, .card-title, .stat-card .number, .greeting-title {
+            font-family: 'Space Grotesk', 'DM Sans', sans-serif;
+        }
+        button, input, select, textarea { font-family: 'DM Sans', sans-serif; }
+        button {
+            border-radius: 8px;
+            box-shadow: none;
+        }
+        button:hover:not(:disabled) {
+            color: #173b35;
+            box-shadow: 0 5px 14px rgba(229, 169, 41, 0.18);
+        }
+        input, textarea {
+            background: #fff;
+            border-color: #d5e0d9;
+            border-radius: 8px;
+        }
+        input:hover, textarea:hover { border-color: #9db5aa; }
+        input:focus, textarea:focus { box-shadow: 0 0 0 3px rgba(57, 124, 106, 0.12); }
+        select {
+            background-color: #fff;
+            border-color: #d5e0d9;
+            background-image: linear-gradient(45deg, transparent 50%, #397c6a 50%), linear-gradient(135deg, #397c6a 50%, transparent 50%);
+        }
+        select option { color: #1b2925; background: #fff; }
+        .app-header {
+            height: var(--header-height);
+            padding: 0 24px;
+            background: rgba(23, 59, 53, 0.98);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: inset 0 3px 0 #e5a929, 0 5px 18px rgba(16, 39, 35, 0.12);
+            gap: 16px;
+        }
+        .app-header .logo { gap: 10px; }
+        .app-header .logo .icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: #e5a929;
+            color: #173b35;
+            font-size: 12px;
+        }
+        .app-header .logo h1 { font: 700 18px 'Space Grotesk', sans-serif; color: #fff; }
+        .countdown-container { gap: 6px; }
+        .countdown-item {
+            min-width: 42px;
+            padding: 4px 8px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 7px;
+        }
+        .countdown-number { color: #f4c45e; font-size: 15px; }
+        .countdown-label { color: rgba(255,255,255,.62); font-size: 8px; }
+        .countdown-label-prova {
+            background: rgba(229, 169, 41, 0.15);
+            color: #f4c45e;
+            padding: 5px 9px;
+            font-size: 10px;
+        }
+        .app-header .header-actions { gap: 8px; }
+        .app-header .header-actions .status-badge {
+            padding: 7px 10px;
+            border: 1px solid rgba(255,255,255,.1);
+            background: rgba(255,255,255,.08);
+            color: #d7e4de;
+            font-size: 10px;
+        }
+        .app-header .header-actions .presenca-btn {
+            min-width: 36px;
+            min-height: 36px;
+            justify-content: center;
+            border-radius: 8px;
+            background: rgba(255,255,255,.08);
+            border-color: rgba(255,255,255,.12);
+        }
+        .app-header .header-actions .presenca-btn.presente-btn { color: #8ce0b8; border-color: rgba(140,224,184,.32); }
+        .app-header .header-actions .presenca-btn.falta-btn { color: #ffaaa2; border-color: rgba(255,170,162,.32); }
+        .sidebar {
+            top: var(--header-height);
+            height: calc(100vh - var(--header-height));
+            width: 248px;
+            padding: 18px 14px 14px;
+            background: #173b35;
+            border-right: 1px solid rgba(255,255,255,.08);
+            gap: 3px;
+        }
+        .sidebar .nav-label {
+            padding: 12px 12px 6px;
+            color: #a7c0b5;
+            opacity: .8;
+            font-size: 10px;
+            letter-spacing: 1.2px;
+        }
+        .sidebar a {
+            min-height: 42px;
+            padding: 9px 12px;
+            border-radius: 8px;
+            color: #c3d4cc;
+            gap: 12px;
+        }
+        .sidebar a:hover { background: rgba(255,255,255,.08); color: #fff; }
+        .sidebar a.active {
+            background: #e5a929;
+            color: #173b35;
+            box-shadow: 0 5px 14px rgba(10, 30, 26, .18);
+        }
+        .sidebar a h3 { font-weight: 600; font-size: 13px; }
+        .sidebar a .badge-link { background: rgba(255,255,255,.12); color: #f4c45e; }
+        .sidebar a.active .badge-link { background: rgba(23,59,53,.12); color: #173b35; }
+        .sidebar .submenu-sistemas { border-color: rgba(255,255,255,.18); }
+        .sidebar .submenu-sistemas a { min-height: 38px; color: #c3d4cc; }
+        .sidebar .submenu-sistemas a i { color: #f4c45e; }
+        .sidebar .user-info { border-color: rgba(255,255,255,.14); padding-top: 14px; }
+        .sidebar .user-info .avatar { border-color: #e5a929; }
+        .sidebar .user-info .name { color: #fff; font-size: 13px; }
+        .sidebar .user-info .role, .sidebar .user-info .presenca-label { color: #a7c0b5; }
+        .container {
+            margin-left: 248px;
+            padding: 26px 32px 40px;
+            max-width: calc(100% - 248px);
+        }
+        #pageContainer { width: 100%; max-width: 1480px; margin: 0 auto; }
+        .page { animation-duration: .24s; }
+        .section-title {
+            min-height: 48px;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #d9e3dc;
+            color: #173b35;
+            font-size: 20px;
+            gap: 10px;
+        }
+        .section-title i { color: #397c6a; }
+        .section-title .badge {
+            padding: 4px 10px;
+            background: #f9edcf;
+            color: #8a6012;
+            border-radius: 6px;
+            font-size: 10px;
+        }
+        .card, .table-wrapper, .relatorio-section, .progress-hero, .achievements {
+            background: #fff;
+            border: 1px solid #dce5df;
+            border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(23,59,53,.035);
+        }
+        .card { padding: 18px 20px; }
+        .card-title { color: #173b35; }
+        .welcome-hero {
+            min-height: 168px;
+            margin-bottom: 16px;
+            padding: 26px 28px;
+            border: 0;
+            border-radius: 10px;
+            color: #fff;
+            background: linear-gradient(112deg, #173b35 0%, #24564b 72%, #32695a 100%);
+            box-shadow: 0 12px 26px rgba(23,59,53,.16);
+        }
+        .welcome-hero::before {
+            top: auto;
+            right: 0;
+            bottom: 0;
+            width: 34%;
+            height: 3px;
+            border-radius: 0;
+            background: #e5a929;
+        }
+        .greeting-title { color: #fff; font-size: 26px; }
+        .greeting-subtitle { margin-top: 4px; color: #c0d3ca; font-size: 13px; }
+        .greeting-icon { font-size: 28px; }
+        .date-day { color: #f4c45e; font-size: 15px; }
+        .date-full, .aulas-hoje { color: #c0d3ca; }
+        .clock-hero {
+            display: inline-flex;
+            margin-top: 16px;
+            padding: 5px 12px;
+            border-color: rgba(255,255,255,.16);
+            background: rgba(255,255,255,.07);
+        }
+        .clock-hero .time { color: #f4c45e; }
+        .clock-hero .seconds { color: #c0d3ca; }
+        .quote-card {
+            margin-bottom: 18px;
+            padding: 17px 20px;
+            border: 1px solid #efdfb8;
+            border-left: 4px solid #e5a929;
+            border-radius: 8px;
+            background: #fffaf0;
+        }
+        .quote-icon { color: #bd841a; }
+        .quote-card blockquote { color: #394840; font-size: 14px; }
+        .quote-author { color: #7b887f; }
+        .btn-new-quote { background: #fff; border-color: #eadcb9; color: #6e6a5e; }
+        .achievements, .progress-hero { margin: 0 0 16px; padding: 18px; }
+        .section-label { color: #173b35; font-size: 15px !important; margin-bottom: 12px; }
+        .achievement-grid { gap: 10px; }
+        .achievement-card {
+            background: #f7f9f6;
+            border: 1px solid #e4ebe6;
+            border-radius: 8px;
+        }
+        .achievement-value { color: #397c6a; }
+        .achievement-label { color: #687a73; font-size: 11px; }
+        .mini-progress { background: #e3eae5; }
+        .mini-bar { background: #4d9679; }
+        .progress-circle .progress-bg { stroke: #e5ece7; }
+        .progress-circle .progress-fg { stroke: #397c6a; }
+        .progress-percent, .info-value.highlight { color: #397c6a; }
+        .progress-message { background: #f2f7f3; border-left-color: #397c6a; color: #354740; }
+        .info-item { border-color: #edf1ee; }
+        .stats-grid { gap: 12px; margin-bottom: 18px; }
+        .stat-card {
+            padding: 16px 12px;
+            border: 1px solid #dce5df;
+            border-radius: 8px;
+            background: #fff;
+            box-shadow: 0 4px 14px rgba(23,59,53,.035);
+            text-align: left;
+        }
+        .stat-card .number { color: #397c6a; font-size: 25px; }
+        .stat-card .label { color: #687a73; font-size: 10px; letter-spacing: .7px; }
+        .table-wrapper { box-shadow: 0 4px 16px rgba(23,59,53,.035); }
+        .table-search { background: #f8faf8; border-color: #e4ebe6; padding: 12px 16px; }
+        .table-search input { border-radius: 7px; background: #fff; }
+        table thead { background: #f4f7f4; }
+        table th { color: #60746b; padding: 11px 14px; }
+        table td { border-color: #edf1ee; padding: 10px 14px; }
+        table tbody tr:hover { background: #f8faf8; }
+        table .cod { color: #397c6a; }
+        .atividades-grid, .presenca-grid, .atendimentos-grid, .assuntos-grid, .avaliacoes-grid, .notas-grid, .checklist-grid { gap: 12px; }
+        .atividade-card, .avaliacao-card, .notas-card, .atendimento-card, .presenca-card, .presenca-atrasada-card, .ocorrencia-card, .assunto-card {
+            border-color: #dce5df;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 4px 14px rgba(23,59,53,.04);
+        }
+        .check-item { border-radius: 7px; }
+        .check-item:hover { background: #f2f7f3; }
+        .check-item .box { border-color: #bdcbc2; }
+        .check-item .box.done { background: #397c6a; border-color: #397c6a; color: #fff; }
+        .bottom-nav {
+            background: rgba(23,59,53,.98);
+            border-top-color: rgba(255,255,255,.1);
+            box-shadow: 0 -5px 18px rgba(16,39,35,.14);
+        }
+        .bottom-nav .nav-item { color: #b3c8be; font-size: 10px; }
+        .bottom-nav .nav-item.active { color: #f4c45e; }
+        .bottom-nav .nav-item .nav-badge { top: 5px; }
+        .mobile-nav-content { background: #173b35; border-color: rgba(255,255,255,.12); }
+        .mobile-nav-list a { color: #c3d4cc; }
+        .mobile-nav-list a.active { background: #e5a929; color: #173b35; }
+        .splash-overlay {
+            background-color: #173b35;
+            background-image: linear-gradient(90deg, rgba(14, 43, 37, .94) 0%, rgba(14, 43, 37, .76) 40%, rgba(14, 43, 37, .2) 100%), url('/FUNDO.webp');
+        }
+        .splash-content {
+            padding: 34px 30px;
+            background: #fff;
+            border: 1px solid rgba(255,255,255,.6);
+            border-radius: 12px;
+            box-shadow: 0 24px 70px rgba(7,30,25,.3);
+        }
+        .splash-content .logo-icon { background: #173b35; color: #f4c45e; border-radius: 12px; }
+        .splash-content h1 { font: 700 28px 'Space Grotesk', sans-serif; color: #173b35; }
+        .splash-content h1 span { color: #d79920; }
+        .splash-content .splash-message { color: #687a73; }
+        .splash-content .auth-fields input { border-color: #d5e0d9; background: #f8faf8; color: #1b2925; }
+        .splash-content .auth-fields input::placeholder { color: #84928b; }
+        .splash-content .btn-entrar { border-radius: 8px; background: #e5a929; color: #173b35; }
+        .splash-content .btn-entrar:hover:not(:disabled) { background: #f0bd4e; }
+        .splash-content .versao { color: #78877f; opacity: 1; }
+        .modal, .modal-content { border-radius: 10px; }
+        @media (max-width: 1024px) {
+            .sidebar { width: 68px; padding: 14px 7px; }
+            .container { margin-left: 68px; max-width: calc(100% - 68px); padding: 22px 20px 32px; }
+        }
+        @media (max-width: 768px) {
+            :root { --header-height: 58px; --bottom-nav-height: 66px; }
+            .app-header { padding: 0 14px; gap: 8px; }
+            .app-header .logo .icon { width: 32px; height: 32px; font-size: 11px; }
+            .app-header .logo h1 { font-size: 16px; }
+            .countdown-container { gap: 3px; }
+            .countdown-item { min-width: 30px; padding: 3px 4px; }
+            .countdown-number { font-size: 12px; }
+            .countdown-label { font-size: 6px; }
+            .countdown-label-prova { display: none; }
+            .container { padding: 18px 16px 26px; }
+            .welcome-hero { min-height: 0; padding: 20px; }
+            .greeting-title { font-size: 22px; }
+            .greeting-subtitle { font-size: 12px; }
+            .section-title { font-size: 18px; }
+            .stat-card { padding: 12px 10px; }
+            .stat-card .number { font-size: 21px; }
+            .stat-card .label { font-size: 9px; }
+            .card { padding: 15px; }
+        }
+        @media (max-width: 480px) {
+            .app-header { padding: 0 10px; }
+            .app-header .logo { gap: 7px; }
+            .countdown-container { margin-left: auto; }
+            .app-header .header-actions { gap: 4px; }
+            .app-header .header-actions .presenca-btn { min-width: 30px; min-height: 30px; }
+            .container { padding: 14px 12px 22px; }
+            .welcome-hero { padding: 18px 16px; }
+            .greeting-section { align-items: flex-start; }
+            .date-info { text-align: left; width: 100%; padding-left: 36px; }
+            .clock-hero { margin-top: 12px; }
+            .quote-card { padding: 15px; }
+            .achievements, .progress-hero { padding: 14px; }
+            .achievement-card { padding: 10px; }
+            .section-title { font-size: 17px; gap: 7px; }
+            .section-title .badge { font-size: 9px; }
+            .stat-card .label { font-size: 8px; }
+            .bottom-nav .nav-item { font-size: 9px; }
+            .splash-content { width: min(100% - 32px, 390px); padding: 28px 22px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
         }
     </style>
 </head>
