@@ -3356,6 +3356,30 @@
         let tipoPresencaAtual = 'presente';
         let filtroAtividadesAtual = 'todas';
         let toastBoasVindasExibido = false;
+        const diasLetivos20262 = [
+            '2026-10-08', '2026-10-09', '2026-10-14', '2026-10-15', '2026-10-16',
+            '2026-10-19', '2026-10-20', '2026-10-21', '2026-10-22', '2026-10-23',
+            '2026-10-26', '2026-10-27', '2026-10-29', '2026-10-30',
+            '2026-11-03', '2026-11-04', '2026-11-05', '2026-11-06', '2026-11-09',
+            '2026-11-10', '2026-11-11', '2026-11-12', '2026-11-13', '2026-11-16',
+            '2026-11-17', '2026-11-18', '2026-11-19', '2026-11-23', '2026-11-24',
+            '2026-11-25', '2026-11-26', '2026-11-27', '2026-11-30',
+            '2026-12-01', '2026-12-02', '2026-12-03', '2026-12-04', '2026-12-07',
+            '2026-12-08', '2026-12-09', '2026-12-10', '2026-12-11', '2026-12-14',
+            '2026-12-15', '2026-12-16', '2026-12-17', '2026-12-18'
+        ];
+        function getDataMaraba(data = new Date()) {
+            const partes = new Intl.DateTimeFormat('en-US', {
+                timeZone: 'America/Belem',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            }).formatToParts(data);
+            const ano = partes.find(parte => parte.type === 'year').value;
+            const mes = partes.find(parte => parte.type === 'month').value;
+            const dia = partes.find(parte => parte.type === 'day').value;
+            return `${ano}-${mes}-${dia}`;
+        }
         function getDataLocal() {
             const hoje = new Date();
             const ano = hoje.getFullYear();
@@ -3657,7 +3681,7 @@
                                 <div class="info-item"><span class="info-label">Semanas cursadas</span><span class="info-value" id="semanasCursadas">0</span></div>
                                 <div class="info-item"><span class="info-label">Total de semanas</span><span class="info-value">18</span></div>
                                 <div class="info-item"><span class="info-label">Semanas restantes</span><span class="info-value highlight" id="semanasRestantes">0</span></div>
-                                <div class="info-item"><span class="info-label">Dias letivos</span><span class="info-value" id="diasLetivos">0</span></div>
+                                <div class="info-item"><span class="info-label">Dias letivos restantes</span><span class="info-value" id="diasLetivos">0</span></div>
                             </div>
                             <div class="progress-message" id="progressMessage">💪 Você está no caminho certo! Continue assim!</div>
                         </div>
@@ -4706,13 +4730,14 @@
             } else {
                 const totalDias2 = Math.ceil((dataFimSemestre2 - dataInicioSemestre2) / (1000 * 60 * 60 * 24));
                 const diasPassados2 = Math.ceil((agora - dataInicioSemestre2) / (1000 * 60 * 60 * 24));
-                const totalSemanas2 = Math.ceil(totalDias2 / 7);
+                const totalSemanas2 = 18;
                 semanasPassadasFinal = Math.ceil(diasPassados2 / 7);
                 percentualFinal = Math.min(100, Math.max(0, Math.round((diasPassados2 / totalDias2) * 100)));
                 mensagemFinal = `📈 ${percentualFinal}% do 2026.2 concluído`;
                 semanasRestantesFinal = Math.max(0, totalSemanas2 - semanasPassadasFinal);
-                diasRestantesFinal = Math.max(0, totalDias2 - diasPassados2);
             }
+            const hojeMaraba = getDataMaraba(agora);
+            diasRestantesFinal = diasLetivos20262.filter(data => data >= hojeMaraba).length;
             const elSemanaCursadas = document.getElementById('semanasCursadas');
             const elSemanaRestantes = document.getElementById('semanasRestantes');
             const elDiasLetivos = document.getElementById('diasLetivos');
