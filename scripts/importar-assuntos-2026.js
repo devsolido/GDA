@@ -212,6 +212,10 @@ const meioAmbiente = 'MEIO AMBIENTE E LEGISLAÇÃO AMBIENTAL';
   ['2026-11-13', 'Recuperação Paralela'], ['2026-11-27', 'Prova Final'], ['2026-12-04', 'MAIPE'], ['2026-12-18', 'Jogos do CMI']
 ].forEach(([data, titulo, descricao]) => adicionar(meioAmbiente, data, titulo, descricao));
 
+const calendarioEscolar = 'CALENDÁRIO ESCOLAR';
+adicionar(calendarioEscolar, '2026-10-12', 'Feriado — Nossa Senhora Aparecida');
+adicionar(calendarioEscolar, '2026-10-13', 'Comemoração antecipada do Dia dos Professores');
+
 async function executar() {
   const atual = await getSectionValue('gda_assuntos');
   const resultado = atual && typeof atual === 'object' && !Array.isArray(atual) ? atual : {};

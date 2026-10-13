@@ -2987,25 +2987,6 @@
             <div class="icon">GDA</div>
             <h1>GDA<span>.</span></h1>
         </div>
-        <div class="countdown-container" id="countdownContainer">
-            <div class="countdown-item">
-                <span class="countdown-number" id="countdownDays">00</span>
-                <span class="countdown-label">dias</span>
-            </div>
-            <div class="countdown-item">
-                <span class="countdown-number" id="countdownHours">00</span>
-                <span class="countdown-label">horas</span>
-            </div>
-            <div class="countdown-item">
-                <span class="countdown-number" id="countdownMinutes">00</span>
-                <span class="countdown-label">min</span>
-            </div>
-            <div class="countdown-item">
-                <span class="countdown-number" id="countdownSeconds">00</span>
-                <span class="countdown-label">seg</span>
-            </div>
-            <span class="countdown-label-prova">📐 Prova 3º BI de Matemática</span>
-        </div>
         <div class="header-actions">
             <span class="status-badge" id="statusBadge">não te esquece da presença 👉</span>
             <button class="presenca-btn presente-btn" id="btnPresencaPresente" title="Marcar presença">
@@ -3285,35 +3266,6 @@
     <script>
     (function() {
         'use strict';
-        function iniciarContagemRegressiva() {
-            const targetDate = new Date('2026-10-03T07:30:00-03:00').getTime();
-            function updateCountdown() {
-                const now = new Date().getTime();
-                const difference = targetDate - now;
-                const daysEl = document.getElementById('countdownDays');
-                const hoursEl = document.getElementById('countdownHours');
-                const minutesEl = document.getElementById('countdownMinutes');
-                const secondsEl = document.getElementById('countdownSeconds');
-                if (!daysEl || !hoursEl || !minutesEl || !secondsEl) return;
-                if (difference <= 0) {
-                    daysEl.textContent = '00';
-                    hoursEl.textContent = '00';
-                    minutesEl.textContent = '00';
-                    secondsEl.textContent = '00';
-                    return;
-                }
-                const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-                daysEl.textContent = String(days).padStart(2, '0');
-                hoursEl.textContent = String(hours).padStart(2, '0');
-                minutesEl.textContent = String(minutes).padStart(2, '0');
-                secondsEl.textContent = String(seconds).padStart(2, '0');
-            }
-            updateCountdown();
-            setInterval(updateCountdown, 1000);
-        }
         let presencasAtrasadas = normalizarColecao(loadData('gda_presencas_atrasadas', []));
         let ocorrencias = normalizarColecao(loadData('gda_ocorrencias', []));
         let presencas = normalizarColecao(loadData('gda_presencas', []));
@@ -4853,7 +4805,6 @@
             }
         }
         async function init() {
-            iniciarContagemRegressiva();
             const btnEntrar = document.getElementById('btnEntrar');
             const authForm = document.getElementById('authForm');
             try {
