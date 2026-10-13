@@ -3682,7 +3682,7 @@
                     <div class="atividades-grid" id="atividadesContainer"></div>
                 </div>
                 <div class="page" id="page-notas">
-                    <div class="section-title"><i class="fas fa-graduation-cap"></i> Módulo de Notas <span class="badge">📊 Média ≥ 7.0 = Aprovado</span></div>
+                    <div class="section-title"><i class="fas fa-graduation-cap"></i> Módulo de Notas <span class="badge">📊 Média ≥ 7.0 ou 28 pts antes do 4º BIM = Aprovado</span></div>
                     <div class="notas-grid" id="notasContainer"></div>
                 </div>
                 <div class="page" id="page-avaliacoes">
@@ -3978,19 +3978,40 @@
             const navBadge = document.getElementById('navAtividadeBadge');
             if (navBadge) navBadge.textContent = atividades.length;
         }
+        function calcularStatusNotas(nota) {
+            const vals = [1,2,3,4].map(b => parseFloat(nota['b'+b])).filter(v => !isNaN(v) && v > 0);
+            const total = vals.reduce((acc, valor) => acc + valor, 0);
+            const media = vals.length > 0 ? total / vals.length : 0;
+            const aprovadoPorMedia = vals.length === 4 && media >= 7;
+            const aprovadoAntecipado = vals.length > 0 && vals.length < 4 && total >= 28;
+
+            let status = 'aguardando';
+            let statusText = `⏳ ${vals.length}/4 bimestres`;
+            let statusColor = vals.length < 4 ? 'var(--color-warning)' : 'var(--color-danger)';
+
+            if (aprovadoPorMedia || aprovadoAntecipado) {
+                status = 'aprovado';
+                statusText = aprovadoAntecipado ? '✅ Aprovado antecipado (28+ pontos — confirmar coordenação)' : '✅ Aprovado!';
+                statusColor = 'var(--color-success)';
+            } else if (vals.length === 4) {
+                status = 'recuperacao';
+                statusText = `🔴 Recuperação (MA: ${media.toFixed(1)})`;
+                statusColor = 'var(--color-danger)';
+            }
+
+            return { vals, total, media, status, statusText, statusColor };
+        }
+
         function renderNotas() {
             const container = document.getElementById('notasContainer');
             if (!container) return;
             container.innerHTML = turmas.map(d => {
                 const nota = notas[d.cod] || { b1: '', b2: '', b3: '', b4: '' };
-                const vals = [1,2,3,4].map(b => parseFloat(nota['b'+b])).filter(v => !isNaN(v) && v > 0);
-                const media = vals.length > 0 ? vals.reduce((a,b) => a+b, 0) / vals.length : 0;
-                const status = vals.length === 4 ? (media >= 7 ? 'aprovado' : 'recuperacao') : 'aguardando';
-                const statusText = vals.length === 4 ? (media >= 7 ? '✅ Aprovado!' : `🔴 Recuperação (MA: ${media.toFixed(1)})`) : `⏳ ${vals.length}/4 bimestres`;
+                const { vals, media, status, statusText, statusColor } = calcularStatusNotas(nota);
                 return `<div class="notas-card">
                     <div class="disciplina-nome">${escapeHtml(d.nome)} <span class="codigo">${d.cod}</span></div>
                     <div class="notas-bimestres">${[1,2,3,4].map(b => `<div class="nota-bimestre"><div class="bimestre-label">${b}º Bim</div><input type="text" inputmode="decimal" pattern="[0-9,.]*" value="${nota['b'+b] || ''}" onchange="atualizarNota('${d.cod}', 'b${b}', this.value)" oninput="validarNota(this)" placeholder="--" /></div>`).join('')}</div>
-                    <div class="notas-resultado"><div class="resultado-principal"><span class="media ${status}">${vals.length > 0 ? media.toFixed(1) : '--'}</span><span style="font-size:11px;color:var(--color-text-muted);">${vals.length}/4 bimestres</span><span style="font-size:10px;font-weight:600;color:${media >= 7 ? 'var(--color-success)' : vals.length < 4 ? 'var(--color-warning)' : 'var(--color-danger)'};">${statusText}</span></div></div>
+                    <div class="notas-resultado"><div class="resultado-principal"><span class="media ${status}">${vals.length > 0 ? media.toFixed(1) : '--'}</span><span style="font-size:11px;color:var(--color-text-muted);">${vals.length}/4 bimestres</span><span style="font-size:10px;font-weight:600;color:${statusColor};">${statusText}</span></div></div>
                 </div>`;
             }).join('');
         }
