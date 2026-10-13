@@ -1318,6 +1318,18 @@
             color: var(--color-text);
         }
         .notas-card .disciplina-nome .codigo { font-size: 10px; color: var(--color-text-muted); font-weight: 400; }
+        .notas-card .disciplina-aprovada {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: rgba(76, 175, 80, 0.14);
+            color: var(--color-success);
+            font-size: 11px;
+            font-weight: 800;
+        }
         .notas-bimestres {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -4009,7 +4021,7 @@
                 const nota = notas[d.cod] || { b1: '', b2: '', b3: '', b4: '' };
                 const { vals, media, status, statusText, statusColor } = calcularStatusNotas(nota);
                 return `<div class="notas-card">
-                    <div class="disciplina-nome">${escapeHtml(d.nome)} <span class="codigo">${d.cod}</span></div>
+                    <div class="disciplina-nome">${escapeHtml(d.nome)} ${status === 'aprovado' ? '<span class="disciplina-aprovada" title="Disciplina aprovada" aria-label="Disciplina aprovada">X</span>' : ''}<span class="codigo">${d.cod}</span></div>
                     <div class="notas-bimestres">${[1,2,3,4].map(b => `<div class="nota-bimestre"><div class="bimestre-label">${b}º Bim</div><input type="text" inputmode="decimal" pattern="[0-9,.]*" value="${nota['b'+b] || ''}" onchange="atualizarNota('${d.cod}', 'b${b}', this.value)" oninput="validarNota(this)" placeholder="--" /></div>`).join('')}</div>
                     <div class="notas-resultado"><div class="resultado-principal"><span class="media ${status}">${vals.length > 0 ? media.toFixed(1) : '--'}</span><span style="font-size:11px;color:var(--color-text-muted);">${vals.length}/4 bimestres</span><span style="font-size:10px;font-weight:600;color:${statusColor};">${statusText}</span></div></div>
                 </div>`;
