@@ -1132,6 +1132,20 @@
         }
         .table-search input:focus { border-color: var(--color-accent); }
         .table-search .search-count { font-size: 10px; color: var(--color-text-muted); }
+        .btn-finalizar-disciplina {
+            min-height: 32px;
+            padding: 5px 9px;
+            border: 1px solid var(--color-border);
+            border-radius: 6px;
+            background: transparent;
+            color: var(--color-text);
+            cursor: pointer;
+            font: inherit;
+            font-size: 11px;
+            white-space: nowrap;
+        }
+        .btn-finalizar-disciplina:hover { border-color: var(--color-accent); color: var(--color-accent); }
+        .disciplina-finalizada { color: var(--color-success); font-size: 11px; font-weight: 600; }
         table {
             width: 100%;
             border-collapse: collapse;
@@ -3277,6 +3291,7 @@
         let atividades = normalizarColecao(loadData('gda_atividades', []));
         let frequencias = normalizarColecao(loadData('gda_frequencias', []));
         let notas = normalizarMapa(loadData('gda_notas', {}));
+        let disciplinasFinalizadas = normalizarMapa(loadData('gda_disciplinas_finalizadas', {}));
         let relatorios = normalizarColecao(loadData('gda_relatorios', []));
         let checklistState = normalizarMapa(loadData('gda_checklist', {}));
         let atendimentos = normalizarColecao(loadData('gda_atendimentos', []));
@@ -3472,7 +3487,7 @@
         async function carregarDados(onProgress) {
             const chaves = [
                 'gda_presencas_atrasadas', 'gda_ocorrencias', 'gda_presencas', 'gda_atividades',
-                'gda_frequencias', 'gda_notas', 'gda_relatorios', 'gda_checklist',
+                'gda_frequencias', 'gda_notas', 'gda_disciplinas_finalizadas', 'gda_relatorios', 'gda_checklist',
                 'gda_atendimentos', 'gda_assuntos', 'gda_avaliacoes'
             ];
             let total = chaves.length;
@@ -3508,6 +3523,7 @@
             atividades = normalizarColecao(loadData('gda_atividades', []));
             frequencias = normalizarColecao(loadData('gda_frequencias', []));
             notas = normalizarMapa(loadData('gda_notas', {}));
+            disciplinasFinalizadas = normalizarMapa(loadData('gda_disciplinas_finalizadas', {}));
             relatorios = normalizarColecao(loadData('gda_relatorios', []));
             checklistState = normalizarMapa(loadData('gda_checklist', {}));
             atendimentos = normalizarColecao(loadData('gda_atendimentos', []));
@@ -3525,6 +3541,7 @@
                 'gda_atividades': () => atividades = normalizarColecao(valor),
                 'gda_frequencias': () => frequencias = normalizarColecao(valor),
                 'gda_notas': () => notas = normalizarMapa(valor),
+                'gda_disciplinas_finalizadas': () => disciplinasFinalizadas = normalizarMapa(valor),
                 'gda_relatorios': () => relatorios = normalizarColecao(valor),
                 'gda_checklist': () => checklistState = normalizarMapa(valor),
                 'gda_atendimentos': () => atendimentos = normalizarColecao(valor),
@@ -3682,7 +3699,7 @@
                     <div class="table-wrapper">
                         <div class="table-search"><input type="text" id="searchTurma" placeholder="🔍 Buscar..." /><span class="search-count" id="searchCount">Mostrando 15 de 15</span></div>
                         <table>
-                            <thead><tr><th>Cód.</th><th>Componente Curricular / Docente</th><th>Turma</th><th>Status</th><th>Horário</th></tr></thead>
+                            <thead><tr><th>Cód.</th><th>Componente Curricular / Docente</th><th>Turma</th><th>Status</th><th>Horário</th><th>Ação</th></tr></thead>
                             <tbody id="turmasTableBody"></tbody>
                         </table>
                     </div>
@@ -3860,23 +3877,37 @@
             const navBadge = document.getElementById('navChecklistBadge');
             if (navBadge) navBadge.textContent = `${pct}%`;
         }
+        async function alternarDisciplinaFinalizada(cod) {
+            const disciplina = turmas.find(item => item.cod === cod);
+            if (!disciplina) return;
+            const finalizada = disciplinasFinalizadas[cod] === true;
+            if (!finalizada && !confirm(`Finalizar ${disciplina.nome}? As notas ficarão bloqueadas.`)) return;
+            if (finalizada) delete disciplinasFinalizadas[cod];
+            else disciplinasFinalizadas[cod] = true;
+            await saveData('gda_disciplinas_finalizadas', disciplinasFinalizadas);
+            renderTurmas();
+            renderNotas();
+            mostrarToast(finalizada ? 'Disciplina reaberta.' : 'Disciplina finalizada.', 'sucesso');
+        }
         function renderTurmas() {
             const tbody = document.getElementById('turmasTableBody');
             if (!tbody) return;
             tbody.innerHTML = turmas.map(t => {
                 const frequencia = frequencias.find(item => item.codigo === t.cod);
                 const resumo = frequencia ? `<br><small style="color:var(--color-accent);">📊 ${frequencia.presencas} presenças · ${frequencia.faltas} faltas · ${frequencia.percentual}%</small>` : '';
+                const finalizada = disciplinasFinalizadas[t.cod] === true;
                 return `<tr>
                 <td class="cod" data-label="Cód.">${t.cod}</td>
                 <td data-label="Componente / Docente"><strong>${t.nome}</strong>${resumo}<br><span class="prof">${t.professor}</span></td>
                 <td class="turma" data-label="Turma">${t.turma}</td>
-                <td data-label="Status"><span class="status"><i class="fas fa-check-circle"></i> Matriculado</span></td>
+                <td data-label="Status"><span class="status"><i class="fas fa-check-circle"></i> ${finalizada ? 'Finalizada' : 'Matriculado'}</span></td>
                 <td class="horario" data-label="Horário">${t.horario}</td>
+                <td data-label="Ação"><button type="button" class="btn-finalizar-disciplina" onclick="alternarDisciplinaFinalizada('${t.cod}')">${finalizada ? 'Reabrir' : 'Finalizar disciplina'}</button></td>
             </tr>`;
             }).join('');
             const searchInput = document.getElementById('searchTurma');
             if (searchInput) {
-                searchInput.addEventListener('input', function() {
+                searchInput.oninput = function() {
                     const filter = this.value.toLowerCase();
                     const rows = tbody.querySelectorAll('tr');
                     let count = 0;
@@ -3887,7 +3918,7 @@
                     });
                     const countEl = document.getElementById('searchCount');
                     if (countEl) countEl.textContent = `Mostrando ${count} de ${turmas.length}`;
-                });
+                };
             }
         }
         function formatarContagemRegressiva(data) {
@@ -4026,9 +4057,10 @@
             container.innerHTML = turmas.map(d => {
                 const nota = notas[d.cod] || { b1: '', b2: '', b3: '', b4: '' };
                 const { vals, media, status, statusText, statusColor } = calcularStatusNotas(nota);
+                const finalizada = disciplinasFinalizadas[d.cod] === true;
                 return `<div class="notas-card">
-                    <div class="disciplina-nome">${escapeHtml(d.nome)} ${status === 'aprovado' ? '<span class="disciplina-aprovada" title="Disciplina aprovada" aria-label="Disciplina aprovada">X</span>' : ''}<span class="codigo">${d.cod}</span></div>
-                    <div class="notas-bimestres">${[1,2,3,4].map(b => `<div class="nota-bimestre"><div class="bimestre-label">${b}º Bim</div><input type="text" inputmode="decimal" pattern="[0-9,.]*" value="${nota['b'+b] || ''}" onchange="atualizarNota('${d.cod}', 'b${b}', this.value, this)" oninput="validarNota(this)" placeholder="--" /></div>`).join('')}</div>
+                    <div class="disciplina-nome">${escapeHtml(d.nome)} ${status === 'aprovado' ? '<span class="disciplina-aprovada" title="Disciplina aprovada" aria-label="Disciplina aprovada">X</span>' : ''}<span class="codigo">${d.cod}</span>${finalizada ? '<span class="disciplina-finalizada">Finalizada</span>' : ''}</div>
+                    <div class="notas-bimestres">${[1,2,3,4].map(b => `<div class="nota-bimestre"><div class="bimestre-label">${b}º Bim</div><input type="text" inputmode="decimal" pattern="[0-9,.]*" value="${nota['b'+b] || ''}" onchange="atualizarNota('${d.cod}', 'b${b}', this.value, this)" oninput="validarNota(this)" placeholder="--" ${finalizada ? 'disabled' : ''} /></div>`).join('')}</div>
                     <div class="notas-resultado"><div class="resultado-principal"><span class="media ${status}">${vals.length > 0 ? media.toFixed(1) : '--'}</span><span style="font-size:11px;color:var(--color-text-muted);">${vals.length}/4 bimestres</span><span style="font-size:10px;font-weight:600;color:${statusColor};">${statusText}</span></div></div>
                 </div>`;
             }).join('');
@@ -4584,6 +4616,11 @@
             input.value = valor;
         }
         function atualizarNota(cod, bimestre, valor, inputEl) {
+            if (disciplinasFinalizadas[cod] === true) {
+                mostrarToast('Esta disciplina está finalizada. Reabra-a em Turmas para editar as notas.', 'aviso');
+                if (inputEl) inputEl.value = notas[cod]?.[bimestre] || '';
+                return;
+            }
             let valorLimpo = valor.replace(',', '.').replace(/[^0-9.]/g, '');
             const num = parseFloat(valorLimpo);
             if (valorLimpo !== '' && (isNaN(num) || num < 0 || num > 10)) {
@@ -5134,6 +5171,7 @@
         window.confirmarOcorrencia = confirmarOcorrencia;
         window.validarNota = validarNota;
         window.atualizarNota = atualizarNota;
+        window.alternarDisciplinaFinalizada = alternarDisciplinaFinalizada;
         window.novaFrase = novaFrase;
         window.adicionarParticipante = adicionarParticipante;
         window.removerParticipante = removerParticipante;
