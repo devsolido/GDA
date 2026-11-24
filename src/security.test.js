@@ -95,6 +95,32 @@ describe('validacao de dados', () => {
     expect(response.statusCode).toBe(400);
   });
 
+  test('valida e aceita disciplinas para sincronizacao', async () => {
+    const invalidResponse = responseMock();
+    await syncController.sync({ method: 'POST', params: { key: 'gda_turmas' }, body: { value: [{ nome: 'Matemática' }] } }, invalidResponse);
+    expect(invalidResponse.statusCode).toBe(400);
+
+    const validResponse = responseMock();
+    await syncController.sync({
+      method: 'POST',
+      params: { key: 'gda_turmas' },
+      body: { value: [{ cod: 'local_123', nome: 'Matemática', professor: 'Maria' }] }
+    }, validResponse);
+    expect(validResponse.statusCode).toBe(200);
+
+    const emptyResponse = responseMock();
+    await syncController.sync({ method: 'POST', params: { key: 'gda_turmas' }, body: { value: [] } }, emptyResponse);
+    expect(emptyResponse.statusCode).toBe(200);
+
+    const semesterResponse = responseMock();
+    await syncController.sync({
+      method: 'POST',
+      params: { key: 'gda_semestre_atual' },
+      body: { value: { atual: '2027.1' } }
+    }, semesterResponse);
+    expect(semesterResponse.statusCode).toBe(200);
+  });
+
   test('bloqueia mapa de notas invalido', async () => {
     const response = responseMock();
     await notasController.set({ body: { value: [] } }, response);

@@ -7,9 +7,12 @@ let schemaPromise;
 const sectionKeys = [
   'gda_presencas_atrasadas', 'gda_ocorrencias', 'gda_presencas', 'gda_atividades',
   'gda_frequencias', 'gda_relatorios', 'gda_checklist',
-  'gda_atendimentos', 'gda_assuntos', 'gda_avaliacoes'
+  'gda_atendimentos', 'gda_assuntos', 'gda_avaliacoes', 'gda_turmas',
+  'gda_disciplinas_finalizadas', 'gda_semestre_atual'
 ];
-const mapSectionKeys = new Set(['gda_checklist', 'gda_assuntos']);
+const mapSectionKeys = new Set([
+  'gda_checklist', 'gda_assuntos', 'gda_disciplinas_finalizadas', 'gda_semestre_atual'
+]);
 
 function getClient() {
   if (!config.dbUrl || !config.dbToken) return null;

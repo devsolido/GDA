@@ -1315,6 +1315,12 @@
             padding: 12px 14px;
             border: 1px solid var(--color-border);
         }
+        .notas-card.emergencia {
+            border-color: rgba(229, 57, 53, 0.65);
+            background: rgba(229, 57, 53, 0.04);
+        }
+        .notas-card.emergencia .nota-bimestre { border-color: rgba(229, 57, 53, 0.35); }
+        .nota-bimestre input.nota-critica { color: var(--color-danger); }
         .notas-card .disciplina-nome {
             font-size: 13px;
             font-weight: 700;
@@ -1397,7 +1403,53 @@
             color: var(--color-text-muted);
         }
         .notas-meta.atingida { color: var(--color-success); }
-        .notas-meta.impossivel { color: var(--color-danger); }
+        .notas-meta.emergencia { color: var(--color-danger); font-weight: 700; }
+        .notas-controles {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 12px;
+            align-items: stretch;
+            margin-bottom: 14px;
+        }
+        .notas-disciplina-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 8px;
+            padding: 12px;
+            background: var(--color-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius);
+        }
+        .notas-disciplina-form input {
+            min-width: 0;
+            padding: 9px 10px;
+            background: var(--color-primary);
+            color: var(--color-text);
+            border: 1px solid var(--color-border);
+            border-radius: 6px;
+            font: inherit;
+        }
+        .notas-disciplina-form button,
+        .btn-iniciar-semestre {
+            border: 0;
+            border-radius: 8px;
+            padding: 10px 14px;
+            color: #fff;
+            font: 700 11px 'Inter', sans-serif;
+            cursor: pointer;
+        }
+        .notas-disciplina-form button { background: var(--color-success); }
+        .btn-iniciar-semestre {
+            background: linear-gradient(135deg, #c62828, #e53935);
+            box-shadow: 0 4px 14px rgba(229, 57, 53, 0.24);
+        }
+        .notas-disciplina-form button:disabled,
+        .btn-iniciar-semestre:disabled { opacity: 0.6; cursor: wait; }
+        .notas-professor { display: block; flex-basis: 100%; color: var(--color-text-muted); font-size: 10px; font-weight: 400; }
+        @media (max-width: 700px) {
+            .notas-controles { grid-template-columns: 1fr; }
+            .notas-disciplina-form { grid-template-columns: 1fr; }
+        }
         .presenca-stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -3298,6 +3350,8 @@
         let atividades = normalizarColecao(loadData('gda_atividades', []));
         let frequencias = normalizarColecao(loadData('gda_frequencias', []));
         let notas = normalizarMapa(loadData('gda_notas', {}));
+        let turmas = [];
+        let semestreAtual = normalizarMapa(loadData('gda_semestre_atual', {}));
         let disciplinasFinalizadas = normalizarMapa(loadData('gda_disciplinas_finalizadas', {}));
         let relatorios = normalizarColecao(loadData('gda_relatorios', []));
         let checklistState = normalizarMapa(loadData('gda_checklist', {}));
@@ -3391,6 +3445,7 @@
         }
         function gerarIdLocal() { return 'local_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6); }
         function escapeHtml(t) { if (!t) return ''; const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+        function escapeHtmlAttribute(t) { return escapeHtml(t).replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
         function loadData(key, def) {
             try { const d = localStorage.getItem(key); return d ? JSON.parse(d) : def; } catch(e) { return def; }
         }
@@ -3429,10 +3484,15 @@
             document.getElementById('authPassword').value = '';
             return true;
         }
-        async function saveData(key, data) {
-            try { localStorage.setItem(key, JSON.stringify(data)); } catch(e) { return false; }
+        async function saveData(key, data, avisarFalha = true) {
+            try {
+                localStorage.setItem(key, JSON.stringify(data));
+            } catch (error) {
+                if (avisarFalha) mostrarToast('Não foi possível salvar neste dispositivo.', 'erro');
+                return false;
+            }
             const synced = await syncDataToCloud(key, data);
-            if (!synced) mostrarToast('Salvo apenas neste dispositivo. Não foi possível sincronizar com a nuvem.', 'aviso', 5000);
+            if (!synced && avisarFalha) mostrarToast('Salvo apenas neste dispositivo. Não foi possível sincronizar com a nuvem.', 'aviso', 5000);
             return synced;
         }
         async function loadDataFromCloud(key, fallback) {
@@ -3473,6 +3533,7 @@
             }
         }
         async function incorporarFrequenciasImportadas() {
+            if (semestreAtual.atual === '2027.1') return;
             const datasExistentes = new Set(presencas.map((registro) => registro.data));
             const novosRegistros = frequenciasImportadas
                 .filter((data) => !datasExistentes.has(data))
@@ -3495,7 +3556,7 @@
             const chaves = [
                 'gda_presencas_atrasadas', 'gda_ocorrencias', 'gda_presencas', 'gda_atividades',
                 'gda_frequencias', 'gda_notas', 'gda_disciplinas_finalizadas', 'gda_relatorios', 'gda_checklist',
-                'gda_atendimentos', 'gda_assuntos', 'gda_avaliacoes'
+                'gda_atendimentos', 'gda_assuntos', 'gda_avaliacoes', 'gda_turmas', 'gda_semestre_atual'
             ];
             let total = chaves.length;
             let concluidas = 0;
@@ -3526,6 +3587,9 @@
             presencasAtrasadas = normalizarColecao(loadData('gda_presencas_atrasadas', []));
             ocorrencias = normalizarColecao(loadData('gda_ocorrencias', []));
             presencas = normalizarColecao(loadData('gda_presencas', []));
+            turmas = normalizarColecao(loadData('gda_turmas', turmas), turmas);
+            semestreAtual = normalizarMapa(loadData('gda_semestre_atual', {}));
+            if (loadData('gda_turmas', null) === null) await saveData('gda_turmas', turmas, false);
             await incorporarFrequenciasImportadas();
             atividades = normalizarColecao(loadData('gda_atividades', []));
             frequencias = normalizarColecao(loadData('gda_frequencias', []));
@@ -3548,6 +3612,8 @@
                 'gda_atividades': () => atividades = normalizarColecao(valor),
                 'gda_frequencias': () => frequencias = normalizarColecao(valor),
                 'gda_notas': () => notas = normalizarMapa(valor),
+                'gda_turmas': () => turmas = normalizarColecao(valor),
+                'gda_semestre_atual': () => semestreAtual = normalizarMapa(valor),
                 'gda_disciplinas_finalizadas': () => disciplinasFinalizadas = normalizarMapa(valor),
                 'gda_relatorios': () => relatorios = normalizarColecao(valor),
                 'gda_checklist': () => checklistState = normalizarMapa(valor),
@@ -3574,7 +3640,7 @@
         }
         function getSaudacao() { const h = parseInt(getPartesMaraba().hora, 10); if (h < 12) return 'Bom dia'; if (h < 18) return 'Boa tarde'; return 'Boa noite'; }
         function getEmojiSaudacao() { const h = parseInt(getPartesMaraba().hora, 10); if (h < 12) return '🌅'; if (h < 18) return '☀️'; return '🌙'; }
-        const turmas = [
+        const turmasPadrao = [
             { cod: 'TICAM0147', nome: 'ARTES', professor: 'THAYS ALVES COSTA', turma: 'B2371M', horario: '6M34' },
             { cod: 'TICAM0151', nome: 'EDUCAÇÃO FÍSICA', professor: 'ANA PAULA SIQUEIRA DA PONTE', turma: 'B2371M', horario: '5T2345' },
             { cod: 'TICAM0152', nome: 'FILOSOFIA', professor: 'JESSIKA CURTINAZ DA SILVA', turma: 'B2371M', horario: '4M56' },
@@ -3591,6 +3657,7 @@
             { cod: 'TICAM0150', nome: 'SOCIOLOGIA', professor: 'MARCELO MELO DOS SANTOS', turma: 'B2371M', horario: '5M56' },
             { cod: 'TICAM0158', nome: 'TÉCNICAS EM EDUCAÇÃO AMBIENTAL', professor: 'DANIELLE IVANA PEREIRA DOS SANTOS', turma: 'B2371M', horario: '4M34' }
         ];
+        turmas = normalizarColecao(loadData('gda_turmas', turmasPadrao), turmasPadrao);
         const checklistItems = [
             { id: 'linkedin', label: 'Verificar LinkedIn', icon: 'fab fa-linkedin' },
             { id: 'gupy', label: 'Gupy - Vaga Aprendiz Home Office', icon: 'fas fa-briefcase' },
@@ -3727,6 +3794,16 @@
                 </div>
                 <div class="page" id="page-notas">
                     <div class="section-title"><i class="fas fa-graduation-cap"></i> Módulo de Notas <span class="badge">📊 Média ≥ 7.0 ou 28 pts antes do 4º BIM = Aprovado</span></div>
+                    <div class="notas-controles">
+                        <form class="notas-disciplina-form" id="disciplinaForm">
+                            <input type="text" id="novaDisciplinaNome" placeholder="Nome da disciplina" maxlength="120" required aria-label="Nome da disciplina" />
+                            <input type="text" id="novaDisciplinaProfessor" placeholder="Nome do professor" maxlength="200" required aria-label="Nome do professor" />
+                            <button type="submit"><i class="fas fa-plus"></i> Adicionar disciplina</button>
+                        </form>
+                        <button type="button" class="btn-iniciar-semestre" id="btnIniciarSemestre">
+                            <i class="fas fa-triangle-exclamation"></i> INICIAR 2027.1 · ZERAR TUDO
+                        </button>
+                    </div>
                     <div class="notas-grid" id="notasContainer"></div>
                 </div>
                 <div class="page" id="page-avaliacoes">
@@ -3899,16 +3976,20 @@
         function renderTurmas() {
             const tbody = document.getElementById('turmasTableBody');
             if (!tbody) return;
+            if (turmas.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6">Cadastre as disciplinas e os professores no módulo de Notas.</td></tr>';
+                return;
+            }
             tbody.innerHTML = turmas.map(t => {
                 const frequencia = frequencias.find(item => item.codigo === t.cod);
                 const resumo = frequencia ? `<br><small style="color:var(--color-accent);">📊 ${frequencia.presencas} presenças · ${frequencia.faltas} faltas · ${frequencia.percentual}%</small>` : '';
                 const finalizada = disciplinasFinalizadas[t.cod] === true;
                 return `<tr>
-                <td class="cod" data-label="Cód.">${t.cod}</td>
-                <td data-label="Componente / Docente"><strong>${t.nome}</strong>${resumo}<br><span class="prof">${t.professor}</span></td>
-                <td class="turma" data-label="Turma">${t.turma}</td>
+                <td class="cod" data-label="Cód.">${escapeHtml(t.cod)}</td>
+                <td data-label="Componente / Docente"><strong>${escapeHtml(t.nome)}</strong>${resumo}<br><span class="prof">${escapeHtml(t.professor)}</span></td>
+                <td class="turma" data-label="Turma">${escapeHtml(t.turma || '')}</td>
                 <td data-label="Status"><span class="status"><i class="fas fa-check-circle"></i> ${finalizada ? 'Finalizada' : 'Matriculado'}</span></td>
-                <td class="horario" data-label="Horário">${t.horario}</td>
+                <td class="horario" data-label="Horário">${escapeHtml(t.horario || '')}</td>
                 <td data-label="Ação"><button type="button" class="btn-finalizar-disciplina" onclick="alternarDisciplinaFinalizada('${t.cod}')">${finalizada ? 'Reabrir' : 'Finalizar disciplina'}</button></td>
             </tr>`;
             }).join('');
@@ -3926,6 +4007,143 @@
                     const countEl = document.getElementById('searchCount');
                     if (countEl) countEl.textContent = `Mostrando ${count} de ${turmas.length}`;
                 };
+            }
+        }
+        function atualizarSelectsDisciplinas() {
+            const selectIds = [
+                'formDisciplina', 'formAvaliacaoDisciplina', 'relatorioDisciplina',
+                'formAssuntoDisciplina', 'formAtendimentoDisciplina', 'formOcorrenciaDisciplina'
+            ];
+            selectIds.forEach(id => {
+                const select = document.getElementById(id);
+                if (!select) return;
+                const selecionada = select.value;
+                select.innerHTML = '<option value="">Selecione uma disciplina</option>' + turmas
+                    .map(t => `<option value="${escapeHtmlAttribute(t.nome)}">${escapeHtml(t.nome)}</option>`).join('');
+                if (turmas.some(t => t.nome === selecionada)) select.value = selecionada;
+            });
+        }
+        async function adicionarDisciplina(event) {
+            event.preventDefault();
+            const form = document.getElementById('disciplinaForm');
+            const nome = document.getElementById('novaDisciplinaNome').value.trim();
+            const professor = document.getElementById('novaDisciplinaProfessor').value.trim();
+            if (turmas.some(t => t.nome.toLocaleLowerCase() === nome.toLocaleLowerCase())) {
+                mostrarToast('Essa disciplina já está cadastrada.', 'aviso');
+                return;
+            }
+            if (turmas.length >= 100) {
+                mostrarToast('O limite de disciplinas foi atingido.', 'aviso');
+                return;
+            }
+            const novasTurmas = [...turmas, {
+                cod: gerarIdLocal(),
+                nome,
+                professor,
+                turma: '',
+                horario: ''
+            }];
+            const campos = [...form.elements];
+            const estadosCampos = campos.map(campo => campo.disabled);
+            const botaoInicio = document.getElementById('btnIniciarSemestre');
+            const inicioDesabilitado = botaoInicio?.disabled;
+            campos.forEach(campo => { campo.disabled = true; });
+            if (botaoInicio) botaoInicio.disabled = true;
+            try {
+                await saveData('gda_turmas', novasTurmas);
+                if (JSON.stringify(loadData('gda_turmas', null)) !== JSON.stringify(novasTurmas)) {
+                    mostrarToast('Não foi possível salvar a disciplina neste dispositivo.', 'erro');
+                    return;
+                }
+                turmas = novasTurmas;
+                form.reset();
+                atualizarSelectsDisciplinas();
+                renderTurmas();
+                renderNotas();
+                mostrarToast('Disciplina e professor adicionados.', 'sucesso');
+            } finally {
+                campos.forEach((campo, index) => { campo.disabled = estadosCampos[index]; });
+                if (botaoInicio) botaoInicio.disabled = inicioDesabilitado;
+            }
+        }
+        async function iniciarSemestre2027(button) {
+            if (!confirm('Iniciar 2027.1 apagará permanentemente as disciplinas, notas, atividades, frequência, avaliações e demais dados acadêmicos locais e sincronizados. Continuar?')) return;
+            if (prompt('Para confirmar a limpeza total, digite 2027.1:') !== '2027.1') {
+                mostrarToast('Limpeza cancelada. Nenhum dado foi apagado.', 'aviso');
+                return;
+            }
+
+            const novosDados = [
+                ['gda_presencas_atrasadas', []],
+                ['gda_ocorrencias', []],
+                ['gda_presencas', []],
+                ['gda_atividades', []],
+                ['gda_frequencias', []],
+                ['gda_notas', {}],
+                ['gda_disciplinas_finalizadas', {}],
+                ['gda_relatorios', []],
+                ['gda_checklist', {}],
+                ['gda_atendimentos', []],
+                ['gda_assuntos', {}],
+                ['gda_avaliacoes', []],
+                ['gda_turmas', []],
+                ['gda_semestre_atual', { atual: '2027.1' }]
+            ];
+            const form = document.getElementById('disciplinaForm');
+            const camposForm = form ? [...form.elements] : [];
+            const estadoCampos = camposForm.map(campo => campo.disabled);
+            button.disabled = true;
+            camposForm.forEach(campo => { campo.disabled = true; });
+            try {
+                const sincronizados = await Promise.all(novosDados.map(([chave, valor]) => saveData(chave, valor, false)));
+                presencasAtrasadas = [];
+                ocorrencias = [];
+                presencas = [];
+                atividades = [];
+                frequencias = [];
+                notas = {};
+                disciplinasFinalizadas = {};
+                relatorios = [];
+                checklistState = {};
+                atendimentos = [];
+                assuntos = {};
+                avaliacoes = [];
+                turmas = [];
+                semestreAtual = { atual: '2027.1' };
+
+                atualizarSelectsDisciplinas();
+                renderChecklist();
+                renderTurmas();
+                renderAtividades();
+                renderNotas();
+                renderAvaliacoes();
+                renderRelatorios();
+                renderTelaInicial();
+                renderDashboard();
+                renderAtendimentos();
+                renderPresenca();
+                renderAssuntos();
+                renderOcorrencias();
+                atualizarBadgePresenca();
+                atualizarBadgeAssuntos();
+
+                const localOk = novosDados.every(([chave, valor]) => {
+                    try {
+                        return localStorage.getItem(chave) === JSON.stringify(valor);
+                    } catch (error) {
+                        return false;
+                    }
+                });
+                if (!localOk) {
+                    mostrarToast('A limpeza não foi salva completamente neste dispositivo. Verifique o armazenamento local.', 'erro', 7000);
+                } else if (sincronizados.some(sucesso => !sucesso)) {
+                    mostrarToast('Dados limpos neste dispositivo, mas a sincronização com a nuvem falhou. Conecte-se e tente novamente.', 'aviso', 7000);
+                } else {
+                    mostrarToast('2027.1 iniciado. Dados acadêmicos apagados; adicione as novas disciplinas e professores.', 'sucesso', 6000);
+                }
+            } finally {
+                button.disabled = false;
+                camposForm.forEach((campo, index) => { campo.disabled = estadoCampos[index]; });
             }
         }
         function formatarContagemRegressiva(data) {
@@ -4069,32 +4287,36 @@
 
             if (total >= 28) return { texto: 'Meta de 28 pts atingida!', status: 'atingida' };
             if (restantes === 0) {
-                return { texto: `Faltaram ${formatarPontos(faltam)} pts para atingir 28 pts.`, status: 'impossivel' };
+                return { texto: `🚨 EMERGÊNCIA: faltaram ${formatarPontos(faltam)} pts para atingir 28 pts.`, status: 'emergencia' };
             }
             const mediaNecessaria = faltam / restantes;
             if (mediaNecessaria > 10) {
                 return {
-                    texto: `Faltam ${formatarPontos(faltam)} pts, mas não é mais possível atingir 28 pts nos ${restantes} bimestres restantes.`,
-                    status: 'impossivel'
+                    texto: `🚨 EMERGÊNCIA: faltam ${formatarPontos(faltam)} pts; não é mais possível atingir 28 pts nos ${restantes} bimestres restantes.`,
+                    status: 'emergencia'
                 };
             }
             return {
-                texto: `Faltam ${formatarPontos(faltam)} pts: tire ${formatarPontos(mediaNecessaria)} em cada um dos ${restantes} bimestres restantes.`,
-                status: 'pendente'
+                texto: `${mediaNecessaria > 7 ? '🚨 EMERGÊNCIA: ' : ''}Faltam ${formatarPontos(faltam)} pts: tire ${formatarPontos(mediaNecessaria)} em cada um dos ${restantes} bimestres restantes.`,
+                status: mediaNecessaria > 7 ? 'emergencia' : 'pendente'
             };
         }
 
         function renderNotas() {
             const container = document.getElementById('notasContainer');
             if (!container) return;
+            if (turmas.length === 0) {
+                container.innerHTML = '<div class="empty-state"><i class="fas fa-book-open"></i>Adicione as disciplinas e os professores do semestre para começar a lançar as notas.</div>';
+                return;
+            }
             container.innerHTML = turmas.map(d => {
                 const nota = notas[d.cod] || { b1: '', b2: '', b3: '', b4: '' };
                 const { vals, media, status, statusText, statusColor } = calcularStatusNotas(nota);
                 const meta = calcularMetaNotas(nota);
                 const finalizada = disciplinasFinalizadas[d.cod] === true;
-                return `<div class="notas-card" data-codigo="${escapeHtml(d.cod)}">
-                    <div class="disciplina-nome">${escapeHtml(d.nome)} ${status === 'aprovado' ? '<span class="disciplina-aprovada" title="Disciplina aprovada" aria-label="Disciplina aprovada">X</span>' : ''}<span class="codigo">${d.cod}</span>${finalizada ? '<span class="disciplina-finalizada">Finalizada</span>' : ''}</div>
-                    <div class="notas-bimestres">${[1,2,3,4].map(b => `<div class="nota-bimestre"><div class="bimestre-label">${b}º Bim</div><input type="text" inputmode="decimal" pattern="[0-9,.]*" value="${nota['b'+b] || ''}" onchange="atualizarNota('${d.cod}', 'b${b}', this.value, this)" oninput="validarNota(this); atualizarPreviaNota(this, 'b${b}')" placeholder="--" ${finalizada ? 'disabled' : ''} /></div>`).join('')}</div>
+                return `<div class="notas-card ${meta.status === 'emergencia' ? 'emergencia' : ''}" data-codigo="${escapeHtmlAttribute(d.cod)}">
+                    <div class="disciplina-nome">${escapeHtml(d.nome)} ${status === 'aprovado' ? '<span class="disciplina-aprovada" title="Disciplina aprovada" aria-label="Disciplina aprovada">X</span>' : ''}<span class="codigo">${escapeHtml(d.cod)}</span>${finalizada ? '<span class="disciplina-finalizada">Finalizada</span>' : ''}<span class="notas-professor">${escapeHtml(d.professor || '')}</span></div>
+                    <div class="notas-bimestres">${[1,2,3,4].map(b => `<div class="nota-bimestre"><div class="bimestre-label">${b}º Bim</div><input class="${meta.status === 'emergencia' && nota['b'+b] !== '' ? 'nota-critica' : ''}" type="text" inputmode="decimal" pattern="[0-9,.]*" value="${escapeHtmlAttribute(nota['b'+b] || '')}" onchange="atualizarNota('${d.cod}', 'b${b}', this.value, this)" oninput="validarNota(this); atualizarPreviaNota(this, 'b${b}')" placeholder="--" ${finalizada ? 'disabled' : ''} /></div>`).join('')}</div>
                     <div class="notas-resultado"><div class="resultado-principal"><span class="media ${status}">${vals.length > 0 ? media.toFixed(1) : '--'}</span><span style="font-size:11px;color:var(--color-text-muted);">${vals.length}/4 bimestres</span><span style="font-size:10px;font-weight:600;color:${statusColor};">${statusText}</span></div><div class="notas-meta ${meta.status}" aria-live="polite">${meta.texto}</div></div>
                 </div>`;
             }).join('');
@@ -4108,6 +4330,10 @@
             const meta = calcularMetaNotas(nota);
             previa.textContent = meta.texto;
             previa.className = `notas-meta ${meta.status}`;
+            card.classList.toggle('emergencia', meta.status === 'emergencia');
+            card.querySelectorAll('.nota-bimestre input').forEach(input => {
+                input.classList.toggle('nota-critica', meta.status === 'emergencia' && input.value !== '');
+            });
         }
 
         function renderRelatorios() {
@@ -4116,7 +4342,7 @@
             relatorios = normalizarColecao(relatorios);
             const select = document.getElementById('relatorioDisciplina');
             if (select && select.options.length <= 1) {
-                select.innerHTML = '<option value="">Selecione uma disciplina</option>' + turmas.map(t => `<option value="${t.nome}">${t.nome}</option>`).join('');
+                select.innerHTML = '<option value="">Selecione uma disciplina</option>' + turmas.map(t => `<option value="${escapeHtmlAttribute(t.nome)}">${escapeHtml(t.nome)}</option>`).join('');
             }
             if (relatorios.length === 0) {
                 container.innerHTML = `<div class="empty-state"><i class="fas fa-inbox"></i>Nenhum relatório registrado.</div>`;
@@ -4142,7 +4368,7 @@
             if (!container) return;
             const select = document.getElementById('formAtendimentoDisciplina');
             if (select) {
-                select.innerHTML = '<option value="">Selecione uma disciplina</option>' + turmas.map(t => `<option value="${t.nome}">${t.nome}</option>`).join('');
+                select.innerHTML = '<option value="">Selecione uma disciplina</option>' + turmas.map(t => `<option value="${escapeHtmlAttribute(t.nome)}">${escapeHtml(t.nome)}</option>`).join('');
             }
             if (atendimentos.length === 0) {
                 container.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:20px 12px;color:var(--color-text-muted);background:var(--color-card);border-radius:var(--radius);border:1px solid var(--color-border);font-size:12px;"><i class="fas fa-handshake" style="font-size:24px;display:block;margin-bottom:8px;color:rgba(255,179,0,0.1);"></i>Nenhum atendimento registrado.</div>`;
@@ -4264,7 +4490,7 @@
             if (!container) return;
             const select = document.getElementById('formAssuntoDisciplina');
             if (select) {
-                select.innerHTML = '<option value="">Selecione uma disciplina</option>' + turmas.map(t => `<option value="${t.nome}">${t.nome}</option>`).join('');
+                select.innerHTML = '<option value="">Selecione uma disciplina</option>' + turmas.map(t => `<option value="${escapeHtmlAttribute(t.nome)}">${escapeHtml(t.nome)}</option>`).join('');
             }
             const disciplinas = Object.keys(assuntos);
             if (disciplinas.length === 0) {
@@ -4914,8 +5140,11 @@
                     presencasAtrasadas = normalizarColecao(loadData('gda_presencas_atrasadas', []));
                     ocorrencias = normalizarColecao(loadData('gda_ocorrencias', []));
                     presencas = normalizarColecao(loadData('gda_presencas', []));
+                    turmas = normalizarColecao(loadData('gda_turmas', turmas), turmas);
                     atividades = normalizarColecao(loadData('gda_atividades', []));
                     notas = normalizarMapa(loadData('gda_notas', {}));
+                    disciplinasFinalizadas = normalizarMapa(loadData('gda_disciplinas_finalizadas', {}));
+                    semestreAtual = normalizarMapa(loadData('gda_semestre_atual', {}));
                     relatorios = normalizarColecao(loadData('gda_relatorios', []));
                     checklistState = normalizarMapa(loadData('gda_checklist', {}));
                     atendimentos = normalizarColecao(loadData('gda_atendimentos', []));
@@ -4945,13 +5174,7 @@
                 }
             });
             renderizarPaginas();
-            const selects = ['formDisciplina', 'formAvaliacaoDisciplina', 'relatorioDisciplina', 'formAssuntoDisciplina', 'formAtendimentoDisciplina', 'formOcorrenciaDisciplina'];
-            selects.forEach(id => {
-                const select = document.getElementById(id);
-                if (select) {
-                    select.innerHTML = '<option value="">Selecione uma disciplina</option>' + turmas.map(t => `<option value="${t.nome}">${t.nome}</option>`).join('');
-                }
-            });
+            atualizarSelectsDisciplinas();
             renderChecklist();
             renderTurmas();
             renderAtividades();
@@ -4996,6 +5219,12 @@
             setInterval(updateClockDisplay, 1000);
             avaliacoesInterval = setInterval(renderAvaliacoes, 60000);
             const avaliacaoForm = document.getElementById('avaliacaoForm');
+            const disciplinaForm = document.getElementById('disciplinaForm');
+            if (disciplinaForm) disciplinaForm.addEventListener('submit', adicionarDisciplina);
+            const btnIniciarSemestre = document.getElementById('btnIniciarSemestre');
+            if (btnIniciarSemestre) {
+                btnIniciarSemestre.addEventListener('click', () => iniciarSemestre2027(btnIniciarSemestre));
+            }
             if (avaliacaoForm) {
                 avaliacaoForm.addEventListener('submit', async function(e) {
                     e.preventDefault();
@@ -5216,6 +5445,7 @@
         window.confirmarOcorrencia = confirmarOcorrencia;
         window.validarNota = validarNota;
         window.atualizarNota = atualizarNota;
+        window.atualizarPreviaNota = atualizarPreviaNota;
         window.alternarDisciplinaFinalizada = alternarDisciplinaFinalizada;
         window.novaFrase = novaFrase;
         window.adicionarParticipante = adicionarParticipante;

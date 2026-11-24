@@ -24,7 +24,8 @@ O GDA centraliza a rotina acadêmica em uma interface web responsiva, com dados 
 - Dashboard inicial e indicadores do semestre
 - Turmas e disciplinas
 - Atividades com prazos, participantes e subtarefas
-- Notas por bimestre e média automática
+- Notas por bimestre, média automática e alerta vermelho quando a meta de 28 pontos exigir mais de 7,0
+- Cadastro de disciplinas e professores; o botão confirmado “Iniciar 2027.1” apaga todos os dados acadêmicos locais e sincronizados
 - Registro de presença e frequência
 - Relatórios de estudo
 - Atendimentos, assuntos e ocorrências
