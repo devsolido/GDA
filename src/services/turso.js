@@ -117,19 +117,32 @@ async function getSectionValue(key) {
 
 async function setSectionValue(key, value, keepLegacy = true) {
   const database = await ensureSectionSchema(key);
+  if (keepLegacy) await ensureSchema();
   const table = getSectionTable(key);
   const now = new Date().toISOString();
   const entries = mapSectionKeys.has(key)
     ? Object.entries(value || {})
     : (Array.isArray(value) ? value : []).map((item, index) => [String(item?.id || index + 1), item]);
-  await database.batch([
+  const statements = [
     { sql: 'DELETE FROM ' + table, args: [] },
     ...entries.map(([recordId, recordValue], index) => ({
       sql: `INSERT INTO ${table} (record_id, value, record_order, updated_at) VALUES (?, ?, ?, ?)`,
       args: [String(recordId), JSON.stringify(recordValue), index, now]
     }))
-  ], 'write');
-  if (keepLegacy) await setValue(key, value);
+  ];
+  if (keepLegacy) {
+    statements.push({
+      sql: `
+        INSERT INTO gda_sync_data (key, value, updated_at)
+        VALUES (?, ?, ?)
+        ON CONFLICT(key) DO UPDATE SET
+          value = excluded.value,
+          updated_at = excluded.updated_at
+      `,
+      args: [key, JSON.stringify(value), now]
+    });
+  }
+  await database.batch(statements, 'write');
 }
 
 async function ensureNotasSchema() {
@@ -163,13 +176,14 @@ async function getNotas() {
   const legacyNotas = await getValue('gda_notas');
   if (!legacyNotas || typeof legacyNotas !== 'object') return {};
   await setNotas(legacyNotas);
-  await deleteValue('gda_notas');
   return legacyNotas;
 }
 
 async function setNotas(notas) {
   const database = await ensureNotasSchema();
+  await ensureSchema();
   const entries = Object.entries(notas || {});
+  const now = new Date().toISOString();
   await database.batch([
     { sql: 'DELETE FROM gda_notas', args: [] },
     ...entries.map(([codigo, nota]) => ({
@@ -177,8 +191,9 @@ async function setNotas(notas) {
         INSERT INTO gda_notas (codigo, b1, b2, b3, b4, updated_at)
         VALUES (?, ?, ?, ?, ?, ?)
       `,
-      args: [codigo, nota.b1 || '', nota.b2 || '', nota.b3 || '', nota.b4 || '', new Date().toISOString()]
-    }))
+      args: [codigo, nota.b1 || '', nota.b2 || '', nota.b3 || '', nota.b4 || '', now]
+    })),
+    { sql: 'DELETE FROM gda_sync_data WHERE key = ?', args: ['gda_notas'] }
   ], 'write');
 }
 

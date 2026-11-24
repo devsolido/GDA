@@ -1182,6 +1182,8 @@
             color: var(--color-success);
             display: inline-block;
         }
+        table .status.status-cursando { background: rgba(255, 179, 0, 0.12); color: var(--color-warning); }
+        table .status.status-perigo { background: rgba(244, 67, 54, 0.12); color: var(--color-danger); }
         .atividades-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -3350,6 +3352,7 @@
         let atividades = normalizarColecao(loadData('gda_atividades', []));
         let frequencias = normalizarColecao(loadData('gda_frequencias', []));
         let notas = normalizarMapa(loadData('gda_notas', {}));
+        const filasDeSincronizacao = new Map();
         let turmas = [];
         let semestreAtual = normalizarMapa(loadData('gda_semestre_atual', {}));
         let disciplinasFinalizadas = normalizarMapa(loadData('gda_disciplinas_finalizadas', {}));
@@ -3485,13 +3488,28 @@
             return true;
         }
         async function saveData(key, data, avisarFalha = true) {
+            let serialized;
             try {
-                localStorage.setItem(key, JSON.stringify(data));
+                serialized = JSON.stringify(data);
+                if (serialized === undefined) throw new TypeError('Dados não serializáveis');
+                localStorage.setItem(key, serialized);
             } catch (error) {
                 if (avisarFalha) mostrarToast('Não foi possível salvar neste dispositivo.', 'erro');
                 return false;
             }
-            const synced = await syncDataToCloud(key, data);
+            const snapshot = JSON.parse(serialized);
+            const anterior = filasDeSincronizacao.get(key) || Promise.resolve();
+            const atual = anterior.then(
+                () => syncDataToCloud(key, snapshot),
+                () => syncDataToCloud(key, snapshot)
+            );
+            filasDeSincronizacao.set(key, atual);
+            let synced;
+            try {
+                synced = await atual;
+            } finally {
+                if (filasDeSincronizacao.get(key) === atual) filasDeSincronizacao.delete(key);
+            }
             if (!synced && avisarFalha) mostrarToast('Salvo apenas neste dispositivo. Não foi possível sincronizar com a nuvem.', 'aviso', 5000);
             return synced;
         }
@@ -3984,11 +4002,14 @@
                 const frequencia = frequencias.find(item => item.codigo === t.cod);
                 const resumo = frequencia ? `<br><small style="color:var(--color-accent);">📊 ${frequencia.presencas} presenças · ${frequencia.faltas} faltas · ${frequencia.percentual}%</small>` : '';
                 const finalizada = disciplinasFinalizadas[t.cod] === true;
+                const { vals, total, media } = calcularStatusNotas(notas[t.cod] || {});
+                const situacao = total >= 28 ? 'aprovado' : vals.length > 0 && media < 7 ? 'perigo' : 'cursando';
+                const situacaoLabel = situacao === 'aprovado' ? 'Aprovado' : situacao === 'perigo' ? 'Perigo' : 'Cursando';
                 return `<tr>
                 <td class="cod" data-label="Cód.">${escapeHtml(t.cod)}</td>
                 <td data-label="Componente / Docente"><strong>${escapeHtml(t.nome)}</strong>${resumo}<br><span class="prof">${escapeHtml(t.professor)}</span></td>
                 <td class="turma" data-label="Turma">${escapeHtml(t.turma || '')}</td>
-                <td data-label="Status"><span class="status"><i class="fas fa-check-circle"></i> ${finalizada ? 'Finalizada' : 'Matriculado'}</span></td>
+                <td data-label="Status"><span class="status status-${situacao}"><i class="fas ${situacao === 'aprovado' ? 'fa-check-circle' : situacao === 'perigo' ? 'fa-exclamation-triangle' : 'fa-hourglass-half'}"></i> ${situacaoLabel}</span>${finalizada ? '<small class="disciplina-finalizada"> · Finalizada</small>' : ''}</td>
                 <td class="horario" data-label="Horário">${escapeHtml(t.horario || '')}</td>
                 <td data-label="Ação"><button type="button" class="btn-finalizar-disciplina" onclick="alternarDisciplinaFinalizada('${t.cod}')">${finalizada ? 'Reabrir' : 'Finalizar disciplina'}</button></td>
             </tr>`;
@@ -4903,6 +4924,7 @@
             if (!notas[cod]) notas[cod] = { b1: '', b2: '', b3: '', b4: '' };
             notas[cod][bimestre] = valorLimpo;
             saveData('gda_notas', notas);
+            renderTurmas();
             renderNotas();
             renderTelaInicial();
             renderDashboard();

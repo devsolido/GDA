@@ -90,7 +90,7 @@ Depois, acesse `http://localhost:3000`.
 
 ## Dados e segurança
 
-Os dados são sincronizados com o Turso após a autenticação. Quando a nuvem está indisponível, o aplicativo mantém uma cópia local e informa que a sincronização não foi concluída.
+Os dados são salvos localmente e sincronizados com o Turso após a autenticação. Gravações consecutivas da mesma seção são enviadas em ordem e as atualizações no banco são atômicas. Quando a nuvem está indisponível, o aplicativo mantém uma cópia local e informa que a sincronização não foi concluída.
 
 As rotas de dados exigem autenticação. A sessão usa cookie `HttpOnly`, `Secure` em produção e `SameSite=Strict`. O servidor também aplica limite de requisições, limite de payload, validação de dados e políticas de segurança HTTP.
 
