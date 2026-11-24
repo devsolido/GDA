@@ -361,6 +361,30 @@
             white-space: nowrap;
             display: none;
         }
+        .event-countdown {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding: 14px 18px;
+            border: 1px solid var(--color-border);
+            border-left: 4px solid var(--color-accent);
+            border-radius: var(--radius);
+            background: var(--color-card);
+            color: var(--color-text);
+        }
+        .event-countdown-label { font-size: 12px; font-weight: 700; }
+        .event-countdown-value {
+            color: var(--color-accent);
+            font-size: clamp(16px, 2.4vw, 24px);
+            font-weight: 800;
+            font-variant-numeric: tabular-nums;
+            white-space: nowrap;
+        }
+        @media (max-width: 480px) {
+            .event-countdown { align-items: flex-start; flex-direction: column; gap: 4px; padding: 12px 14px; }
+        }
         @media (min-width: 480px) {
             .countdown-item {
                 padding: 3px 8px;
@@ -3353,6 +3377,7 @@
         let frequencias = normalizarColecao(loadData('gda_frequencias', []));
         let notas = normalizarMapa(loadData('gda_notas', {}));
         const filasDeSincronizacao = new Map();
+        const DATA_ALVO_DEZEMBRO = Date.parse('2026-12-18T00:00:00-03:00');
         let turmas = [];
         let semestreAtual = normalizarMapa(loadData('gda_semestre_atual', {}));
         let disciplinasFinalizadas = normalizarMapa(loadData('gda_disciplinas_finalizadas', {}));
@@ -3717,6 +3742,10 @@
                             <span class="time" id="clockHeroTime">00:00</span>
                             <span class="seconds" id="clockHeroSeconds">00</span>
                         </div>
+                    </div>
+                    <div class="event-countdown" role="timer" aria-live="off">
+                        <span class="event-countdown-label">Contagem regressiva para 18 de dezembro de 2026</span>
+                        <span class="event-countdown-value" id="decemberCountdown">Calculando...</span>
                     </div>
                     <div class="quote-card">
                         <i class="fas fa-quote-left quote-icon"></i>
@@ -5093,6 +5122,8 @@
         function updateClockDisplay() {
             const now = new Date();
             const p = getPartesMaraba(now);
+            const countdown = document.getElementById('decemberCountdown');
+            if (countdown) countdown.textContent = formatarContagemDezembro(now.getTime());
 
             // Tela de login: apenas a data (sem relógio); atualiza sozinha na virada do dia
             const loginAccessDate = document.getElementById('loginAccessDate');
@@ -5114,6 +5145,17 @@
 
             const modal = document.getElementById('modalPresencaOverlay');
             if (modal && modal.classList.contains('open')) atualizarRelogioModal();
+        }
+        function formatarContagemDezembro(agora) {
+            let segundosRestantes = Math.max(0, Math.floor((DATA_ALVO_DEZEMBRO - agora) / 1000));
+            if (segundosRestantes === 0) return 'Chegou o dia 18 de dezembro!';
+            const dias = Math.floor(segundosRestantes / 86400);
+            segundosRestantes %= 86400;
+            const horas = Math.floor(segundosRestantes / 3600);
+            segundosRestantes %= 3600;
+            const minutos = Math.floor(segundosRestantes / 60);
+            const segundos = segundosRestantes % 60;
+            return `${dias}d ${String(horas).padStart(2, '0')}h ${String(minutos).padStart(2, '0')}m ${String(segundos).padStart(2, '0')}s`;
         }
         function novaFrase() {
             const random = frasesTelaInicial[Math.floor(Math.random() * frasesTelaInicial.length)];
