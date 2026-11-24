@@ -1391,6 +1391,13 @@
         .notas-resultado .media.reprovado { color: var(--color-danger); }
         .notas-resultado .media.recuperacao { color: var(--color-warning); }
         .notas-resultado .media.aguardando { color: var(--color-text-muted); }
+        .notas-meta {
+            margin-top: 6px;
+            font-size: 11px;
+            color: var(--color-text-muted);
+        }
+        .notas-meta.atingida { color: var(--color-success); }
+        .notas-meta.impossivel { color: var(--color-danger); }
         .presenca-stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -4051,20 +4058,58 @@
             return { vals, total, media, status, statusText, statusColor };
         }
 
+        function calcularMetaNotas(nota) {
+            const vals = [1,2,3,4]
+                .map(b => parseFloat(nota['b'+b]))
+                .filter(v => !isNaN(v));
+            const total = vals.reduce((acc, valor) => acc + valor, 0);
+            const restantes = 4 - vals.length;
+            const faltam = Math.max(0, 28 - total);
+            const formatarPontos = valor => valor.toFixed(1).replace('.', ',');
+
+            if (total >= 28) return { texto: 'Meta de 28 pts atingida!', status: 'atingida' };
+            if (restantes === 0) {
+                return { texto: `Faltaram ${formatarPontos(faltam)} pts para atingir 28 pts.`, status: 'impossivel' };
+            }
+            const mediaNecessaria = faltam / restantes;
+            if (mediaNecessaria > 10) {
+                return {
+                    texto: `Faltam ${formatarPontos(faltam)} pts, mas não é mais possível atingir 28 pts nos ${restantes} bimestres restantes.`,
+                    status: 'impossivel'
+                };
+            }
+            return {
+                texto: `Faltam ${formatarPontos(faltam)} pts: tire ${formatarPontos(mediaNecessaria)} em cada um dos ${restantes} bimestres restantes.`,
+                status: 'pendente'
+            };
+        }
+
         function renderNotas() {
             const container = document.getElementById('notasContainer');
             if (!container) return;
             container.innerHTML = turmas.map(d => {
                 const nota = notas[d.cod] || { b1: '', b2: '', b3: '', b4: '' };
                 const { vals, media, status, statusText, statusColor } = calcularStatusNotas(nota);
+                const meta = calcularMetaNotas(nota);
                 const finalizada = disciplinasFinalizadas[d.cod] === true;
-                return `<div class="notas-card">
+                return `<div class="notas-card" data-codigo="${escapeHtml(d.cod)}">
                     <div class="disciplina-nome">${escapeHtml(d.nome)} ${status === 'aprovado' ? '<span class="disciplina-aprovada" title="Disciplina aprovada" aria-label="Disciplina aprovada">X</span>' : ''}<span class="codigo">${d.cod}</span>${finalizada ? '<span class="disciplina-finalizada">Finalizada</span>' : ''}</div>
-                    <div class="notas-bimestres">${[1,2,3,4].map(b => `<div class="nota-bimestre"><div class="bimestre-label">${b}º Bim</div><input type="text" inputmode="decimal" pattern="[0-9,.]*" value="${nota['b'+b] || ''}" onchange="atualizarNota('${d.cod}', 'b${b}', this.value, this)" oninput="validarNota(this)" placeholder="--" ${finalizada ? 'disabled' : ''} /></div>`).join('')}</div>
-                    <div class="notas-resultado"><div class="resultado-principal"><span class="media ${status}">${vals.length > 0 ? media.toFixed(1) : '--'}</span><span style="font-size:11px;color:var(--color-text-muted);">${vals.length}/4 bimestres</span><span style="font-size:10px;font-weight:600;color:${statusColor};">${statusText}</span></div></div>
+                    <div class="notas-bimestres">${[1,2,3,4].map(b => `<div class="nota-bimestre"><div class="bimestre-label">${b}º Bim</div><input type="text" inputmode="decimal" pattern="[0-9,.]*" value="${nota['b'+b] || ''}" onchange="atualizarNota('${d.cod}', 'b${b}', this.value, this)" oninput="validarNota(this); atualizarPreviaNota(this, 'b${b}')" placeholder="--" ${finalizada ? 'disabled' : ''} /></div>`).join('')}</div>
+                    <div class="notas-resultado"><div class="resultado-principal"><span class="media ${status}">${vals.length > 0 ? media.toFixed(1) : '--'}</span><span style="font-size:11px;color:var(--color-text-muted);">${vals.length}/4 bimestres</span><span style="font-size:10px;font-weight:600;color:${statusColor};">${statusText}</span></div><div class="notas-meta ${meta.status}" aria-live="polite">${meta.texto}</div></div>
                 </div>`;
             }).join('');
         }
+
+        function atualizarPreviaNota(inputEl, bimestre) {
+            const card = inputEl.closest('.notas-card');
+            const previa = card?.querySelector('.notas-meta');
+            if (!card || !previa) return;
+            const nota = { ...(notas[card.dataset.codigo] || {}), [bimestre]: inputEl.value };
+            const meta = calcularMetaNotas(nota);
+            previa.textContent = meta.texto;
+            previa.className = `notas-meta ${meta.status}`;
+        }
+
         function renderRelatorios() {
             const container = document.getElementById('relatoriosLista');
             if (!container) return;
