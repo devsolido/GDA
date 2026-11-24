@@ -104,9 +104,25 @@ describe('validacao de dados', () => {
     await syncController.sync({
       method: 'POST',
       params: { key: 'gda_turmas' },
-      body: { value: [{ cod: 'local_123', nome: 'Matemática', professor: 'Maria' }] }
+      body: { value: [{ cod: 'local_123', nome: 'Matemática', professor: 'Maria', turma: 'B2371M' }] }
     }, validResponse);
     expect(validResponse.statusCode).toBe(200);
+
+    const invalidClassResponse = responseMock();
+    await syncController.sync({
+      method: 'POST',
+      params: { key: 'gda_turmas' },
+      body: { value: [{ cod: 'local_123', nome: 'Matemática', professor: 'Maria', turma: 2371 }] }
+    }, invalidClassResponse);
+    expect(invalidClassResponse.statusCode).toBe(400);
+
+    const oversizedClassResponse = responseMock();
+    await syncController.sync({
+      method: 'POST',
+      params: { key: 'gda_turmas' },
+      body: { value: [{ cod: 'local_123', nome: 'Matemática', professor: 'Maria', turma: 'T'.repeat(81) }] }
+    }, oversizedClassResponse);
+    expect(oversizedClassResponse.statusCode).toBe(400);
 
     const emptyResponse = responseMock();
     await syncController.sync({ method: 'POST', params: { key: 'gda_turmas' }, body: { value: [] } }, emptyResponse);

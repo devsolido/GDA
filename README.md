@@ -25,7 +25,9 @@ O GDA centraliza a rotina acadêmica em uma interface web responsiva, com dados 
 - Turmas e disciplinas
 - Atividades com prazos, participantes e subtarefas
 - Notas por bimestre, média automática e alerta vermelho quando a meta de 28 pontos exigir mais de 7,0
-- Cadastro de disciplinas e professores; o botão confirmado “Iniciar 2027.1” apaga todos os dados acadêmicos locais e sincronizados
+- Cadastro de disciplinas, professores e turmas; o catálogo atualizado aparece nos módulos de notas, turmas, atividades, avaliações, relatórios, atendimentos, assuntos e ocorrências
+- O botão confirmado “Iniciar 2027.1” zera os dados acadêmicos de todos os módulos, localmente e no Turso, e libera o cadastro do novo semestre
+- Dashboard atualiza o semestre e a quantidade de turmas; em 2027.1, o progresso e os horários antigos não são reaproveitados
 - Registro de presença e frequência
 - Relatórios de estudo
 - Atendimentos, assuntos e ocorrências

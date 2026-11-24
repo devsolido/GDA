@@ -23,7 +23,8 @@ const syncController = {
           || value.some((turma) => !turma || typeof turma !== 'object' || Array.isArray(turma)
             || typeof turma.cod !== 'string' || !/^[A-Za-z0-9_-]{1,32}$/.test(turma.cod)
             || typeof turma.nome !== 'string' || turma.nome.trim().length < 1 || turma.nome.length > 120
-            || typeof turma.professor !== 'string' || turma.professor.trim().length < 1 || turma.professor.length > 200)
+            || typeof turma.professor !== 'string' || turma.professor.trim().length < 1 || turma.professor.length > 200
+            || (turma.turma !== undefined && (typeof turma.turma !== 'string' || turma.turma.length > 80)))
         )) {
           return res.status(400).json({ error: 'Disciplinas inválidas' });
         }
